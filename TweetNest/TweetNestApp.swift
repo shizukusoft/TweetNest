@@ -6,15 +6,16 @@
 //
 
 import SwiftUI
+import TweetNestKit
 
 @main
 struct TweetNestApp: App {
-    let persistenceController = PersistenceController.shared
+    let session = TweetNestKit.Session.shared
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
-                .environment(\.managedObjectContext, persistenceController.container.viewContext)
+            MainView()
+                .environment(\.managedObjectContext, session.container.viewContext)
         }
     }
 }
