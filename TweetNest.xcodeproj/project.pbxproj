@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,7 @@
 		1946B3BF25E515050050C437 /* TweetNest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 1946B3BD25E515050050C437 /* TweetNest.xcdatamodeld */; };
 		1946B3CA25E515050050C437 /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946B3C925E515050050C437 /* TweetNestTests.swift */; };
 		1946B3D525E515050050C437 /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946B3D425E515050050C437 /* TweetNestUITests.swift */; };
+		196D694325E518B800BD5213 /* TweetNestAuthSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 196D694225E518B800BD5213 /* TweetNestAuthSupport */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				196D694325E518B800BD5213 /* TweetNestAuthSupport in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -152,6 +154,9 @@
 			dependencies = (
 			);
 			name = TweetNest;
+			packageProductDependencies = (
+				196D694225E518B800BD5213 /* TweetNestAuthSupport */,
+			);
 			productName = TweetNest;
 			productReference = 1946B3AF25E515040050C437 /* TweetNest.app */;
 			productType = "com.apple.product-type.application";
@@ -223,6 +228,9 @@
 				Base,
 			);
 			mainGroup = 1946B3A625E515040050C437;
+			packageReferences = (
+				196D694125E518B800BD5213 /* XCRemoteSwiftPackageReference "TweetNestAuthSupport" */,
+			);
 			productRefGroup = 1946B3B025E515040050C437 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -588,6 +596,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		196D694125E518B800BD5213 /* XCRemoteSwiftPackageReference "TweetNestAuthSupport" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sinoru/TweetNestAuthSupport.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		196D694225E518B800BD5213 /* TweetNestAuthSupport */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196D694125E518B800BD5213 /* XCRemoteSwiftPackageReference "TweetNestAuthSupport" */;
+			productName = TweetNestAuthSupport;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		1946B3BD25E515050050C437 /* TweetNest.xcdatamodeld */ = {
