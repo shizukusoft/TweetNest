@@ -13,6 +13,7 @@
 		19089E1825E51912009BD7A8 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19089E0325E51911009BD7A8 /* TweetNestKit.framework */; };
 		19089E1925E51912009BD7A8 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19089E0325E51911009BD7A8 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19089E2725E5192E009BD7A8 /* TweetNestAuthSupport in Frameworks */ = {isa = PBXBuildFile; productRef = 19089E2625E5192E009BD7A8 /* TweetNestAuthSupport */; };
+		19089E3625E51ABF009BD7A8 /* TwitterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 19089E3525E51ABF009BD7A8 /* TwitterKit */; };
 		1946B3B325E515040050C437 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946B3B225E515040050C437 /* TweetNestApp.swift */; };
 		1946B3B525E515040050C437 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946B3B425E515040050C437 /* ContentView.swift */; };
 		1946B3B725E515050050C437 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1946B3B625E515050050C437 /* Assets.xcassets */; };
@@ -104,6 +105,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19089E2725E5192E009BD7A8 /* TweetNestAuthSupport in Frameworks */,
+				19089E3625E51ABF009BD7A8 /* TwitterKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -260,6 +262,7 @@
 			name = TweetNestKit;
 			packageProductDependencies = (
 				19089E2625E5192E009BD7A8 /* TweetNestAuthSupport */,
+				19089E3525E51ABF009BD7A8 /* TwitterKit */,
 			);
 			productName = TweetNestKit;
 			productReference = 19089E0325E51911009BD7A8 /* TweetNestKit.framework */;
@@ -381,6 +384,7 @@
 			mainGroup = 1946B3A625E515040050C437;
 			packageReferences = (
 				196D694125E518B800BD5213 /* XCRemoteSwiftPackageReference "TweetNestAuthSupport" */,
+				19089E3425E51ABF009BD7A8 /* XCRemoteSwiftPackageReference "TwitterKit.swift" */,
 			);
 			productRefGroup = 1946B3B025E515040050C437 /* Products */;
 			projectDirPath = "";
@@ -907,6 +911,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		19089E3425E51ABF009BD7A8 /* XCRemoteSwiftPackageReference "TwitterKit.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sinoru/TwitterKit.swift.git";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		196D694125E518B800BD5213 /* XCRemoteSwiftPackageReference "TweetNestAuthSupport" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sinoru/TweetNestAuthSupport.git";
@@ -922,6 +934,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 196D694125E518B800BD5213 /* XCRemoteSwiftPackageReference "TweetNestAuthSupport" */;
 			productName = TweetNestAuthSupport;
+		};
+		19089E3525E51ABF009BD7A8 /* TwitterKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19089E3425E51ABF009BD7A8 /* XCRemoteSwiftPackageReference "TwitterKit.swift" */;
+			productName = TwitterKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 
