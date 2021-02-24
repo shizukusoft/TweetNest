@@ -10,16 +10,32 @@ import AuthenticationServices
 
 struct WebAuthenticationView: UIViewRepresentable {
     class View: UIView {
-        let authenticationSession: ASWebAuthenticationSession
+        private let authenticationSession: ASWebAuthenticationSession
 
         init(authenticationSession: ASWebAuthenticationSession) {
             self.authenticationSession = authenticationSession
 
             super.init(frame: .zero)
+
+            self.backgroundColor = .clear
+            self.authenticationSession.presentationContextProvider = self
         }
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
+        }
+
+        func start() {
+            guard window != nil else {
+                DispatchQueue.main.async { self.start() }
+                return
+            }
+
+            authenticationSession.start()
+        }
+
+        func cancel() {
+            authenticationSession.cancel()
         }
     }
 
@@ -31,9 +47,13 @@ struct WebAuthenticationView: UIViewRepresentable {
     func makeUIView(context: Context) -> View {
         let view = View(authenticationSession: ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme) { (url, error) in
             if let error = error {
-                callbackURLResult = .failure(error)
+                DispatchQueue.main.async {
+                    callbackURLResult = .failure(error)
+                }
             } else {
-                callbackURLResult = .success(url!)
+                DispatchQueue.main.async {
+                    callbackURLResult = .success(url!)
+                }
             }
         })
         view.frame = CGRect.zero
@@ -42,11 +62,11 @@ struct WebAuthenticationView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: View, context: Context) {
-        uiView.authenticationSession.start()
+        uiView.start()
     }
 
     static func dismantleUIView(_ uiView: View, coordinator: ()) {
-        uiView.authenticationSession.cancel()
+        uiView.cancel()
     }
 }
 

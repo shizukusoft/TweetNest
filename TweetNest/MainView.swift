@@ -43,18 +43,20 @@ struct MainView: View {
                     }
                 }
             })
-        }
 
-        if let requestToken = requestToken {
-            WebAuthenticationView(
-                url: URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")!,
-                callbackURLScheme: "tweet-nest",
-                callbackURLResult: $authenticationResult
-            )
+            if let requestToken = requestToken, authenticationResult == nil {
+                WebAuthenticationView(
+                    url: URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")!,
+                    callbackURLScheme: "tweet-nest",
+                    callbackURLResult: $authenticationResult
+                )
+                .zIndex(1.0)
+            }
         }
     }
 
     private func addAccount() {
+        authenticationResult = nil
         Session.shared.obtainRequestToken { result in
             switch result {
             case .success(let requestToken):
