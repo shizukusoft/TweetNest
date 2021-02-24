@@ -6,6 +6,7 @@
 //
 
 import CoreData
+import AuthenticationServices
 import TwitterKit
 import TweetNestAuthSupport
 
@@ -63,12 +64,54 @@ public class Session {
         }
     }
 
-    public func obtainRequestToken(completion: @escaping (Result<OAuth1Authenticator.RequestToken, Error>) -> Void) {
-        var twitterSession: TwitterKit.Session? = self.twitterSession()
+    public func authorizeNewAccount(
+        webAuthenticationSessionHandler: @escaping (ASWebAuthenticationSession) -> Void,
+        resultHandler: @escaping (Result<Void, Swift.Error>) -> Void
+    ) {
+        let twitterSession = self.twitterSession()
 
-        twitterSession!.oauth1Authenticator.requestToken(callback: "tweet-nest://") {
-            completion($0)
-            twitterSession = nil
+        twitterSession.oauth1Authenticator.fetchRequestToken(callback: "tweet-nest://") { requestTokenResult in
+            switch requestTokenResult {
+            case .success(let requestToken):
+                webAuthenticationSessionHandler(
+                    ASWebAuthenticationSession(url: URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")!, callbackURLScheme: "tweet-nest", completionHandler: { (url, error) in
+                        if let error = error {
+                            resultHandler(.failure(error))
+                        } else {
+                            let urlComponents = URLComponents(url: url!, resolvingAgainstBaseURL: true)
+
+                            let token = urlComponents?.queryItems?.first(where: { $0.name == "oauth_token" })?.value ?? ""
+                            let verifier = urlComponents?.queryItems?.first(where: { $0.name == "oauth_verifier" })?.value ?? ""
+
+                            twitterSession.oauth1Authenticator.fetchAccessToken(token: token, verifier: verifier) { result in
+                                switch result {
+                                case .success(let accessToken):
+                                    let credential = OAuth1Credential(tokenResponse: accessToken)
+                                    twitterSession.oauth1Credential = credential
+                                    User.fetchMe(session: twitterSession) { result in
+                                        switch result {
+                                        case .success(let user):
+                                            self.twitterSessions[user.id] = twitterSession
+                                            self.addNewAccount(credential: credential, user: user)
+                                            resultHandler(.success(()))
+                                        case .failure(let error):
+                                            resultHandler(.failure(error))
+                                        }
+                                    }
+                                case .failure(let error):
+                                    resultHandler(.failure(error))
+                                }
+                            }
+                        }
+                    })
+                )
+            case .failure(let error):
+                resultHandler(.failure(error))
+            }
         }
+    }
+
+    private func addNewAccount(credential: OAuth1Credential, user: User) {
+        
     }
 }

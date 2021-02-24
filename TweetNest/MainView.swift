@@ -9,6 +9,7 @@ import SwiftUI
 import CoreData
 import TweetNestKit
 import TwitterKit
+import AuthenticationServices
 
 struct MainView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -18,8 +19,8 @@ struct MainView: View {
         animation: .default)
     private var accounts: FetchedResults<Account>
 
-    @State var requestToken: TwitterKit.OAuth1Authenticator.RequestToken?
-    @State var authenticationResult: Result<URL, Swift.Error>?
+    @State var webAuthenticationSession: ASWebAuthenticationSession?
+    @State var authorizationResult: Result<Void, Swift.Error>?
 
     var body: some View {
         NavigationView {
@@ -44,25 +45,22 @@ struct MainView: View {
                 }
             })
 
-            if let requestToken = requestToken, authenticationResult == nil {
-                WebAuthenticationView(
-                    url: URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")!,
-                    callbackURLScheme: "tweet-nest",
-                    callbackURLResult: $authenticationResult
-                )
-                .zIndex(1.0)
+            if let webAuthenticationSession = webAuthenticationSession, authorizationResult == nil {
+                WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
+                    .zIndex(1.0)
             }
         }
     }
 
     private func addAccount() {
-        authenticationResult = nil
-        Session.shared.obtainRequestToken { result in
-            switch result {
-            case .success(let requestToken):
-                self.requestToken = requestToken
-            case .failure(let error):
-                break
+        authorizationResult = nil
+        Session.shared.authorizeNewAccount { webAuthenticationSession in
+            DispatchQueue.main.async {
+                self.webAuthenticationSession = webAuthenticationSession
+            }
+        } resultHandler: { (result) in
+            DispatchQueue.main.async {
+                self.authorizationResult = result
             }
         }
 

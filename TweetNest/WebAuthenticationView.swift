@@ -39,24 +39,12 @@ struct WebAuthenticationView: UIViewRepresentable {
         }
     }
 
-    let url: URL
-    let callbackURLScheme: String?
-
-    @Binding var callbackURLResult: Result<URL, Swift.Error>?
+    let webAuthenticationSession: ASWebAuthenticationSession
 
     func makeUIView(context: Context) -> View {
-        let view = View(authenticationSession: ASWebAuthenticationSession(url: url, callbackURLScheme: callbackURLScheme) { (url, error) in
-            if let error = error {
-                DispatchQueue.main.async {
-                    callbackURLResult = .failure(error)
-                }
-            } else {
-                DispatchQueue.main.async {
-                    callbackURLResult = .success(url!)
-                }
-            }
-        })
-        view.frame = CGRect.zero
+        webAuthenticationSession.prefersEphemeralWebBrowserSession = true
+
+        let view = View(authenticationSession: webAuthenticationSession)
 
         return view
     }
