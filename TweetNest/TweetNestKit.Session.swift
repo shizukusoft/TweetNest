@@ -14,8 +14,9 @@ extension TweetNestKit.Session {
         let viewContext = result.container.viewContext
         for _ in 0..<3 {
             let newAccount = Account(context: viewContext)
-            newAccount.id = Int64.random(in: Int64.min...Int64.max)
-            newAccount.addedAt = Date()
+            newAccount.creationDate = Date()
+            newAccount.user = User(context: viewContext)
+            newAccount.user!.id = Int64.random(in: Int64.min...Int64.max)
         }
         do {
             try viewContext.save()

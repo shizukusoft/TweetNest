@@ -18,14 +18,20 @@
 		1946B3BA25E515050050C437 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1946B3B925E515050050C437 /* Preview Assets.xcassets */; };
 		1946B3CA25E515050050C437 /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946B3C925E515050050C437 /* TweetNestTests.swift */; };
 		1946B3D525E515050050C437 /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1946B3D425E515050050C437 /* TweetNestUITests.swift */; };
+		196A6F4625E63DC8007236E2 /* KeychainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F4525E63DC8007236E2 /* KeychainError.swift */; };
+		196A6F4C25E640F2007236E2 /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F4B25E640F2007236E2 /* PersistentCloudKitContainer.swift */; };
+		196A6F5B25E6430E007236E2 /* UserData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F5525E6430E007236E2 /* UserData+CoreDataClass.swift */; };
+		196A6F5C25E6430E007236E2 /* UserData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F5625E6430E007236E2 /* UserData+CoreDataProperties.swift */; };
+		196A6F5D25E6430E007236E2 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F5725E6430E007236E2 /* User+CoreDataClass.swift */; };
+		196A6F5E25E6430E007236E2 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F5825E6430E007236E2 /* User+CoreDataProperties.swift */; };
+		196A6F5F25E6430E007236E2 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F5925E6430E007236E2 /* Account+CoreDataClass.swift */; };
+		196A6F6025E6430E007236E2 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F5A25E6430E007236E2 /* Account+CoreDataProperties.swift */; };
 		19885CCD25E54A0D00931E36 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19885CCC25E54A0D00931E36 /* CloudKit.framework */; };
 		19885CD725E54A9500931E36 /* TwitterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 19885CD625E54A9500931E36 /* TwitterKit */; };
 		19885CD825E54A9500931E36 /* TwitterKit in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 19885CD625E54A9500931E36 /* TwitterKit */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		19885CDE25E54AFD00931E36 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885CDD25E54AFD00931E36 /* Session.swift */; };
 		19885CE925E54B1A00931E36 /* TweetNestKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 19885CE725E54B1A00931E36 /* TweetNestKit.xcdatamodeld */; };
 		19885D1325E54DE500931E36 /* TweetNestKit.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D1225E54DE500931E36 /* TweetNestKit.Session.swift */; };
-		19885D2E25E54E9E00931E36 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D2C25E54E9E00931E36 /* Account+CoreDataClass.swift */; };
-		19885D2F25E54E9E00931E36 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D2D25E54E9E00931E36 /* Account+CoreDataProperties.swift */; };
 		19885D3D25E551F300931E36 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D3C25E551F200931E36 /* MainView.swift */; };
 		19885D4B25E5609E00931E36 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D4A25E5609E00931E36 /* WebAuthenticationView.swift */; };
 /* End PBXBuildFile section */
@@ -100,13 +106,19 @@
 		1946B3D025E515050050C437 /* TweetNestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		1946B3D425E515050050C437 /* TweetNestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITests.swift; sourceTree = "<group>"; };
 		1946B3D625E515050050C437 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		196A6F4525E63DC8007236E2 /* KeychainError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainError.swift; sourceTree = "<group>"; };
+		196A6F4B25E640F2007236E2 /* PersistentCloudKitContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistentCloudKitContainer.swift; sourceTree = SOURCE_ROOT; };
+		196A6F5525E6430E007236E2 /* UserData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		196A6F5625E6430E007236E2 /* UserData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		196A6F5725E6430E007236E2 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
+		196A6F5825E6430E007236E2 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		196A6F5925E6430E007236E2 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
+		196A6F5A25E6430E007236E2 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19885CBF25E5495600931E36 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		19885CCC25E54A0D00931E36 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		19885CDD25E54AFD00931E36 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		19885CE825E54B1A00931E36 /* TweetNestKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKit.xcdatamodel; sourceTree = "<group>"; };
 		19885D1225E54DE500931E36 /* TweetNestKit.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.Session.swift; sourceTree = "<group>"; };
-		19885D2C25E54E9E00931E36 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
-		19885D2D25E54E9E00931E36 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19885D3C25E551F200931E36 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		19885D4A25E5609E00931E36 /* WebAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuthenticationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -160,9 +172,15 @@
 			isa = PBXGroup;
 			children = (
 				19885CDD25E54AFD00931E36 /* Session.swift */,
-				19885D2C25E54E9E00931E36 /* Account+CoreDataClass.swift */,
-				19885D2D25E54E9E00931E36 /* Account+CoreDataProperties.swift */,
+				196A6F4525E63DC8007236E2 /* KeychainError.swift */,
+				196A6F4B25E640F2007236E2 /* PersistentCloudKitContainer.swift */,
 				19885CE725E54B1A00931E36 /* TweetNestKit.xcdatamodeld */,
+				196A6F5525E6430E007236E2 /* UserData+CoreDataClass.swift */,
+				196A6F5625E6430E007236E2 /* UserData+CoreDataProperties.swift */,
+				196A6F5725E6430E007236E2 /* User+CoreDataClass.swift */,
+				196A6F5825E6430E007236E2 /* User+CoreDataProperties.swift */,
+				196A6F5925E6430E007236E2 /* Account+CoreDataClass.swift */,
+				196A6F5A25E6430E007236E2 /* Account+CoreDataProperties.swift */,
 				19089E0625E51911009BD7A8 /* Info.plist */,
 			);
 			path = TweetNestKit;
@@ -464,10 +482,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				196A6F5C25E6430E007236E2 /* UserData+CoreDataProperties.swift in Sources */,
+				196A6F5B25E6430E007236E2 /* UserData+CoreDataClass.swift in Sources */,
+				196A6F6025E6430E007236E2 /* Account+CoreDataProperties.swift in Sources */,
+				196A6F5E25E6430E007236E2 /* User+CoreDataProperties.swift in Sources */,
 				19885CE925E54B1A00931E36 /* TweetNestKit.xcdatamodeld in Sources */,
-				19885D2E25E54E9E00931E36 /* Account+CoreDataClass.swift in Sources */,
-				19885D2F25E54E9E00931E36 /* Account+CoreDataProperties.swift in Sources */,
+				196A6F4C25E640F2007236E2 /* PersistentCloudKitContainer.swift in Sources */,
 				19885CDE25E54AFD00931E36 /* Session.swift in Sources */,
+				196A6F4625E63DC8007236E2 /* KeychainError.swift in Sources */,
+				196A6F5F25E6430E007236E2 /* Account+CoreDataClass.swift in Sources */,
+				196A6F5D25E6430E007236E2 /* User+CoreDataClass.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

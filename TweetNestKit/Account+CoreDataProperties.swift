@@ -2,7 +2,7 @@
 //  Account+CoreDataProperties.swift
 //  TweetNestKit
 //
-//  Created by Jaehong Kang on 2021/02/23.
+//  Created by Jaehong Kang on 2021/02/24.
 //
 //
 
@@ -16,8 +16,9 @@ extension Account {
         return NSFetchRequest<Account>(entityName: "Account")
     }
 
-    @NSManaged public var id: Int64
-    @NSManaged public var addedAt: Date?
+    @NSManaged public var creationDate: Date?
+    @NSManaged public var token: String?
+    @NSManaged public var user: User?
 
 }
 

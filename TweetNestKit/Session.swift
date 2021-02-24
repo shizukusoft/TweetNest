@@ -20,10 +20,13 @@ public class Session {
     public let container: NSPersistentCloudKitContainer
 
     public init(inMemory: Bool = false) {
-        container = NSPersistentCloudKitContainer(name: "TweetNestKit", managedObjectModel: NSManagedObjectModel(contentsOf: Bundle(for: Self.self).url(forResource: "TweetNestKit", withExtension: "momd")!)!)
+        container = PersistentCloudKitContainer(name: "TweetNestKit", managedObjectModel: NSManagedObjectModel(contentsOf: Bundle(for: Self.self).url(forResource: "TweetNestKit", withExtension: "momd")!)!)
         if inMemory {
             container.persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
         }
+
+        container.viewContext.automaticallyMergesChangesFromParent = true
+
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
                 // Replace this implementation with code to handle the error appropriately.
@@ -86,14 +89,20 @@ public class Session {
                             twitterSession.oauth1Authenticator.fetchAccessToken(token: token, verifier: verifier) { result in
                                 switch result {
                                 case .success(let accessToken):
-                                    let credential = OAuth1Credential(tokenResponse: accessToken)
-                                    twitterSession.oauth1Credential = credential
-                                    User.fetchMe(session: twitterSession) { result in
+                                    twitterSession.oauth1Credential = .init(tokenResponse: accessToken)
+                                    TwitterKit.User.fetchMe(session: twitterSession) { result in
                                         switch result {
                                         case .success(let user):
                                             self.twitterSessions[user.id] = twitterSession
-                                            self.addNewAccount(credential: credential, user: user)
-                                            resultHandler(.success(()))
+                                            self.addNewAccount(tokenResponse: accessToken, user: user) { result in
+                                                switch result {
+                                                case .success:
+                                                    resultHandler(.success(()))
+                                                case .failure(let error):
+                                                    resultHandler(.failure(error))
+                                                }
+                                            }
+
                                         case .failure(let error):
                                             resultHandler(.failure(error))
                                         }
@@ -111,7 +120,43 @@ public class Session {
         }
     }
 
-    private func addNewAccount(credential: OAuth1Credential, user: User) {
-        
+    private func addNewAccount(tokenResponse: OAuth1Authenticator.TokenResponse, user: TwitterKit.User, completion: @escaping (Result<Void, Swift.Error>) -> Void) {
+        container.performBackgroundTask { (context) in
+            do {
+                let account = Account(context: context)
+                account.creationDate = Date()
+                account.token = tokenResponse.token
+
+                let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                userFetchRequest.predicate = NSPredicate(format: "id == %d", user.id)
+                userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+
+                if let user = try? context.fetch(userFetchRequest).first {
+                    account.user = user
+                } else {
+                    account.user = User(context: context)
+                    account.user!.id = user.id
+                    account.user!.creationDate = Date()
+                }
+
+                let query: [String: Any] = [
+                    kSecClass as String: kSecClassInternetPassword,
+                    kSecAttrAccount as String: tokenResponse.token,
+                    kSecAttrServer as String: "api.twitter.com",
+                    kSecValueData as String: tokenResponse.tokenSecret.data(using: .utf8)!,
+                    kSecAttrSynchronizable as String: kCFBooleanTrue as Any,
+                    kSecAttrAccessGroup as String: "group.io.sinoru.TweetNestKit"
+                ]
+
+                let status = SecItemAdd(query as CFDictionary, nil)
+                guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status) }
+
+                try context.save()
+
+                completion(.success(()))
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 }

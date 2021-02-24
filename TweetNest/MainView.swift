@@ -15,7 +15,7 @@ struct MainView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
-        sortDescriptors: [NSSortDescriptor(keyPath: \Account.addedAt, ascending: true)],
+        sortDescriptors: [NSSortDescriptor(keyPath: \Account.creationDate, ascending: true)],
         animation: .default)
     private var accounts: FetchedResults<Account>
 
@@ -23,29 +23,31 @@ struct MainView: View {
     @State var authorizationResult: Result<Void, Swift.Error>?
 
     var body: some View {
-        NavigationView {
-            List {
-                ForEach(accounts) { item in
-                    Text("Item at \(item.addedAt!, formatter: itemFormatter)")
-                }
-                .onDelete(perform: deleteAccounts)
-            }
-            .navigationBarTitle(Text("Twitter Accounts"))
-            .toolbar(content: {
-                #if os(iOS)
-                ToolbarItem(placement: .navigationBarLeading) {
-                    EditButton()
-                }
-                #endif
-
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: addAccount) {
-                        Label("Add Item", systemImage: "plus")
+        ZStack {
+            NavigationView {
+                List {
+                    ForEach(accounts) { item in
+                        Text("Item at \(item.creationDate!, formatter: itemFormatter)")
                     }
+                    .onDelete(perform: deleteAccounts)
                 }
-            })
+                .navigationBarTitle(Text("Twitter Accounts"))
+                .toolbar(content: {
+                    #if os(iOS)
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        EditButton()
+                    }
+                    #endif
 
-            if let webAuthenticationSession = webAuthenticationSession, authorizationResult == nil {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        Button(action: addAccount) {
+                            Label("Add Item", systemImage: "plus")
+                        }
+                    }
+                })
+            }
+
+            if let webAuthenticationSession = webAuthenticationSession {
                 WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
                     .zIndex(1.0)
             }
@@ -61,6 +63,7 @@ struct MainView: View {
         } resultHandler: { (result) in
             DispatchQueue.main.async {
                 self.authorizationResult = result
+                self.webAuthenticationSession = nil
             }
         }
 
