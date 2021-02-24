@@ -26,6 +26,9 @@
 		196A6F9625E68B99007236E2 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F9325E68B99007236E2 /* Account.swift */; };
 		196A6F9725E68B99007236E2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F9425E68B99007236E2 /* User.swift */; };
 		196A6F9825E68B99007236E2 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F9525E68B99007236E2 /* UserData.swift */; };
+		196A6FB225E691BE007236E2 /* AccountsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6FB125E691BD007236E2 /* AccountsListView.swift */; };
+		196A6FB825E69262007236E2 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6FB725E69262007236E2 /* AccountView.swift */; };
+		196A6FBE25E69A33007236E2 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6FBD25E69A33007236E2 /* ImageView.swift */; };
 		19885CCD25E54A0D00931E36 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19885CCC25E54A0D00931E36 /* CloudKit.framework */; };
 		19885CD725E54A9500931E36 /* TwitterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 19885CD625E54A9500931E36 /* TwitterKit */; };
 		19885CD825E54A9500931E36 /* TwitterKit in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 19885CD625E54A9500931E36 /* TwitterKit */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -114,6 +117,9 @@
 		196A6F9325E68B99007236E2 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		196A6F9425E68B99007236E2 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		196A6F9525E68B99007236E2 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
+		196A6FB125E691BD007236E2 /* AccountsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsListView.swift; sourceTree = "<group>"; };
+		196A6FB725E69262007236E2 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
+		196A6FBD25E69A33007236E2 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		19885CBF25E5495600931E36 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		19885CCC25E54A0D00931E36 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		19885CDD25E54AFD00931E36 /* Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
@@ -233,7 +239,10 @@
 			children = (
 				1946B3B225E515040050C437 /* TweetNestApp.swift */,
 				19885D3C25E551F200931E36 /* MainView.swift */,
+				196A6FB125E691BD007236E2 /* AccountsListView.swift */,
+				196A6FB725E69262007236E2 /* AccountView.swift */,
 				19885D4A25E5609E00931E36 /* WebAuthenticationView.swift */,
+				196A6FBD25E69A33007236E2 /* ImageView.swift */,
 				19885D1225E54DE500931E36 /* TweetNestKit.Session.swift */,
 				1946B3B625E515050050C437 /* Assets.xcassets */,
 				1946B3C025E515050050C437 /* Info.plist */,
@@ -507,9 +516,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				196A6FB825E69262007236E2 /* AccountView.swift in Sources */,
 				19885D3D25E551F300931E36 /* MainView.swift in Sources */,
+				196A6FB225E691BE007236E2 /* AccountsListView.swift in Sources */,
 				19885D1325E54DE500931E36 /* TweetNestKit.Session.swift in Sources */,
 				1946B3B325E515040050C437 /* TweetNestApp.swift in Sources */,
+				196A6FBE25E69A33007236E2 /* ImageView.swift in Sources */,
 				19885D4B25E5609E00931E36 /* WebAuthenticationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

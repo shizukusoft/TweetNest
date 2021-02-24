@@ -20,6 +20,7 @@ extension UserData {
     @NSManaged public var id: String?
     @NSManaged public var name: String?
     @NSManaged public var username: String?
+    @NSManaged public var profileImageURL: URL?
 
 }
 

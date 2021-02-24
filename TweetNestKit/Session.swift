@@ -176,6 +176,7 @@ public class Session {
         newUserData.id = twitterUser.id
         newUserData.name = twitterUser.name
         newUserData.username = twitterUser.username
+        newUserData.profileImageURL = twitterUser.profileImageURL
 
         if (newUserData == userDatas.last) {
             context.delete(newUserData)

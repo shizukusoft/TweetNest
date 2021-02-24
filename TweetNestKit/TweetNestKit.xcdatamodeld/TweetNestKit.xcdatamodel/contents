@@ -17,11 +17,12 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="profileImageURL" optional="YES" attributeType="URI"/>
         <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="74"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="95"/>
-        <element name="UserData" positionX="-45" positionY="27" width="128" height="89"/>
+        <element name="UserData" positionX="-45" positionY="27" width="128" height="104"/>
     </elements>
 </model>
