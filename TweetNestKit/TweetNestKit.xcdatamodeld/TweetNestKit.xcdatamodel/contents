@@ -7,7 +7,7 @@
     </entity>
     <entity name="User" representedClassName="User" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
         <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="user" inverseEntity="Account"/>
         <fetchedProperty name="userDatas" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="UserData" predicateString="id == $FETCH_SOURCE.id"/>
@@ -15,11 +15,13 @@
     </entity>
     <entity name="UserData" representedClassName="UserData" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="username" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="74"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="95"/>
-        <element name="UserData" positionX="-45" positionY="27" width="128" height="59"/>
+        <element name="UserData" positionX="-45" positionY="27" width="128" height="89"/>
     </elements>
 </model>

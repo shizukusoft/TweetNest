@@ -16,10 +16,10 @@ extension User {
         return NSFetchRequest<User>(entityName: "User")
     }
 
+    @NSManaged public var id: String?
     @NSManaged public var creationDate: Date?
-    @NSManaged public var id: Int64
     @NSManaged public var account: Account?
-
+    @NSManaged public var userDatas: [UserData]
 }
 
 extension User : Identifiable {

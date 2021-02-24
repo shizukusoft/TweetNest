@@ -8,7 +8,6 @@
 import SwiftUI
 import CoreData
 import TweetNestKit
-import TwitterKit
 import AuthenticationServices
 
 struct MainView: View {
@@ -26,8 +25,8 @@ struct MainView: View {
         ZStack {
             NavigationView {
                 List {
-                    ForEach(accounts) { item in
-                        Text("Item at \(item.creationDate!, formatter: itemFormatter)")
+                    ForEach(accounts) { account in
+                        Text(account.user?.userDatas.last?.username ?? account.user?.id.flatMap { "#" + $0 } ?? itemFormatter.string(from: account.creationDate!))
                     }
                     .onDelete(perform: deleteAccounts)
                 }
