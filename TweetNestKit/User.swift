@@ -1,15 +1,12 @@
 //
-//  User+CoreDataClass.swift
+//  User.swift
 //  TweetNestKit
 //
-//  Created by Jaehong Kang on 2021/02/24.
-//
+//  Created by Jaehong Kang on 2021/02/25.
 //
 
 import Foundation
-import CoreData
 
-@objc(User)
-public class User: NSManagedObject {
-
+extension User {
+    @NSManaged public var userDatas: [UserData]
 }

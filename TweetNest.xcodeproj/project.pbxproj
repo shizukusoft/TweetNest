@@ -24,8 +24,6 @@
 		196A6F8D25E68B83007236E2 /* UserData+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F8A25E68B83007236E2 /* UserData+CoreDataProperties.swift */; };
 		196A6F8E25E68B83007236E2 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F8B25E68B83007236E2 /* User+CoreDataProperties.swift */; };
 		196A6F9625E68B99007236E2 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F9325E68B99007236E2 /* Account.swift */; };
-		196A6F9725E68B99007236E2 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F9425E68B99007236E2 /* User.swift */; };
-		196A6F9825E68B99007236E2 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6F9525E68B99007236E2 /* UserData.swift */; };
 		196A6FB225E691BE007236E2 /* AccountsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6FB125E691BD007236E2 /* AccountsListView.swift */; };
 		196A6FB825E69262007236E2 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6FB725E69262007236E2 /* AccountView.swift */; };
 		196A6FBE25E69A33007236E2 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196A6FBD25E69A33007236E2 /* ImageView.swift */; };
@@ -37,6 +35,10 @@
 		19885D1325E54DE500931E36 /* TweetNestKit.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D1225E54DE500931E36 /* TweetNestKit.Session.swift */; };
 		19885D3D25E551F300931E36 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D3C25E551F200931E36 /* MainView.swift */; };
 		19885D4B25E5609E00931E36 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19885D4A25E5609E00931E36 /* WebAuthenticationView.swift */; };
+		19C471B825E7E94D00D80127 /* UserData+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C471B525E7E94D00D80127 /* UserData+CoreDataClass.swift */; };
+		19C471B925E7E94D00D80127 /* Account+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C471B625E7E94D00D80127 /* Account+CoreDataClass.swift */; };
+		19C471BA25E7E94D00D80127 /* User+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C471B725E7E94D00D80127 /* User+CoreDataClass.swift */; };
+		19C471C425E7E98F00D80127 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C471C325E7E98F00D80127 /* User.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,8 +117,6 @@
 		196A6F8A25E68B83007236E2 /* UserData+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		196A6F8B25E68B83007236E2 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		196A6F9325E68B99007236E2 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
-		196A6F9425E68B99007236E2 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
-		196A6F9525E68B99007236E2 /* UserData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserData.swift; sourceTree = "<group>"; };
 		196A6FB125E691BD007236E2 /* AccountsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsListView.swift; sourceTree = "<group>"; };
 		196A6FB725E69262007236E2 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		196A6FBD25E69A33007236E2 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
@@ -127,6 +127,10 @@
 		19885D1225E54DE500931E36 /* TweetNestKit.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.Session.swift; sourceTree = "<group>"; };
 		19885D3C25E551F200931E36 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		19885D4A25E5609E00931E36 /* WebAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuthenticationView.swift; sourceTree = "<group>"; };
+		19C471B525E7E94D00D80127 /* UserData+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserData+CoreDataClass.swift"; sourceTree = "<group>"; };
+		19C471B625E7E94D00D80127 /* Account+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataClass.swift"; sourceTree = "<group>"; };
+		19C471B725E7E94D00D80127 /* User+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+CoreDataClass.swift"; sourceTree = "<group>"; };
+		19C471C325E7E98F00D80127 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,12 +184,14 @@
 				19885CDD25E54AFD00931E36 /* Session.swift */,
 				196A6F4525E63DC8007236E2 /* KeychainError.swift */,
 				196A6F4B25E640F2007236E2 /* PersistentCloudKitContainer.swift */,
-				19885CE725E54B1A00931E36 /* TweetNestKit.xcdatamodeld */,
 				196A6F9325E68B99007236E2 /* Account.swift */,
+				19C471C325E7E98F00D80127 /* User.swift */,
+				19885CE725E54B1A00931E36 /* TweetNestKit.xcdatamodeld */,
+				19C471B625E7E94D00D80127 /* Account+CoreDataClass.swift */,
 				196A6F8925E68B83007236E2 /* Account+CoreDataProperties.swift */,
-				196A6F9425E68B99007236E2 /* User.swift */,
+				19C471B725E7E94D00D80127 /* User+CoreDataClass.swift */,
 				196A6F8B25E68B83007236E2 /* User+CoreDataProperties.swift */,
-				196A6F9525E68B99007236E2 /* UserData.swift */,
+				19C471B525E7E94D00D80127 /* UserData+CoreDataClass.swift */,
 				196A6F8A25E68B83007236E2 /* UserData+CoreDataProperties.swift */,
 				19089E0625E51911009BD7A8 /* Info.plist */,
 			);
@@ -491,13 +497,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				196A6F9825E68B99007236E2 /* UserData.swift in Sources */,
 				196A6F8D25E68B83007236E2 /* UserData+CoreDataProperties.swift in Sources */,
+				19C471B825E7E94D00D80127 /* UserData+CoreDataClass.swift in Sources */,
+				19C471BA25E7E94D00D80127 /* User+CoreDataClass.swift in Sources */,
 				19885CE925E54B1A00931E36 /* TweetNestKit.xcdatamodeld in Sources */,
 				196A6F4C25E640F2007236E2 /* PersistentCloudKitContainer.swift in Sources */,
 				196A6F8E25E68B83007236E2 /* User+CoreDataProperties.swift in Sources */,
 				196A6F8C25E68B83007236E2 /* Account+CoreDataProperties.swift in Sources */,
-				196A6F9725E68B99007236E2 /* User.swift in Sources */,
+				19C471B925E7E94D00D80127 /* Account+CoreDataClass.swift in Sources */,
+				19C471C425E7E98F00D80127 /* User.swift in Sources */,
 				19885CDE25E54AFD00931E36 /* Session.swift in Sources */,
 				196A6F4625E63DC8007236E2 /* KeychainError.swift in Sources */,
 				196A6F9625E68B99007236E2 /* Account.swift in Sources */,

@@ -2,7 +2,7 @@
 //  UserData+CoreDataProperties.swift
 //  TweetNestKit
 //
-//  Created by Jaehong Kang on 2021/02/24.
+//  Created by Jaehong Kang on 2021/02/25.
 //
 //
 
@@ -19,8 +19,8 @@ extension UserData {
     @NSManaged public var creationDate: Date?
     @NSManaged public var id: String?
     @NSManaged public var name: String?
-    @NSManaged public var username: String?
     @NSManaged public var profileImageURL: URL?
+    @NSManaged public var username: String?
 
 }
 
