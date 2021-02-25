@@ -45,20 +45,41 @@ public class Session {
         })
     }
 
-    func twitterSession(for accountID: String? = nil) -> TwitterKit.Session {
+    func fetchTwitterSession(for accountID: String? = nil, completion: @escaping (Result<TwitterKit.Session, Swift.Error>) -> Void) {
         if let accountID = accountID, let session = mainQueue.sync(execute: { twitterSessions[accountID] }) {
-            return session
+            return completion(.success(session))
         }
 
         let session = TwitterKit.Session(consumerKey: TweetNestAuthSupport.twitterAPIKey, consumerSecret: TweetNestAuthSupport.twitterAPISecret)
 
-        if let accountID = accountID {
-            mainQueue.async {
-                self.twitterSessions[accountID] = session
-            }
+        guard let accountID = accountID else {
+            return completion(.success(session))
         }
 
-        return session
+        self.fetchToken(for: accountID) { (tokenResult) in
+            do {
+                switch tokenResult {
+                case .success(let token):
+                    guard let token = token else {
+                        return completion(.success(session))
+                    }
+
+                    let credential = try self.fetchCredential(for: token)
+
+                    session.oauth1Credential = credential
+
+                    self.mainQueue.async {
+                        self.twitterSessions[accountID] = session
+                    }
+
+                    completion(.success(session))
+                case .failure(let error):
+                    throw error
+                }
+            } catch {
+                completion(.failure(error))
+            }
+        }
     }
 
     func destroyTwitterSession(for accountID: String) {
@@ -71,36 +92,41 @@ public class Session {
         webAuthenticationSessionHandler: @escaping (ASWebAuthenticationSession) -> Void,
         resultHandler: @escaping (Result<Void, Swift.Error>) -> Void
     ) {
-        let twitterSession = self.twitterSession()
+        fetchTwitterSession { (result) in
+            switch result {
+            case .success(let twitterSession):
+                twitterSession.oauth1Authenticator.fetchRequestToken(callback: "tweet-nest://") { requestTokenResult in
+                    switch requestTokenResult {
+                    case .success(let requestToken):
+                        webAuthenticationSessionHandler(
+                            ASWebAuthenticationSession(url: URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")!, callbackURLScheme: "tweet-nest", completionHandler: { (url, error) in
+                                if let error = error {
+                                    resultHandler(.failure(error))
+                                } else {
+                                    let urlComponents = URLComponents(url: url!, resolvingAgainstBaseURL: true)
 
-        twitterSession.oauth1Authenticator.fetchRequestToken(callback: "tweet-nest://") { requestTokenResult in
-            switch requestTokenResult {
-            case .success(let requestToken):
-                webAuthenticationSessionHandler(
-                    ASWebAuthenticationSession(url: URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")!, callbackURLScheme: "tweet-nest", completionHandler: { (url, error) in
-                        if let error = error {
-                            resultHandler(.failure(error))
-                        } else {
-                            let urlComponents = URLComponents(url: url!, resolvingAgainstBaseURL: true)
+                                    let token = urlComponents?.queryItems?.first(where: { $0.name == "oauth_token" })?.value ?? ""
+                                    let verifier = urlComponents?.queryItems?.first(where: { $0.name == "oauth_verifier" })?.value ?? ""
 
-                            let token = urlComponents?.queryItems?.first(where: { $0.name == "oauth_token" })?.value ?? ""
-                            let verifier = urlComponents?.queryItems?.first(where: { $0.name == "oauth_verifier" })?.value ?? ""
-
-                            twitterSession.oauth1Authenticator.fetchAccessToken(token: token, verifier: verifier) { result in
-                                switch result {
-                                case .success(let accessToken):
-                                    twitterSession.oauth1Credential = .init(tokenResponse: accessToken)
-                                    TwitterKit.Account.fetchMe(session: twitterSession) { result in
+                                    twitterSession.oauth1Authenticator.fetchAccessToken(token: token, verifier: verifier) { result in
                                         switch result {
-                                        case .success(let account):
-                                            TwitterKit.User.fetchUser(id: account.id, session: twitterSession) { result in
+                                        case .success(let accessToken):
+                                            twitterSession.oauth1Credential = .init(tokenResponse: accessToken)
+                                            TwitterKit.Account.fetchMe(session: twitterSession) { result in
                                                 switch result {
-                                                case .success(let user):
-                                                    self.twitterSessions[user.id] = twitterSession
-                                                    self.createNewAccount(tokenResponse: accessToken, user: user) { result in
+                                                case .success(let account):
+                                                    TwitterKit.User.fetchUser(id: account.id, session: twitterSession) { result in
                                                         switch result {
-                                                        case .success:
-                                                            resultHandler(.success(()))
+                                                        case .success(let user):
+                                                            self.twitterSessions[user.id] = twitterSession
+                                                            self.createNewAccount(tokenResponse: accessToken, user: user) { result in
+                                                                switch result {
+                                                                case .success:
+                                                                    resultHandler(.success(()))
+                                                                case .failure(let error):
+                                                                    resultHandler(.failure(error))
+                                                                }
+                                                            }
                                                         case .failure(let error):
                                                             resultHandler(.failure(error))
                                                         }
@@ -113,13 +139,13 @@ public class Session {
                                             resultHandler(.failure(error))
                                         }
                                     }
-                                case .failure(let error):
-                                    resultHandler(.failure(error))
                                 }
-                            }
-                        }
-                    })
-                )
+                            })
+                        )
+                    case .failure(let error):
+                        resultHandler(.failure(error))
+                    }
+                }
             case .failure(let error):
                 resultHandler(.failure(error))
             }
@@ -155,5 +181,52 @@ public class Session {
                 completion(.failure(error))
             }
         }
+    }
+
+    private func fetchToken(for accountID: String, completion: @escaping (Result<String?, Swift.Error>) -> Void) {
+        container.performBackgroundTask { (context) in
+            do {
+                let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                userFetchRequest.predicate = NSPredicate(format: "id == %d", accountID)
+                userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+
+                guard
+                    let user = try context.fetch(userFetchRequest).first,
+                    let account = user.account
+                else {
+                    completion(.success(nil))
+                    return
+                }
+
+                completion(.success(account.token))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+    }
+
+    private func fetchCredential(for token: String) throws -> OAuth1Credential {
+        let query: [String: Any] = [
+            kSecClass as String: kSecClassInternetPassword,
+            kSecAttrAccount as String: token,
+            kSecAttrServer as String: "api.twitter.com",
+            kSecAttrSynchronizable as String: kCFBooleanTrue as Any,
+            kSecAttrAccessGroup as String: "group.io.sinoru.TweetNestKit"
+        ]
+
+        var item: CFTypeRef?
+        let status = SecItemCopyMatching(query as CFDictionary, &item)
+        guard status != errSecItemNotFound else { throw KeychainError.noPassword }
+        guard status == errSecSuccess else { throw KeychainError.unhandledError(status: status) }
+
+        guard let existingItem = item as? [String : Any],
+            let tokenSecretData = existingItem[kSecValueData as String] as? Data,
+            let tokenSecret = String(data: tokenSecretData, encoding: String.Encoding.utf8),
+            let token = existingItem[kSecAttrAccount as String] as? String
+        else {
+            throw KeychainError.unexpectedPasswordData
+        }
+
+        return OAuth1Credential(token: token, tokenSecret: tokenSecret)
     }
 }

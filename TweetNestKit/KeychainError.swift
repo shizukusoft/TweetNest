@@ -9,4 +9,6 @@ import Foundation
 
 enum KeychainError: Swift.Error {
     case unhandledError(status: OSStatus)
+    case noPassword
+    case unexpectedPasswordData
 }
