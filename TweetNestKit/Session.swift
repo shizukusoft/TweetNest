@@ -97,7 +97,7 @@ public class Session {
                                                 switch result {
                                                 case .success(let user):
                                                     self.twitterSessions[user.id] = twitterSession
-                                                    self.addNewAccount(tokenResponse: accessToken, user: user) { result in
+                                                    self.createNewAccount(tokenResponse: accessToken, user: user) { result in
                                                         switch result {
                                                         case .success:
                                                             resultHandler(.success(()))
@@ -126,14 +126,14 @@ public class Session {
         }
     }
 
-    private func addNewAccount(tokenResponse: OAuth1Authenticator.TokenResponse, user: TwitterKit.User, completion: @escaping (Result<Void, Swift.Error>) -> Void) {
+    private func createNewAccount(tokenResponse: OAuth1Authenticator.TokenResponse, user: TwitterKit.User, completion: @escaping (Result<Void, Swift.Error>) -> Void) {
         container.performBackgroundTask { (context) in
             do {
                 let account = Account(context: context)
                 account.creationDate = Date()
                 account.token = tokenResponse.token
 
-                let user = try self.updateUser(user: user, context: context)
+                let user = try User.update(user, context: context)
                 account.user = user
 
                 let query: [String: Any] = [
@@ -155,33 +155,5 @@ public class Session {
                 completion(.failure(error))
             }
         }
-    }
-
-    private func updateUser(user twitterUser: TwitterKit.User, context: NSManagedObjectContext) throws -> User {
-        let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-        userFetchRequest.predicate = NSPredicate(format: "id == %d", twitterUser.id)
-        userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-
-        let user = try context.fetch(userFetchRequest).first ?? User(context: context)
-        user.id = twitterUser.id
-        user.creationDate = user.creationDate ?? Date()
-
-        let userDataFetchRequest: NSFetchRequest<UserData> = UserData.fetchRequest()
-        userDataFetchRequest.predicate = NSPredicate(format: "id == %d", twitterUser.id)
-        userDataFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-
-        let userDatas = try context.fetch(userDataFetchRequest)
-
-        let newUserData = UserData(context: context)
-        newUserData.id = twitterUser.id
-        newUserData.name = twitterUser.name
-        newUserData.username = twitterUser.username
-        newUserData.profileImageURL = twitterUser.profileImageURL
-
-        if (newUserData == userDatas.last) {
-            context.delete(newUserData)
-        }
-
-        return user
     }
 }
