@@ -12,6 +12,7 @@ import TwitterKit
 extension User {
     @NSManaged public var userDatas: [UserData]
 
+    @discardableResult
     static func update(_ twitterUser: TwitterKit.User, context: NSManagedObjectContext) throws -> User {
         let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
         userFetchRequest.predicate = NSPredicate(format: "id == %d", twitterUser.id)

@@ -42,27 +42,22 @@ struct AccountsListView: View {
                 }
                 .onDelete(perform: deleteAccounts)
             }
-            .listStyle(InsetGroupedListStyle())
 
             if let webAuthenticationSession = webAuthenticationSession {
                 WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
                     .zIndex(1.0)
             }
         }
-        .navigationBarTitle(Text("Twitter Accounts"))
-        .toolbar(content: {
+        .navigationTitle(Text("Twitter Accounts"))
+        .toolbar {
             #if os(iOS)
-            ToolbarItem(placement: .navigationBarLeading) {
-                EditButton()
-            }
+            EditButton()
             #endif
 
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: addAccount) {
-                    Label("Add Item", systemImage: "plus")
-                }
+            Button(action: addAccount) {
+                Label("Add Item", systemImage: "plus")
             }
-        })
+        }
     }
 
     private func addAccount() {

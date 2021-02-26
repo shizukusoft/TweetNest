@@ -28,8 +28,13 @@ struct ImageView: View {
         .onAppear(perform: {
             self.imageCancellable = URLSession.shared
                 .dataTaskPublisher(for: url)
-                .compactMap { UIImage(data: $0.data) }
-                .map { Image(uiImage: $0) }
+                .compactMap {
+                    #if os(macOS)
+                    return NSImage(data: $0.data).flatMap { Image(nsImage: $0) }
+                    #elseif os(iOS)
+                    return UIImage(data: $0.data).flatMap { Image(uiImage: $0) }
+                    #endif
+                }
                 .subscribe(on: DispatchQueue.global(qos: .default))
                 .receive(on: DispatchQueue.main)
                 .sink { debugPrint($0) } receiveValue: {

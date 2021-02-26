@@ -1,8 +1,8 @@
 //
 //  UserData+CoreDataProperties.swift
-//  TweetNestKit
+//  TweetNest
 //
-//  Created by Jaehong Kang on 2021/02/25.
+//  Created by Jaehong Kang on 2021/02/26.
 //
 //
 

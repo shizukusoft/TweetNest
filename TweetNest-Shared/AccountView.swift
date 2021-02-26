@@ -16,9 +16,9 @@ struct AccountView: View {
             ImageView(url: URL(string: "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png")!, placeholderImage: nil)
             Text("Hello, \(account.user?.userDatas.last?.name ?? "")!")
         }
-        .navigationBarTitle(Text(account.user?.userDatas.last?.name ?? "#\(account.user!.id!)"))
+        .navigationTitle(Text(account.user?.userDatas.last?.name ?? "#\(account.user!.id!)"))
         .toolbar(content: {
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .automatic) {
                 Button(action: refresh) {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
