@@ -61,8 +61,8 @@
 		19933ECE25E90EEA006AB4C0 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ECC25E90EEA006AB4C0 /* AccountView.swift */; };
 		19933ED425E90EF9006AB4C0 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */; };
 		19933ED525E90EF9006AB4C0 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */; };
-		19933EDB25E90F0A006AB4C0 /*  ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /*  ImageView.swift */; };
-		19933EDC25E90F0A006AB4C0 /*  ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /*  ImageView.swift */; };
+		19933EDB25E90F0A006AB4C0 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /* ImageView.swift */; };
+		19933EDC25E90F0A006AB4C0 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /* ImageView.swift */; };
 		19933EE225E90F16006AB4C0 /* TweetNestKit.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */; };
 		19933EE325E90F16006AB4C0 /* TweetNestKit.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */; };
 /* End PBXBuildFile section */
@@ -215,7 +215,7 @@
 		19933EB925E90ECD006AB4C0 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		19933ECC25E90EEA006AB4C0 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuthenticationView.swift; sourceTree = "<group>"; };
-		19933EDA25E90F0A006AB4C0 /*  ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " ImageView.swift"; sourceTree = "<group>"; };
+		19933EDA25E90F0A006AB4C0 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.Session.swift; sourceTree = "<group>"; };
 		19933EF025E91277006AB4C0 /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -316,7 +316,7 @@
 				19933D2C25E901F3006AB4C0 /* AccountsListView.swift */,
 				19933ECC25E90EEA006AB4C0 /* AccountView.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
-				19933EDA25E90F0A006AB4C0 /*  ImageView.swift */,
+				19933EDA25E90F0A006AB4C0 /* ImageView.swift */,
 				19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */,
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
 			);
@@ -751,7 +751,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19933ED425E90EF9006AB4C0 /* WebAuthenticationView.swift in Sources */,
-				19933EDB25E90F0A006AB4C0 /*  ImageView.swift in Sources */,
+				19933EDB25E90F0A006AB4C0 /* ImageView.swift in Sources */,
 				19933ECD25E90EEA006AB4C0 /* AccountView.swift in Sources */,
 				19933D5725E901F5006AB4C0 /* TweetNestApp.swift in Sources */,
 				19933EBA25E90ECD006AB4C0 /* MainView.swift in Sources */,
@@ -765,7 +765,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19933ED525E90EF9006AB4C0 /* WebAuthenticationView.swift in Sources */,
-				19933EDC25E90F0A006AB4C0 /*  ImageView.swift in Sources */,
+				19933EDC25E90F0A006AB4C0 /* ImageView.swift in Sources */,
 				19933ECE25E90EEA006AB4C0 /* AccountView.swift in Sources */,
 				19933D5825E901F5006AB4C0 /* TweetNestApp.swift in Sources */,
 				19933EBB25E90ECD006AB4C0 /* MainView.swift in Sources */,
