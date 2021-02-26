@@ -16,7 +16,7 @@
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)group.io.sinoru.TweetNestKit</string>
+		<string>$(AppIdentifierPrefix)io.sinoru.TweetNestKit</string>
 	</array>
 </dict>
 </plist>
