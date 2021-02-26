@@ -168,7 +168,7 @@ public class Session {
                     kSecAttrServer as String: "api.twitter.com",
                     kSecValueData as String: tokenResponse.tokenSecret.data(using: .utf8)!,
                     kSecAttrSynchronizable as String: kCFBooleanTrue as Any,
-                    kSecAttrAccessGroup as String: "group.io.sinoru.TweetNestKit"
+                    kSecAttrAccessGroup as String: "83XZ8ZBS6L.group.io.sinoru.TweetNestKit"
                 ]
 
                 let status = SecItemAdd(query as CFDictionary, nil)
