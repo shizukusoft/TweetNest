@@ -49,34 +49,57 @@ public class Session {
             return completion(.success(session))
         }
 
-        let session = TwitterKit.Session(consumerKey: Self.twitterAPIKey, consumerSecret: Self.twitterAPISecret)
+        let container = CKContainer(identifier: "iCloud.io.sinoru.TweetNestKit")
+        let database = container.publicCloudDatabase
 
-        guard let accountID = accountID else {
-            return completion(.success(session))
-        }
+        let query = CKQuery(recordType: "TwitterAPIInfo", predicate: NSPredicate(value: true))
+        query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: true)]
 
-        self.fetchToken(for: accountID) { (tokenResult) in
-            do {
-                switch tokenResult {
-                case .success(let token):
-                    guard let token = token else {
-                        return completion(.success(session))
+        database.perform(query, inZoneWith: .default) { (records, error) in
+            guard let records = records else {
+                completion(.failure(error!))
+                return
+            }
+
+            guard let apiKey: String = records.last?["apiKey"] else {
+                completion(.failure(SessionError.noAPIKey))
+                return
+            }
+
+            guard let apiKeySecret: String = records.last?["apiKeySecret"] else {
+                completion(.failure(SessionError.noAPIKeySecret))
+                return
+            }
+
+            let twitterSession = TwitterKit.Session(consumerKey: apiKey, consumerSecret: apiKeySecret)
+
+            guard let accountID = accountID else {
+                return completion(.success(twitterSession))
+            }
+
+            self.fetchToken(for: accountID) { (tokenResult) in
+                do {
+                    switch tokenResult {
+                    case .success(let token):
+                        guard let token = token else {
+                            return completion(.success(twitterSession))
+                        }
+
+                        let credential = try self.fetchCredential(for: token)
+
+                        twitterSession.oauth1Credential = credential
+
+                        self.mainQueue.async {
+                            self.twitterSessions[accountID] = twitterSession
+                        }
+
+                        completion(.success(twitterSession))
+                    case .failure(let error):
+                        throw error
                     }
-
-                    let credential = try self.fetchCredential(for: token)
-
-                    session.oauth1Credential = credential
-
-                    self.mainQueue.async {
-                        self.twitterSessions[accountID] = session
-                    }
-
-                    completion(.success(session))
-                case .failure(let error):
-                    throw error
+                } catch {
+                    completion(.failure(error))
                 }
-            } catch {
-                completion(.failure(error))
             }
         }
     }

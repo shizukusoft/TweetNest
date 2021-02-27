@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		194A61B525E918AC00394262 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 194A61B425E918AC00394262 /* CloudKit.framework */; };
 		194A61B725E918B900394262 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 194A61B625E918B900394262 /* CloudKit.framework */; };
-		194A61C125EA281B00394262 /* Session+AuthSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194A61C025EA281A00394262 /* Session+AuthSupport.swift */; };
-		194A61C225EA281B00394262 /* Session+AuthSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194A61C025EA281A00394262 /* Session+AuthSupport.swift */; };
 		19933D4825E901F5006AB4C0 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D4725E901F5006AB4C0 /* Tests_iOS.swift */; };
 		19933D5325E901F5006AB4C0 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D5225E901F5006AB4C0 /* Tests_macOS.swift */; };
 		19933D5725E901F5006AB4C0 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */; };
@@ -65,6 +63,8 @@
 		19933EDC25E90F0A006AB4C0 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /* ImageView.swift */; };
 		19933EE225E90F16006AB4C0 /* TweetNestKit.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */; };
 		19933EE325E90F16006AB4C0 /* TweetNestKit.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */; };
+		19EB7CDF25EA5C81006109A6 /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EB7CDE25EA5C81006109A6 /* SessionError.swift */; };
+		19EB7CE025EA5C81006109A6 /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EB7CDE25EA5C81006109A6 /* SessionError.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -176,7 +176,6 @@
 /* Begin PBXFileReference section */
 		194A61B425E918AC00394262 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.4.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		194A61B625E918B900394262 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
-		194A61C025EA281A00394262 /* Session+AuthSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+AuthSupport.swift"; sourceTree = "<group>"; };
 		19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestApp.swift; sourceTree = "<group>"; };
 		19933D2C25E901F3006AB4C0 /* AccountsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsListView.swift; sourceTree = "<group>"; };
 		19933D2E25E901F4006AB4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -219,6 +218,7 @@
 		19933EDA25E90F0A006AB4C0 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.Session.swift; sourceTree = "<group>"; };
 		19933EF025E91277006AB4C0 /* iOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOS.entitlements; sourceTree = "<group>"; };
+		19EB7CDE25EA5C81006109A6 /* SessionError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -411,8 +411,8 @@
 			isa = PBXGroup;
 			children = (
 				19933E3625E90DA5006AB4C0 /* Session.swift */,
-				194A61C025EA281A00394262 /* Session+AuthSupport.swift */,
 				19933E7B25E90E42006AB4C0 /* KeychainError.swift */,
+				19EB7CDE25EA5C81006109A6 /* SessionError.swift */,
 				19933E8225E90E53006AB4C0 /* PersistentCloudKitContainer.swift */,
 				19933E8925E90E5C006AB4C0 /* Account.swift */,
 				19933E9025E90E65006AB4C0 /* User.swift */,
@@ -792,6 +792,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19933EAF25E90E94006AB4C0 /* UserData+CoreDataProperties.swift in Sources */,
+				19EB7CDF25EA5C81006109A6 /* SessionError.swift in Sources */,
 				19933E7C25E90E42006AB4C0 /* KeychainError.swift in Sources */,
 				19933E8A25E90E5C006AB4C0 /* Account.swift in Sources */,
 				19933EAD25E90E94006AB4C0 /* UserData+CoreDataClass.swift in Sources */,
@@ -799,7 +800,6 @@
 				19933E3725E90DA5006AB4C0 /* Session.swift in Sources */,
 				19933E9125E90E65006AB4C0 /* User.swift in Sources */,
 				19933EA925E90E94006AB4C0 /* User+CoreDataClass.swift in Sources */,
-				194A61C125EA281B00394262 /* Session+AuthSupport.swift in Sources */,
 				19933E9925E90E7A006AB4C0 /* TweetNestKit.xcdatamodeld in Sources */,
 				19933EA725E90E94006AB4C0 /* Account+CoreDataProperties.swift in Sources */,
 				19933EAB25E90E94006AB4C0 /* User+CoreDataProperties.swift in Sources */,
@@ -820,6 +820,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19933EB025E90E94006AB4C0 /* UserData+CoreDataProperties.swift in Sources */,
+				19EB7CE025EA5C81006109A6 /* SessionError.swift in Sources */,
 				19933E7D25E90E42006AB4C0 /* KeychainError.swift in Sources */,
 				19933E8B25E90E5C006AB4C0 /* Account.swift in Sources */,
 				19933EAE25E90E94006AB4C0 /* UserData+CoreDataClass.swift in Sources */,
@@ -827,7 +828,6 @@
 				19933E3825E90DA5006AB4C0 /* Session.swift in Sources */,
 				19933E9225E90E65006AB4C0 /* User.swift in Sources */,
 				19933EAA25E90E94006AB4C0 /* User+CoreDataClass.swift in Sources */,
-				194A61C225EA281B00394262 /* Session+AuthSupport.swift in Sources */,
 				19933E9A25E90E7A006AB4C0 /* TweetNestKit.xcdatamodeld in Sources */,
 				19933EA825E90E94006AB4C0 /* Account+CoreDataProperties.swift in Sources */,
 				19933EAC25E90E94006AB4C0 /* User+CoreDataProperties.swift in Sources */,
