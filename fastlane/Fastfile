@@ -18,8 +18,8 @@ default_platform(:ios)
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :beta do
-    increment_build_number(xcodeproj: "TweetNest.xcodeproj")
-    build_app(scheme: "TweetNest (iOS)")
+    build
+    export
     upload_to_testflight
   end
 
@@ -28,5 +28,31 @@ platform :ios do
     increment_build_number(xcodeproj: "TweetNest.xcodeproj")
     build_app(scheme: "TweetNest (iOS)")
     upload_to_app_store
+  end
+
+  private_lane :build do |options|
+    sync_code_signing(type: "development")
+    build_app(
+      **options,
+      scheme: "TweetNest (iOS)",
+      skip_package_ipa: true,
+      skip_package_pkg: true
+    )
+  end
+  
+  private_lane :export do |options|
+    if options[export_method] == "app-store"
+      sync_code_signing(type: "appstore")
+    elsif options[export_method] == "development"
+      sync_code_signing(type: "development")
+    else
+      sync_code_signing(type: "adhoc")
+    end
+
+    build_app(
+      **options,
+      scheme: "TweetNest (iOS)",
+      skip_build_archive: true
+    )
   end
 end
