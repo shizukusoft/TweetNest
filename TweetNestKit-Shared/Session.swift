@@ -8,7 +8,6 @@
 import CoreData
 import AuthenticationServices
 import TwitterKit
-import TweetNestAuthSupport
 
 public class Session {
     public static let shared = Session()
@@ -50,7 +49,7 @@ public class Session {
             return completion(.success(session))
         }
 
-        let session = TwitterKit.Session(consumerKey: TweetNestAuthSupport.twitterAPIKey, consumerSecret: TweetNestAuthSupport.twitterAPISecret)
+        let session = TwitterKit.Session(consumerKey: Self.twitterAPIKey, consumerSecret: Self.twitterAPISecret)
 
         guard let accountID = accountID else {
             return completion(.success(session))
