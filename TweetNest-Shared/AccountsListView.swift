@@ -55,7 +55,7 @@ struct AccountsListView: View {
             #endif
 
             Button(action: addAccount) {
-                Label("Add Item", systemImage: "plus")
+                Label("Add Account", systemImage: "plus")
             }
         }
     }
