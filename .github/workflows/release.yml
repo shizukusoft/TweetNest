@@ -27,6 +27,7 @@ jobs:
     strategy:
       matrix:
         target-platform: [iOS, macOS]
+        fail-fast: false
     runs-on: macOS-latest
     env:
       APPLE_ID: "bot@sinoru.io"
@@ -56,7 +57,7 @@ jobs:
           ruby-version: 2.6 # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: bundle exec fastlane ios archive
-        if: ${{ matrix.target-platform == "iOS" }}
+        if: ${{ matrix.target-platform == 'iOS' }}
         env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
@@ -64,7 +65,7 @@ jobs:
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_READONLY: "true"
       - run: bundle exec fastlane mac archive
-        if: ${{ matrix.target-platform == "macOS" }}
+        if: ${{ matrix.target-platform == 'macOS' }}
         env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
