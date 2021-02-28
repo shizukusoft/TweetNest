@@ -31,8 +31,9 @@ jobs:
     runs-on: macOS-latest
     env:
       APPLE_ID: "bot@sinoru.io"
-      IPA_PATH: "TweetNest ${{ matrix.target-platform }}.ipa"
-      XCARCHIVE_PATH: "archive/TweetNest ${{ matrix.target-platform }}.xcarchive"
+      IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
+      XCARCHIVE_NAME: TweetNest (${{ matrix.target-platform }}).xcarchive
+      XCARCHIVE_PATH: "archive/TweetNest (${{ matrix.target-platform }}).xcarchive"
       KEYCHAIN_NAME: "build.keychain"
     steps:
       - uses: actions/checkout@v2
@@ -56,30 +57,27 @@ jobs:
         with:
           ruby-version: 2.6 # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - run: bundle exec fastlane ios archive
-        if: ${{ matrix.target-platform == 'iOS' }}
+      - name: Archive
+        run: |
+          case "${{ matrix.target-platform }}" in
+            "iOS") bundle exec fastlane ios archive;;
+            "macOS") bundle exec fastlane mac archive;;
+            *) exit 1;;
+          esac
         env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_READONLY: "true"
-      - run: bundle exec fastlane mac archive
-        if: ${{ matrix.target-platform == 'macOS' }}
-        env:
-          GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
-          MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
-          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-          MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-          MATCH_READONLY: "true"
-      - run: hdiutil create -format ULFO -srcfolder archive "TweetNest ${{ matrix.target-platform }}.xcarchive.dmg"
+      - run: hdiutil create -format ULFO -srcfolder archive "$XCARCHIVE_NAME.dmg"
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./TweetNest ${{ matrix.target-platform }}.xcarchive.dmg
-          asset_name: TweetNest ${{ matrix.target-platform }}.xcarchive.dmg
+          asset_path: ./${{ env.XCARCHIVE_NAME }}.dmg
+          asset_name: ${{ env.XCARCHIVE_NAME }}.dmg
           asset_content_type: application/x-apple-diskimage
       # - run: bundle exec fastlane ${{ matrix.target-platform }} deploy_beta
       #   env:
