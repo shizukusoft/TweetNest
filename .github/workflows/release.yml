@@ -7,13 +7,31 @@ on:
 name: Release
 
 jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    outputs:
+      release-upload-url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
   release:
     name: Release
+    needs: create-release
+    strategy:
+      matrix:
+        target-platform: [iOS, macOS]
     runs-on: macOS-latest
     env:
       APPLE_ID: "bot@sinoru.io"
-      IPA_PATH: "TweetNest.ipa"
-      XCARCHIVE_PATH: "archive/TweetNest.xcarchive"
+      IPA_PATH: "TweetNest ${{ matrix.target-platform }}.ipa"
+      XCARCHIVE_PATH: "archive/TweetNest ${{ matrix.target-platform }}.xcarchive"
       KEYCHAIN_NAME: "build.keychain"
     steps:
       - uses: actions/checkout@v2
@@ -37,45 +55,37 @@ jobs:
         with:
           ruby-version: 2.6 # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - run: bundle exec fastlane archive
+      - run: bundle exec fastlane ${{ matrix.target-platform }} archive
         env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_READONLY: "true"
-      - run: hdiutil create -format ULFO -srcfolder archive TweetNest.xcarchive.dmg
-      - uses: actions/create-release@v1
-        id: create_release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: ${{ github.ref }}
-          draft: true
+      - run: hdiutil create -format ULFO -srcfolder archive "TweetNest ${{ matrix.target-platform }}.xcarchive.dmg"
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./TweetNest.xcarchive.dmg
-          asset_name: TweetNest.xcarchive.dmg
+          asset_path: ./TweetNest ${{ matrix.target-platform }}.xcarchive.dmg
+          asset_name: TweetNest ${{ matrix.target-platform }}.xcarchive.dmg
           asset_content_type: application/x-apple-diskimage
-      - run: bundle exec fastlane deploy_beta
-        env:
-          FASTLANE_USER: ${{ env.APPLE_ID }}
-          FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-          GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
-          GYM_OUTPUT_NAME: ${{ env.IPA_PATH }}
-          MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
-          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-          MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-          MATCH_READONLY: "true"
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-          asset_path: ./TweetNest.ipa
-          asset_name: TweetNest.ipa
-          asset_content_type: application/zip
+      # - run: bundle exec fastlane ${{ matrix.target-platform }} deploy_beta
+      #   env:
+      #     FASTLANE_USER: ${{ env.APPLE_ID }}
+      #     FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+      #     GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
+      #     GYM_OUTPUT_NAME: ${{ env.IPA_PATH }}
+      #     MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
+      #     MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+      #     MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+      #     MATCH_READONLY: "true"
+      # - uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+      #     asset_path: ./TweetNest ${{ matrix.target-platform }}.ipa
+      #     asset_name: TweetNest ${{ matrix.target-platform }}.ipa
+      #     asset_content_type: application/zip
