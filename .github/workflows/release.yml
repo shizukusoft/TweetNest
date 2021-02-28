@@ -11,6 +11,7 @@ jobs:
     name: Release
     runs-on: macOS-latest
     env:
+      APPLE_ID: "bot@sinoru.io"
       XCARCHIVE_PATH: "archive/TweetNest.xcarchive"
       IPA_PATH: "TweetNest.ipa"
     steps:
@@ -30,9 +31,9 @@ jobs:
           ruby-version: 2.6 # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: bundle exec fastlane archive
-        env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_READONLY: "true"
       - run: hdiutil create -format ULFO -srcfolder archive TweetNest.xcarchive.dmg
       - uses: actions/create-release@v1
         id: create_release
@@ -52,9 +53,12 @@ jobs:
           asset_content_type: application/x-apple-diskimage
       - run: bundle exec fastlane deploy_beta
         env:
+          FASTLANE_USER: ${{ env.APPLE_ID }}
+          FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           GYM_OUTPUT_NAME: ${{ env.IPA_PATH }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_READONLY: "true"
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
