@@ -49,57 +49,41 @@ public class Session {
             return completion(.success(session))
         }
 
-        let container = CKContainer(identifier: "iCloud.io.sinoru.TweetNestKit")
-        let database = container.publicCloudDatabase
+        fetchTwitterAPIInfo { twitterAPIInfoResult in
+            switch twitterAPIInfoResult {
+            case .success(let twitterAPIInfo):
+                let twitterSession = TwitterKit.Session(consumerKey: twitterAPIInfo.apiKey, consumerSecret: twitterAPIInfo.apiKeySecret)
 
-        let query = CKQuery(recordType: "TwitterAPIInfo", predicate: NSPredicate(value: true))
-        query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: true)]
-
-        database.perform(query, inZoneWith: .default) { (records, error) in
-            guard let records = records else {
-                completion(.failure(error!))
-                return
-            }
-
-            guard let apiKey: String = records.last?["apiKey"] else {
-                completion(.failure(SessionError.noAPIKey))
-                return
-            }
-
-            guard let apiKeySecret: String = records.last?["apiKeySecret"] else {
-                completion(.failure(SessionError.noAPIKeySecret))
-                return
-            }
-
-            let twitterSession = TwitterKit.Session(consumerKey: apiKey, consumerSecret: apiKeySecret)
-
-            guard let accountID = accountID else {
-                return completion(.success(twitterSession))
-            }
-
-            self.fetchToken(for: accountID) { (tokenResult) in
-                do {
-                    switch tokenResult {
-                    case .success(let token):
-                        guard let token = token else {
-                            return completion(.success(twitterSession))
-                        }
-
-                        let credential = try self.fetchCredential(for: token)
-
-                        twitterSession.oauth1Credential = credential
-
-                        self.mainQueue.async {
-                            self.twitterSessions[accountID] = twitterSession
-                        }
-
-                        completion(.success(twitterSession))
-                    case .failure(let error):
-                        throw error
-                    }
-                } catch {
-                    completion(.failure(error))
+                guard let accountID = accountID else {
+                    return completion(.success(twitterSession))
                 }
+
+                self.fetchToken(for: accountID) { (tokenResult) in
+                    do {
+                        switch tokenResult {
+                        case .success(let token):
+                            guard let token = token else {
+                                return completion(.success(twitterSession))
+                            }
+
+                            let credential = try self.fetchCredential(for: token)
+
+                            twitterSession.oauth1Credential = credential
+
+                            self.mainQueue.async {
+                                self.twitterSessions[accountID] = twitterSession
+                            }
+
+                            completion(.success(twitterSession))
+                        case .failure(let error):
+                            throw error
+                        }
+                    } catch {
+                        completion(.failure(error))
+                    }
+                }
+            case .failure(let error):
+                completion(.failure(error))
             }
         }
     }
@@ -171,6 +155,33 @@ public class Session {
             case .failure(let error):
                 resultHandler(.failure(error))
             }
+        }
+    }
+
+    private func fetchTwitterAPIInfo(completion: @escaping (Result<(apiKey: String, apiKeySecret: String), Swift.Error>) -> Void) {
+        let container = CKContainer(identifier: "iCloud.io.sinoru.TweetNestKit")
+        let database = container.publicCloudDatabase
+
+        let query = CKQuery(recordType: "TwitterAPIInfo", predicate: NSPredicate(value: true))
+        query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: true)]
+
+        database.perform(query, inZoneWith: .default) { (records, error) in
+            guard let records = records else {
+                completion(.failure(error!))
+                return
+            }
+
+            guard let apiKey: String = records.last?["apiKey"] else {
+                completion(.failure(SessionError.noAPIKey))
+                return
+            }
+
+            guard let apiKeySecret: String = records.last?["apiKeySecret"] else {
+                completion(.failure(SessionError.noAPIKeySecret))
+                return
+            }
+
+            completion(.success((apiKey: apiKey, apiKeySecret: apiKeySecret)))
         }
     }
 
