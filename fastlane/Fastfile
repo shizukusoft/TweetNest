@@ -18,12 +18,14 @@ default_platform(:ios)
 platform :ios do
   lane :archive do |options|
     sync_code_signing(type: "development")
+    disable_automatic_code_signing(path: "TweetNest.xcodeproj")
     build_app(
       **options,
       scheme: "TweetNest (iOS)",
       skip_package_ipa: true,
       skip_package_pkg: true
     )
+    enable_automatic_code_signing(path: "TweetNest.xcodeproj")
   end
 
   lane :deploy_beta do

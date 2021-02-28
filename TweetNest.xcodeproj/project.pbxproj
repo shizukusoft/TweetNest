@@ -1018,6 +1018,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1042,6 +1043,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
