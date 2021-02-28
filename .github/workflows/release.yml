@@ -21,6 +21,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+      - name: Setup Keychain
+        run: |
+          security create-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security default-keychain -s build.keychain
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" build.keychain
+          security set-key-partition-list -S apple-tool:,apple: -s -k actions build.keychain
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
       - uses: sinoru/actions-setup-xcode@v1.1
         with:
           xcode-version: 12.4
