@@ -1071,6 +1071,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1096,6 +1097,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};

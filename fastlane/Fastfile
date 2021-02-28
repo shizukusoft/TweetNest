@@ -21,8 +21,7 @@ platform :ios do
     update_code_signing_settings(use_automatic_signing: false)
     build_ios_app(
       **options,
-      skip_package_ipa: true,
-      skip_package_pkg: true
+      skip_package_ipa: true
     )
     update_code_signing_settings(use_automatic_signing: true)
   end
@@ -66,7 +65,6 @@ platform :mac do
     update_code_signing_settings(use_automatic_signing: false)
     build_mac_app(
       **options,
-      skip_package_ipa: true,
       skip_package_pkg: true
     )
     update_code_signing_settings(use_automatic_signing: true)
