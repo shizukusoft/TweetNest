@@ -12,8 +12,8 @@ jobs:
     runs-on: macOS-latest
     env:
       APPLE_ID: "bot@sinoru.io"
-      XCARCHIVE_PATH: "archive/TweetNest.xcarchive"
       IPA_PATH: "TweetNest.ipa"
+      XCARCHIVE_PATH: "archive/TweetNest.xcarchive"
     steps:
       - uses: actions/checkout@v2
       - name: Add Deploy Key
@@ -31,6 +31,7 @@ jobs:
           ruby-version: 2.6 # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
       - run: bundle exec fastlane archive
+        env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_READONLY: "true"
