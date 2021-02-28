@@ -27,7 +27,7 @@ jobs:
     strategy:
       matrix:
         target-platform: [iOS, macOS]
-        fail-fast: false
+      fail-fast: false
     runs-on: macOS-latest
     env:
       APPLE_ID: "bot@sinoru.io"
