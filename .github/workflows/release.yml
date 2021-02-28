@@ -1,0 +1,58 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Release
+
+jobs:
+  release:
+    name: Release
+    runs-on: macOS-latest
+    env:
+      XCARCHIVE_PATH: "archive/TweetNest.xcarchive"
+      IPA_PATH: "TweetNest.ipa"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: sinoru/actions-setup-xcode@v1.1
+        with:
+          xcode-version: ${{ matrix.xcode-version }}
+          apple-id: bot@sinoru.io
+          apple-id-password: ${{ secrets.APPLE_ID_PASSWORD }}
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6 # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+      - run: bundle exec fastlane archive
+        env:
+          GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
+      - run: hdiutil create -format ULFO -srcfolder archive TweetNest.xcarchive.dmg
+      - uses: actions/create-release@v1
+        id: create_release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref }}
+          draft: true
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./TweetNest.xcarchive.dmg
+          asset_name: TweetNest.xcarchive.dmg
+          asset_content_type: application/x-apple-diskimage
+      - run: bundle exec fastlane deploy_beta
+        env:
+          GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
+          GYM_OUTPUT_NAME: ${{ env.IPA_PATH }}
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          asset_path: ./TweetNest.ipa
+          asset_name: TweetNest.ipa
+          asset_content_type: application/zip
