@@ -55,7 +55,16 @@ jobs:
         with:
           ruby-version: 2.6 # Not needed with a .ruby-version file
           bundler-cache: true # runs 'bundle install' and caches installed gems automatically
-      - run: bundle exec fastlane ${{ matrix.target-platform }} archive
+      - run: bundle exec fastlane ios archive
+        if: ${{ matrix.target-platform == "iOS" }}
+        env:
+          GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
+          MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
+          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_READONLY: "true"
+      - run: bundle exec fastlane mac archive
+        if: ${{ matrix.target-platform == "macOS" }}
         env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}

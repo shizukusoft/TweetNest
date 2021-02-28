@@ -15,45 +15,93 @@
 
 default_platform(:ios)
 
-lane :archive do |options|
-  sync_code_signing(type: "development")
-  update_code_signing_settings(use_automatic_signing: false)
-  build_app(
-    **options,
-    skip_package_ipa: true,
-    skip_package_pkg: true
-  )
-  update_code_signing_settings(use_automatic_signing: true)
-end
-
-lane :deploy_beta do
-  export(export_method: "app-store")
-  upload_to_testflight
-end
-
-desc "Push a new beta build to TestFlight"
-lane :beta do
-  archive
-  deploy_beta
-end
-
-desc "Push a new release build to the App Store"
-lane :release do
-  increment_build_number(xcodeproj: "TweetNest.xcodeproj")
-  upload_to_app_store
-end
-
-private_lane :export do |options|
-  if options[:export_method] == "app-store"
-    sync_code_signing(type: "appstore")
-  elsif options[:export_method] == "development"
+platform :ios do
+  lane :archive do |options|
     sync_code_signing(type: "development")
-  else
-    sync_code_signing(type: "adhoc")
+    update_code_signing_settings(use_automatic_signing: false)
+    build_ios_app(
+      **options,
+      skip_package_ipa: true,
+      skip_package_pkg: true
+    )
+    update_code_signing_settings(use_automatic_signing: true)
   end
 
-  build_app(
-    **options,
-    skip_build_archive: true
-  )
+  lane :deploy_beta do
+    export(export_method: "app-store")
+    upload_to_testflight
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    archive
+    deploy_beta
+  end
+
+  desc "Push a new release build to the App Store"
+  lane :release do
+    increment_build_number(xcodeproj: "TweetNest.xcodeproj")
+    upload_to_app_store
+  end
+  
+  private_lane :export do |options|
+    if options[:export_method] == "app-store"
+      sync_code_signing(type: "appstore")
+    elsif options[:export_method] == "development"
+      sync_code_signing(type: "development")
+    else
+      sync_code_signing(type: "adhoc")
+    end
+
+    build_ios_app(
+      **options,
+      skip_build_archive: true
+    )
+  end
+end
+
+platform :mac do
+  lane :archive do |options|
+    sync_code_signing(type: "development")
+    update_code_signing_settings(use_automatic_signing: false)
+    build_mac_app(
+      **options,
+      skip_package_ipa: true,
+      skip_package_pkg: true
+    )
+    update_code_signing_settings(use_automatic_signing: true)
+  end
+
+  lane :deploy_beta do
+    export(export_method: "app-store")
+    upload_to_testflight
+  end
+
+  desc "Push a new beta build to TestFlight"
+  lane :beta do
+    archive
+    deploy_beta
+  end
+
+  desc "Push a new release build to the App Store"
+  lane :release do
+    increment_build_number(xcodeproj: "TweetNest.xcodeproj")
+    build_mac_app(scheme: "TweetNest (iOS)")
+    upload_to_app_store
+  end
+  
+  private_lane :export do |options|
+    if options[:export_method] == "app-store"
+      sync_code_signing(type: "appstore")
+    elsif options[:export_method] == "development"
+      sync_code_signing(type: "development")
+    else
+      sync_code_signing(type: "adhoc")
+    end
+
+    build_mac_app(
+      **options,
+      skip_build_archive: true
+    )
+  end
 end
