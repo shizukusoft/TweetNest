@@ -18,14 +18,14 @@ default_platform(:ios)
 platform :ios do
   lane :archive do |options|
     sync_code_signing(type: "development")
-    disable_automatic_code_signing(path: "TweetNest.xcodeproj")
+    update_code_signing_settings(use_automatic_signing: false)
     build_app(
       **options,
       scheme: "TweetNest (iOS)",
       skip_package_ipa: true,
       skip_package_pkg: true
     )
-    enable_automatic_code_signing(path: "TweetNest.xcodeproj")
+    update_code_signing_settings(use_automatic_signing: true)
   end
 
   lane :deploy_beta do
@@ -47,9 +47,9 @@ platform :ios do
   end
   
   private_lane :export do |options|
-    if options[export_method] == "app-store"
+    if options[:export_method] == "app-store"
       sync_code_signing(type: "appstore")
-    elsif options[export_method] == "development"
+    elsif options[:export_method] == "development"
       sync_code_signing(type: "development")
     else
       sync_code_signing(type: "adhoc")
