@@ -33,9 +33,11 @@ jobs:
       APPLE_ID: "bot@sinoru.io"
       IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
       KEYCHAIN_NAME: "build.keychain"
+      MATCH_READONLY: 1
+      PKG_PATH: "TweetNest (${{ matrix.target-platform }}).pkg"
+      SPACESHIP_SKIP_2FA_UPGRADE: 1
       XCARCHIVE_NAME: TweetNest (${{ matrix.target-platform }}).xcarchive
       XCARCHIVE_PATH: "archive/TweetNest (${{ matrix.target-platform }}).xcarchive"
-      PKG_PATH: "TweetNest (${{ matrix.target-platform }}).pkg"
     steps:
       - uses: actions/checkout@v2
       - name: Add Deploy Key
@@ -70,7 +72,6 @@ jobs:
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-          MATCH_READONLY: "true"
       - run: hdiutil create -format ULFO -srcfolder archive "$XCARCHIVE_NAME.dmg"
       - uses: actions/upload-release-asset@v1
         env:
@@ -91,7 +92,6 @@ jobs:
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-          MATCH_READONLY: "true"
       - name: Release (macOS)
         if: ${{ matrix.target-platform == 'macOS' }}
         run: bundle exec fastlane mac release
@@ -103,7 +103,6 @@ jobs:
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-          MATCH_READONLY: "true"
       - name: Upload IPA to Release
         if: ${{ matrix.target-platform == 'iOS' }}
         uses: actions/upload-release-asset@v1
