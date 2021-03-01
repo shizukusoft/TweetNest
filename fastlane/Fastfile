@@ -71,7 +71,7 @@ platform :mac do
   
   private_lane :export do |options|
     if options[:export_method] == "app-store"
-      sync_code_signing(type: "appstore")
+      sync_code_signing(type: "appstore", additional_cert_types: "mac_installer_distribution")
     elsif options[:export_method] == "development"
       sync_code_signing(type: "development")
     else
