@@ -1,5 +1,4 @@
 app_identifier("io.sinoru.TweetNest") # The bundle identifier of your app
-apple_id("sinoru@me.com") # Your Apple email address
 
 itc_team_id("97182105") # App Store Connect Team ID
 team_id("83XZ8ZBS6L") # Developer Portal Team ID
