@@ -32,9 +32,10 @@ jobs:
     env:
       APPLE_ID: "bot@sinoru.io"
       IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
+      KEYCHAIN_NAME: "build.keychain"
       XCARCHIVE_NAME: TweetNest (${{ matrix.target-platform }}).xcarchive
       XCARCHIVE_PATH: "archive/TweetNest (${{ matrix.target-platform }}).xcarchive"
-      KEYCHAIN_NAME: "build.keychain"
+      PKG_PATH: "TweetNest (${{ matrix.target-platform }}).pkg"
     steps:
       - uses: actions/checkout@v2
       - name: Add Deploy Key
@@ -75,25 +76,51 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ needs.create-release.outputs.release-upload-url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+          upload_url: ${{ needs.create-release.outputs.release-upload-url }}
           asset_path: ./${{ env.XCARCHIVE_NAME }}.dmg
           asset_name: ${{ env.XCARCHIVE_NAME }}.dmg
           asset_content_type: application/x-apple-diskimage
-      # - run: bundle exec fastlane ${{ matrix.target-platform }} deploy_beta
-      #   env:
-      #     FASTLANE_USER: ${{ env.APPLE_ID }}
-      #     FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-      #     GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
-      #     GYM_OUTPUT_NAME: ${{ env.IPA_PATH }}
-      #     MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
-      #     MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-      #     MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
-      #     MATCH_READONLY: "true"
-      # - uses: actions/upload-release-asset@v1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-      #     asset_path: ./TweetNest ${{ matrix.target-platform }}.ipa
-      #     asset_name: TweetNest ${{ matrix.target-platform }}.ipa
-      #     asset_content_type: application/zip
+      - name: Release (iOS)
+        if: ${{ matrix.target-platform == 'iOS' }}
+        run: bundle exec fastlane ios release
+        env:
+          FASTLANE_USER: ${{ env.APPLE_ID }}
+          FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
+          GYM_OUTPUT_NAME: ${{ env.IPA_PATH }}
+          MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
+          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_READONLY: "true"
+      - name: Release (macOS)
+        if: ${{ matrix.target-platform == 'macOS' }}
+        run: bundle exec fastlane mac release
+        env:
+          FASTLANE_USER: ${{ env.APPLE_ID }}
+          FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
+          GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
+          GYM_OUTPUT_NAME: ${{ env.PKG_PATH }}
+          MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
+          MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+          MATCH_READONLY: "true"
+      - name: Upload IPA to Release
+        if: ${{ matrix.target-platform == 'iOS' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.release-upload-url }}
+          asset_path: ./${{ env.IPA_PATH }}
+          asset_name: ${{ env.IPA_PATH }}
+          asset_content_type: application/zip
+      - name: Upload PKG to Release
+        if: ${{ matrix.target-platform == 'macOS' }}
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release.outputs.release-upload-url }}
+          asset_path: ./${{ env.PKG_PATH }}
+          asset_name: ${{ env.PKG_PATH }}
+          asset_content_type: application/octet-stream
