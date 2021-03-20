@@ -30,7 +30,7 @@ jobs:
       fail-fast: false
     runs-on: macOS-latest
     env:
-      APPLE_ID: "bot@sinoru.io"
+      APP_STORE_CONNECT_API_KEY_PATH: "AuthKey_4UD4U5446F.json"
       IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
       KEYCHAIN_NAME: "build.keychain"
       MATCH_READONLY: "true"
@@ -45,6 +45,16 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+      - name: Add App Store Connect API Key
+        run: |
+          cat <<EOF > "$APP_STORE_CONNECT_API_KEY_PATH"
+          {
+            "key_id": "D383SF739",
+            "issuer_id": "6053b7fe-68a8-4acb-89be-165aa6465141",
+            "key": "$(echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | sed 's/\\n/\n/g')",
+            "in_house": false, # optional but may be required if using match/sigh
+          }
+          EOF
       - name: Setup Keychain
         run: |
           security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
@@ -85,8 +95,6 @@ jobs:
         if: ${{ matrix.target-platform == 'iOS' }}
         run: bundle exec fastlane ios release
         env:
-          FASTLANE_USER: ${{ env.APPLE_ID }}
-          FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           GYM_OUTPUT_NAME: ${{ env.IPA_PATH }}
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
@@ -96,8 +104,6 @@ jobs:
         if: ${{ matrix.target-platform == 'macOS' }}
         run: bundle exec fastlane mac release
         env:
-          FASTLANE_USER: ${{ env.APPLE_ID }}
-          FASTLANE_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
           GYM_OUTPUT_NAME: ${{ env.PKG_PATH }}
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
