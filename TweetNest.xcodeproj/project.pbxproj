@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		194A61B525E918AC00394262 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 194A61B425E918AC00394262 /* CloudKit.framework */; };
 		194A61B725E918B900394262 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 194A61B625E918B900394262 /* CloudKit.framework */; };
+		197EF53226065DED00D877B7 /* TwitterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 197EF53126065DED00D877B7 /* TwitterKit */; };
+		197EF53326065DED00D877B7 /* TwitterKit in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 197EF53126065DED00D877B7 /* TwitterKit */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		197EF53526065DFF00D877B7 /* TwitterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 197EF53426065DFF00D877B7 /* TwitterKit */; };
+		197EF53626065DFF00D877B7 /* TwitterKit in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 197EF53426065DFF00D877B7 /* TwitterKit */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		19933D4825E901F5006AB4C0 /* Tests_iOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D4725E901F5006AB4C0 /* Tests_iOS.swift */; };
 		19933D5325E901F5006AB4C0 /* Tests_macOS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D5225E901F5006AB4C0 /* Tests_macOS.swift */; };
 		19933D5725E901F5006AB4C0 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */; };
@@ -28,9 +32,7 @@
 		19933E3725E90DA5006AB4C0 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933E3625E90DA5006AB4C0 /* Session.swift */; };
 		19933E3825E90DA5006AB4C0 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933E3625E90DA5006AB4C0 /* Session.swift */; };
 		19933E6525E90E0E006AB4C0 /* TwitterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 19933E6425E90E0E006AB4C0 /* TwitterKit */; };
-		19933E6625E90E0E006AB4C0 /* TwitterKit in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 19933E6425E90E0E006AB4C0 /* TwitterKit */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		19933E6825E90E11006AB4C0 /* TwitterKit in Frameworks */ = {isa = PBXBuildFile; productRef = 19933E6725E90E11006AB4C0 /* TwitterKit */; };
-		19933E6925E90E11006AB4C0 /* TwitterKit in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 19933E6725E90E11006AB4C0 /* TwitterKit */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		19933E7C25E90E42006AB4C0 /* KeychainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933E7B25E90E42006AB4C0 /* KeychainError.swift */; };
 		19933E7D25E90E42006AB4C0 /* KeychainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933E7B25E90E42006AB4C0 /* KeychainError.swift */; };
 		19933E8325E90E53006AB4C0 /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933E8225E90E53006AB4C0 /* PersistentCloudKitContainer.swift */; };
@@ -134,6 +136,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				19933DBB25E90CE2006AB4C0 /* TweetNestKit.framework in Embed Frameworks */,
+				197EF53626065DFF00D877B7 /* TwitterKit in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -145,28 +148,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				19933DFC25E90D43006AB4C0 /* TweetNestKit.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19933E5525E90DFB006AB4C0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				19933E6625E90E0E006AB4C0 /* TwitterKit in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19933E5F25E90E02006AB4C0 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				19933E6925E90E11006AB4C0 /* TwitterKit in Embed Frameworks */,
+				197EF53326065DED00D877B7 /* TwitterKit in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -226,6 +208,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				197EF53526065DFF00D877B7 /* TwitterKit in Frameworks */,
 				19933DBA25E90CE2006AB4C0 /* TweetNestKit.framework in Frameworks */,
 				194A61B525E918AC00394262 /* CloudKit.framework in Frameworks */,
 			);
@@ -235,6 +218,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				197EF53226065DED00D877B7 /* TwitterKit in Frameworks */,
 				19933DFB25E90D43006AB4C0 /* TweetNestKit.framework in Frameworks */,
 				194A61B725E918B900394262 /* CloudKit.framework in Frameworks */,
 			);
@@ -471,6 +455,9 @@
 				19933DB925E90CE2006AB4C0 /* PBXTargetDependency */,
 			);
 			name = "TweetNest (iOS)";
+			packageProductDependencies = (
+				197EF53426065DFF00D877B7 /* TwitterKit */,
+			);
 			productName = "TweetNest (iOS)";
 			productReference = 19933D3325E901F4006AB4C0 /* TweetNest.app */;
 			productType = "com.apple.product-type.application";
@@ -490,6 +477,9 @@
 				19933DFA25E90D43006AB4C0 /* PBXTargetDependency */,
 			);
 			name = "TweetNest (macOS)";
+			packageProductDependencies = (
+				197EF53126065DED00D877B7 /* TwitterKit */,
+			);
 			productName = "TweetNest (macOS)";
 			productReference = 19933D3B25E901F5006AB4C0 /* TweetNest.app */;
 			productType = "com.apple.product-type.application";
@@ -538,7 +528,6 @@
 				19933DA125E90CE2006AB4C0 /* Sources */,
 				19933DA225E90CE2006AB4C0 /* Frameworks */,
 				19933DA325E90CE2006AB4C0 /* Resources */,
-				19933E5525E90DFB006AB4C0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -579,7 +568,6 @@
 				19933DE225E90D43006AB4C0 /* Sources */,
 				19933DE325E90D43006AB4C0 /* Frameworks */,
 				19933DE425E90D43006AB4C0 /* Resources */,
-				19933E5F25E90E02006AB4C0 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1502,6 +1490,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		197EF53126065DED00D877B7 /* TwitterKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TwitterKit;
+		};
+		197EF53426065DFF00D877B7 /* TwitterKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = TwitterKit;
+		};
 		19933E6425E90E0E006AB4C0 /* TwitterKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 19933E5125E90DFB006AB4C0 /* XCRemoteSwiftPackageReference "TwitterKit.swift" */;
