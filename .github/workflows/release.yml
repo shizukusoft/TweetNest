@@ -35,6 +35,7 @@ jobs:
       IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
       KEYCHAIN_NAME: "build.keychain"
       MATCH_READONLY: "true"
+      DELIVER_FORCE: "true"
       PKG_PATH: "TweetNest (${{ matrix.target-platform }}).pkg"
       SPACESHIP_SKIP_2FA_UPGRADE: "true"
       XCARCHIVE_NAME: TweetNest (${{ matrix.target-platform }}).xcarchive
