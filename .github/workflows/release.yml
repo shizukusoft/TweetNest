@@ -30,6 +30,7 @@ jobs:
       fail-fast: false
     runs-on: macOS-latest
     env:
+      APPLE_ID: "bot@sinoru.io"
       APP_STORE_CONNECT_API_KEY_PATH: "AuthKey_4UD4U5446F.json"
       IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
       KEYCHAIN_NAME: "build.keychain"
@@ -51,7 +52,7 @@ jobs:
           {
             "key_id": "D383SF739",
             "issuer_id": "6053b7fe-68a8-4acb-89be-165aa6465141",
-            "key": "$(echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | sed 's/\\n/\n/g')",
+            "key": "$(echo '${{ secrets.APP_STORE_CONNECT_API_KEY }}' | awk '{printf "%s\\n", $0}'",
             "in_house": false, # optional but may be required if using match/sigh
           }
           EOF
@@ -64,7 +65,7 @@ jobs:
       - uses: sinoru/actions-setup-xcode@v1.1
         with:
           xcode-version: 12.4
-          apple-id: bot@sinoru.io
+          apple-id: ${{ env.APPLE_ID }}
           apple-id-password: ${{ secrets.APPLE_ID_PASSWORD }}
       - uses: ruby/setup-ruby@v1
         with:
