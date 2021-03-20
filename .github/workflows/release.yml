@@ -54,7 +54,8 @@ jobs:
           "issuer_id": "6053b7fe-68a8-4acb-89be-165aa6465141",
           "key": "$(echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | awk '{printf "%s\\n", $0}')",
           "in_house": false,
-          }EOF
+          }
+          EOF
       - name: Setup Keychain
         run: |
           security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
@@ -68,8 +69,8 @@ jobs:
           apple-id-password: ${{ secrets.APPLE_ID_PASSWORD }}
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.6 # Not needed with a .ruby-version file
-          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          ruby-version: 2.7
+          bundler-cache: true
       - name: Archive
         run: |
           case "${{ matrix.target-platform }}" in
