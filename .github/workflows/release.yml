@@ -52,7 +52,7 @@ jobs:
           {
           "key_id": "D383SF739",
           "issuer_id": "6053b7fe-68a8-4acb-89be-165aa6465141",
-          "key": "$(echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | awk '{printf "%s\\n", $0}')",
+          "key": "$(echo "${{ secrets.APP_STORE_CONNECT_API_KEY }}" | sed '$!s/$/\\n/' | tr -d '\n')",
           "in_house": false
           }
           EOF
