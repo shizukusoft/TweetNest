@@ -8,8 +8,16 @@
 import SwiftUI
 import TweetNestKit
 
+#if os(iOS)
+typealias ApplicationDelegateAdaptor = UIApplicationDelegateAdaptor
+#elseif os(macOS)
+typealias ApplicationDelegateAdaptor = NSApplicationDelegateAdaptor
+#endif
+
 @main
 struct TweetNestApp: App {
+    @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
+
     let session = TweetNestKit.Session.shared
 
     var body: some Scene {
