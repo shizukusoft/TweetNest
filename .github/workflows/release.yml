@@ -32,9 +32,9 @@ jobs:
     env:
       APPLE_ID: "bot@sinoru.io"
       APP_STORE_CONNECT_API_KEY_PATH: "AuthKey_4UD4U5446F.json"
+      DELIVER_RUN_PRECHECK_BEFORE_SUBMIT: "false"
       IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
       KEYCHAIN_NAME: "build.keychain"
-      MATCH_READONLY: "true"
       DELIVER_FORCE: "true"
       PKG_PATH: "TweetNest (${{ matrix.target-platform }}).pkg"
       SPACESHIP_SKIP_2FA_UPGRADE: "true"
