@@ -30,12 +30,15 @@ extension User {
 
         let newUserData = UserData(context: context)
         newUserData.id = twitterUser.id
+        newUserData.creationDate = userDatas.last?.creationDate
         newUserData.name = twitterUser.name
         newUserData.username = twitterUser.username
         newUserData.profileImageURL = twitterUser.profileImageURL
 
         if (newUserData == userDatas.last) {
             context.delete(newUserData)
+        } else {
+            newUserData.creationDate = Date()
         }
 
         return user
