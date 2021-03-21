@@ -33,13 +33,13 @@ jobs:
       APPLE_ID: "bot@sinoru.io"
       APP_STORE_CONNECT_API_KEY_PATH: "AuthKey_4UD4U5446F.json"
       DELIVER_RUN_PRECHECK_BEFORE_SUBMIT: "false"
-      IPA_PATH: "TweetNest (${{ matrix.target-platform }}).ipa"
+      IPA_PATH: "TweetNest-${{ matrix.target-platform }}.ipa"
       KEYCHAIN_NAME: "build.keychain"
       DELIVER_FORCE: "true"
-      PKG_PATH: "TweetNest (${{ matrix.target-platform }}).pkg"
+      PKG_PATH: "TweetNest-${{ matrix.target-platform }}.pkg"
       SPACESHIP_SKIP_2FA_UPGRADE: "true"
-      XCARCHIVE_NAME: TweetNest (${{ matrix.target-platform }}).xcarchive
-      XCARCHIVE_PATH: "archive/TweetNest (${{ matrix.target-platform }}).xcarchive"
+      XCARCHIVE_NAME: TweetNest-${{ matrix.target-platform }}.xcarchive
+      XCARCHIVE_PATH: "archive/TweetNest-${{ matrix.target-platform }}.xcarchive"
     steps:
       - uses: actions/checkout@v2
       - name: Add Deploy Key
@@ -108,7 +108,7 @@ jobs:
         run: bundle exec fastlane mac release
         env:
           GYM_ARCHIVE_PATH: ${{ env.XCARCHIVE_PATH }}
-          GYM_OUTPUT_NAME: ${{ env.PKG_PATH }}
+          GYM_OUTPUT_NAME: "TweetNest-${{ matrix.target-platform }}"
           MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
           MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
