@@ -676,7 +676,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -701,7 +701,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
