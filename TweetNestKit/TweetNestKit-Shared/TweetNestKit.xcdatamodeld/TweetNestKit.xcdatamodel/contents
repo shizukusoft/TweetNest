@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D74" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="17709" systemVersion="20D91" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Account" representedClassName="Account" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="token" optional="YES" attributeType="String"/>
@@ -9,6 +9,8 @@
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="user" inverseEntity="Account"/>
+        <relationship name="followerUsers" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="User" inverseName="followingUsers" inverseEntity="User"/>
+        <relationship name="followingUsers" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="User" inverseName="followerUsers" inverseEntity="User"/>
         <fetchedProperty name="userDatas" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="UserData" predicateString="id == $FETCH_SOURCE.id"/>
         </fetchedProperty>
@@ -22,7 +24,7 @@
     </entity>
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="74"/>
-        <element name="User" positionX="-63" positionY="0" width="128" height="95"/>
+        <element name="User" positionX="-63" positionY="0" width="128" height="125"/>
         <element name="UserData" positionX="-45" positionY="27" width="128" height="104"/>
     </elements>
 </model>
