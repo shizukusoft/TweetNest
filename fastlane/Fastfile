@@ -16,6 +16,15 @@
 default_platform(:ios)
 
 platform :ios do
+  lane :test do |options|
+    sync_code_signing(type: "development")
+    update_code_signing_settings(use_automatic_signing: false)
+    run_tests(
+      **options
+    )
+    update_code_signing_settings(use_automatic_signing: true)
+  end
+
   lane :archive do |options|
     sync_code_signing(type: "development")
     update_code_signing_settings(use_automatic_signing: false)
@@ -51,6 +60,15 @@ platform :ios do
 end
 
 platform :mac do
+  lane :test do |options|
+    sync_code_signing(type: "development")
+    update_code_signing_settings(use_automatic_signing: false)
+    run_tests(
+      **options
+    )
+    update_code_signing_settings(use_automatic_signing: true)
+  end
+
   lane :archive do |options|
     sync_code_signing(type: "development")
     update_code_signing_settings(use_automatic_signing: false)

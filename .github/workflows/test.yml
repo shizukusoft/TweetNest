@@ -9,6 +9,7 @@ on:
 
 env:
   APPLE_ID: "bot@sinoru.io"
+  KEYCHAIN_NAME: "build.keychain"
   RUBY_VERSION: 2.7
   XCODE_VERSION: 12.4
       
@@ -31,7 +32,7 @@ jobs:
 
   test-TweetNestKit-macOS:
     name: Test TweetNestKit (macOS)
-    runs-on: macos-latest
+    runs-on: macos-11.0
     steps:
     - uses: actions/checkout@v2
     - uses: sinoru/actions-setup-xcode@v2
@@ -59,13 +60,24 @@ jobs:
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
         bundler-cache: true
-    - run: bundle exec fastlane scan -s "TweetNest (iOS)"
+    - run: bundle exec fastlane ios test
 
   test-TweetNest-macOS:
     name: Test TweetNest (macOS)
-    runs-on: macos-latest
+    runs-on: macos-11.0
     steps:
     - uses: actions/checkout@v2
+    - name: Add Deploy Key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+    - name: Setup Keychain
+      run: |
+        security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+        security default-keychain -s "$KEYCHAIN_NAME"
+      env:
+        KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
     - uses: sinoru/actions-setup-xcode@v2
       with:
         xcode-version: ${{ env.XCODE_VERSION }}
@@ -75,4 +87,8 @@ jobs:
       with:
         ruby-version: ${{ env.RUBY_VERSION }}
         bundler-cache: true
-    - run: bundle exec fastlane scan -s "TweetNest (macOS)"
+    - run: bundle exec fastlane mac test
+      env:
+        MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
+        MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+        MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
