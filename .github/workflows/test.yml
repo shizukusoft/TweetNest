@@ -68,10 +68,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Add Deploy Key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
     - name: Setup Keychain
       run: |
         security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
