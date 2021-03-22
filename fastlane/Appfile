@@ -1,4 +1,4 @@
-app_identifier("io.sinoru.TweetNest") # The bundle identifier of your app
+app_identifier("app.tweetnest.TweetNest") # The bundle identifier of your app
 
 itc_team_id("97182105") # App Store Connect Team ID
 team_id("83XZ8ZBS6L") # Developer Portal Team ID
