@@ -51,6 +51,17 @@ jobs:
     runs-on: macos-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Add Deploy Key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+    - name: Setup Keychain
+      run: |
+        security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN_NAME"
+        security default-keychain -s "$KEYCHAIN_NAME"
+      env:
+        KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
     - uses: sinoru/actions-setup-xcode@v2
       with:
         xcode-version: ${{ env.XCODE_VERSION }}
@@ -61,6 +72,10 @@ jobs:
         ruby-version: ${{ env.RUBY_VERSION }}
         bundler-cache: true
     - run: bundle exec fastlane ios test
+      env:
+        MATCH_KEYCHAIN_NAME: ${{ env.KEYCHAIN_NAME }}
+        MATCH_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
+        MATCH_PASSWORD: ${{ secrets.APPLE_CERTIFICATES_PASSWORD }}
 
   test-TweetNest-macOS:
     name: Test TweetNest (macOS)
