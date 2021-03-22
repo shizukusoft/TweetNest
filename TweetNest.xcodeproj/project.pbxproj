@@ -674,9 +674,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -699,9 +699,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -727,9 +727,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -753,9 +753,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_io.sinoru.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -774,7 +774,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.sinoru.Tests-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -796,7 +796,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.sinoru.Tests-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -820,7 +820,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.sinoru.Tests-macOS";
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -842,7 +842,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 11.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "io.sinoru.Tests-macOS";
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;

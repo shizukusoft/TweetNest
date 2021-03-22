@@ -159,7 +159,7 @@ public class Session {
     }
 
     private func fetchTwitterAPIInfo(completion: @escaping (Result<(apiKey: String, apiKeySecret: String), Swift.Error>) -> Void) {
-        let container = CKContainer(identifier: "iCloud.io.sinoru.TweetNestKit")
+        let container = CKContainer(identifier: "iCloud.app.tweetnest.TweetNestKit")
         let database = container.publicCloudDatabase
 
         let query = CKQuery(recordType: "TwitterAPIInfo", predicate: NSPredicate(value: true))
@@ -201,7 +201,7 @@ public class Session {
                     kSecAttrServer as String: "api.twitter.com",
                     kSecValueData as String: tokenResponse.tokenSecret.data(using: .utf8)!,
                     kSecAttrSynchronizable as String: kCFBooleanTrue as Any,
-                    kSecAttrAccessGroup as String: "83XZ8ZBS6L.io.sinoru.TweetNestKit"
+                    kSecAttrAccessGroup as String: "83XZ8ZBS6L.app.tweetnest.TweetNestKit"
                 ]
 
                 let status = SecItemAdd(query as CFDictionary, nil)
@@ -244,7 +244,7 @@ public class Session {
             kSecAttrAccount as String: token,
             kSecAttrServer as String: "api.twitter.com",
             kSecAttrSynchronizable as String: kCFBooleanTrue as Any,
-            kSecAttrAccessGroup as String: "83XZ8ZBS6L.io.sinoru.TweetNestKit"
+            kSecAttrAccessGroup as String: "83XZ8ZBS6L.app.tweetnest.TweetNestKit"
         ]
 
         var item: CFTypeRef?

@@ -11,7 +11,7 @@ import CoreData
 class PersistentCloudKitContainer: NSPersistentCloudKitContainer {
     override class func defaultDirectoryURL() -> URL {
         return FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: "group.io.sinoru.TweetNestKit")?
+            .containerURL(forSecurityApplicationGroupIdentifier: "group.app.tweetnest.TweetNestKit")?
             .appendingPathComponent("Application Support/TweetNestKit") ?? super.defaultDirectoryURL()
     }
 }

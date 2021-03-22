@@ -593,7 +593,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKit;
+				PRODUCT_BUNDLE_IDENTIFIER = app.TweetNest.TweetNestKit;
 				PRODUCT_NAME = TweetNestKit;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -619,7 +619,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKit;
+				PRODUCT_BUNDLE_IDENTIFIER = app.TweetNest.TweetNestKit;
 				PRODUCT_NAME = TweetNestKit;
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -640,7 +640,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKitTests;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -660,7 +660,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKitTests;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -684,7 +684,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKit;
+				PRODUCT_BUNDLE_IDENTIFIER = app.TweetNest.TweetNestKit;
 				PRODUCT_NAME = TweetNestKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -710,7 +710,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKit;
+				PRODUCT_BUNDLE_IDENTIFIER = app.TweetNest.TweetNestKit;
 				PRODUCT_NAME = TweetNestKit;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -732,7 +732,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKitTests;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -752,7 +752,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = io.sinoru.TweetNestKitTests;
+				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
