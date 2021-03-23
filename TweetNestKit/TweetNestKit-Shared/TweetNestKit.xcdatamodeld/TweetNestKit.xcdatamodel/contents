@@ -7,10 +7,10 @@
     </entity>
     <entity name="User" representedClassName="User" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="followerUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="followingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="user" inverseEntity="Account"/>
-        <relationship name="followerUsers" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="User" inverseName="followingUsers" inverseEntity="User"/>
-        <relationship name="followingUsers" optional="YES" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="User" inverseName="followerUsers" inverseEntity="User"/>
         <fetchedProperty name="userDatas" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="UserData" predicateString="id == $FETCH_SOURCE.id"/>
         </fetchedProperty>
