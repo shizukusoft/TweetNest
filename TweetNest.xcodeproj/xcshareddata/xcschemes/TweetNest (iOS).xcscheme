@@ -38,6 +38,16 @@
                ReferencedContainer = "container:TweetNest.xcodeproj">
             </BuildableReference>
          </TestableReference>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "19365994260978EB00865D40"
+               BuildableName = "TweetNestUITests.xctest"
+               BlueprintName = "TweetNestUITests (iOS)"
+               ReferencedContainer = "container:TweetNest.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
    </TestAction>
    <LaunchAction
