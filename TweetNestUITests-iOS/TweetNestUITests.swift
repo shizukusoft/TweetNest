@@ -1,13 +1,13 @@
 //
-//  Tests_macOS.swift
-//  Tests macOS
+//  TweetNestUITests.swift
+//  TweetNestUITests
 //
-//  Created by Jaehong Kang on 2021/02/26.
+//  Created by Jaehong Kang on 2021/03/23.
 //
 
 import XCTest
 
-class Tests_macOS: XCTestCase {
+class TweetNestUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

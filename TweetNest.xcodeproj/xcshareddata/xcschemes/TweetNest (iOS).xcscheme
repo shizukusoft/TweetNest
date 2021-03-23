@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19933D3225E901F4006AB4C0"
+               BlueprintIdentifier = "19365979260978EA00865D40"
                BuildableName = "TweetNest.app"
                BlueprintName = "TweetNest (iOS)"
                ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -32,8 +32,8 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19933D4225E901F5006AB4C0"
-               BuildableName = "TweetNestTests (iOS).xctest"
+               BlueprintIdentifier = "19365989260978EB00865D40"
+               BuildableName = "TweetNestTests.xctest"
                BlueprintName = "TweetNestTests (iOS)"
                ReferencedContainer = "container:TweetNest.xcodeproj">
             </BuildableReference>
@@ -54,7 +54,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "19933D3225E901F4006AB4C0"
+            BlueprintIdentifier = "19365979260978EA00865D40"
             BuildableName = "TweetNest.app"
             BlueprintName = "TweetNest (iOS)"
             ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -71,7 +71,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "19933D3225E901F4006AB4C0"
+            BlueprintIdentifier = "19365979260978EA00865D40"
             BuildableName = "TweetNest.app"
             BlueprintName = "TweetNest (iOS)"
             ReferencedContainer = "container:TweetNest.xcodeproj">
