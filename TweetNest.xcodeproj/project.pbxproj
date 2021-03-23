@@ -220,66 +220,61 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		1936598D260978EB00865D40 /* TweetNestTests-iOS */ = {
+		1936598D260978EB00865D40 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				19365990260978EB00865D40 /* Info.plist */,
 			);
-			path = "TweetNestTests-iOS";
+			path = iOS;
 			sourceTree = "<group>";
 		};
-		19365998260978EB00865D40 /* TweetNestUITests-iOS */ = {
+		19365998260978EB00865D40 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				19365999260978EB00865D40 /* TweetNestUITests.swift */,
 				1936599B260978EB00865D40 /* Info.plist */,
 			);
-			path = "TweetNestUITests-iOS";
+			path = iOS;
 			sourceTree = "<group>";
 		};
-		19365A2D26097A9700865D40 /* TweetNestTests-macOS */ = {
+		19365A2D26097A9700865D40 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
 				19365A3026097A9700865D40 /* Info.plist */,
 			);
-			path = "TweetNestTests-macOS";
+			path = macOS;
 			sourceTree = "<group>";
 		};
-		19365A3826097A9700865D40 /* TweetNestUITests-macOS */ = {
+		19365A3826097A9700865D40 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
 				19365A3926097A9800865D40 /* TweetNestUITests.swift */,
 				19365A3B26097A9800865D40 /* Info.plist */,
 			);
-			path = "TweetNestUITests-macOS";
+			path = macOS;
 			sourceTree = "<group>";
 		};
-		19365ACE26097C3F00865D40 /* TweetNestTests-Shared */ = {
+		19365ACE26097C3F00865D40 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				1936598E260978EB00865D40 /* TweetNestTests.swift */,
 			);
-			path = "TweetNestTests-Shared";
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		19933D2325E901F3006AB4C0 = {
 			isa = PBXGroup;
 			children = (
-				19933D2825E901F3006AB4C0 /* TweetNest-Shared */,
-				19933D3525E901F4006AB4C0 /* TweetNest-iOS */,
-				19933D3C25E901F5006AB4C0 /* TweetNest-macOS */,
-				19365ACE26097C3F00865D40 /* TweetNestTests-Shared */,
-				1936598D260978EB00865D40 /* TweetNestTests-iOS */,
-				19365A2D26097A9700865D40 /* TweetNestTests-macOS */,
-				19365998260978EB00865D40 /* TweetNestUITests-iOS */,
-				19365A3826097A9700865D40 /* TweetNestUITests-macOS */,
+				19B042522609D2540009ECF8 /* TweetNest */,
+				19B042632609D2790009ECF8 /* TweetNestTests */,
+				19B042682609D28D0009ECF8 /* TweetNestUITests */,
 				19FA5DD626071B2900305895 /* TweetNestKit.xcodeproj */,
 				19933D3425E901F4006AB4C0 /* Products */,
 				19933E5B25E90E02006AB4C0 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
-		19933D2825E901F3006AB4C0 /* TweetNest-Shared */ = {
+		19933D2825E901F3006AB4C0 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */,
@@ -293,7 +288,7 @@
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
 				19365982260978EB00865D40 /* Preview Content */,
 			);
-			path = "TweetNest-Shared";
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		19933D3425E901F4006AB4C0 /* Products */ = {
@@ -309,24 +304,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		19933D3525E901F4006AB4C0 /* TweetNest-iOS */ = {
+		19933D3525E901F4006AB4C0 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */,
 				19933D3625E901F4006AB4C0 /* Info.plist */,
 				19933EF025E91277006AB4C0 /* TweetNest.entitlements */,
 			);
-			path = "TweetNest-iOS";
+			path = iOS;
 			sourceTree = "<group>";
 		};
-		19933D3C25E901F5006AB4C0 /* TweetNest-macOS */ = {
+		19933D3C25E901F5006AB4C0 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
 				1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */,
 				19933D3D25E901F5006AB4C0 /* Info.plist */,
 				19933D3E25E901F5006AB4C0 /* TweetNest.entitlements */,
 			);
-			path = "TweetNest-macOS";
+			path = macOS;
 			sourceTree = "<group>";
 		};
 		19933E5B25E90E02006AB4C0 /* Frameworks */ = {
@@ -334,6 +329,35 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		19B042522609D2540009ECF8 /* TweetNest */ = {
+			isa = PBXGroup;
+			children = (
+				19933D2825E901F3006AB4C0 /* Shared */,
+				19933D3525E901F4006AB4C0 /* iOS */,
+				19933D3C25E901F5006AB4C0 /* macOS */,
+			);
+			path = TweetNest;
+			sourceTree = "<group>";
+		};
+		19B042632609D2790009ECF8 /* TweetNestTests */ = {
+			isa = PBXGroup;
+			children = (
+				19365ACE26097C3F00865D40 /* Shared */,
+				1936598D260978EB00865D40 /* iOS */,
+				19365A2D26097A9700865D40 /* macOS */,
+			);
+			path = TweetNestTests;
+			sourceTree = "<group>";
+		};
+		19B042682609D28D0009ECF8 /* TweetNestUITests */ = {
+			isa = PBXGroup;
+			children = (
+				19365998260978EB00865D40 /* iOS */,
+				19365A3826097A9700865D40 /* macOS */,
+			);
+			path = TweetNestUITests;
 			sourceTree = "<group>";
 		};
 		19FA5DD726071B2900305895 /* Products */ = {
@@ -704,12 +728,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "TweetNest-iOS/TweetNest.entitlements";
+				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest-Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "TweetNest-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -728,12 +752,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "TweetNest-iOS/TweetNest.entitlements";
+				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest-Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "TweetNest-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -755,7 +779,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestTests-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestTests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -778,7 +802,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestTests-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestTests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -801,7 +825,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestUITests-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestUITests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -823,7 +847,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestUITests-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestUITests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -845,14 +869,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "TweetNest-macOS/TweetNest.entitlements";
+				CODE_SIGN_ENTITLEMENTS = TweetNest/macOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest-Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "TweetNest-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -871,14 +895,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "TweetNest-macOS/TweetNest.entitlements";
+				CODE_SIGN_ENTITLEMENTS = TweetNest/macOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest-Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = "TweetNest-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -900,7 +924,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestTests-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestTests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -923,7 +947,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestTests-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestTests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -945,7 +969,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestUITests-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestUITests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -967,7 +991,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestUITests-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestUITests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

@@ -120,14 +120,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		19B042812609D37F0009ECF8 /* TweetNestKit */ = {
+			isa = PBXGroup;
+			children = (
+				19FA5DED26071B3B00305895 /* Shared */,
+				19FA5E4026071D1000305895 /* iOS */,
+				19FA5DBE26071B2900305895 /* macOS */,
+			);
+			path = TweetNestKit;
+			sourceTree = "<group>";
+		};
+		19B0428A2609D3930009ECF8 /* TweetNestKitTests */ = {
+			isa = PBXGroup;
+			children = (
+				19FA5E4B26071D1000305895 /* iOS */,
+				19FA5DC926071B2900305895 /* macOS */,
+			);
+			path = TweetNestKitTests;
+			sourceTree = "<group>";
+		};
 		19FA5DB226071B2900305895 = {
 			isa = PBXGroup;
 			children = (
-				19FA5DED26071B3B00305895 /* TweetNestKit-Shared */,
-				19FA5E4026071D1000305895 /* TweetNestKit-iOS */,
-				19FA5DBE26071B2900305895 /* TweetNestKit-macOS */,
-				19FA5E4B26071D1000305895 /* TweetNestKitTests-iOS */,
-				19FA5DC926071B2900305895 /* TweetNestKitTests-macOS */,
+				19B042812609D37F0009ECF8 /* TweetNestKit */,
+				19B0428A2609D3930009ECF8 /* TweetNestKitTests */,
 				19FA5DBD26071B2900305895 /* Products */,
 				19FA5EEE26071E9A00305895 /* Frameworks */,
 			);
@@ -144,24 +160,24 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		19FA5DBE26071B2900305895 /* TweetNestKit-macOS */ = {
+		19FA5DBE26071B2900305895 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
 				19FA5DC026071B2900305895 /* Info.plist */,
 			);
-			path = "TweetNestKit-macOS";
+			path = macOS;
 			sourceTree = "<group>";
 		};
-		19FA5DC926071B2900305895 /* TweetNestKitTests-macOS */ = {
+		19FA5DC926071B2900305895 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
 				19FA5DCA26071B2900305895 /* TweetNestKitTests.swift */,
 				19FA5DCC26071B2900305895 /* Info.plist */,
 			);
-			path = "TweetNestKitTests-macOS";
+			path = macOS;
 			sourceTree = "<group>";
 		};
-		19FA5DED26071B3B00305895 /* TweetNestKit-Shared */ = {
+		19FA5DED26071B3B00305895 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
 				19FA5EA226071DBC00305895 /* Session.swift */,
@@ -178,24 +194,24 @@
 				19FA5EC226071E0500305895 /* UserData+CoreDataClass.swift */,
 				19FA5EC526071E0500305895 /* UserData+CoreDataProperties.swift */,
 			);
-			path = "TweetNestKit-Shared";
+			path = Shared;
 			sourceTree = "<group>";
 		};
-		19FA5E4026071D1000305895 /* TweetNestKit-iOS */ = {
+		19FA5E4026071D1000305895 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				19FA5E4226071D1000305895 /* Info.plist */,
 			);
-			path = "TweetNestKit-iOS";
+			path = iOS;
 			sourceTree = "<group>";
 		};
-		19FA5E4B26071D1000305895 /* TweetNestKitTests-iOS */ = {
+		19FA5E4B26071D1000305895 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
 				19FA5E4C26071D1000305895 /* TweetNestKitTests.swift */,
 				19FA5E4E26071D1000305895 /* Info.plist */,
 			);
-			path = "TweetNestKitTests-iOS";
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		19FA5EEE26071E9A00305895 /* Frameworks */ = {
@@ -586,7 +602,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "TweetNestKit-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKit/macOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -612,7 +628,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "TweetNestKit-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKit/macOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -634,7 +650,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestKitTests-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKitTests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -654,7 +670,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestKitTests-macOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKitTests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -677,7 +693,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "TweetNestKit-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKit/iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -703,7 +719,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "TweetNestKit-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKit/iOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -726,7 +742,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestKitTests-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKitTests/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -746,7 +762,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
-				INFOPLIST_FILE = "TweetNestKitTests-iOS/Info.plist";
+				INFOPLIST_FILE = TweetNestKitTests/iOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
