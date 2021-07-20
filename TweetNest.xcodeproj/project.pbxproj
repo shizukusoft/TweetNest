@@ -645,7 +645,7 @@
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -669,7 +669,7 @@
 				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -792,7 +792,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
 				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
@@ -818,7 +818,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
 				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";

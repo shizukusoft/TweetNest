@@ -54,23 +54,25 @@ struct AccountsListView: View {
             EditButton()
             #endif
 
-            Button(action: addAccount) {
+            Button(action: { Task { await addAccount() } }) {
                 Label("Add Account", systemImage: "plus")
             }
         }
     }
 
-    private func addAccount() {
+    private func addAccount() async {
         authorizationResult = nil
-        Session.shared.authorizeNewAccount { webAuthenticationSession in
-            DispatchQueue.main.async {
-                self.webAuthenticationSession = webAuthenticationSession
-            }
-        } resultHandler: { (result) in
-            DispatchQueue.main.async {
-                self.authorizationResult = result
+
+        do {
+            defer {
                 self.webAuthenticationSession = nil
             }
+
+            try await Session.shared.authorizeNewAccount { webAuthenticationSession in
+                self.webAuthenticationSession = webAuthenticationSession
+            }
+        } catch {
+            self.authorizationResult = .failure(error)
         }
     }
 
