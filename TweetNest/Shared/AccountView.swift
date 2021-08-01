@@ -11,54 +11,15 @@ import TweetNestKit
 struct AccountView: View {
     let account: Account
 
-    @FetchRequest
-    private var userDatas: FetchedResults<UserData>
-
-    var followingsCount: Int? {
-        userDatas.last?.followingUserIDs?.count
-    }
-
-    var followersCount: Int? {
-        userDatas.last?.followerUserIDs?.count
-    }
-
     @State var showErrorAlert: Bool = false
     @State var error: Error? = nil
 
     var body: some View {
-        List {
-            Section {
-                UserProfileView(userData: userDatas.last)
-                    .padding(8)
-
-                HStack {
-                    Text("Following:")
-                    Spacer()
-                    if let count = followingsCount {
-                        Text(String(count))
-                    }
-                }
-
-                HStack {
-                    Text("Followers:")
-                    Spacer()
-                    if let count = followersCount {
-                        Text(String(count))
-                    }
-                }
-            }
-
-            Section {
-                if let user = account.user {
-                    NavigationLink {
-                        UserAllDataView(user: user)
-                    } label: {
-                        Text("Show All Data")
-                    }
-                }
+        Group {
+            if let user = account.user {
+                UserView(user: user)
             }
         }
-        .navigationTitle(Text(account.user?.sortedUserDatas?.last?.name ?? "#\(account.id)"))
         .toolbar(content: {
             ToolbarItem(placement: .automatic) {
                 Button(action: refresh) {
@@ -75,15 +36,6 @@ struct AccountView: View {
         }
     }
 
-    init(account: Account) {
-        self.account = account
-        self._userDatas = FetchRequest(
-            sortDescriptors: [NSSortDescriptor(keyPath: \Account.creationDate, ascending: true)],
-            predicate: NSPredicate(format: "user.id == %@", account.user?.id ?? ""),
-            animation: .default
-        )
-    }
-
     func refresh() {
         Task {
             do {
@@ -95,3 +47,11 @@ struct AccountView: View {
         }
     }
 }
+
+#if DEBUG
+struct AccountView_Previews: PreviewProvider {
+    static var previews: some View {
+        AccountView(account: Account.preview)
+    }
+}
+#endif

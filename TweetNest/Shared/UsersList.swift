@@ -20,7 +20,7 @@ struct UsersList: View {
                 users.sorted(by: { userIDs.firstIndex(of: $0.id) ?? -1 < userIDs.firstIndex(of: $1.id) ?? -1})
             ) { user in
                 NavigationLink {
-                    UserAllDataView(user: user)
+                    UserView(user: user)
                 } label: {
                     HStack(spacing: 8) {
                         Group {

@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		190D12EF26B67F5F0090E474 /* UserAllDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12EE26B67F5F0090E474 /* UserAllDataView.swift */; };
-		190D12F026B67F5F0090E474 /* UserAllDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12EE26B67F5F0090E474 /* UserAllDataView.swift */; };
+		190D12EF26B67F5F0090E474 /* UserAllDataSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */; };
+		190D12F026B67F5F0090E474 /* UserAllDataSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */; };
 		190D12F226B682C20090E474 /* UsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12F126B682C20090E474 /* UsersList.swift */; };
 		190D12F326B682C20090E474 /* UsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12F126B682C20090E474 /* UsersList.swift */; };
 		1929B44526A716D10098CBC6 /* TweetNestKit in Frameworks */ = {isa = PBXBuildFile; productRef = 1929B44426A716D10098CBC6 /* TweetNestKit */; };
@@ -39,6 +39,10 @@
 		19365A6F26097B4A00865D40 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
 		19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
 		19365AD726097C5200865D40 /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1936598E260978EB00865D40 /* TweetNestTests.swift */; };
+		193AB25D26B6FD1200B18D45 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
+		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
+		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
+		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
 		19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */; };
 		19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */; };
 		19C3AAE926B56E660093D223 /* AddAccountButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE826B56E660093D223 /* AddAccountButton.swift */; };
@@ -106,7 +110,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		190D12EE26B67F5F0090E474 /* UserAllDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllDataView.swift; sourceTree = "<group>"; };
+		190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserAllDataSection.swift; sourceTree = "<group>"; };
 		190D12F126B682C20090E474 /* UsersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersList.swift; sourceTree = "<group>"; };
 		1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestAppDelegate.swift; sourceTree = "<group>"; };
 		1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
@@ -125,6 +129,7 @@
 		19365A3526097A9700865D40 /* TweetNestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19365A3926097A9800865D40 /* TweetNestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITests.swift; sourceTree = "<group>"; };
 		19365A3B26097A9800865D40 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		193AB25C26B6FD1200B18D45 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestApp.swift; sourceTree = "<group>"; };
 		19933D2C25E901F3006AB4C0 /* AccountsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSection.swift; sourceTree = "<group>"; };
 		19933D2E25E901F4006AB4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -137,6 +142,8 @@
 		19933EDA25E90F0A006AB4C0 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.Session.swift; sourceTree = "<group>"; };
 		19933EF025E91277006AB4C0 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
+		1995B92B26B6F1ED00AFCC9E /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
+		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C3AAE826B56E660093D223 /* AddAccountButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountButton.swift; sourceTree = "<group>"; };
 		19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSectionRow.swift; sourceTree = "<group>"; };
@@ -242,6 +249,31 @@
 			path = Shared;
 			sourceTree = "<group>";
 		};
+		193AB25926B6FCFA00B18D45 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				193AB25B26B6FD0700B18D45 /* Foundation */,
+				193AB25A26B6FD0000B18D45 /* SwiftUI */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		193AB25A26B6FD0000B18D45 /* SwiftUI */ = {
+			isa = PBXGroup;
+			children = (
+				19C7378926B6DE25005CFCC9 /* Image.swift */,
+			);
+			path = SwiftUI;
+			sourceTree = "<group>";
+		};
+		193AB25B26B6FD0700B18D45 /* Foundation */ = {
+			isa = PBXGroup;
+			children = (
+				193AB25C26B6FD1200B18D45 /* URL.swift */,
+			);
+			path = Foundation;
+			sourceTree = "<group>";
+		};
 		19933D2325E901F3006AB4C0 = {
 			isa = PBXGroup;
 			children = (
@@ -264,13 +296,14 @@
 				19933D2C25E901F3006AB4C0 /* AccountsSection.swift */,
 				19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */,
 				19933ECC25E90EEA006AB4C0 /* AccountView.swift */,
+				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
 				19C7378326B6DC96005CFCC9 /* UserProfileView.swift */,
-				190D12EE26B67F5F0090E474 /* UserAllDataView.swift */,
+				190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
 				19933EDA25E90F0A006AB4C0 /* ImageView.swift */,
 				19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */,
-				19C7378926B6DE25005CFCC9 /* Image.swift */,
+				193AB25926B6FCFA00B18D45 /* Extensions */,
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
 				19365982260978EB00865D40 /* Preview Content */,
 			);
@@ -294,6 +327,7 @@
 			isa = PBXGroup;
 			children = (
 				1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */,
+				1995B93526B6F9E000AFCC9E /* SafariView.swift */,
 				19933D3625E901F4006AB4C0 /* Info.plist */,
 				19933EF025E91277006AB4C0 /* TweetNest.entitlements */,
 			);
@@ -582,16 +616,19 @@
 				193659B4260978F900865D40 /* TweetNestApp.swift in Sources */,
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
 				193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
+				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				193659B1260978F900865D40 /* WebAuthenticationView.swift in Sources */,
 				19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */,
+				1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */,
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				19C7378426B6DC96005CFCC9 /* UserProfileView.swift in Sources */,
 				193659B2260978F900865D40 /* AccountsSection.swift in Sources */,
+				1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				193659B5260978F900865D40 /* AccountView.swift in Sources */,
 				193659AF260978F900865D40 /* TweetNestKit.Session.swift in Sources */,
-				190D12EF26B67F5F0090E474 /* UserAllDataView.swift in Sources */,
+				190D12EF26B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -628,9 +665,10 @@
 				19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				19C7378526B6DC96005CFCC9 /* UserProfileView.swift in Sources */,
 				19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */,
+				1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				19365A6526097B4800865D40 /* ImageView.swift in Sources */,
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
-				190D12F026B67F5F0090E474 /* UserAllDataView.swift in Sources */,
+				190D12F026B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

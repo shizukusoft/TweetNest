@@ -1,6 +1,6 @@
 //
-//  UserAllDataView.swift
-//  UserAllDataView
+//  UserAllDataSection.swift
+//  UserAllDataSection
 //
 //  Created by Jaehong Kang on 2021/08/01.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 import TweetNestKit
 
-struct UserAllDataView: View {
+struct UserAllDataSection: View {
     private static let itemFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -22,7 +22,7 @@ struct UserAllDataView: View {
     private var userDatas: FetchedResults<UserData>
 
     var body: some View {
-        List {
+        Section("All Data") {
             ForEach(userDatas) { userData in
                 NavigationLink {
                     List {
@@ -57,13 +57,12 @@ struct UserAllDataView: View {
                 }
             }
         }
-        .navigationTitle("All Data")
     }
 
     init(user: User) {
         self.user = user
         self._userDatas = FetchRequest(
-            sortDescriptors: [NSSortDescriptor(keyPath: \Account.creationDate, ascending: true)],
+            sortDescriptors: [NSSortDescriptor(keyPath: \User.creationDate, ascending: false)],
             predicate: NSPredicate(format: "user.id == %@", user.id),
             animation: .default
         )
@@ -71,9 +70,9 @@ struct UserAllDataView: View {
 }
 
 #if DEBUG
-struct UserAllDataView_Previews: PreviewProvider {
+struct UserAllDataSection_Previews: PreviewProvider {
     static var previews: some View {
-        UserAllDataView(user: Account.preview.user!)
+        UserAllDataSection(user: Account.preview.user!)
     }
 }
 #endif
