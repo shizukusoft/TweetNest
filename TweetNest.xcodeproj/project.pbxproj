@@ -45,6 +45,10 @@
 		19C3AAEA26B56E660093D223 /* AddAccountButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE826B56E660093D223 /* AddAccountButton.swift */; };
 		19C3AAEF26B58A720093D223 /* AccountsSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */; };
 		19C3AAF026B58A720093D223 /* AccountsSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */; };
+		19C7378426B6DC96005CFCC9 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378326B6DC96005CFCC9 /* UserProfileView.swift */; };
+		19C7378526B6DC96005CFCC9 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378326B6DC96005CFCC9 /* UserProfileView.swift */; };
+		19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
+		19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -136,6 +140,8 @@
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C3AAE826B56E660093D223 /* AddAccountButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountButton.swift; sourceTree = "<group>"; };
 		19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSectionRow.swift; sourceTree = "<group>"; };
+		19C7378326B6DC96005CFCC9 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
+		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -258,11 +264,13 @@
 				19933D2C25E901F3006AB4C0 /* AccountsSection.swift */,
 				19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */,
 				19933ECC25E90EEA006AB4C0 /* AccountView.swift */,
+				19C7378326B6DC96005CFCC9 /* UserProfileView.swift */,
 				190D12EE26B67F5F0090E474 /* UserAllDataView.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
 				19933EDA25E90F0A006AB4C0 /* ImageView.swift */,
 				19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */,
+				19C7378926B6DE25005CFCC9 /* Image.swift */,
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
 				19365982260978EB00865D40 /* Preview Content */,
 			);
@@ -577,7 +585,9 @@
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				193659B1260978F900865D40 /* WebAuthenticationView.swift in Sources */,
+				19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */,
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
+				19C7378426B6DC96005CFCC9 /* UserProfileView.swift in Sources */,
 				193659B2260978F900865D40 /* AccountsSection.swift in Sources */,
 				193659B5260978F900865D40 /* AccountView.swift in Sources */,
 				193659AF260978F900865D40 /* TweetNestKit.Session.swift in Sources */,
@@ -614,7 +624,9 @@
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
 				19365A6826097B4800865D40 /* TweetNestKit.Session.swift in Sources */,
+				19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */,
 				19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */,
+				19C7378526B6DC96005CFCC9 /* UserProfileView.swift in Sources */,
 				19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */,
 				19365A6526097B4800865D40 /* ImageView.swift in Sources */,
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,

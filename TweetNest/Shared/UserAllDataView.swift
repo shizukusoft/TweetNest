@@ -26,37 +26,28 @@ struct UserAllDataView: View {
             ForEach(userDatas) { userData in
                 NavigationLink {
                     List {
-                        if let name = userData.name {
-                            HStack {
-                                Text("Name")
-                                Spacer()
-                                Text(name)
-                            }
+                        Section {
+                            UserProfileView(userData: userData)
+                                .padding(8)
                         }
 
-                        if let username = userData.username {
-                            HStack {
-                                Text("Username")
-                                Spacer()
-                                Text("@\(username)")
+                        Section {
+                            if let followingUserIDs = userData.followingUserIDs {
+                                NavigationLink {
+                                    UsersList(userIDs: followingUserIDs)
+                                        .navigationTitle(Text("Followings (\(followingUserIDs.count))"))
+                                } label: {
+                                    Text("Followings (\(followingUserIDs.count))")
+                                }
                             }
-                        }
 
-                        if let followingUserIDs = userData.followingUserIDs {
-                            NavigationLink {
-                                UsersList(userIDs: followingUserIDs)
-                                    .navigationTitle(Text("Followings (\(followingUserIDs.count))"))
-                            } label: {
-                                Text("Followings (\(followingUserIDs.count))")
-                            }
-                        }
-
-                        if let followerUserIDs = userData.followerUserIDs {
-                            NavigationLink {
-                                UsersList(userIDs: followerUserIDs)
-                                    .navigationTitle(Text("Followers (\(followerUserIDs.count))"))
-                            } label: {
-                                Text("Followers (\(followerUserIDs.count))")
+                            if let followerUserIDs = userData.followerUserIDs {
+                                NavigationLink {
+                                    UsersList(userIDs: followerUserIDs)
+                                        .navigationTitle(Text("Followers (\(followerUserIDs.count))"))
+                                } label: {
+                                    Text("Followers (\(followerUserIDs.count))")
+                                }
                             }
                         }
                     }

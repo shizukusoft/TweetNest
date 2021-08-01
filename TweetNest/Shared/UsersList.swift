@@ -23,13 +23,17 @@ struct UsersList: View {
                     UserAllDataView(user: user)
                 } label: {
                     HStack(spacing: 8) {
-                        AsyncImage(url: user.sortedUserDatas?.last?.profileImageURL) { image in
-                            image.resizable()
-                        } placeholder: {
-                            ProgressView()
+                        Group {
+                            if let profileImage = Image(data: user.sortedUserDatas?.last?.profileImageData) {
+                                profileImage
+                                    .resizable()
+                            } else {
+                                Color.gray
+                            }
                         }
                         .frame(width: 24, height: 24)
                         .cornerRadius(16)
+
                         HStack(spacing: 4) {
                             Text(user.sortedUserDatas?.last?.name ?? "#\(user.id)")
 

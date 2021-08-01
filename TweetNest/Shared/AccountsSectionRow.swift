@@ -45,10 +45,13 @@ struct AccountsSectionRow: View {
                 Label {
                     Text(account.user?.sortedUserDatas?.last?.username ?? (account.user?.id).flatMap { "#\($0)" } ?? Self.itemFormatter.string(from: account.creationDate!))
                 } icon: {
-                    AsyncImage(url: account.user?.sortedUserDatas?.last?.profileImageURL) { image in
-                        image.resizable()
-                    } placeholder: {
-                        ProgressView()
+                    Group {
+                        if let profileImage = Image(data: account.user?.sortedUserDatas?.last?.profileImageData) {
+                            profileImage
+                                .resizable()
+                        } else {
+                            Color.gray
+                        }
                     }
                     .frame(width: 16, height: 16)
                     .cornerRadius(8)

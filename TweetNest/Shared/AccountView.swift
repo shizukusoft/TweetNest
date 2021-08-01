@@ -14,24 +14,6 @@ struct AccountView: View {
     @FetchRequest
     private var userDatas: FetchedResults<UserData>
 
-    var profileImageURL: URL {
-        let profileImageURL = userDatas.last?.profileImageURL ?? URL(string: "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png")!
-
-        return profileImageURL
-            .deletingLastPathComponent()
-            .appendingPathComponent(profileImageURL.lastPathComponent.replacingOccurrences(of: "_normal.", with: "."))
-    }
-
-    var name: String {
-        userDatas.last?.name ?? "#\(account.id)"
-    }
-
-    var username: String? {
-        userDatas.last?.username.flatMap {
-            "@\($0)"
-        }
-    }
-
     var followingsCount: Int? {
         userDatas.last?.followingUserIDs?.count
     }
@@ -46,21 +28,8 @@ struct AccountView: View {
     var body: some View {
         List {
             Section {
-                HStack(spacing: 8) {
-                    AsyncImage(url: profileImageURL) { image in
-                        image.resizable()
-                    } placeholder: {
-                        ProgressView()
-                    }
-                    .frame(width: 50, height: 50)
-                    .cornerRadius(25)
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(name)
-                        if let username = username {
-                            Text(username)
-                        }
-                    }
-                }
+                UserProfileView(userData: userDatas.last)
+                    .padding(8)
 
                 HStack {
                     Text("Following:")
