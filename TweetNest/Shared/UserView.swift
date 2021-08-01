@@ -63,9 +63,11 @@ struct UserView: View {
                 #endif
             }
         }
+        #if os(iOS)
         .sheet(item: $safariSheetURL) {
             SafariView(url: $0)
         }
+        #endif
     }
 }
 
