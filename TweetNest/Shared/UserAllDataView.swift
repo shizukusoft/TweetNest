@@ -79,8 +79,10 @@ struct UserAllDataView: View {
     }
 }
 
+#if DEBUG
 struct UserAllDataView_Previews: PreviewProvider {
     static var previews: some View {
         UserAllDataView(user: Account.preview.user!)
     }
 }
+#endif

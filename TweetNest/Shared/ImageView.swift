@@ -49,8 +49,10 @@ struct ImageView: View {
     }
 }
 
+#if DEBUG
 struct ImageView_Previews: PreviewProvider {
     static var previews: some View {
         ImageView(url: URL(string: "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png")!, placeholderImage: nil)
     }
 }
+#endif

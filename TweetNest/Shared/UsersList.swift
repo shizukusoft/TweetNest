@@ -56,8 +56,10 @@ struct UsersList: View {
     }
 }
 
+#if DEBUG
 struct UsersList_Previews: PreviewProvider {
     static var previews: some View {
         UsersList(userIDs: [])
     }
 }
+#endif

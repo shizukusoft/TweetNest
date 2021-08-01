@@ -58,8 +58,10 @@ struct AccountsSectionRow: View {
     }
 }
 
+#if DEBUG
 struct AccountsSectionRow_Previews: PreviewProvider {
     static var previews: some View {
         AccountsSectionRow(account: .preview, navigationItemSelection: .constant(nil))
     }
 }
+#endif

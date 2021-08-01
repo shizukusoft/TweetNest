@@ -64,8 +64,10 @@ struct AddAccountButton: View {
     }
 }
 
+#if DEBUG
 struct AddAccountButton_Previews: PreviewProvider {
     static var previews: some View {
         AddAccountButton()
     }
 }
+#endif

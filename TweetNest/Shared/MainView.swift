@@ -18,8 +18,10 @@ struct MainView: View {
     }
 }
 
+#if DEBUG
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
         MainView().environment(\.managedObjectContext, Session.preview.container.viewContext)
     }
 }
+#endif

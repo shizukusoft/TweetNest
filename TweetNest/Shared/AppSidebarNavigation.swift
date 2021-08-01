@@ -39,9 +39,11 @@ struct AppSidebarNavigation: View {
     }
 }
 
+#if DEBUG
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
         AppSidebarNavigation()
             .environment(\.managedObjectContext, Session.preview.container.viewContext)
     }
 }
+#endif
