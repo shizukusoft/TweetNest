@@ -14,9 +14,7 @@ struct MainView: View {
     @State var selectedAccount: Account?
 
     var body: some View {
-        NavigationView {
-            AccountsListView(selectedAccount: $selectedAccount)
-        }
+        AppSidebarNavigation()
     }
 }
 
