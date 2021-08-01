@@ -17,22 +17,30 @@ default_platform(:ios)
 
 platform :ios do
   lane :test do |options|
-    sync_code_signing(type: "development")
-    update_code_signing_settings(use_automatic_signing: false)
+    if is_ci
+      sync_code_signing(type: "development")
+      update_code_signing_settings(use_automatic_signing: false)
+    end
     run_tests(
       **options
     )
-    update_code_signing_settings(use_automatic_signing: true)
+    if is_ci
+      update_code_signing_settings(use_automatic_signing: true)
+    end
   end
 
   lane :archive do |options|
-    sync_code_signing(type: "development")
-    update_code_signing_settings(use_automatic_signing: false)
+    if is_ci
+      sync_code_signing(type: "development")
+      update_code_signing_settings(use_automatic_signing: false)
+    end
     build_ios_app(
       **options,
       skip_package_ipa: true
     )
-    update_code_signing_settings(use_automatic_signing: true)
+    if is_ci
+      update_code_signing_settings(use_automatic_signing: true)
+    end
   end
 
   desc "Push a new release build to the App Store"
@@ -44,12 +52,14 @@ platform :ios do
   end
   
   private_lane :export do |options|
-    if options[:export_method] == "app-store"
-      sync_code_signing(type: "appstore")
-    elsif options[:export_method] == "development"
-      sync_code_signing(type: "development")
-    else
-      sync_code_signing(type: "adhoc")
+    if is_ci
+      if options[:export_method] == "app-store"
+        sync_code_signing(type: "appstore")
+      elsif options[:export_method] == "development"
+        sync_code_signing(type: "development")
+      else
+        sync_code_signing(type: "adhoc")
+      end
     end
 
     build_ios_app(
@@ -61,22 +71,30 @@ end
 
 platform :mac do
   lane :test do |options|
-    sync_code_signing(type: "development")
-    update_code_signing_settings(use_automatic_signing: false)
+    if is_ci
+      sync_code_signing(type: "development")
+      update_code_signing_settings(use_automatic_signing: false)
+    end
     run_tests(
       **options
     )
-    update_code_signing_settings(use_automatic_signing: true)
+    if is_ci
+      update_code_signing_settings(use_automatic_signing: true)
+    end
   end
 
   lane :archive do |options|
-    sync_code_signing(type: "development")
-    update_code_signing_settings(use_automatic_signing: false)
+    if is_ci
+      sync_code_signing(type: "development")
+      update_code_signing_settings(use_automatic_signing: false)
+    end
     build_mac_app(
       **options,
       skip_package_pkg: true
     )
-    update_code_signing_settings(use_automatic_signing: true)
+    if is_ci
+      update_code_signing_settings(use_automatic_signing: true)
+    end
   end
 
   desc "Push a new release build to the App Store"
@@ -88,12 +106,14 @@ platform :mac do
   end
   
   private_lane :export do |options|
-    if options[:export_method] == "app-store"
-      sync_code_signing(type: "appstore", additional_cert_types: "mac_installer_distribution")
-    elsif options[:export_method] == "development"
-      sync_code_signing(type: "development")
-    else
-      sync_code_signing(type: "adhoc")
+    if is_ci
+      if options[:export_method] == "app-store"
+        sync_code_signing(type: "appstore", additional_cert_types: "mac_installer_distribution")
+      elsif options[:export_method] == "development"
+        sync_code_signing(type: "development")
+      else
+        sync_code_signing(type: "adhoc")
+      end
     end
 
     build_mac_app(
