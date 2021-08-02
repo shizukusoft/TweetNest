@@ -11,8 +11,9 @@ import OrderedCollections
 
 struct UsersList: View {
     private let userIDs: OrderedSet<String>
-    @FetchRequest
-    private var users: FetchedResults<User>
+
+    @FetchRequest private var users: FetchedResults<User>
+    @State private var searchQuery: String = ""
 
     var body: some View {
         List {
@@ -44,6 +45,22 @@ struct UsersList: View {
                         }
                     }
                 }
+            }
+        }
+        .searchable(text: $searchQuery)
+        .onChange(of: searchQuery) { newSearchQuery in
+            if newSearchQuery.isEmpty {
+                users.nsPredicate = NSPredicate(format: "id IN %@", Array(userIDs))
+            } else {
+                users.nsPredicate = NSCompoundPredicate(
+                    andPredicateWithSubpredicates: [
+                        NSPredicate(format: "id IN %@", Array(userIDs)),
+                        NSCompoundPredicate(orPredicateWithSubpredicates: [
+                            NSPredicate(format: "ANY userDatas.name CONTAINS[cd] %@", newSearchQuery),
+                            NSPredicate(format: "ANY userDatas.username CONTAINS[cd] %@", newSearchQuery)
+                        ])
+                    ]
+                )
             }
         }
     }
