@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="options.css" />
+    <title>Mirror Block</title>
+  </head>
+  <body>
+    <div class="whole">
+      <fieldset>
+        <legend>Options</legend>
+        <div class="option-item">
+          <label class="field checkbox-field">
+            <input type="checkbox" id="outlineBlockUser" disabled />
+            <span data-i18n-text="outline_user_blocked_me"></span>
+          </label>
+        </div>
+        <div class="option-item">
+          <label class="field checkbox-field">
+            <input type="checkbox" id="enableBlockReflection" disabled />
+            <span data-i18n-text="enable_block_reflection"></span>
+          </label>
+          <div class="info-option">
+            <p data-i18n-text="enable_block_reflection_description"></p>
+          </div>
+        </div>
+        <div class="option-item">
+          <label class="field checkbox-field">
+            <input type="checkbox" id="blockMutedUser" disabled />
+            <span data-i18n-text="block_muted_user"></span>
+          </label>
+          <div class="info-option">
+            <p data-i18n-text="block_muted_user_description"></p>
+          </div>
+        </div>
+        <div class="option-item">
+          <label class="field checkbox-field">
+            <input type="checkbox" id="alwaysImmediatelyBlockMode" disabled />
+            <span data-i18n-text="always_immediately_block_mode"></span>
+          </label>
+          <div class="info-option">
+            <p data-i18n-text="always_immediately_block_mode_description"></p>
+          </div>
+        </div>
+      </fieldset>
+      <hr />
+      <a href="https://github.com/gaeulbyul/MirrorBlock" rel="noopener noreferrer">Mirror Block</a>
+      <small>
+        &lt;by
+        <a href="https://twitter.com/gaeulbyul" rel="noopener noreferrer">@gaeulbyul</a>&gt; /
+        Version
+        <span id="version"></span>
+      </small>
+    </div>
+    <script src="../vendor/browser-polyfill.min.js"></script>
+    <script src="/bundled/options_ui.bun.js"></script>
+  </body>
+</html>
