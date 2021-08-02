@@ -839,10 +839,8 @@ function initialize() {
         setTimeout(initialize, 500);
     }
 }
-requestIdleCallback(initialize, {
-    timeout: 10000
-});
 
+initialize()
 
 /***/ }),
 
@@ -981,10 +979,7 @@ function userCellDetector(state) {
                     continue;
                 }
                 observer.unobserve(ent.target);
-                requestIdleCallback(()=>elem.dispatchEvent(event)
-                , {
-                    timeout: 1000
-                });
+                elem.dispatchEvent(event);
             }
         });
         intObserver.observe(elem);
@@ -1034,10 +1029,7 @@ function tweetDetector(state) {
                     continue;
                 }
                 observer.unobserve(ent.target);
-                requestIdleCallback(()=>elem.dispatchEvent(event)
-                , {
-                    timeout: 1000
-                });
+                elem.dispatchEvent(event);
             }
         });
         intObserver.observe(elem);
