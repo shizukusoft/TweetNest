@@ -40,6 +40,7 @@
 		19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
 		19365AD726097C5200865D40 /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1936598E260978EB00865D40 /* TweetNestTests.swift */; };
 		193AB25D26B6FD1200B18D45 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
+		193AB28926B78ABB00B18D45 /* TweetNestKit in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 1929B44426A716D10098CBC6 /* TweetNestKit */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
@@ -93,6 +94,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				193AB28926B78ABB00B18D45 /* TweetNestKit in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -717,6 +719,7 @@
 		1936599C260978EB00865D40 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
@@ -742,6 +745,7 @@
 		1936599D260978EB00865D40 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
