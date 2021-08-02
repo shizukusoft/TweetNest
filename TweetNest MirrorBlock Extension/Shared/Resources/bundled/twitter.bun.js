@@ -864,10 +864,7 @@ function triggerPageEvent(eventName, eventDetail) {
     const requestEvent = new CustomEvent(`MirrorBlock->${eventName}`, {
         detail
     });
-    requestIdleCallback(()=>document.dispatchEvent(requestEvent)
-    , {
-        timeout: 5000
-    });
+    document.dispatchEvent(requestEvent);
 }
 async function insertSingleUserIntoStore(user) {
     triggerPageEvent('insertSingleUserIntoStore', {
