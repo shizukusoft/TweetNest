@@ -24,27 +24,7 @@ struct UserView: View {
 
     var body: some View {
         List {
-            Section {
-                UserProfileView(userData: lastUserData)
-                    .padding(8)
-
-                if let followingUsersCount = lastUserData?.followingUserIDs?.count {
-                    HStack {
-                        Text("Following:")
-                        Spacer()
-                        Text(String(followingUsersCount))
-                    }
-                }
-
-                if let followerUsersCount = lastUserData?.followerUserIDs?.count {
-                    HStack {
-                        Text("Followers:")
-                        Spacer()
-                        Text(String(followerUsersCount))
-                    }
-                }
-            }
-
+            UserProfileSection(userData: lastUserData)
             UserAllDataSection(user: user)
         }
         .navigationTitle(Text(lastUserData?.name ?? "#\(user.id)"))

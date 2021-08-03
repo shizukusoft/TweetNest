@@ -72,10 +72,10 @@
 		19C3AAEA26B56E660093D223 /* AddAccountButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE826B56E660093D223 /* AddAccountButton.swift */; };
 		19C3AAEF26B58A720093D223 /* AccountsSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */; };
 		19C3AAF026B58A720093D223 /* AccountsSectionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */; };
-		19C7378426B6DC96005CFCC9 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378326B6DC96005CFCC9 /* UserProfileView.swift */; };
-		19C7378526B6DC96005CFCC9 /* UserProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378326B6DC96005CFCC9 /* UserProfileView.swift */; };
 		19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
 		19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
+		19DA23D126B98767002436DC /* UserProfileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserProfileSection.swift */; };
+		19DA23D226B98767002436DC /* UserProfileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserProfileSection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -222,8 +222,8 @@
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C3AAE826B56E660093D223 /* AddAccountButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddAccountButton.swift; sourceTree = "<group>"; };
 		19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsSectionRow.swift; sourceTree = "<group>"; };
-		19C7378326B6DC96005CFCC9 /* UserProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileView.swift; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
+		19DA23D026B98767002436DC /* UserProfileSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileSection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -439,7 +439,7 @@
 				19C3AAEE26B58A720093D223 /* AccountsSectionRow.swift */,
 				19933ECC25E90EEA006AB4C0 /* AccountView.swift */,
 				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
-				19C7378326B6DC96005CFCC9 /* UserProfileView.swift */,
+				19DA23D026B98767002436DC /* UserProfileSection.swift */,
 				190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
@@ -852,6 +852,7 @@
 				19C3AAEF26B58A720093D223 /* AccountsSectionRow.swift in Sources */,
 				193659B6260978F900865D40 /* ImageView.swift in Sources */,
 				193659B4260978F900865D40 /* TweetNestApp.swift in Sources */,
+				19DA23D126B98767002436DC /* UserProfileSection.swift in Sources */,
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
 				193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
@@ -861,7 +862,6 @@
 				19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */,
 				1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */,
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
-				19C7378426B6DC96005CFCC9 /* UserProfileView.swift in Sources */,
 				193659B2260978F900865D40 /* AccountsSection.swift in Sources */,
 				1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				193659B5260978F900865D40 /* AccountView.swift in Sources */,
@@ -892,6 +892,7 @@
 			files = (
 				19C3AAEA26B56E660093D223 /* AddAccountButton.swift in Sources */,
 				19C3AAF026B58A720093D223 /* AccountsSectionRow.swift in Sources */,
+				19DA23D226B98767002436DC /* UserProfileSection.swift in Sources */,
 				19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
 				19365A6426097B4800865D40 /* AccountsSection.swift in Sources */,
 				19365A6226097B4800865D40 /* AccountView.swift in Sources */,
@@ -901,7 +902,6 @@
 				19365A6826097B4800865D40 /* TweetNestKit.Session.swift in Sources */,
 				19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */,
 				19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */,
-				19C7378526B6DC96005CFCC9 /* UserProfileView.swift in Sources */,
 				19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */,
 				1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				19365A6526097B4800865D40 /* ImageView.swift in Sources */,

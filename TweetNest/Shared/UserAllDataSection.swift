@@ -19,30 +19,7 @@ struct UserAllDataSection: View {
             ForEach(userDatas) { userData in
                 NavigationLink {
                     List {
-                        Section {
-                            UserProfileView(userData: userData)
-                                .padding(8)
-                        }
-
-                        Section {
-                            if let followingUserIDs = userData.followingUserIDs {
-                                NavigationLink {
-                                    UsersList(userIDs: followingUserIDs)
-                                        .navigationTitle(Text("Followings (\(followingUserIDs.count))"))
-                                } label: {
-                                    Text("Followings (\(followingUserIDs.count))")
-                                }
-                            }
-
-                            if let followerUserIDs = userData.followerUserIDs {
-                                NavigationLink {
-                                    UsersList(userIDs: followerUserIDs)
-                                        .navigationTitle(Text("Followers (\(followerUserIDs.count))"))
-                                } label: {
-                                    Text("Followers (\(followerUserIDs.count))")
-                                }
-                            }
-                        }
+                        UserProfileSection(userData: userData)
                     }
                     .navigationTitle(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
                 } label: {
