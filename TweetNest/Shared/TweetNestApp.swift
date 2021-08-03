@@ -19,7 +19,6 @@ struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
 
     let session = TweetNestKit.Session.shared
-        .initialize()
 
     var body: some Scene {
         WindowGroup {
