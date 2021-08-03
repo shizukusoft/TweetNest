@@ -11,6 +11,8 @@ import TweetNestKit
 struct AccountView: View {
     let account: Account
 
+    @State var isRefreshing: Bool = false
+
     @State var showErrorAlert: Bool = false
     @State var error: Error? = nil
 
@@ -25,6 +27,7 @@ struct AccountView: View {
                 Button(action: refresh) {
                     Label("Refresh", systemImage: "arrow.clockwise")
                 }
+                .disabled(isRefreshing)
             }
         })
         .alert("Error", isPresented: $showErrorAlert, presenting: error) { _ in
@@ -37,12 +40,21 @@ struct AccountView: View {
     }
 
     func refresh() {
+        guard isRefreshing == false else {
+            return
+        }
+
+        isRefreshing = true
+
         Task {
             do {
                 try await Session.shared.updateAccount(account)
+
+                isRefreshing = false
             } catch {
                 self.error = error
                 showErrorAlert = true
+                isRefreshing = false
             }
         }
     }
