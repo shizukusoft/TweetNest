@@ -51,6 +51,10 @@ extension TweetNestAppDelegate: UIApplicationDelegate {
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-        try? self.scheduleRefresh()
+        do {
+            try scheduleRefresh()
+        } catch {
+            debugPrint(error)
+        }
     }
 }
