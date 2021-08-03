@@ -39,7 +39,7 @@ struct AccountView: View {
     func refresh() {
         Task {
             do {
-                try await account.updateUser()
+                try await Session.shared.updateAccount(account)
             } catch {
                 self.error = error
                 showErrorAlert = true
