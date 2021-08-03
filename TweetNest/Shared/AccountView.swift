@@ -7,6 +7,9 @@
 
 import SwiftUI
 import TweetNestKit
+#if os(iOS)
+import UIKit
+#endif
 
 struct AccountView: View {
     let account: Account
@@ -56,15 +59,29 @@ struct AccountView: View {
 
         isRefreshing = true
 
-        do {
-            try await Session.shared.updateAccount(account)
+        let task = Task {
+            do {
+                try await Session.shared.updateAccount(account)
 
-            isRefreshing = false
-        } catch {
-            self.error = error
-            showErrorAlert = true
-            isRefreshing = false
+                isRefreshing = false
+            } catch {
+                self.error = error
+                showErrorAlert = true
+                isRefreshing = false
+            }
         }
+
+        #if os(iOS)
+        let backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
+            task.cancel()
+        }
+        #endif
+
+        await task.value
+
+        #if os(iOS)
+        await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+        #endif
     }
 }
 
