@@ -9,13 +9,6 @@ import SwiftUI
 import TweetNestKit
 
 struct AccountsSectionRow: View {
-    private static let itemFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .medium
-        return formatter
-    }()
-
     let account: Account
 
     @Binding var navigationItemSelection: AppSidebarNavigation.NavigationItem?
@@ -43,7 +36,7 @@ struct AccountsSectionRow: View {
                 AccountView(account: account)
             } label: {
                 Label {
-                    Text(account.user?.sortedUserDatas?.last?.username ?? (account.user?.id).flatMap { "#\($0)" } ?? Self.itemFormatter.string(from: account.creationDate!))
+                    Text(account.user?.sortedUserDatas?.last?.username ?? (account.user?.id).flatMap { "#\($0)" } ?? account.creationDate!.formatted(date: .abbreviated, time: .standard))
                 } icon: {
                     Group {
                         if let profileImage = Image(data: account.user?.sortedUserDatas?.last?.profileImageData) {

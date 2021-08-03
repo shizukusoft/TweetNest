@@ -9,13 +9,6 @@ import SwiftUI
 import TweetNestKit
 
 struct UserAllDataSection: View {
-    private static let itemFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .medium
-        return formatter
-    }()
-        
     let user: User
 
     @FetchRequest
@@ -51,9 +44,9 @@ struct UserAllDataSection: View {
                             }
                         }
                     }
-                    .navigationTitle(userData.creationDate.flatMap { Self.itemFormatter.string(from: $0) } ?? userData.objectID.description)
+                    .navigationTitle(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
                 } label: {
-                    Text(userData.creationDate.flatMap { Self.itemFormatter.string(from: $0) } ?? userData.objectID.description)
+                    Text(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
                 }
             }
         }
