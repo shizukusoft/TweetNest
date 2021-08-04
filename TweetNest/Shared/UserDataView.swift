@@ -18,6 +18,20 @@ struct UserDataView: View {
             }
 
             Section {
+                if let creationDate = userData.creationDate {
+                    Label("Joined \(creationDate.formatted(date: .numeric, time: .standard))", systemImage: "calendar")
+                }
+
+                if userData.isProtected {
+                    Label("Protected", systemImage: "lock")
+                }
+
+                if userData.isVerified {
+                    Label("Verified", systemImage: "checkmark.seal")
+                }
+            }
+
+            Section {
                 if let followingUserIDs = userData.followingUserIDs, followingUserIDs.isEmpty == false {
                     NavigationLink {
                         UsersList(userIDs: followingUserIDs)
