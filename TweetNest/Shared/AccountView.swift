@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TweetNestKit
+import UnifiedLogging
 #if os(iOS)
 import UIKit
 #endif
@@ -65,6 +66,7 @@ struct AccountView: View {
 
                 isRefreshing = false
             } catch {
+                Logger().error("Error occured: \(String(reflecting: error))")
                 self.error = error
                 showErrorAlert = true
                 isRefreshing = false
