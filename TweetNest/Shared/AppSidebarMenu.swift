@@ -1,26 +1,40 @@
 //
-//  AddAccountButton.swift
-//  AddAccountButton
+//  AppSidebarMenu.swift
+//  AppSidebarMenu
 //
-//  Created by Jaehong Kang on 2021/07/31.
+//  Created by Jaehong Kang on 2021/08/04.
 //
 
 import SwiftUI
 import TweetNestKit
 import AuthenticationServices
 
-struct AddAccountButton: View {
+struct AppSidebarMenu: View {
     @State var webAuthenticationSession: ASWebAuthenticationSession?
     @State var isAddingAccount: Bool = false
+
+    @State var showAccountsEditor: Bool = false
+
     @State var showErrorAlert: Bool = false
     @State var error: Error? = nil
 
     var body: some View {
         ZStack {
-            Button(action: addAccount) {
-                Label("Add Account", systemImage: "plus")
+            Menu {
+                Button(action: addAccount) {
+                    Label("Add Account", systemImage: "plus")
+                }
+                .disabled(isAddingAccount)
+
+                Button {
+                    showAccountsEditor.toggle()
+                } label: {
+                    Text("Edit Accounts")
+                }
+            } label: {
+                Label("Menu", systemImage: "ellipsis.circle")
+                    .labelStyle(.iconOnly)
             }
-            .disabled(isAddingAccount)
 
             if let webAuthenticationSession = webAuthenticationSession {
                 WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
@@ -32,6 +46,18 @@ struct AddAccountButton: View {
         } message: {
             $0.flatMap {
                 Text($0.localizedDescription)
+            }
+        }
+        .sheet(isPresented: $showAccountsEditor) {
+            NavigationView {
+                AccountsEditorView()
+                    .toolbar {
+                        ToolbarItemGroup(placement: .cancellationAction) {
+                            Button("Cancel", role: .cancel) {
+                                showAccountsEditor.toggle()
+                            }
+                        }
+                    }
             }
         }
     }
@@ -64,10 +90,8 @@ struct AddAccountButton: View {
     }
 }
 
-#if DEBUG
-struct AddAccountButton_Previews: PreviewProvider {
+struct AppSidebarMenu_Previews: PreviewProvider {
     static var previews: some View {
-        AddAccountButton()
+        AppSidebarMenu()
     }
 }
-#endif
