@@ -24,7 +24,11 @@ struct UserView: View {
 
     var body: some View {
         List {
-            UserProfileSection(userData: lastUserData)
+            if let lastUserData = lastUserData {
+                Section("Latest Profile") {
+                    UserDataProfileView(userData: lastUserData)
+                }
+            }
             UserAllDataSection(user: user)
         }
         .navigationTitle(Text(lastUserData?.name ?? "#\(user.id)"))

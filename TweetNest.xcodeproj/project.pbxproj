@@ -44,12 +44,12 @@
 		193659B1260978F900865D40 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */; };
 		193659B3260978F900865D40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		193659B4260978F900865D40 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */; };
-		193659B5260978F900865D40 /* AccountProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ECC25E90EEA006AB4C0 /* AccountProfileView.swift */; };
+		193659B5260978F900865D40 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ECC25E90EEA006AB4C0 /* AccountView.swift */; };
 		193659B6260978F900865D40 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /* ImageView.swift */; };
 		193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */; };
 		19365A3A26097A9800865D40 /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19365A3926097A9800865D40 /* TweetNestUITests.swift */; };
 		19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */; };
-		19365A6226097B4800865D40 /* AccountProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ECC25E90EEA006AB4C0 /* AccountProfileView.swift */; };
+		19365A6226097B4800865D40 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ECC25E90EEA006AB4C0 /* AccountView.swift */; };
 		19365A6326097B4800865D40 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EB925E90ECD006AB4C0 /* MainView.swift */; };
 		19365A6526097B4800865D40 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /* ImageView.swift */; };
 		19365A6626097B4800865D40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
@@ -65,6 +65,8 @@
 		1989B75126BA4A2000755B1E /* AppSidebarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B74F26BA4A2000755B1E /* AppSidebarMenu.swift */; };
 		1989B75326BA4AD100755B1E /* AccountsEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75226BA4AD100755B1E /* AccountsEditorView.swift */; };
 		1989B75426BA4AD100755B1E /* AccountsEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75226BA4AD100755B1E /* AccountsEditorView.swift */; };
+		1989B75626BA537900755B1E /* UserDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDataView.swift */; };
+		1989B75726BA537900755B1E /* UserDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDataView.swift */; };
 		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
@@ -72,8 +74,8 @@
 		19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */; };
 		19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
 		19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
-		19DA23D126B98767002436DC /* UserProfileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserProfileSection.swift */; };
-		19DA23D226B98767002436DC /* UserProfileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserProfileSection.swift */; };
+		19DA23D126B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
+		19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -205,13 +207,14 @@
 		193AB25C26B6FD1200B18D45 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
 		1989B74F26BA4A2000755B1E /* AppSidebarMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarMenu.swift; sourceTree = "<group>"; };
 		1989B75226BA4AD100755B1E /* AccountsEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsEditorView.swift; sourceTree = "<group>"; };
+		1989B75526BA537900755B1E /* UserDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataView.swift; sourceTree = "<group>"; };
 		19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestApp.swift; sourceTree = "<group>"; };
 		19933D2E25E901F4006AB4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		19933D3625E901F4006AB4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19933D3D25E901F5006AB4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19933D3E25E901F5006AB4C0 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		19933EB925E90ECD006AB4C0 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		19933ECC25E90EEA006AB4C0 /* AccountProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountProfileView.swift; sourceTree = "<group>"; };
+		19933ECC25E90EEA006AB4C0 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuthenticationView.swift; sourceTree = "<group>"; };
 		19933EDA25E90F0A006AB4C0 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.Session.swift; sourceTree = "<group>"; };
@@ -220,7 +223,7 @@
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
-		19DA23D026B98767002436DC /* UserProfileSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileSection.swift; sourceTree = "<group>"; };
+		19DA23D026B98767002436DC /* UserDataProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -433,10 +436,11 @@
 				19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */,
 				1989B74F26BA4A2000755B1E /* AppSidebarMenu.swift */,
 				1989B75226BA4AD100755B1E /* AccountsEditorView.swift */,
-				19933ECC25E90EEA006AB4C0 /* AccountProfileView.swift */,
+				19933ECC25E90EEA006AB4C0 /* AccountView.swift */,
 				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
-				19DA23D026B98767002436DC /* UserProfileSection.swift */,
 				190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */,
+				1989B75526BA537900755B1E /* UserDataView.swift */,
+				19DA23D026B98767002436DC /* UserDataProfileView.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
 				19933EDA25E90F0A006AB4C0 /* ImageView.swift */,
@@ -846,7 +850,7 @@
 			files = (
 				193659B6260978F900865D40 /* ImageView.swift in Sources */,
 				193659B4260978F900865D40 /* TweetNestApp.swift in Sources */,
-				19DA23D126B98767002436DC /* UserProfileSection.swift in Sources */,
+				19DA23D126B98767002436DC /* UserDataProfileView.swift in Sources */,
 				1989B75326BA4AD100755B1E /* AccountsEditorView.swift in Sources */,
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
 				193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
@@ -859,7 +863,8 @@
 				1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */,
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */,
-				193659B5260978F900865D40 /* AccountProfileView.swift in Sources */,
+				193659B5260978F900865D40 /* AccountView.swift in Sources */,
+				1989B75626BA537900755B1E /* UserDataView.swift in Sources */,
 				193659AF260978F900865D40 /* TweetNestKit.Session.swift in Sources */,
 				190D12EF26B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 			);
@@ -885,9 +890,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19DA23D226B98767002436DC /* UserProfileSection.swift in Sources */,
+				19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */,
 				19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
-				19365A6226097B4800865D40 /* AccountProfileView.swift in Sources */,
+				1989B75726BA537900755B1E /* UserDataView.swift in Sources */,
+				19365A6226097B4800865D40 /* AccountView.swift in Sources */,
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,

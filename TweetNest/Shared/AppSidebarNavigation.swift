@@ -33,9 +33,9 @@ struct AppSidebarNavigation: View {
                 ForEach(accounts) { account in
                     Section {
                         NavigationLink(tag: .profile(account), selection: $navigationItemSelection) {
-                            AccountProfileView(account: account)
+                            AccountView(account: account)
                         } label: {
-                            Label("Profile", systemImage: "person")
+                            Label("Account", systemImage: "person")
                         }
 
                         NavigationLink(tag: .followings(account), selection: $navigationItemSelection) {

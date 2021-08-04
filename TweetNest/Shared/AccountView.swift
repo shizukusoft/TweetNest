@@ -1,5 +1,5 @@
 //
-//  AccountProfileView.swift
+//  AccountView.swift
 //  TweetNest
 //
 //  Created by Jaehong Kang on 2021/02/24.
@@ -11,7 +11,7 @@ import TweetNestKit
 import UIKit
 #endif
 
-struct AccountProfileView: View {
+struct AccountView: View {
     let account: Account
 
     @State var isRefreshing: Bool = false
@@ -88,7 +88,7 @@ struct AccountProfileView: View {
 #if DEBUG
 struct AccountView_Previews: PreviewProvider {
     static var previews: some View {
-        AccountProfileView(account: Account.preview)
+        AccountView(account: Account.preview)
     }
 }
 #endif

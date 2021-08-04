@@ -18,10 +18,8 @@ struct UserAllDataSection: View {
         Section("All Data") {
             ForEach(userDatas) { userData in
                 NavigationLink {
-                    List {
-                        UserProfileSection(userData: userData)
-                    }
-                    .navigationTitle(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
+                    UserDataView(userData: userData)
+                        .navigationTitle(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
                 } label: {
                     Text(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
                 }
