@@ -7,6 +7,7 @@
 
 import UIKit
 import BackgroundTasks
+import UnifiedLogging
 import TweetNestKit
 
 extension TweetNestAppDelegate: UIApplicationDelegate {
@@ -21,7 +22,7 @@ extension TweetNestAppDelegate: UIApplicationDelegate {
         do {
             try Session.shared.scheduleRefresh()
         } catch {
-            debugPrint(error)
+            Logger().error("Error occured while schedule refresh: \(String(describing: error))")
         }
     }
 }
