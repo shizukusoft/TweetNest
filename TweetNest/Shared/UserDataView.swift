@@ -13,7 +13,9 @@ struct UserDataView: View {
 
     var body: some View {
         List {
-            UserDataProfileSection(title: "Profile", userData: userData)
+            Section("Profile") {
+                UserDataProfileView(userData: userData)
+            }
 
             Section {
                 if let followingUserIDs = userData.followingUserIDs, followingUserIDs.isEmpty == false {

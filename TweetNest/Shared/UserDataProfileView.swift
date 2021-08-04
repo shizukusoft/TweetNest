@@ -1,6 +1,6 @@
 //
-//  UserDataProfileSection.swift
-//  UserDataProfileSection
+//  UserDataProfileView.swift
+//  UserDataProfileView
 //
 //  Created by Jaehong Kang on 2021/08/03.
 //
@@ -8,12 +8,11 @@
 import SwiftUI
 import TweetNestKit
 
-struct UserDataProfileSection<Title>: View where Title: StringProtocol{
-    let title: Title
+struct UserDataProfileView: View {
     let userData: UserData
 
     var body: some View {
-        Section(title) {
+        Group {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
                     Group {
@@ -84,7 +83,7 @@ struct UserDataProfileSection<Title>: View where Title: StringProtocol{
 //#if DEBUG
 //struct UserProfileSection_Previews: PreviewProvider {
 //    static var previews: some View {
-//        UserDataProfileSection(userData: nil)
+//        UserDataProfileView(userData: nil)
 //    }
 //}
 //#endif

@@ -25,7 +25,13 @@ struct UserView: View {
     var body: some View {
         List {
             if let lastUserData = lastUserData {
-                UserDataProfileSection(title: "Latest Profile", userData: lastUserData)
+                Section {
+                    UserDataProfileView(userData: lastUserData)
+                } header: {
+                    Text("Latest Profile")
+                } footer: {
+                    Text("#\(Int(user.id)?.formatted() ?? user.id)")
+                }
             }
             UserAllDataSection(user: user)
         }
