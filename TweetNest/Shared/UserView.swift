@@ -25,9 +25,7 @@ struct UserView: View {
     var body: some View {
         List {
             if let lastUserData = lastUserData {
-                Section("Latest Profile") {
-                    UserDataProfileView(userData: lastUserData)
-                }
+                UserDataProfileSection(title: "Latest Profile", userData: lastUserData)
             }
             UserAllDataSection(user: user)
         }

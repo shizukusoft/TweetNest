@@ -13,23 +13,7 @@ struct UserDataView: View {
 
     var body: some View {
         List {
-            Section("Profile") {
-                UserDataProfileView(userData: userData)
-            }
-
-            Section {
-                if let creationDate = userData.creationDate {
-                    Label("Joined \(creationDate.formatted(date: .numeric, time: .standard))", systemImage: "calendar")
-                }
-
-                if userData.isProtected {
-                    Label("Protected", systemImage: "lock")
-                }
-
-                if userData.isVerified {
-                    Label("Verified", systemImage: "checkmark.seal")
-                }
-            }
+            UserDataProfileSection(title: "Profile", userData: userData)
 
             Section {
                 if let followingUserIDs = userData.followingUserIDs, followingUserIDs.isEmpty == false {

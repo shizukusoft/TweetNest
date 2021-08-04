@@ -74,8 +74,8 @@
 		19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */; };
 		19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
 		19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
-		19DA23D126B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
-		19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
+		19DA23D126B98767002436DC /* UserDataProfileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileSection.swift */; };
+		19DA23D226B98767002436DC /* UserDataProfileSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileSection.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -223,7 +223,7 @@
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
-		19DA23D026B98767002436DC /* UserDataProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataProfileView.swift; sourceTree = "<group>"; };
+		19DA23D026B98767002436DC /* UserDataProfileSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataProfileSection.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -440,7 +440,7 @@
 				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
 				190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */,
 				1989B75526BA537900755B1E /* UserDataView.swift */,
-				19DA23D026B98767002436DC /* UserDataProfileView.swift */,
+				19DA23D026B98767002436DC /* UserDataProfileSection.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
 				19933EDA25E90F0A006AB4C0 /* ImageView.swift */,
@@ -850,7 +850,7 @@
 			files = (
 				193659B6260978F900865D40 /* ImageView.swift in Sources */,
 				193659B4260978F900865D40 /* TweetNestApp.swift in Sources */,
-				19DA23D126B98767002436DC /* UserDataProfileView.swift in Sources */,
+				19DA23D126B98767002436DC /* UserDataProfileSection.swift in Sources */,
 				1989B75326BA4AD100755B1E /* AccountsEditorView.swift in Sources */,
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
 				193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
@@ -890,7 +890,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */,
+				19DA23D226B98767002436DC /* UserDataProfileSection.swift in Sources */,
 				19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
 				1989B75726BA537900755B1E /* UserDataView.swift in Sources */,
 				19365A6226097B4800865D40 /* AccountView.swift in Sources */,

@@ -24,6 +24,10 @@ struct AccountView: View {
         Group {
             if let user = account.user {
                 UserView(user: user)
+            } else {
+                List {
+                    
+                }
             }
         }
         #if os(iOS)
