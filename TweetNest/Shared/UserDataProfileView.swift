@@ -61,11 +61,11 @@ struct UserDataProfileView: View {
                 }
             }
 
-            if let creationDate = userData.creationDate {
+            if let userCreationDate = userData.userCreationDate {
                 HStack {
                     Label("Joined", systemImage: "calendar")
                     Spacer()
-                    Text(creationDate.formatted(date: .numeric, time: .standard))
+                    Text(userCreationDate.formatted(date: .numeric, time: .standard))
                 }
             }
 
