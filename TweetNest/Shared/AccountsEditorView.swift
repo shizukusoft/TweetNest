@@ -40,7 +40,9 @@ struct AccountsEditorView: View {
             .onDelete(perform: deleteAccounts)
             .onMove(perform: moveAccounts)
         }
+        #if os(iOS)
         .environment(\.editMode, .constant(.active))
+        #endif
         .navigationTitle("Accounts")
     }
 
