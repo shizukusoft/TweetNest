@@ -90,8 +90,8 @@
 		19C5A2BE26BC1F8A00AB1122 /* UserData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2B026BC1F8A00AB1122 /* UserData.swift */; };
 		19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */; };
 		19C5A2C426BC1FD600AB1122 /* Twitter in Frameworks */ = {isa = PBXBuildFile; productRef = 19C5A2C326BC1FD600AB1122 /* Twitter */; };
-		19C5A2C526BC1FFA00AB1122 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; platformFilter = ios; };
-		19C5A2C626BC1FFA00AB1122 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; platformFilter = ios; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		19C5A2C526BC1FFA00AB1122 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; };
+		19C5A2C626BC1FFA00AB1122 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19C5A2CB26BC205000AB1122 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 19C5A2CA26BC205000AB1122 /* OrderedCollections */; };
 		19C5A2D026BC208700AB1122 /* UnifiedLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 19C5A2CF26BC208700AB1122 /* UnifiedLogging */; };
 		19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2D326BC219200AB1122 /* Bundle+TweetNestKit.swift */; };
@@ -1185,7 +1185,6 @@
 		};
 		19C5A2C826BC1FFA00AB1122 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
 			target = 19C5A28526BC1F3500AB1122 /* TweetNestKit */;
 			targetProxy = 19C5A2C726BC1FFA00AB1122 /* PBXContainerItemProxy */;
 		};
