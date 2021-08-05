@@ -8,6 +8,7 @@
 import SwiftUI
 import TweetNestKit
 import UserNotifications
+import UnifiedLogging
 
 #if os(iOS)
 typealias ApplicationDelegateAdaptor = UIApplicationDelegateAdaptor
@@ -18,6 +19,7 @@ typealias ApplicationDelegateAdaptor = NSApplicationDelegateAdaptor
 @main
 struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
+    @Environment(\.scenePhase) private var scenePhase
 
     @State var error: Error?
     @State var showErrorAlert: Bool = false
@@ -26,6 +28,9 @@ struct TweetNestApp: App {
         WindowGroup {
             MainView()
                 .environment(\.managedObjectContext, Session.shared.container.viewContext)
+                .alert(Text("Error"), isPresented: $showErrorAlert, presenting: error) {
+                    Text($0.localizedDescription)
+                }
                 .onAppear {
                     Task {
                         do {
@@ -36,8 +41,19 @@ struct TweetNestApp: App {
                         }
                     }
                 }
-                .alert(Text("Error"), isPresented: $showErrorAlert, presenting: error) {
-                    Text($0.localizedDescription)
+                .onChange(of: scenePhase) { phase in
+                    switch phase {
+                    case .active, .inactive:
+                        break
+                    case .background:
+                        do {
+                            try Session.shared.scheduleAppRefresh()
+                        } catch {
+                            Logger().error("Error occured while schedule refresh: \(String(describing: error))")
+                        }
+                    @unknown default:
+                        break
+                    }
                 }
         }
     }
