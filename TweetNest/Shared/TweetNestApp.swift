@@ -47,7 +47,7 @@ struct TweetNestApp: App {
                         break
                     case .background:
                         do {
-                            try Session.shared.scheduleAppRefresh()
+                            try Session.shared.scheduleUpdateAccountsBackgroundTask()
                         } catch {
                             Logger().error("Error occured while schedule refresh: \(String(describing: error))")
                         }
