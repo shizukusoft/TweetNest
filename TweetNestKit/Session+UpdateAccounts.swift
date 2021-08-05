@@ -13,7 +13,7 @@ import UserNotifications
 
 extension Session {
     @discardableResult
-    public func updateAccounts() async throws -> [NSManagedObjectID] {
+    public func updateAccounts() async throws -> [(NSManagedObjectID, Bool)] {
         let context = container.newBackgroundContext()
 
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
@@ -27,11 +27,10 @@ extension Session {
             return try context.fetch(fetchRequest)
         }
 
-        return try await withThrowingTaskGroup(of: NSManagedObjectID.self) { taskGroup in
+        return try await withThrowingTaskGroup(of: (NSManagedObjectID, Bool).self) { taskGroup in
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
-                    try await self.updateAccount(accountObjectID)
-                    return accountObjectID
+                    return (accountObjectID, try await self.updateAccount(accountObjectID))
                 }
             }
 
@@ -75,7 +74,7 @@ extension Session {
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = "Refresh"
                     notificationContent.subtitle = "Error"
-                    notificationContent.body = "Error occured while refresh.\n\(error.localizedDescription)"
+                    notificationContent.body = "Error occured while refresh.\n\n\(error.localizedDescription)"
                     notificationContent.sound = .default
                     notificationContent.interruptionLevel = .active
 
@@ -93,26 +92,26 @@ extension Session {
 
                     let usernames = await self.container.performBackgroundTask { context in
                         accountObjectIDs
-                            .map { context.object(with: $0) }
+                            .lazy
+                            .filter { $0.1 == true }
+                            .map { context.object(with: $0.0) }
                             .compactMap { $0 as? Account }
                             .map { ($0.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\($0.id)"  }
                     }
 
-                    let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = "Refresh"
                     if usernames.isEmpty == false {
-                        notificationContent.body = "Successfully Refreshed for \(usernames.joined(separator: ", "))"
-                    } else {
-                        notificationContent.body = "Successfully Refreshed"
-                    }
-                    notificationContent.interruptionLevel = .passive
+                        let notificationContent = UNMutableNotificationContent()
+                        notificationContent.title = "Refresh"
+                        notificationContent.body = "New data available for \(usernames.joined(separator: ", "))"
+                        notificationContent.interruptionLevel = .passive
 
-                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+                        let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
 
-                    do {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } catch {
-                        logger.error("Error occured while request notification: \(String(describing: error))")
+                        do {
+                            try await UNUserNotificationCenter.current().add(notificationRequest)
+                        } catch {
+                            logger.error("Error occured while request notification: \(String(describing: error))")
+                        }
                     }
                 } catch {
                     logger.error("Error occured while update accounts: \(String(describing: error))")

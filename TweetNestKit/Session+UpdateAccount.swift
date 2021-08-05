@@ -10,7 +10,8 @@ import CoreData
 import Twitter
 
 extension Session {
-    public func updateAccount(_ accountObjectID: NSManagedObjectID) async throws {
+    @discardableResult
+    public func updateAccount(_ accountObjectID: NSManagedObjectID) async throws -> Bool {
         let context = container.newBackgroundContext()
 
         guard let account = try await context.perform({
@@ -127,7 +128,9 @@ extension Session {
         let followerUserIDs = try await followerUserIDsTask.value
         let profileImageData = try await profileImageDataTask.value
 
-        try await context.perform {
+        return try await context.perform {
+            let previousUserData = account.user?.sortedUserDatas?.last
+
             let userData = try UserData.createOrUpdate(
                 twitterUser: twitterUser,
                 followingUserIDs: followingUserIDs,
@@ -139,11 +142,13 @@ extension Session {
             userData.user?.account = account
 
             try context.save()
-            context.refresh(userData, mergeChanges: false)
+
+            return previousUserData?.objectID != userData.objectID
         }
     }
 
-    public func updateAccount(_ account: Account) async throws {
+    @discardableResult
+    public func updateAccount(_ account: Account) async throws -> Bool {
         try await updateAccount(account.objectID)
     }
 }
