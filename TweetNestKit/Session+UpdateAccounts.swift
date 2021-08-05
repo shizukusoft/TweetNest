@@ -88,14 +88,21 @@ extension Session {
                 }
 
                 do {
-                    let accountObjectIDs = try await self.updateAccounts()
+                    let changedAccountObjectIDs = try await self.updateAccounts()
+                        .lazy
+                        .filter { $0.1 == true }
+                        .map { $0.0 }
 
-                    let usernames = await self.container.performBackgroundTask { context in
-                        accountObjectIDs
-                            .lazy
-                            .filter { $0.1 == true }
-                            .map { context.object(with: $0.0) }
-                            .compactMap { $0 as? Account }
+                    let usernames: [String] = await self.container.performBackgroundTask { context in
+                        changedAccountObjectIDs
+                            .compactMap { context.object(with: $0) as? Account }
+                            .sorted {
+                                if $0.sortOrder != $1.sortOrder {
+                                    return $0.sortOrder < $1.sortOrder
+                                } else {
+                                    return ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast)
+                                }
+                            }
                             .map { ($0.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\($0.id)"  }
                     }
 
