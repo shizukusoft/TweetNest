@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19186" systemVersion="21A5294g" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Account" representedClassName="TWNKAccount" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sortOrder" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="token" optional="YES" attributeType="String" allowsCloudEncryption="YES"/>
+        <attribute name="tokenSecret" optional="YES" attributeType="String" allowsCloudEncryption="YES"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="account" inverseEntity="User"/>
+    </entity>
+    <entity name="User" representedClassName="TWNKUser" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="user" inverseEntity="Account"/>
+        <relationship name="userDatas" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserData" inverseName="user" inverseEntity="UserData"/>
+    </entity>
+    <entity name="UserData" representedClassName="TWNKUserData" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="followerUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="followingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="isProtected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="profileImageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="profileImageURL" optional="YES" attributeType="URI"/>
+        <attribute name="url" optional="YES" attributeType="URI"/>
+        <attribute name="userAttributedDescription" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.SecureUnarchiveFromDataTransformer"/>
+        <attribute name="userCreationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="username" optional="YES" attributeType="String"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="userDatas" inverseEntity="User"/>
+    </entity>
+    <elements>
+        <element name="Account" positionX="-63" positionY="-18" width="128" height="119"/>
+        <element name="User" positionX="-63" positionY="0" width="128" height="104"/>
+        <element name="UserData" positionX="-45" positionY="27" width="128" height="239"/>
+    </elements>
+</model>
