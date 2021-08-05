@@ -13,10 +13,8 @@ import Twitter
 public actor Session {
     public static let shared = Session()
 
-    static let moduleName = "TweetNestKit"
-    static let moduleIdentifier = "app.tweetnest.\(moduleName)"
-    static let cloudKitIdentifier = "iCloud.\(moduleIdentifier)"
-    static let applicationGroupIdentifier = "group.\(moduleIdentifier)"
+    static let cloudKitIdentifier = "iCloud.\(Bundle.module.bundleIdentifier!)"
+    static let applicationGroupIdentifier = "group.\(Bundle.module.bundleIdentifier!)"
 
     private let twitterAPIConfigurationTask: Task<TwitterAPIConfiguration, Error>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {

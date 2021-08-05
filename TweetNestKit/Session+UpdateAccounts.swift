@@ -42,7 +42,7 @@ extension Session {
 
 #if os(iOS)
 extension Session {
-    public static let updateAccountsBackgroundTaskIdentifier: String = "\(moduleIdentifier).update-accounts"
+    public static let updateAccountsBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).update-accounts"
 
     @available(iOSApplicationExtension, unavailable)
     @discardableResult
@@ -58,7 +58,7 @@ extension Session {
     }
 
     public nonisolated func updateAccounts(backgroundTask: BGTask) {
-        let logger = Logger(subsystem: Self.moduleIdentifier, category: "refresh")
+        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "refresh")
 
         let task = Task.detached {
             logger.info("Start background task for: \(backgroundTask.identifier)")

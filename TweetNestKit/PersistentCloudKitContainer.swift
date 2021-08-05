@@ -12,11 +12,11 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
         return FileManager.default
             .containerURL(forSecurityApplicationGroupIdentifier: Session.applicationGroupIdentifier)?
-            .appendingPathComponent("Application Support/\(Session.moduleName)") ?? super.defaultDirectoryURL()
+            .appendingPathComponent("Application Support/\(Bundle.module.name!)") ?? super.defaultDirectoryURL()
     }
 
     init(inMemory: Bool = false) {
-        super.init(name: Session.moduleName, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle(for: Self.self).url(forResource: Session.moduleName, withExtension: "momd")!)!)
+        super.init(name: Bundle.module.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.module.url(forResource: Bundle.module.name!, withExtension: "momd")!)!)
 
         if inMemory {
             persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
