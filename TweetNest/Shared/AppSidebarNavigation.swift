@@ -6,7 +6,9 @@
 //
 
 import SwiftUI
+import AuthenticationServices
 import TweetNestKit
+import UnifiedLogging
 
 struct AppSidebarNavigation: View {
     enum NavigationItem: Hashable {
@@ -17,7 +19,15 @@ struct AppSidebarNavigation: View {
 
     @State private var navigationItemSelection: NavigationItem? = nil
 
-    @Environment(\.managedObjectContext) private var viewContext
+    @State private var showAccountsEditor: Bool = false
+
+    @State private var webAuthenticationSession: ASWebAuthenticationSession? = nil
+    @State private var isAddingAccount: Bool = false
+
+    @State private var isRefreshing: Bool = false
+
+    @State private var showErrorAlert: Bool = false
+    @State private var error: Error? = nil
 
     @FetchRequest(
         sortDescriptors: [
@@ -32,27 +42,7 @@ struct AppSidebarNavigation: View {
             List {
                 ForEach(accounts) { account in
                     Section {
-                        NavigationLink(tag: .profile(account), selection: $navigationItemSelection) {
-                            AccountView(account: account)
-                        } label: {
-                            Label("Account", systemImage: "person")
-                        }
-
-                        NavigationLink(tag: .followings(account), selection: $navigationItemSelection) {
-                            UsersList(userIDs: account.user?.sortedUserDatas?.last?.followingUserIDs ?? [])
-                                .navigationTitle(Text("Followings"))
-                        } label: {
-                            Label("Followings", systemImage: "person.2")
-                        }
-                        .deleteDisabled(true)
-
-                        NavigationLink(tag: .followers(account), selection: $navigationItemSelection) {
-                            UsersList(userIDs: account.user?.sortedUserDatas?.last?.followerUserIDs ?? [])
-                                .navigationTitle(Text("Followers"))
-                        } label: {
-                            Label("Followers", systemImage: "person.2")
-                        }
-                        .deleteDisabled(true)
+                        AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
                     } header: {
                         Label {
                             Text((account.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\(account.id)")
@@ -73,13 +63,124 @@ struct AppSidebarNavigation: View {
                 }
             }
             .listStyle(.sidebar)
+            .refreshable(action: refresh)
             .navigationTitle(Text("TweetNest"))
             .toolbar {
+                #if os(iOS)
+                ToolbarItemGroup(placement: .navigationBarLeading) {
+                    Button {
+                        showAccountsEditor.toggle()
+                    } label: {
+                        Text("Edit")
+                    }
+                }
+                #endif
+
                 ToolbarItemGroup(placement: .primaryAction) {
-                    AppSidebarMenu()
+                    Button(action: addAccount) {
+                        ZStack {
+                            Label("Add Account", systemImage: "plus")
+
+                            if let webAuthenticationSession = webAuthenticationSession {
+                                WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
+                                    .zIndex(1.0)
+                            }
+                        }
+                    }
+                    .disabled(isAddingAccount)
+
+                    #if !os(iOS)
+                    Button {
+                        Task {
+                            refresh
+                        }
+                    } label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
+                    }
+                    .disabled(isRefreshing)
+                    #endif
+                }
+            }
+            .alert("Error", isPresented: $showErrorAlert, presenting: error) { _ in
+
+            } message: {
+                $0.flatMap {
+                    Text($0.localizedDescription)
+                }
+            }
+            .sheet(isPresented: $showAccountsEditor) {
+                NavigationView {
+                    AccountsEditorView()
+                        .toolbar {
+                            ToolbarItemGroup(placement: .cancellationAction) {
+                                Button("Cancel", role: .cancel) {
+                                    showAccountsEditor.toggle()
+                                }
+                            }
+                        }
                 }
             }
         }
+    }
+
+    private func addAccount() {
+        withAnimation {
+            isAddingAccount = true
+        }
+
+        Task {
+            do {
+                try await Session.shared.authorizeNewAccount { webAuthenticationSession in
+                    self.webAuthenticationSession = webAuthenticationSession
+                }
+
+                webAuthenticationSession = nil
+
+                withAnimation {
+                    isAddingAccount = false
+                }
+            } catch {
+                withAnimation {
+                    webAuthenticationSession = nil
+                    self.error = error
+                    showErrorAlert = true
+                    isAddingAccount = false
+                }
+            }
+        }
+    }
+
+    private func refresh() async {
+        guard isRefreshing == false else {
+            return
+        }
+
+        isRefreshing = true
+
+        let task = Task.detached {
+            try await Session.shared.updateAccounts()
+        }
+
+        #if os(iOS)
+        let backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
+            task.cancel()
+        }
+        #endif
+
+        do {
+            _ = try await task.value
+
+            isRefreshing = false
+        } catch {
+            Logger().error("Error occured: \(String(reflecting: error))")
+            self.error = error
+            showErrorAlert = true
+            isRefreshing = false
+        }
+
+        #if os(iOS)
+        await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+        #endif
     }
 }
 

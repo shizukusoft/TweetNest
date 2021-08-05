@@ -64,17 +64,8 @@ struct AccountView: View {
 
         isRefreshing = true
 
-        let task = Task {
-            do {
-                try await Session.shared.updateAccount(account)
-
-                isRefreshing = false
-            } catch {
-                Logger().error("Error occured: \(String(reflecting: error))")
-                self.error = error
-                showErrorAlert = true
-                isRefreshing = false
-            }
+        let task = Task.detached {
+            try await Session.shared.updateAccount(account)
         }
 
         #if os(iOS)
@@ -83,7 +74,16 @@ struct AccountView: View {
         }
         #endif
 
-        await task.value
+        do {
+            _ = try await task.value
+
+            isRefreshing = false
+        } catch {
+            Logger().error("Error occured: \(String(reflecting: error))")
+            self.error = error
+            showErrorAlert = true
+            isRefreshing = false
+        }
 
         #if os(iOS)
         await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
