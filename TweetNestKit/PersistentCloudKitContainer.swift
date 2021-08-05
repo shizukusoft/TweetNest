@@ -15,11 +15,17 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             .appendingPathComponent("Application Support/\(Bundle.module.name!)") ?? super.defaultDirectoryURL()
     }
 
+    var usersSpotlightDelegate: UsersSpotlightDelegate?
+
     init(inMemory: Bool = false) {
         super.init(name: Bundle.module.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.module.url(forResource: Bundle.module.name!, withExtension: "momd")!)!)
 
-        if inMemory {
-            persistentStoreDescriptions.first!.url = URL(fileURLWithPath: "/dev/null")
+        persistentStoreDescriptions.forEach { description in
+            if inMemory == false {
+                description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+            } else {
+                description.url = URL(fileURLWithPath: "/dev/null")
+            }
         }
 
         loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -36,6 +42,11 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 Check the error message to determine what the actual problem was.
                 */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
+            }
+
+            if inMemory == false, storeDescription.type == NSSQLiteStoreType {
+                self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
+                self.usersSpotlightDelegate?.startSpotlightIndexing()
             }
         })
 

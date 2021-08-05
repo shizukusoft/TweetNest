@@ -13,7 +13,7 @@
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="user" inverseEntity="Account"/>
-        <relationship name="userDatas" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserData" inverseName="user" inverseEntity="UserData"/>
+        <relationship name="userDatas" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserData" inverseName="user" inverseEntity="UserData" spotlightIndexingEnabled="YES"/>
     </entity>
     <entity name="UserData" representedClassName="TWNKUserData" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -22,13 +22,13 @@
         <attribute name="isProtected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="location" optional="YES" attributeType="String"/>
-        <attribute name="name" optional="YES" attributeType="String"/>
-        <attribute name="profileImageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="profileImageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" spotlightIndexingEnabled="YES"/>
         <attribute name="profileImageURL" optional="YES" attributeType="URI"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
         <attribute name="userAttributedDescription" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.SecureUnarchiveFromDataTransformer"/>
         <attribute name="userCreationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="username" optional="YES" attributeType="String"/>
+        <attribute name="username" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="userDatas" inverseEntity="User"/>
     </entity>
     <elements>

@@ -7,7 +7,6 @@
 
 import SwiftUI
 import TweetNestKit
-import UserNotifications
 import UnifiedLogging
 
 #if os(iOS)
@@ -21,44 +20,29 @@ struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
 
-    @State var error: Error?
-    @State var showErrorAlert: Bool = false
-
     var body: some Scene {
         WindowGroup {
             MainView()
                 .environment(\.managedObjectContext, Session.shared.container.viewContext)
-                .alert(Text("Error"), isPresented: $showErrorAlert, presenting: error) {
-                    Text($0.localizedDescription)
+        }
+        .onChange(of: scenePhase) { phase in
+            switch phase {
+            case .active, .inactive:
+                break
+            case .background:
+                #if os(iOS)
+                do {
+                    try Session.shared.scheduleUpdateAccountsBackgroundTask()
+                } catch {
+                    Logger().error("Error occured while schedule refresh: \(String(describing: error))")
                 }
-                .onAppear {
-                    Task {
-                        do {
-                            try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
-                        } catch {
-                            self.error = error
-                            self.showErrorAlert = true
-                        }
-                    }
-                }
-                .onChange(of: scenePhase) { phase in
-                    switch phase {
-                    case .active, .inactive:
-                        break
-                    case .background:
-                        #if os(iOS)
-                        do {
-                            try Session.shared.scheduleUpdateAccountsBackgroundTask()
-                        } catch {
-                            Logger().error("Error occured while schedule refresh: \(String(describing: error))")
-                        }
-                        #else
-                        break
-                        #endif
-                    @unknown default:
-                        break
-                    }
-                }
+                #else
+                break
+                #endif
+            @unknown default:
+                break
+            }
+
         }
     }
 }
