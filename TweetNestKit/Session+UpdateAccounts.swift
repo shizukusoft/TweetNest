@@ -73,8 +73,9 @@ extension Session {
                     logger.error("Error occured while schedule refresh: \(String(describing: error))")
 
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = "Error"
-                    notificationContent.body = error.localizedDescription
+                    notificationContent.title = "Refresh"
+                    notificationContent.subtitle = "Error"
+                    notificationContent.body = "Error occured while refresh.\n\(error.localizedDescription)"
                     notificationContent.sound = .default
                     notificationContent.interruptionLevel = .active
 
@@ -98,7 +99,7 @@ extension Session {
                     }
 
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = "Success"
+                    notificationContent.title = "Refresh"
                     if usernames.isEmpty == false {
                         notificationContent.body = "Successfully Refreshed for \(usernames.joined(separator: ", "))"
                     } else {

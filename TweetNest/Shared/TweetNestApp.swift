@@ -42,7 +42,6 @@ struct TweetNestApp: App {
             @unknown default:
                 break
             }
-
         }
     }
 }
