@@ -40,7 +40,7 @@ extension Session {
 
         let followingUserIDsTask = Task { () -> [String] in
             let followingUsersFetchStartDate = Date()
-            let followingUsers = try await twitterUser.following(session: twitterSession)
+            let followingUsers = try await twitterUser.followingUsers(session: twitterSession)
             let followingUsersFetchEndDate = Date()
 
             return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data).self) { taskGroup in
@@ -88,30 +88,30 @@ extension Session {
         }
 
         let followerUserIDsTask = Task { () -> [String] in
-            let followerUsersFetchStartDate = Date()
-            let followerUsers = try await twitterUser.followers(session: twitterSession)
-            let followerUsersFetchEndDate = Date()
+            let followersFetchStartDate = Date()
+            let followers = try await twitterUser.followers(session: twitterSession)
+            let followersFetchEndDate = Date()
 
             return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data).self) { taskGroup in
-                for (index, followerUser) in followerUsers.enumerated() {
+                for (index, follower) in followers.enumerated() {
                     taskGroup.addTask {
                         (
                             index: index,
-                            twitterUser: followerUser,
-                            profileImageData: try await Self.urlData(from: followerUser.profileImageOriginalURL)
+                            twitterUser: follower,
+                            profileImageData: try await Self.urlData(from: follower.profileImageOriginalURL)
                         )
                     }
                 }
 
                 var userIDsByIndex = [Int: String?]()
 
-                for try await followersUser in taskGroup {
-                    userIDsByIndex[followersUser.index] = try await context.perform {
+                for try await follower in taskGroup {
+                    userIDsByIndex[follower.index] = try await context.perform {
                         let userData = try UserData.createOrUpdate(
-                            twitterUser: followersUser.twitterUser,
-                            profileImageData: followersUser.profileImageData,
-                            userUpdateStartDate: followerUsersFetchStartDate,
-                            userDataCreationDate: followerUsersFetchEndDate,
+                            twitterUser: follower.twitterUser,
+                            profileImageData: follower.profileImageData,
+                            userUpdateStartDate: followersFetchStartDate,
+                            userDataCreationDate: followersFetchEndDate,
                             context: context
                         )
 
@@ -138,7 +138,7 @@ extension Session {
 
         let blockingUserIDsTask = Task { () -> [String] in
             let blockingUsersFetchStartDate = Date()
-            let blockingUsers = try await twitterUser.blocking(session: twitterSession)
+            let blockingUsers = try await twitterUser.blockingUsers(session: twitterSession)
             let blockingUsersFetchEndDate = Date()
 
             return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data).self) { taskGroup in
