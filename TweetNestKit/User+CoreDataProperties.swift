@@ -18,6 +18,8 @@ extension User {
 
     @NSManaged public var creationDate: Date?
     @NSManaged public var id: String
+    @NSManaged public var lastUpdateStartDate: Date?
+    @NSManaged public var lastUpdateEndDate: Date?
     @NSManaged public var modificationDate: Date?
     @NSManaged public var account: Account?
     @NSManaged public var userDatas: NSSet?

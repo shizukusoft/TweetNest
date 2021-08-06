@@ -65,7 +65,7 @@ struct AccountView: View {
         isRefreshing = true
 
         let task = Task.detached {
-            try await Session.shared.updateAccount(account)
+            try await Session.shared.updateAccount(account.objectID)
         }
 
         #if os(iOS)

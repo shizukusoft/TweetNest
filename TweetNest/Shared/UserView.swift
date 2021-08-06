@@ -30,7 +30,12 @@ struct UserView: View {
                 } header: {
                     Text("Latest Profile")
                 } footer: {
-                    Text("#\(Int(user.id)?.formatted() ?? user.id)")
+                    VStack(alignment: .leading) {
+                        Text("#\(Int(user.id)?.formatted() ?? user.id)")
+                        if let lastUpdateDate = user.lastUpdateEndDate {
+                            Text("Updated \(lastUpdateDate, style: .relative) ago")
+                        }
+                    }
                 }
             }
             UserAllDataSection(user: user)

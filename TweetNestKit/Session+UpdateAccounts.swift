@@ -20,7 +20,7 @@ extension Session {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Account.sortOrder, ascending: true),
-                NSSortDescriptor(keyPath: \Account.creationDate, ascending: true)
+                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
             ]
             fetchRequest.resultType = .managedObjectIDResultType
 
@@ -100,7 +100,7 @@ extension Session {
                                 if $0.sortOrder != $1.sortOrder {
                                     return $0.sortOrder < $1.sortOrder
                                 } else {
-                                    return ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast)
+                                    return ($0.creationDate ?? .distantPast) > ($1.creationDate ?? .distantPast)
                                 }
                             }
                             .map { ($0.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\($0.id)"  }

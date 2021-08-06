@@ -12,7 +12,7 @@ import Twitter
 
 @objc(TWNKUserData)
 public class UserData: NSManagedObject, Identifiable {
-
+    
 }
 
 extension UserData {
@@ -22,7 +22,9 @@ extension UserData {
         followingUserIDs: [String]? = nil,
         followerUserIDs: [String]? = nil,
         profileImageData: Data? = nil,
-        creationDate: Date = Date(),
+        userUpdateStartDate: Date = Date(),
+        userUpdateEndDate: Date = Date(),
+        userDataCreationDate: Date = Date(),
         context: NSManagedObjectContext
     ) throws -> UserData {
         try context.performAndWait {
@@ -33,10 +35,13 @@ extension UserData {
             let user = try context.fetch(userFetchRequest).first ?? {
                 let user = User(context: context)
                 user.id = twitterUser.id
-                user.creationDate = creationDate
+                user.creationDate = userDataCreationDate
 
                 return user
             }()
+
+            user.lastUpdateStartDate = userUpdateStartDate
+            user.lastUpdateEndDate = userUpdateEndDate
 
             if
                 let lastUserData = user.sortedUserDatas?.last,
@@ -57,7 +62,7 @@ extension UserData {
                 return lastUserData
             } else {
                 let newUserData = UserData(context: context)
-                newUserData.creationDate = creationDate
+                newUserData.creationDate = userDataCreationDate
 
                 newUserData.followingUserIDs = followingUserIDs
                 newUserData.followerUserIDs = followerUserIDs
@@ -73,7 +78,7 @@ extension UserData {
                 newUserData.username = twitterUser.username
                 newUserData.user = user
 
-                newUserData.user?.modificationDate = creationDate
+                newUserData.user?.modificationDate = userDataCreationDate
 
                 return newUserData
             }

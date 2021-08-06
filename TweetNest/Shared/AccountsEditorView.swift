@@ -14,7 +14,7 @@ struct AccountsEditorView: View {
     @FetchRequest(
         sortDescriptors: [
             SortDescriptor.init(\.sortOrder, order: .forward),
-            SortDescriptor.init(\.creationDate, order: .forward),
+            SortDescriptor.init(\.creationDate, order: .reverse),
         ],
         animation: .default)
     private var accounts: FetchedResults<Account>

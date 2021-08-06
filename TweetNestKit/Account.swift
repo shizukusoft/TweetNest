@@ -10,5 +10,7 @@ import CoreData
 
 @objc(TWNKAccount)
 public class Account: NSManagedObject {
-
+    public override func awakeFromInsert() {
+        setPrimitiveValue(Int16.min, forKey: "sortOrder")
+    }
 }

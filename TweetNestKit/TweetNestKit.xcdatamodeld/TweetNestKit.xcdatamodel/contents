@@ -11,6 +11,8 @@
     <entity name="User" representedClassName="TWNKUser" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="lastUpdateEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdateStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="user" inverseEntity="Account"/>
         <relationship name="userDatas" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserData" inverseName="user" inverseEntity="UserData" spotlightIndexingEnabled="YES"/>
@@ -33,7 +35,7 @@
     </entity>
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="119"/>
-        <element name="User" positionX="-63" positionY="0" width="128" height="104"/>
+        <element name="User" positionX="-63" positionY="0" width="128" height="134"/>
         <element name="UserData" positionX="-45" positionY="27" width="128" height="239"/>
     </elements>
 </model>
