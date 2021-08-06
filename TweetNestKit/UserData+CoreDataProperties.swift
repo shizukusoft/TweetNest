@@ -16,6 +16,7 @@ extension UserData {
         return NSFetchRequest<UserData>(entityName: "UserData")
     }
 
+    @NSManaged public var blockingUserIDs: [String]?
     @NSManaged public var creationDate: Date?
     @NSManaged public var followerUserIDs: [String]?
     @NSManaged public var followingUserIDs: [String]?

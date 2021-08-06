@@ -21,6 +21,7 @@ extension UserData {
         twitterUser: Twitter.User,
         followingUserIDs: [String]? = nil,
         followerUserIDs: [String]? = nil,
+        blockingUserIDs: [String]? = nil,
         profileImageData: Data? = nil,
         userUpdateStartDate: Date = Date(),
         userUpdateEndDate: Date = Date(),
@@ -45,6 +46,7 @@ extension UserData {
 
             if
                 let lastUserData = user.sortedUserDatas?.last,
+                lastUserData.blockingUserIDs == blockingUserIDs,
                 lastUserData.followingUserIDs == followingUserIDs,
                 lastUserData.followerUserIDs == followerUserIDs,
                 lastUserData.isProtected == twitterUser.protected,
@@ -63,7 +65,8 @@ extension UserData {
             } else {
                 let newUserData = UserData(context: context)
                 newUserData.creationDate = userDataCreationDate
-
+                
+                newUserData.blockingUserIDs = blockingUserIDs
                 newUserData.followingUserIDs = followingUserIDs
                 newUserData.followerUserIDs = followerUserIDs
                 newUserData.isProtected = twitterUser.protected

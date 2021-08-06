@@ -15,6 +15,7 @@ struct AppSidebarNavigation: View {
         case profile(Account)
         case followings(Account)
         case followers(Account)
+        case blockings(Account)
     }
 
     @State private var navigationItemSelection: NavigationItem? = nil

@@ -19,18 +19,33 @@ struct AppSidebarAccountRows: View {
             Label("Account", systemImage: "person")
         }
 
-        NavigationLink(tag: .followings(account), selection: $navigationItemSelection) {
-            UsersList(userIDs: account.user?.sortedUserDatas?.last?.followingUserIDs ?? [])
-                .navigationTitle(Text("Followings"))
-        } label: {
-            Label("Followings", systemImage: "person.2")
-        }
+        if let lastUserData = account.user?.sortedUserDatas?.last {
+            if let followingUserIDs = lastUserData.followingUserIDs {
+                NavigationLink(tag: .followings(account), selection: $navigationItemSelection) {
+                    UsersList(userIDs: followingUserIDs)
+                        .navigationTitle(Text("Latest Followings"))
+                } label: {
+                    Label("Latest Followings", systemImage: "person.2")
+                }
+            }
 
-        NavigationLink(tag: .followers(account), selection: $navigationItemSelection) {
-            UsersList(userIDs: account.user?.sortedUserDatas?.last?.followerUserIDs ?? [])
-                .navigationTitle(Text("Followers"))
-        } label: {
-            Label("Followers", systemImage: "person.2")
+            if let followerUserIDs = lastUserData.followerUserIDs {
+                NavigationLink(tag: .followers(account), selection: $navigationItemSelection) {
+                    UsersList(userIDs: followerUserIDs)
+                        .navigationTitle(Text("Latest Followers"))
+                } label: {
+                    Label("Latest Followers", systemImage: "person.2")
+                }
+            }
+
+            if let blockingUserIDs = lastUserData.blockingUserIDs {
+                NavigationLink(tag: .blockings(account), selection: $navigationItemSelection) {
+                    UsersList(userIDs: blockingUserIDs)
+                        .navigationTitle(Text("Latest Blockings"))
+                } label: {
+                    Label("Latest Blockings", systemImage: "nosign")
+                }
+            }
         }
     }
 }

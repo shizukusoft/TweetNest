@@ -18,6 +18,7 @@
         <relationship name="userDatas" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserData" inverseName="user" inverseEntity="UserData" spotlightIndexingEnabled="YES"/>
     </entity>
     <entity name="UserData" representedClassName="TWNKUserData" syncable="YES">
+        <attribute name="blockingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="followerUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="followingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
@@ -36,6 +37,6 @@
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="119"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="134"/>
-        <element name="UserData" positionX="-45" positionY="27" width="128" height="239"/>
+        <element name="UserData" positionX="-45" positionY="27" width="128" height="254"/>
     </elements>
 </model>

@@ -45,6 +45,20 @@ struct UserDataView: View {
                         }
                     }
                 }
+
+                if let blockingUserIDs = userData.blockingUserIDs, blockingUserIDs.isEmpty == false {
+                    NavigationLink {
+                        UsersList(userIDs: blockingUserIDs)
+                            .navigationTitle(Text("Blockings"))
+                    } label: {
+                        HStack {
+                            Text("Blockings")
+                            Spacer()
+                            Text(blockingUserIDs.count.formatted())
+                                .foregroundColor(Color.gray)
+                        }
+                    }
+                }
             }
         }
     }
