@@ -158,6 +158,32 @@ extension Session {
             return (userObjectID: userData.user!.objectID, hasChanges: previousUserData?.objectID != userData.objectID)
         }
     }
+
+    @discardableResult
+    public func updateUser(forAccountObjectID accountObjectID: NSManagedObjectID) async throws -> Bool {
+        let context = container.newBackgroundContext()
+
+        let accountID = await context.perform {
+            (context.object(with: accountObjectID) as? Account)?.id
+        }
+
+        guard let accountID = accountID else {
+            throw SessionError.unknown
+        }
+
+        let twitterSession = try await twitterSession(for: accountID)
+
+        let updateResult = try await updateUser(id: String(accountID), with: twitterSession)
+
+        await context.perform {
+            let user = context.object(with: updateResult.userObjectID) as? User
+            let account = context.object(with: accountObjectID) as? Account
+
+            user?.account = account
+        }
+
+        return updateResult.hasChanges
+    }
 }
 
 extension Session {

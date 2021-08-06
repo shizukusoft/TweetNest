@@ -30,7 +30,7 @@ extension Session {
         return try await withThrowingTaskGroup(of: (NSManagedObjectID, Bool).self) { taskGroup in
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
-                    return (accountObjectID, try await self.updateAccount(accountObjectID))
+                    return (accountObjectID, try await self.updateUser(forAccountObjectID: accountObjectID))
                 }
             }
 

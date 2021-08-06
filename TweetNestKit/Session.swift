@@ -128,7 +128,7 @@ extension Session {
             return account.objectID
         }
 
-        try await updateAccount(accountObjectID)
+        try await updateUser(forAccountObjectID: accountObjectID)
     }
 }
 
