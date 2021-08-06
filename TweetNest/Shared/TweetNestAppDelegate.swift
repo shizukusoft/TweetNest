@@ -6,8 +6,13 @@
 //
 
 import Foundation
+import UserNotifications
 import Combine
 
 class TweetNestAppDelegate: NSObject, ObservableObject {
+    
+}
 
+extension TweetNestAppDelegate: UNUserNotificationCenterDelegate {
+    
 }

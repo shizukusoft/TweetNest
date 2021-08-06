@@ -57,7 +57,7 @@ extension Session {
     }
 
     public nonisolated func updateAccounts(backgroundTask: BGTask) {
-        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "refresh")
+        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "update-accounts")
 
         let task = Task.detached {
             logger.info("Start background task for: \(backgroundTask.identifier)")
@@ -69,14 +69,13 @@ extension Session {
                 do {
                     try self.scheduleUpdateAccountsBackgroundTask()
                 } catch {
-                    logger.error("Error occured while schedule refresh: \(String(describing: error))")
+                    logger.error("Error occured while schedule update accounts: \(String(describing: error))")
 
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = "Refresh"
+                    notificationContent.title = "Update accounts"
                     notificationContent.subtitle = "Error"
-                    notificationContent.body = "Error occured while refresh.\n\n\(error.localizedDescription)"
+                    notificationContent.body = "Error occured while update accounts.\n\n\(error.localizedDescription)"
                     notificationContent.sound = .default
-                    notificationContent.interruptionLevel = .active
 
                     let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
 
@@ -93,7 +92,7 @@ extension Session {
                         .filter { $0.1 == true }
                         .map { $0.0 }
 
-                    let usernames: [String] = await self.container.performBackgroundTask { context in
+                    let accountInfo: [(id: Int64, username: String?)] = await self.container.performBackgroundTask { context in
                         changedAccountObjectIDs
                             .compactMap { context.object(with: $0) as? Account }
                             .sorted {
@@ -103,17 +102,20 @@ extension Session {
                                     return ($0.creationDate ?? .distantPast) > ($1.creationDate ?? .distantPast)
                                 }
                             }
-                            .map { ($0.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\($0.id)"  }
+                            .map { (id: $0.id, username: $0.user?.sortedUserDatas?.last?.username) }
                     }
 
-                    if usernames.isEmpty == false {
+                    let notificationRequests: [UNNotificationRequest] = accountInfo.map {
                         let notificationContent = UNMutableNotificationContent()
-                        notificationContent.title = "Refresh"
-                        notificationContent.body = "New data available for \(usernames.joined(separator: ", "))"
-                        notificationContent.interruptionLevel = .passive
+                        notificationContent.title = "Update accounts"
+                        notificationContent.body = "New data available for \($0.username.flatMap { "@\($0)" } ?? "#\($0.id)"))"
+                        notificationContent.interruptionLevel = .timeSensitive
+                        notificationContent.threadIdentifier = String($0.id)
 
-                        let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+                        return UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+                    }
 
+                    for notificationRequest in notificationRequests {
                         do {
                             try await UNUserNotificationCenter.current().add(notificationRequest)
                         } catch {
@@ -124,10 +126,10 @@ extension Session {
                     logger.error("Error occured while update accounts: \(String(describing: error))")
 
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = "Error"
+                    notificationContent.title = "Update accounts"
+                    notificationContent.subtitle = "Error"
                     notificationContent.body = error.localizedDescription
                     notificationContent.sound = .default
-                    notificationContent.interruptionLevel = .active
 
                     let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
 
