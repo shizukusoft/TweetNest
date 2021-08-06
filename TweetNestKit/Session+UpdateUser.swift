@@ -175,11 +175,13 @@ extension Session {
 
         let updateResult = try await updateUser(id: String(accountID), with: twitterSession)
 
-        await context.perform {
+        try await context.perform {
             let user = context.object(with: updateResult.userObjectID) as? User
             let account = context.object(with: accountObjectID) as? Account
 
             user?.account = account
+
+            try context.save()
         }
 
         return updateResult.hasChanges
