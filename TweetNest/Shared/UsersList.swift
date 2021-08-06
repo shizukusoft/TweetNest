@@ -37,10 +37,13 @@ struct UsersList: View {
 
                         HStack(spacing: 4) {
                             Text(user.sortedUserDatas?.last?.name ?? "#\(user.id)")
+                                .lineLimit(1)
 
                             if let username = user.sortedUserDatas?.last?.username {
                                 Text("@\(username)")
+                                    .lineLimit(1)
                                     .foregroundColor(Color.gray)
+                                    .layoutPriority(1)
                             }
                         }
                     }

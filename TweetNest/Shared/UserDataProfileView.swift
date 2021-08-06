@@ -37,6 +37,7 @@ struct UserDataProfileView: View {
 
                 if let userAttributedDescription = userData.userAttributedDescription.flatMap({AttributedString($0)}), userAttributedDescription.startIndex != userAttributedDescription.endIndex {
                     Text(userAttributedDescription)
+                        .frame(maxHeight: .infinity)
                 }
             }
             .padding([.top, .bottom], 8)
