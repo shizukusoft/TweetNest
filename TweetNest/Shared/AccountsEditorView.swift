@@ -29,7 +29,7 @@ struct AccountsEditorView: View {
                     ProfileImage(userData: account.user?.sortedUserDatas?.last)
                         .frame(width: 24, height: 24)
                 }
-                .accessibilityLabel(Text(verbatim: username ?? "\(account.id)"))
+                .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id)"))
             }
             .onDelete(perform: deleteAccounts)
             .onMove(perform: moveAccounts)
