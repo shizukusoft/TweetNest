@@ -247,7 +247,7 @@ extension Session {
             let httpResponse = response as? HTTPURLResponse,
             (200..<300).contains(httpResponse.statusCode)
         else {
-            throw SessionError.invalidServerResponse
+            throw SessionError.invalidServerResponse(response)
         }
 
         return data

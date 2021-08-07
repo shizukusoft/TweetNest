@@ -11,5 +11,5 @@ enum SessionError: Swift.Error {
     case unknown
     case noAPIKey
     case noAPIKeySecret
-    case invalidServerResponse
+    case invalidServerResponse(URLResponse)
 }
