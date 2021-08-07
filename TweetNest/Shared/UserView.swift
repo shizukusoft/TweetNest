@@ -20,6 +20,8 @@ struct UserView: View {
 
     #if os(iOS)
     @State var safariSheetURL: URL? = nil
+
+    @Environment(\.openURL) private var openURL
     #endif
 
     var body: some View {
@@ -31,26 +33,36 @@ struct UserView: View {
                     Text("Latest Profile")
                 } footer: {
                     VStack(alignment: .leading) {
-                        Text("#\(Int(user.id)?.formatted() ?? user.id)")
+                        Text(verbatim: "#\(Int64(user.id)?.formatted() ?? user.id)")
                         if let lastUpdateDate = user.lastUpdateEndDate {
                             Text("Updated \(lastUpdateDate, style: .relative) ago")
+                            .accessibilityAddTraits(.updatesFrequently)
                         }
                     }
                 }
             }
             UserAllDataSection(user: user)
         }
-        .navigationTitle(Text(lastUserData?.name ?? "#\(user.id)"))
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
+        .navigationTitle(Text(verbatim: lastUserData?.username.flatMap({"@\($0)"}) ?? "#\(user.id)"))
         .toolbar {
+            let userProfileURL = URL(string: "https://twitter.com/intent/user?user_id=\(user.id)")!
             ToolbarItemGroup(placement: .automatic) {
                 #if os(iOS)
                 Button {
-                    safariSheetURL = URL(string: "https://www.twitter.com/\(lastUserData?.username ?? user.id)")!
+                    safariSheetURL = userProfileURL
                 } label: {
                     Label("Open Profile", systemImage: "safari")
                 }
+                .contextMenu {
+                    Button("Open Profile") {
+                        openURL(userProfileURL)
+                    }
+                }
                 #else
-                Link(destination: URL(string: "https://www.twitter.com/\(lastUserData?.username ?? user.id)")!) {
+                Link(destination: userProfileURL) {
                     Label("Open Profile", systemImage: "safari")
                 }
                 #endif

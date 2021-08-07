@@ -93,6 +93,9 @@ struct UserDataView: View {
                 }
             }
         }
+        #if os(iOS)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 

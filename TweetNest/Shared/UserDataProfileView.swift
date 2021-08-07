@@ -11,6 +11,8 @@ import TweetNestKit
 struct UserDataProfileView: View {
     @ObservedObject var userData: UserData
 
+    @Environment(\.openURL) private var openURL
+
     var body: some View {
         Group {
             VStack(alignment: .leading, spacing: 16) {
@@ -35,31 +37,38 @@ struct UserDataProfileView: View {
             .padding([.top, .bottom], 8)
 
             if let location = userData.location {
+                let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 HStack {
                     Label("Location", systemImage: "location")
                     Spacer()
-                    if let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") }) {
+                    if let locationQueryURL = locationQueryURL {
                         Link(location, destination: locationQueryURL)
-                    } else {
+                    }
+                    else {
                         Text(location)
                     }
                 }
+                .accessibilityElement(children: .combine)
             }
 
             if let url = userData.url {
                 HStack {
                     Label("URL", systemImage: "safari")
+                    .tint(.primary)
                     Spacer()
                     Link(url.absoluteString, destination: url)
                 }
+                .accessibilityElement(children: .combine)
             }
 
             if let userCreationDate = userData.userCreationDate {
                 HStack {
                     Label("Joined", systemImage: "calendar")
+                    .tint(.primary)
                     Spacer()
                     Text(userCreationDate.formatted(date: .numeric, time: .standard))
                 }
+                .accessibilityElement(children: .combine)
             }
 
             if userData.isProtected {

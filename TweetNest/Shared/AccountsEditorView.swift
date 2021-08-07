@@ -22,12 +22,14 @@ struct AccountsEditorView: View {
     var body: some View {
         List {
             ForEach(accounts) { account in
+                let username = account.user?.sortedUserDatas?.last?.username
                 Label {
-                    Text((account.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\(account.id)")
+                    Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id)")
                 } icon: {
                     ProfileImage(userData: account.user?.sortedUserDatas?.last)
                         .frame(width: 24, height: 24)
                 }
+                .accessibilityLabel(Text(verbatim: username ?? "\(account.id)"))
             }
             .onDelete(perform: deleteAccounts)
             .onMove(perform: moveAccounts)

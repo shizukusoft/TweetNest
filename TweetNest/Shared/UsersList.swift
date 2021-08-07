@@ -20,19 +20,20 @@ struct UsersList: View {
             ForEach(
                 users.sorted(by: { userIDs.firstIndex(of: $0.id) ?? -1 < userIDs.firstIndex(of: $1.id) ?? -1})
             ) { user in
+                let latestUserData = user.sortedUserDatas?.last
                 NavigationLink {
                     UserView(user: user)
                 } label: {
                     HStack(spacing: 8) {
-                        ProfileImage(userData: user.sortedUserDatas?.last)
+                        ProfileImage(userData: latestUserData)
                             .frame(width: 24, height: 24)
 
                         HStack(spacing: 4) {
-                            Text(user.sortedUserDatas?.last?.name ?? "#\(user.id)")
+                            Text(verbatim: latestUserData?.name ?? "#\(user.id)")
                                 .lineLimit(1)
 
-                            if let username = user.sortedUserDatas?.last?.username {
-                                Text("@\(username)")
+                            if let username = latestUserData?.username {
+                                Text(verbatim: "@\(username)")
                                     .lineLimit(1)
                                     .foregroundColor(Color.gray)
                                     .layoutPriority(1)
@@ -40,6 +41,7 @@ struct UsersList: View {
                         }
                     }
                 }
+                .accessibilityLabel(Text(verbatim: latestUserData?.name ?? "#\(user.id)"))
             }
         }
         .searchable(text: $searchQuery)
