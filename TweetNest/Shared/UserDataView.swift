@@ -9,7 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserDataView: View {
-    let userData: UserData
+    @ObservedObject var userData: UserData
 
     var body: some View {
         List {

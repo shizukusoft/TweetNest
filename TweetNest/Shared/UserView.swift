@@ -9,7 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserView: View {
-    let user: User
+    @ObservedObject var user: User
 
     var lastUserData: UserData? {
         user.sortedUserDatas?.last

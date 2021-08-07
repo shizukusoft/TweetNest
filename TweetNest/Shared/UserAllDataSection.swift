@@ -9,7 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserAllDataSection: View {
-    let user: User
+    @ObservedObject var user: User
 
     @FetchRequest
     private var userDatas: FetchedResults<UserData>

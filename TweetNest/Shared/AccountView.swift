@@ -13,7 +13,7 @@ import UIKit
 #endif
 
 struct AccountView: View {
-    let account: Account
+    @ObservedObject var account: Account
 
     @State var isRefreshing: Bool = false
 
