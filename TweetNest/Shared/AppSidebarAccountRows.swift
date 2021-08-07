@@ -22,6 +22,7 @@ struct AppSidebarAccountRows: View {
             } label: {
                 Label("Account", systemImage: "person")
             }
+            .accessibilityLabel("Account")
 
             if let followingUserIDs = lastUserData?.followingUserIDs {
                 NavigationLink(tag: .followings(account), selection: $navigationItemSelection) {
@@ -30,6 +31,7 @@ struct AppSidebarAccountRows: View {
                 } label: {
                     Label("Latest Followings", systemImage: "person.2")
                 }
+                .accessibilityLabel("Latest Followings")
             }
 
             if let followerUserIDs = lastUserData?.followerUserIDs {
@@ -39,6 +41,7 @@ struct AppSidebarAccountRows: View {
                 } label: {
                     Label("Latest Followers", systemImage: "person.2")
                 }
+                .accessibilityLabel("Latest Followers")
             }
 
             if let blockingUserIDs = lastUserData?.blockingUserIDs {
@@ -48,6 +51,7 @@ struct AppSidebarAccountRows: View {
                 } label: {
                     Label("Latest Blockings", systemImage: "nosign")
                 }
+                .accessibilityLabel("Latest Blockings")
             }
         }
     }
