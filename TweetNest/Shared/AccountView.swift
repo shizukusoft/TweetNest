@@ -57,7 +57,7 @@ struct AccountView: View {
         }
     }
 
-    func refresh() async {
+    private func refresh() async {
         guard isRefreshing == false else {
             return
         }
