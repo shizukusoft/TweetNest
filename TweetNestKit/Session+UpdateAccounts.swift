@@ -108,7 +108,7 @@ extension Session {
                     let notificationRequests: [UNNotificationRequest] = accountInfo.map {
                         let notificationContent = UNMutableNotificationContent()
                         notificationContent.title = "Update accounts"
-                        notificationContent.body = "New data available for \($0.username.flatMap { "@\($0)" } ?? "#\($0.id)"))"
+                        notificationContent.body = "New data available for \($0.username.flatMap { "@\($0)" } ?? "#\($0.id)")"
                         notificationContent.interruptionLevel = .timeSensitive
                         notificationContent.threadIdentifier = String($0.id)
 
