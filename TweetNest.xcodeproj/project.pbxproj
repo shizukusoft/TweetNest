@@ -897,8 +897,8 @@
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
 				Base,
+				en,
 			);
 			mainGroup = 19933D2325E901F3006AB4C0;
 			packageReferences = (
