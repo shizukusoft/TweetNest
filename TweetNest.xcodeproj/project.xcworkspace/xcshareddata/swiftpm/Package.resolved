@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "swift-collections",
+        "repositoryURL": "https://github.com/apple/swift-collections",
+        "state": {
+          "branch": null,
+          "revision": "0959ba76a1d4a98fd11163aa83fd49c25b93bfae",
+          "version": "0.0.5"
+        }
+      },
+      {
+        "package": "swift-twitter",
+        "repositoryURL": "https://github.com/TweetNest/swift-twitter.git",
+        "state": {
+          "branch": "develop",
+          "revision": "34473b3f6a7fd8ebe058ee6394aa211f9f4ccbf8",
+          "version": null
+        }
+      },
+      {
+        "package": "TweetNestKit",
+        "repositoryURL": "https://github.com/TweetNest/TweetNestKit.git",
+        "state": {
+          "branch": "develop",
+          "revision": "2c9d86362dce2f0eb3ef9ce61890aa521dfd2a24",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
