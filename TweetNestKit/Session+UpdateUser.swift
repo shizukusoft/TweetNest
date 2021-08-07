@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import UnifiedLogging
 import Twitter
 
 extension Session {
@@ -35,7 +36,7 @@ extension Session {
         let twitterUserFetchDate = Date()
 
         let profileImageDataTask = Task {
-            try await Self.urlData(from: twitterUser.profileImageOriginalURL)
+            await Self.profileImage(from: twitterUser.profileImageOriginalURL)
         }
 
         let followingUserIDsTask = Task { () -> [String] in
@@ -43,13 +44,13 @@ extension Session {
             let followingUsers = try await twitterUser.followingUsers(session: twitterSession).map { try $0.get() }
             let followingUsersFetchEndDate = Date()
 
-            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data).self) { taskGroup in
+            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data?).self) { taskGroup in
                 for (index, followingUser) in followingUsers.enumerated() {
                     taskGroup.addTask {
                         (
                             index: index,
                             twitterUser: followingUser,
-                            profileImageData: try await Self.urlData(from: followingUser.profileImageOriginalURL)
+                            profileImageData: await Self.profileImage(from: followingUser.profileImageOriginalURL)
                         )
                     }
                 }
@@ -92,13 +93,13 @@ extension Session {
             let followers = try await twitterUser.followers(session: twitterSession).map { try $0.get() }
             let followersFetchEndDate = Date()
 
-            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data).self) { taskGroup in
+            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data?).self) { taskGroup in
                 for (index, follower) in followers.enumerated() {
                     taskGroup.addTask {
                         (
                             index: index,
                             twitterUser: follower,
-                            profileImageData: try await Self.urlData(from: follower.profileImageOriginalURL)
+                            profileImageData: await Self.profileImage(from: follower.profileImageOriginalURL)
                         )
                     }
                 }
@@ -141,13 +142,13 @@ extension Session {
             let blockingUsers = try await twitterUser.blockingUsers(session: twitterSession).map { try $0.get() }
             let blockingUsersFetchEndDate = Date()
 
-            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data).self) { taskGroup in
+            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data?).self) { taskGroup in
                 for (index, blockingUser) in blockingUsers.enumerated() {
                     taskGroup.addTask {
                         (
                             index: index,
                             twitterUser: blockingUser,
-                            profileImageData: try await Self.urlData(from: blockingUser.profileImageOriginalURL)
+                            profileImageData: await Self.profileImage(from: blockingUser.profileImageOriginalURL)
                         )
                     }
                 }
@@ -188,7 +189,7 @@ extension Session {
         let followingUserIDs = try await followingUserIDsTask.value
         let followerUserIDs = try await followerUserIDsTask.value
         let blockingUserIDs = try await blockingUserIDsTask.value
-        let profileImageData = try await profileImageDataTask.value
+        let profileImageData = await profileImageDataTask.value
 
         return try await context.perform {
             let previousUserData = user?.sortedUserDatas?.last
@@ -250,5 +251,16 @@ extension Session {
         }
 
         return data
+    }
+
+    private static func profileImage(from url: URL) async -> Data? {
+        do {
+            return try await urlData(from: url)
+        } catch {
+            Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
+                .error("Error occured while downloading image: \(String(reflecting: error), privacy: .public)")
+
+            return nil
+        }
     }
 }
