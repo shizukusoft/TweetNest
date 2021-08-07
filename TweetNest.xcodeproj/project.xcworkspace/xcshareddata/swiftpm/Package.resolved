@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "swift-collections",
-        "repositoryURL": "https://github.com/apple/swift-collections.git",
+        "repositoryURL": "https://github.com/apple/swift-collections",
         "state": {
           "branch": null,
           "revision": "0959ba76a1d4a98fd11163aa83fd49c25b93bfae",
