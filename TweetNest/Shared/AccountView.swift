@@ -69,7 +69,7 @@ struct AccountView: View {
         }
 
         #if os(iOS)
-        let backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
+        let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask {
             task.cancel()
         }
         #endif
@@ -86,7 +86,7 @@ struct AccountView: View {
         }
 
         #if os(iOS)
-        await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+        UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
         #endif
     }
 }
