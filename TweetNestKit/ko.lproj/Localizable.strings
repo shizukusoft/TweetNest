@@ -1,0 +1,16 @@
+/* 
+  Localizable.strings
+  TweetNest
+
+  Created by Jaehong Kang on 2021/08/08.
+  
+*/
+
+/* update-accounts notification title. */
+"Update accounts" = "계정 업데이트";
+
+/* update-accounts notification body. */
+"New data available for %@." = "%@에 새로운 데이터가 있습니다.";
+
+/* update-accounts notification subtitle. */
+"Error" = "오류";

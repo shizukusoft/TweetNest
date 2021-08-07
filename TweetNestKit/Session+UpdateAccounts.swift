@@ -70,20 +70,6 @@ extension Session {
                     try self.scheduleUpdateAccountsBackgroundTask()
                 } catch {
                     logger.error("Error occurred while schedule update accounts: \(String(reflecting: error), privacy: .public)")
-
-                    let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = "Update accounts"
-                    notificationContent.subtitle = "Error"
-                    notificationContent.body = "Error occurred while update accounts.\n\n\(error.localizedDescription)"
-                    notificationContent.sound = .default
-
-                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-
-                    do {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } catch {
-                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
-                    }
                 }
 
                 do {
@@ -107,8 +93,8 @@ extension Session {
 
                     let notificationRequests: [UNNotificationRequest] = accountInfo.map {
                         let notificationContent = UNMutableNotificationContent()
-                        notificationContent.title = "Update accounts"
-                        notificationContent.body = "New data available for \($0.username.flatMap { "@\($0)" } ?? "#\($0.id)")"
+                        notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
+                        notificationContent.body = String(localized: "New data available for \($0.username.flatMap { "@\($0)" } ?? "#\($0.id)")", bundle: .module, comment: "update-accounts notification body.")
                         notificationContent.interruptionLevel = .timeSensitive
                         notificationContent.threadIdentifier = String($0.id)
 
@@ -126,8 +112,8 @@ extension Session {
                     logger.error("Error occurred while update accounts: \(String(describing: error))")
 
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = "Update accounts"
-                    notificationContent.subtitle = "Error"
+                    notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
+                    notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "update-accounts notification subtitle.")
                     notificationContent.body = error.localizedDescription
                     notificationContent.sound = .default
 
