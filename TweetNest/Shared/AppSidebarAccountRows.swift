@@ -27,7 +27,7 @@ struct AppSidebarAccountRows: View {
     }
 
     @ViewBuilder
-    func userDataView(_ userData: UserData) -> some View {
+    private func userDataView(_ userData: UserData) -> some View {
         if let followingUserIDs = userData.followingUserIDs {
             NavigationLink(tag: .followings(account), selection: $navigationItemSelection) {
                 UsersList(userIDs: followingUserIDs)
