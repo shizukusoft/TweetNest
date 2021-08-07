@@ -89,7 +89,7 @@ extension Session {
 
         let url: URL = try await withCheckedThrowingContinuation { continuation in
             webAuthenticationSessionHandler(
-                ASWebAuthenticationSession(url: URL(string: "https://api.twitter.com/oauth/authorize?oauth_token=\(requestToken.token)")!, callbackURLScheme: "tweet-nest", completionHandler: { (url, error) in
+                ASWebAuthenticationSession(url: URL(twitterOAuthAuthorizeURLWithOAuthToken: requestToken.token), callbackURLScheme: "tweet-nest", completionHandler: { (url, error) in
                     if let error = error {
                         continuation.resume(throwing: error)
                     } else {
