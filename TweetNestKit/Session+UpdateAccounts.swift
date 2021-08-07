@@ -69,12 +69,12 @@ extension Session {
                 do {
                     try self.scheduleUpdateAccountsBackgroundTask()
                 } catch {
-                    logger.error("Error occured while schedule update accounts: \(String(reflecting: error), privacy: .public)")
+                    logger.error("Error occurred while schedule update accounts: \(String(reflecting: error), privacy: .public)")
 
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = "Update accounts"
                     notificationContent.subtitle = "Error"
-                    notificationContent.body = "Error occured while update accounts.\n\n\(error.localizedDescription)"
+                    notificationContent.body = "Error occurred while update accounts.\n\n\(error.localizedDescription)"
                     notificationContent.sound = .default
 
                     let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
@@ -82,7 +82,7 @@ extension Session {
                     do {
                         try await UNUserNotificationCenter.current().add(notificationRequest)
                     } catch {
-                        logger.error("Error occured while request notification: \(String(reflecting: error), privacy: .public)")
+                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                     }
                 }
 
@@ -119,11 +119,11 @@ extension Session {
                         do {
                             try await UNUserNotificationCenter.current().add(notificationRequest)
                         } catch {
-                            logger.error("Error occured while request notification: \(String(reflecting: error), privacy: .public)")
+                            logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                         }
                     }
                 } catch {
-                    logger.error("Error occured while update accounts: \(String(describing: error))")
+                    logger.error("Error occurred while update accounts: \(String(describing: error))")
 
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = "Update accounts"
@@ -136,7 +136,7 @@ extension Session {
                     do {
                         try await UNUserNotificationCenter.current().add(notificationRequest)
                     } catch {
-                        logger.error("Error occured while request notification: \(String(reflecting: error), privacy: .public)")
+                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                     }
 
                     throw error

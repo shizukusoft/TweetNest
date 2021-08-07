@@ -166,7 +166,7 @@ struct AppSidebarNavigation: View {
 
             isRefreshing = false
         } catch {
-            Logger().error("Error occured: \(String(reflecting: error), privacy: .public)")
+            Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
             self.error = error
             showErrorAlert = true
             isRefreshing = false

@@ -258,7 +258,7 @@ extension Session {
             return try await urlData(from: url)
         } catch {
             Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
-                .error("Error occured while downloading image: \(String(reflecting: error), privacy: .public)")
+                .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
 
             return nil
         }
