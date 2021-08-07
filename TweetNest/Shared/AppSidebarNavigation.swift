@@ -101,13 +101,7 @@ struct AppSidebarNavigation: View {
                     #endif
                 }
             }
-            .alert("Error", isPresented: $showErrorAlert, presenting: error) { _ in
-
-            } message: {
-                $0.flatMap {
-                    Text($0.localizedDescription)
-                }
-            }
+            .alertError(isPresented: $showErrorAlert, error: $error)
             .sheet(isPresented: $showAccountsEditor) {
                 NavigationView {
                     AccountsEditorView()

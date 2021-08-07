@@ -20,9 +20,7 @@ struct MainView: View {
 
     var body: some View {
         AppSidebarNavigation()
-            .alert(Text("Error"), isPresented: $showErrorAlert, presenting: error) {
-                Text($0.localizedDescription)
-            }
+            .alertError(isPresented: $showErrorAlert, error: $error)
             .sheet(item: $user) { user in
                 NavigationView {
                     UserView(user: user)
