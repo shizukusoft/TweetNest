@@ -42,13 +42,11 @@
 		193659B3260978F900865D40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		193659B4260978F900865D40 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */; };
 		193659B5260978F900865D40 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ECC25E90EEA006AB4C0 /* AccountView.swift */; };
-		193659B6260978F900865D40 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /* ImageView.swift */; };
 		193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */; };
 		19365A3A26097A9800865D40 /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19365A3926097A9800865D40 /* TweetNestUITests.swift */; };
 		19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */; };
 		19365A6226097B4800865D40 /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ECC25E90EEA006AB4C0 /* AccountView.swift */; };
 		19365A6326097B4800865D40 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EB925E90ECD006AB4C0 /* MainView.swift */; };
-		19365A6526097B4800865D40 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EDA25E90F0A006AB4C0 /* ImageView.swift */; };
 		19365A6626097B4800865D40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */; };
 		19365A6826097B4800865D40 /* TweetNestKit.Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */; };
@@ -236,7 +234,6 @@
 		19933EB925E90ECD006AB4C0 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 		19933ECC25E90EEA006AB4C0 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebAuthenticationView.swift; sourceTree = "<group>"; };
-		19933EDA25E90F0A006AB4C0 /* ImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
 		19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.Session.swift; sourceTree = "<group>"; };
 		19933EF025E91277006AB4C0 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		1995B92B26B6F1ED00AFCC9E /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
@@ -516,7 +513,6 @@
 				19DA23D026B98767002436DC /* UserDataProfileView.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
-				19933EDA25E90F0A006AB4C0 /* ImageView.swift */,
 				19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */,
 				193AB25926B6FCFA00B18D45 /* Extensions */,
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
@@ -1040,7 +1036,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				193659B6260978F900865D40 /* ImageView.swift in Sources */,
 				193659B4260978F900865D40 /* TweetNestApp.swift in Sources */,
 				19DA23D126B98767002436DC /* UserDataProfileView.swift in Sources */,
 				1989B75326BA4AD100755B1E /* AccountsEditorView.swift in Sources */,
@@ -1096,7 +1091,6 @@
 				19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */,
 				1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */,
-				19365A6526097B4800865D40 /* ImageView.swift in Sources */,
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
 				1989B75426BA4AD100755B1E /* AccountsEditorView.swift in Sources */,
 				190D12F026B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
