@@ -54,7 +54,6 @@ struct UserDataProfileView: View {
             if let url = userData.url {
                 HStack {
                     Label("URL", systemImage: "safari")
-                    .tint(.primary)
                     Spacer()
                     Link(url.absoluteString, destination: url)
                 }
@@ -64,7 +63,6 @@ struct UserDataProfileView: View {
             if let userCreationDate = userData.userCreationDate {
                 HStack {
                     Label("Joined", systemImage: "calendar")
-                    .tint(.primary)
                     Spacer()
                     Text(userCreationDate.formatted(date: .numeric, time: .standard))
                 }
