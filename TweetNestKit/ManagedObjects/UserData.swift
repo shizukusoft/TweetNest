@@ -46,15 +46,21 @@ extension UserData {
 
             if
                 let lastUserData = user.sortedUserDatas?.last,
+
                 lastUserData.blockingUserIDs == blockingUserIDs,
                 lastUserData.followingUserIDs == followingUserIDs,
                 lastUserData.followerUserIDs == followerUserIDs,
+
+                lastUserData.followersCount == twitterUser.publicMetrics.followersCount,
+                lastUserData.followingUsersCount == twitterUser.publicMetrics.followingUsersCount,
                 lastUserData.isProtected == twitterUser.protected,
                 lastUserData.isVerified == twitterUser.verified,
+                lastUserData.listedCount == twitterUser.publicMetrics.listedCount,
                 lastUserData.location == twitterUser.location,
                 lastUserData.name == twitterUser.name,
                 lastUserData.profileImageURL == twitterUser.profileImageOriginalURL,
                 lastUserData.profileImageData == profileImageData,
+                lastUserData.tweetsCount == twitterUser.publicMetrics.tweetsCount,
                 lastUserData.url == twitterUser.expandedURL,
                 lastUserData.userCreationDate == twitterUser.createdAt,
                 lastUserData.userAttributedDescription == twitterUser.attributedDescription.flatMap({ NSAttributedString($0) }),
@@ -69,12 +75,17 @@ extension UserData {
                 newUserData.blockingUserIDs = blockingUserIDs
                 newUserData.followingUserIDs = followingUserIDs
                 newUserData.followerUserIDs = followerUserIDs
+
+                newUserData.followersCount = Int32(twitterUser.publicMetrics.followersCount)
+                newUserData.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
                 newUserData.isProtected = twitterUser.protected
                 newUserData.isVerified = twitterUser.verified
+                newUserData.listedCount = Int32(twitterUser.publicMetrics.listedCount)
                 newUserData.location = twitterUser.location
                 newUserData.name = twitterUser.name
                 newUserData.profileImageURL = twitterUser.profileImageOriginalURL
                 newUserData.profileImageData = profileImageData
+                newUserData.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
                 newUserData.url = twitterUser.expandedURL
                 newUserData.userCreationDate = twitterUser.createdAt
                 newUserData.userAttributedDescription = twitterUser.attributedDescription.flatMap({ NSAttributedString($0) })

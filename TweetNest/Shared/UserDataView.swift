@@ -11,6 +11,26 @@ import TweetNestKit
 struct UserDataView: View {
     @ObservedObject var userData: UserData
 
+    @ViewBuilder
+    var followingUsersLabel: some View {
+        HStack {
+            Label("Following", systemImage: "person.2")
+            Spacer()
+            Text(userData.followingUsersCount.formatted())
+                .foregroundColor(Color.gray)
+        }
+    }
+
+    @ViewBuilder
+    var followersLabel: some View {
+        HStack {
+            Label("Followers", systemImage: "person.2")
+            Spacer()
+            Text(userData.followersCount.formatted())
+                .foregroundColor(Color.gray)
+        }
+    }
+
     var body: some View {
         List {
             Section("Profile") {
@@ -23,13 +43,10 @@ struct UserDataView: View {
                         UsersList(userIDs: followingUserIDs)
                             .navigationTitle(Text("Followings"))
                     } label: {
-                        HStack {
-                            Text("Following")
-                            Spacer()
-                            Text(followingUserIDs.count.formatted())
-                                .foregroundColor(Color.gray)
-                        }
+                        followingUsersLabel
                     }
+                } else {
+                    followingUsersLabel
                 }
 
                 if let followerUserIDs = userData.followerUserIDs, followerUserIDs.isEmpty == false {
@@ -37,13 +54,10 @@ struct UserDataView: View {
                         UsersList(userIDs: followerUserIDs)
                             .navigationTitle(Text("Followers"))
                     } label: {
-                        HStack {
-                            Text("Followers")
-                            Spacer()
-                            Text(followerUserIDs.count.formatted())
-                                .foregroundColor(Color.gray)
-                        }
+                        followersLabel
                     }
+                } else {
+                    followersLabel
                 }
 
                 if let blockingUserIDs = userData.blockingUserIDs, blockingUserIDs.isEmpty == false {
@@ -52,12 +66,30 @@ struct UserDataView: View {
                             .navigationTitle(Text("Blockings"))
                     } label: {
                         HStack {
-                            Text("Blockings")
+                            Label("Blockings", systemImage: "nosign")
                             Spacer()
                             Text(blockingUserIDs.count.formatted())
                                 .foregroundColor(Color.gray)
                         }
                     }
+                }
+            }
+
+            Section {
+                HStack {
+                    Label("Listed", systemImage: "list.bullet")
+                    Spacer()
+                    Text(userData.listedCount.formatted())
+                        .foregroundColor(Color.gray)
+                }
+            }
+
+            Section {
+                HStack {
+                    Label("Tweets", systemImage: "text.bubble")
+                    Spacer()
+                    Text(userData.tweetsCount.formatted())
+                        .foregroundColor(Color.gray)
                 }
             }
         }

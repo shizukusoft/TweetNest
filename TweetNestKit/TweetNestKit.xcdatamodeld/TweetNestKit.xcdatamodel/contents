@@ -20,14 +20,18 @@
     <entity name="UserData" representedClassName="TWNKUserData" syncable="YES">
         <attribute name="blockingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="followersCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="followerUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="followingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="followingUsersCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="isProtected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="listedCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="location" optional="YES" attributeType="String"/>
         <attribute name="name" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
         <attribute name="profileImageData" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" spotlightIndexingEnabled="YES"/>
         <attribute name="profileImageURL" optional="YES" attributeType="URI"/>
+        <attribute name="tweetsCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
         <attribute name="userAttributedDescription" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.SecureUnarchiveFromDataTransformer"/>
         <attribute name="userCreationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -37,6 +41,6 @@
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="119"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="134"/>
-        <element name="UserData" positionX="-45" positionY="27" width="128" height="254"/>
+        <element name="UserData" positionX="-45" positionY="27" width="128" height="314"/>
     </elements>
 </model>
