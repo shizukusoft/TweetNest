@@ -83,7 +83,6 @@
 		19C5A2B526BC1F8A00AB1122 /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A726BC1F8900AB1122 /* PersistentCloudKitContainer.swift */; };
 		19C5A2B626BC1F8A00AB1122 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */; };
 		19C5A2B726BC1F8A00AB1122 /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A926BC1F8900AB1122 /* SessionError.swift */; };
-		19C5A2B826BC1F8A00AB1122 /* KeychainError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AA26BC1F8900AB1122 /* KeychainError.swift */; };
 		19C5A2BA26BC1F8A00AB1122 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */; };
 		19C5A2BB26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */; };
 		19C5A2BC26BC1F8A00AB1122 /* Session+UpdateAccounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AE26BC1F8A00AB1122 /* Session+UpdateAccounts.swift */; };
@@ -254,7 +253,6 @@
 		19C5A2A726BC1F8900AB1122 /* PersistentCloudKitContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentCloudKitContainer.swift; sourceTree = "<group>"; };
 		19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19C5A2A926BC1F8900AB1122 /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
-		19C5A2AA26BC1F8900AB1122 /* KeychainError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainError.swift; sourceTree = "<group>"; };
 		19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TwitterAPIConfiguration.swift"; sourceTree = "<group>"; };
 		19C5A2AE26BC1F8A00AB1122 /* Session+UpdateAccounts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+UpdateAccounts.swift"; sourceTree = "<group>"; };
@@ -474,6 +472,19 @@
 			path = Foundation;
 			sourceTree = "<group>";
 		};
+		1945CED226BE6CD700FBAE51 /* ManagedObjects */ = {
+			isa = PBXGroup;
+			children = (
+				19C5A2A326BC1F8800AB1122 /* Account.swift */,
+				19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */,
+				19C5A2A426BC1F8900AB1122 /* User.swift */,
+				19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */,
+				19C5A2B026BC1F8A00AB1122 /* UserData.swift */,
+				19C5A2A626BC1F8900AB1122 /* UserData+CoreDataProperties.swift */,
+			);
+			path = ManagedObjects;
+			sourceTree = "<group>";
+		};
 		19933D2325E901F3006AB4C0 = {
 			isa = PBXGroup;
 			children = (
@@ -591,9 +602,6 @@
 		19C5A28726BC1F3500AB1122 /* TweetNestKit */ = {
 			isa = PBXGroup;
 			children = (
-				19C5A2A326BC1F8800AB1122 /* Account.swift */,
-				19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */,
-				19C5A2AA26BC1F8900AB1122 /* KeychainError.swift */,
 				19C5A2A726BC1F8900AB1122 /* PersistentCloudKitContainer.swift */,
 				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
 				19C5A2AF26BC1F8A00AB1122 /* Session.swift */,
@@ -601,12 +609,9 @@
 				190DF4C026BCF1B700E1F062 /* Session+UpdateUser.swift */,
 				19C5A2AE26BC1F8A00AB1122 /* Session+UpdateAccounts.swift */,
 				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
-				19C5A2A426BC1F8900AB1122 /* User.swift */,
-				19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */,
-				19C5A2B026BC1F8A00AB1122 /* UserData.swift */,
-				19C5A2A626BC1F8900AB1122 /* UserData+CoreDataProperties.swift */,
 				19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */,
 				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
+				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
 				19C5A2D126BC217900AB1122 /* Extensions */,
 				19C5A28926BC1F3500AB1122 /* TweetNestKit.docc */,
 				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
@@ -1133,7 +1138,6 @@
 				19C5A2B126BC1F8A00AB1122 /* Account.swift in Sources */,
 				19C5A2B226BC1F8A00AB1122 /* User.swift in Sources */,
 				19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */,
-				19C5A2B826BC1F8A00AB1122 /* KeychainError.swift in Sources */,
 				19C5A2B526BC1F8A00AB1122 /* PersistentCloudKitContainer.swift in Sources */,
 				19C5A2D626BC34A600AB1122 /* UsersSpotlightDelegate.swift in Sources */,
 				1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */,
