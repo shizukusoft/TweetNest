@@ -38,6 +38,8 @@ struct AppSidebarNavigation: View {
         animation: .default)
     private var accounts: FetchedResults<Account>
 
+    @Environment(\.refresh) private var refreshAction
+
     var body: some View {
         NavigationView {
             List {
@@ -83,14 +85,23 @@ struct AppSidebarNavigation: View {
 
                     #if !os(iOS)
                     Button {
-                        Task {
-                            refresh
+                        if let refresh = refreshAction {
+                            Task {
+                                refresh
+                            }
                         }
                     } label: {
                         Label("Refresh", systemImage: "arrow.clockwise")
                     }
                     .disabled(isRefreshing)
                     #endif
+                }
+            }
+            .accessibilityAction(named: "Refresh") {
+                if let refresh = refreshAction {
+                    Task {
+                        refresh
+                    }
                 }
             }
             .alertError(isPresented: $showErrorAlert, error: $error)
