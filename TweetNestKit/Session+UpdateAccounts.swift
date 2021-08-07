@@ -60,16 +60,16 @@ extension Session {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "update-accounts")
 
         let task = Task.detached {
-            logger.info("Start background task for: \(backgroundTask.identifier)")
+            logger.info("Start background task for: \(backgroundTask.identifier, privacy: .public)")
             defer {
-                logger.info("Background task finished for: \(backgroundTask.identifier)")
+                logger.info("Background task finished for: \(backgroundTask.identifier, privacy: .public)")
             }
 
             do {
                 do {
                     try self.scheduleUpdateAccountsBackgroundTask()
                 } catch {
-                    logger.error("Error occured while schedule update accounts: \(String(describing: error))")
+                    logger.error("Error occured while schedule update accounts: \(String(reflecting: error), privacy: .public)")
 
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = "Update accounts"
@@ -82,7 +82,7 @@ extension Session {
                     do {
                         try await UNUserNotificationCenter.current().add(notificationRequest)
                     } catch {
-                        logger.error("Error occured while request notification: \(String(describing: error))")
+                        logger.error("Error occured while request notification: \(String(reflecting: error), privacy: .public)")
                     }
                 }
 
@@ -119,7 +119,7 @@ extension Session {
                         do {
                             try await UNUserNotificationCenter.current().add(notificationRequest)
                         } catch {
-                            logger.error("Error occured while request notification: \(String(describing: error))")
+                            logger.error("Error occured while request notification: \(String(reflecting: error), privacy: .public)")
                         }
                     }
                 } catch {
@@ -136,7 +136,7 @@ extension Session {
                     do {
                         try await UNUserNotificationCenter.current().add(notificationRequest)
                     } catch {
-                        logger.error("Error occured while request notification: \(String(describing: error))")
+                        logger.error("Error occured while request notification: \(String(reflecting: error), privacy: .public)")
                     }
 
                     throw error
@@ -149,7 +149,7 @@ extension Session {
         }
 
         backgroundTask.expirationHandler = {
-            logger.info("Background task expired for: \(backgroundTask.identifier)")
+            logger.info("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
             task.cancel()
         }
     }

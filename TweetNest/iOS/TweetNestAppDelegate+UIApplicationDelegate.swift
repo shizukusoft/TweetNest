@@ -15,7 +15,7 @@ extension TweetNestAppDelegate: UIApplicationDelegate {
         UNUserNotificationCenter.current().delegate = self
 
         if (Session.shared.registerUpdateAccountsBackgroundTask() == false) {
-            Logger().error("Failed to register update accounts background task (\(Session.updateAccountsBackgroundTaskIdentifier))")
+            Logger().error("Failed to register update accounts background task: \(Session.updateAccountsBackgroundTaskIdentifier, privacy: .public)")
         }
 
         return true
