@@ -60,7 +60,6 @@ struct AppSidebarNavigation: View {
                             .cornerRadius(12)
                         }
                     }
-
                 }
             }
             .listStyle(.sidebar)
