@@ -32,8 +32,9 @@ extension UserData {
             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
             userFetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            userFetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
 
-            let user = try context.fetch(userFetchRequest).first ?? {
+            let user = try context.fetch(userFetchRequest).last ?? {
                 let user = User(context: context)
                 user.id = twitterUser.id
                 user.creationDate = userDataCreationDate

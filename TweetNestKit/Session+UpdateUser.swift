@@ -14,22 +14,21 @@ extension Session {
     @discardableResult
     func updateUser(id userID: Twitter.User.ID, with twitterSession: Twitter.Session) async throws -> (userObjectID: NSManagedObjectID, hasChanges: Bool) {
         let context = container.newBackgroundContext()
+        context.undoManager = nil
 
         let updateStartDate = Date()
-        let user: User? = try await context.perform {
+        try await context.perform {
             let fetchRequest = User.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
 
-            return try context.fetch(fetchRequest).last
-        }
-
-        if let user = user {
-            try await context.perform {
-                user.lastUpdateStartDate = updateStartDate
-                user.lastUpdateEndDate = nil
-
-                try context.save()
+            guard let user = try context.fetch(fetchRequest).last else {
+                return
             }
+
+            user.lastUpdateStartDate = updateStartDate
+            user.lastUpdateEndDate = nil
+
+            try context.save()
         }
 
         let twitterUser = try await Twitter.User(id: userID, session: twitterSession)
@@ -59,25 +58,29 @@ extension Session {
 
                 for try await followingUser in taskGroup {
                     userIDsByIndex[followingUser.index] = try await context.perform(schedule: .enqueued) {
-                        let userData = try UserData.createOrUpdate(
-                            twitterUser: followingUser.twitterUser,
-                            profileImageData: followingUser.profileImageData,
-                            userUpdateStartDate: followingUsersFetchStartDate,
-                            userDataCreationDate: followingUsersFetchEndDate,
-                            context: context
-                        )
+                        try autoreleasepool {
+                            let userData = try UserData.createOrUpdate(
+                                twitterUser: followingUser.twitterUser,
+                                profileImageData: followingUser.profileImageData,
+                                userUpdateStartDate: followingUsersFetchStartDate,
+                                userDataCreationDate: followingUsersFetchEndDate,
+                                context: context
+                            )
 
-                        let userID = userData.user?.id
+                            let userID = userData.user?.id
 
-                        if userData.user?.account != nil {
-                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                            context.delete(userData)
+                            if userData.user?.account != nil {
+                                // Don't update user data if user data has account. (Might overwrite followings/followers list)
+                                context.delete(userData)
+                            }
+
+                            try context.save()
+                            defer {
+                                context.reset()
+                            }
+
+                            return userID
                         }
-
-                        try context.save()
-                        context.refreshAllObjects()
-
-                        return userID
                     }
                 }
 
@@ -108,25 +111,29 @@ extension Session {
 
                 for try await follower in taskGroup {
                     userIDsByIndex[follower.index] = try await context.perform {
-                        let userData = try UserData.createOrUpdate(
-                            twitterUser: follower.twitterUser,
-                            profileImageData: follower.profileImageData,
-                            userUpdateStartDate: followersFetchStartDate,
-                            userDataCreationDate: followersFetchEndDate,
-                            context: context
-                        )
+                        try autoreleasepool {
+                            let userData = try UserData.createOrUpdate(
+                                twitterUser: follower.twitterUser,
+                                profileImageData: follower.profileImageData,
+                                userUpdateStartDate: followersFetchStartDate,
+                                userDataCreationDate: followersFetchEndDate,
+                                context: context
+                            )
 
-                        let userID = userData.user?.id
+                            let userID = userData.user?.id
 
-                        if userData.user?.account != nil {
-                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                            context.delete(userData)
+                            if userData.user?.account != nil {
+                                // Don't update user data if user data has account. (Might overwrite followings/followers list)
+                                context.delete(userData)
+                            }
+
+                            try context.save()
+                            defer {
+                                context.reset()
+                            }
+
+                            return userID
                         }
-
-                        try context.save()
-                        context.refreshAllObjects()
-
-                        return userID
                     }
                 }
 
@@ -157,25 +164,29 @@ extension Session {
 
                 for try await blockingUser in taskGroup {
                     userIDsByIndex[blockingUser.index] = try await context.perform {
-                        let userData = try UserData.createOrUpdate(
-                            twitterUser: blockingUser.twitterUser,
-                            profileImageData: blockingUser.profileImageData,
-                            userUpdateStartDate: blockingUsersFetchStartDate,
-                            userDataCreationDate: blockingUsersFetchEndDate,
-                            context: context
-                        )
+                        try autoreleasepool {
+                            let userData = try UserData.createOrUpdate(
+                                twitterUser: blockingUser.twitterUser,
+                                profileImageData: blockingUser.profileImageData,
+                                userUpdateStartDate: blockingUsersFetchStartDate,
+                                userDataCreationDate: blockingUsersFetchEndDate,
+                                context: context
+                            )
 
-                        let userID = userData.user?.id
+                            let userID = userData.user?.id
 
-                        if userData.user?.account != nil {
-                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                            context.delete(userData)
+                            if userData.user?.account != nil {
+                                // Don't update user data if user data has account. (Might overwrite followings/followers list)
+                                context.delete(userData)
+                            }
+
+                            try context.save()
+                            defer {
+                                context.reset()
+                            }
+
+                            return userID
                         }
-
-                        try context.save()
-                        context.refreshAllObjects()
-
-                        return userID
                     }
                 }
 
@@ -192,6 +203,11 @@ extension Session {
         let profileImageData = await profileImageDataTask.value
 
         return try await context.perform {
+            let fetchRequest = User.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
+            fetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
+
+            let user = try context.fetch(fetchRequest).last
             let previousUserData = user?.sortedUserDatas?.last
 
             let userData = try UserData.createOrUpdate(
@@ -206,6 +222,9 @@ extension Session {
             )
 
             try context.save()
+            defer {
+                context.reset()
+            }
 
             return (userObjectID: userData.user!.objectID, hasChanges: previousUserData?.objectID != userData.objectID)
         }
