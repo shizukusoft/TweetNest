@@ -16,10 +16,17 @@ public actor Session {
     static let cloudKitIdentifier = "iCloud.\(Bundle.module.bundleIdentifier!)"
     static let applicationGroupIdentifier = "group.\(Bundle.module.bundleIdentifier!)"
 
-    private let twitterAPIConfigurationTask: Task<TwitterAPIConfiguration, Error>
+    private var _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
         get async throws {
-            try await twitterAPIConfigurationTask.value
+            switch _twitterAPIConfiguration {
+            case .uninitialized(let initializer):
+                let value = try await initializer()
+                _twitterAPIConfiguration = .initialized(value)
+                return value
+            case .initialized(let value):
+                return value
+            }
         }
     }
 
@@ -27,23 +34,17 @@ public actor Session {
     public nonisolated let container: PersistentContainer
 
     public init(inMemory: Bool = false) {
-        self.twitterAPIConfigurationTask = Task.detached {
-            try await .iCloud
-        }
+        _twitterAPIConfiguration = .uninitialized { try await .iCloud }
         container = PersistentContainer(inMemory: inMemory)
     }
 
     public init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
-        self.twitterAPIConfigurationTask = Task.detached {
-            try await twitterAPIConfiguration()
-        }
+        _twitterAPIConfiguration = .uninitialized { try await twitterAPIConfiguration() }
         container = PersistentContainer(inMemory: inMemory)
     }
 
     public init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
-        self.twitterAPIConfigurationTask = Task.detached {
-            twitterAPIConfiguration
-        }
+        _twitterAPIConfiguration = .uninitialized { twitterAPIConfiguration }
         container = PersistentContainer(inMemory: inMemory)
     }
 }
