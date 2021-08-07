@@ -22,7 +22,6 @@ extension UserData {
         followingUserIDs: [String]? = nil,
         followerUserIDs: [String]? = nil,
         blockingUserIDs: [String]? = nil,
-        profileImageData: Data? = nil,
         userUpdateStartDate: Date = Date(),
         userUpdateEndDate: Date = Date(),
         userDataCreationDate: Date = Date(),
@@ -60,7 +59,6 @@ extension UserData {
                 lastUserData.location == twitterUser.location,
                 lastUserData.name == twitterUser.name,
                 lastUserData.profileImageURL == twitterUser.profileImageOriginalURL,
-                lastUserData.profileImageData == profileImageData,
                 lastUserData.tweetsCount == twitterUser.publicMetrics.tweetsCount,
                 lastUserData.url == twitterUser.expandedURL,
                 lastUserData.userCreationDate == twitterUser.createdAt,
@@ -85,7 +83,6 @@ extension UserData {
                 newUserData.location = twitterUser.location
                 newUserData.name = twitterUser.name
                 newUserData.profileImageURL = twitterUser.profileImageOriginalURL
-                newUserData.profileImageData = profileImageData
                 newUserData.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
                 newUserData.url = twitterUser.expandedURL
                 newUserData.userCreationDate = twitterUser.createdAt

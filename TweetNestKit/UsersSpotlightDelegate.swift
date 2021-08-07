@@ -25,8 +25,15 @@ class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
 
             attributeSet.identifier = user.id
             attributeSet.displayName = sortedUserDatas?.last?.name
-            attributeSet.alternateNames = (sortedUserDatas?.last?.username).flatMap { ["@\($0)"] }
-            attributeSet.thumbnailData = sortedUserDatas?.last?.profileImageData
+            attributeSet.alternateNames = sortedUserDatas?.last?.username.flatMap { ["@\($0)"] }
+            attributeSet.thumbnailData = try? sortedUserDatas?.last?.profileImageURL.flatMap {
+                let fetchRequest = DataAsset.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "url == %@", $0 as NSURL)
+                fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                fetchRequest.fetchLimit = 1
+
+                return try user.managedObjectContext?.fetch(fetchRequest).first?.data
+            }
             attributeSet.keywords = (sortedUserDatas?.compactMap(\.name) ?? []) + (sortedUserDatas?.compactMap(\.username) ?? [])
 
             return attributeSet

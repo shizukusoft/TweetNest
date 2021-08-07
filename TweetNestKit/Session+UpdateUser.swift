@@ -34,173 +34,112 @@ extension Session {
         let twitterUser = try await Twitter.User(id: userID, session: twitterSession)
         let twitterUserFetchDate = Date()
 
-        let profileImageDataTask = Task {
-            await Self.profileImage(from: twitterUser.profileImageOriginalURL)
-        }
-
-        let followingUserIDsTask = Task { () -> [String] in
+        let followingUsersTask = Task { () -> [Twitter.User] in
             let followingUsersFetchStartDate = Date()
             let followingUsers = try await twitterUser.followingUsers(session: twitterSession).map { try $0.get() }
             let followingUsersFetchEndDate = Date()
 
-            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data?).self) { taskGroup in
-                for (index, followingUser) in followingUsers.enumerated() {
-                    taskGroup.addTask {
-                        (
-                            index: index,
+            for followingUser in followingUsers {
+                try await context.perform(schedule: .enqueued) {
+                    try autoreleasepool {
+                        let userData = try UserData.createOrUpdate(
                             twitterUser: followingUser,
-                            profileImageData: await Self.profileImage(from: followingUser.profileImageOriginalURL)
+                            userUpdateStartDate: followingUsersFetchStartDate,
+                            userDataCreationDate: followingUsersFetchEndDate,
+                            context: context
                         )
-                    }
-                }
 
-                var userIDsByIndex = [Int: String?]()
-
-                for try await followingUser in taskGroup {
-                    userIDsByIndex[followingUser.index] = try await context.perform(schedule: .enqueued) {
-                        try autoreleasepool {
-                            let userData = try UserData.createOrUpdate(
-                                twitterUser: followingUser.twitterUser,
-                                profileImageData: followingUser.profileImageData,
-                                userUpdateStartDate: followingUsersFetchStartDate,
-                                userDataCreationDate: followingUsersFetchEndDate,
-                                context: context
-                            )
-
-                            let userID = userData.user?.id
-
-                            if userData.user?.account != nil {
-                                // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                                context.delete(userData)
-                            }
-
-                            try context.save()
-                            defer {
-                                context.reset()
-                            }
-
-                            return userID
+                        if userData.user?.account != nil {
+                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
+                            context.delete(userData)
                         }
+
+                        try context.save()
+                        context.reset()
                     }
                 }
-
-                return userIDsByIndex
-                    .lazy
-                    .sorted { $0.key < $1.key }
-                    .compactMap { $0.value }
             }
+
+            return followingUsers
         }
 
-        let followerUserIDsTask = Task { () -> [String] in
+        let followersTask = Task { () -> [Twitter.User] in
             let followersFetchStartDate = Date()
             let followers = try await twitterUser.followers(session: twitterSession).map { try $0.get() }
             let followersFetchEndDate = Date()
 
-            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data?).self) { taskGroup in
-                for (index, follower) in followers.enumerated() {
-                    taskGroup.addTask {
-                        (
-                            index: index,
+            for follower in followers {
+                try await context.perform(schedule: .enqueued) {
+                    try autoreleasepool {
+                        let userData = try UserData.createOrUpdate(
                             twitterUser: follower,
-                            profileImageData: await Self.profileImage(from: follower.profileImageOriginalURL)
+                            userUpdateStartDate: followersFetchStartDate,
+                            userDataCreationDate: followersFetchEndDate,
+                            context: context
                         )
-                    }
-                }
 
-                var userIDsByIndex = [Int: String?]()
-
-                for try await follower in taskGroup {
-                    userIDsByIndex[follower.index] = try await context.perform {
-                        try autoreleasepool {
-                            let userData = try UserData.createOrUpdate(
-                                twitterUser: follower.twitterUser,
-                                profileImageData: follower.profileImageData,
-                                userUpdateStartDate: followersFetchStartDate,
-                                userDataCreationDate: followersFetchEndDate,
-                                context: context
-                            )
-
-                            let userID = userData.user?.id
-
-                            if userData.user?.account != nil {
-                                // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                                context.delete(userData)
-                            }
-
-                            try context.save()
-                            defer {
-                                context.reset()
-                            }
-
-                            return userID
+                        if userData.user?.account != nil {
+                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
+                            context.delete(userData)
                         }
+
+                        try context.save()
+                        context.reset()
                     }
                 }
-
-                return userIDsByIndex
-                    .lazy
-                    .sorted { $0.key < $1.key }
-                    .compactMap { $0.value }
             }
+
+            return followers
         }
 
-        let blockingUserIDsTask = Task { () -> [String] in
+        let blockingUsersTask = Task { () -> [Twitter.User] in
             let blockingUsersFetchStartDate = Date()
             let blockingUsers = try await twitterUser.blockingUsers(session: twitterSession).map { try $0.get() }
             let blockingUsersFetchEndDate = Date()
 
-            return try await withThrowingTaskGroup(of: (index: Int, twitterUser: Twitter.User, profileImageData: Data?).self) { taskGroup in
-                for (index, blockingUser) in blockingUsers.enumerated() {
-                    taskGroup.addTask {
-                        (
-                            index: index,
+            for blockingUser in blockingUsers {
+                try await context.perform(schedule: .enqueued) {
+                    try autoreleasepool {
+                        let userData = try UserData.createOrUpdate(
                             twitterUser: blockingUser,
-                            profileImageData: await Self.profileImage(from: blockingUser.profileImageOriginalURL)
+                            userUpdateStartDate: blockingUsersFetchStartDate,
+                            userDataCreationDate: blockingUsersFetchEndDate,
+                            context: context
                         )
-                    }
-                }
 
-                var userIDsByIndex = [Int: String?]()
-
-                for try await blockingUser in taskGroup {
-                    userIDsByIndex[blockingUser.index] = try await context.perform {
-                        try autoreleasepool {
-                            let userData = try UserData.createOrUpdate(
-                                twitterUser: blockingUser.twitterUser,
-                                profileImageData: blockingUser.profileImageData,
-                                userUpdateStartDate: blockingUsersFetchStartDate,
-                                userDataCreationDate: blockingUsersFetchEndDate,
-                                context: context
-                            )
-
-                            let userID = userData.user?.id
-
-                            if userData.user?.account != nil {
-                                // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                                context.delete(userData)
-                            }
-
-                            try context.save()
-                            defer {
-                                context.reset()
-                            }
-
-                            return userID
+                        if userData.user?.account != nil {
+                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
+                            context.delete(userData)
                         }
+
+                        try context.save()
+                        context.reset()
                     }
                 }
-
-                return userIDsByIndex
-                    .lazy
-                    .sorted { $0.key < $1.key }
-                    .compactMap { $0.value }
             }
+
+            return blockingUsers
         }
 
-        let followingUserIDs = try await followingUserIDsTask.value
-        let followerUserIDs = try await followerUserIDsTask.value
-        let blockingUserIDs = try await blockingUserIDsTask.value
-        let profileImageData = await profileImageDataTask.value
+        let followingUsers = try await followingUsersTask.value
+        let followers = try await followersTask.value
+        let blockingUsers = try await blockingUsersTask.value
+
+        let profileImageOriginalURLs = Set([twitterUser.profileImageOriginalURL] + followingUsers.map(\.profileImageOriginalURL) + followers.map(\.profileImageOriginalURL) + blockingUsers.map(\.profileImageOriginalURL))
+        await withTaskGroup(of: Void.self) { taskGroup in
+            for profileImageOriginalURL in profileImageOriginalURLs {
+                taskGroup.addTask {
+                    do {
+                        _ = try await DataAsset.dataAsset(for: profileImageOriginalURL, context: context)
+                    } catch {
+                        Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
+                            .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                    }
+                }
+            }
+
+            await taskGroup.waitForAll()
+        }
 
         return try await context.perform {
             let fetchRequest = User.fetchRequest()
@@ -212,10 +151,9 @@ extension Session {
 
             let userData = try UserData.createOrUpdate(
                 twitterUser: twitterUser,
-                followingUserIDs: followingUserIDs,
-                followerUserIDs: followerUserIDs,
-                blockingUserIDs: blockingUserIDs,
-                profileImageData: profileImageData,
+                followingUserIDs: followingUsers.map(\.id),
+                followerUserIDs: followers.map(\.id),
+                blockingUserIDs: blockingUsers.map(\.id),
                 userUpdateStartDate: updateStartDate,
                 userDataCreationDate: twitterUserFetchDate,
                 context: context
@@ -256,30 +194,5 @@ extension Session {
         }
 
         return updateResult.hasChanges
-    }
-}
-
-extension Session {
-    private static func urlData(from url: URL) async throws -> Data {
-        let (data, response) = try await URLSession.shared.data(from: url)
-        guard
-            let httpResponse = response as? HTTPURLResponse,
-            (200..<300).contains(httpResponse.statusCode)
-        else {
-            throw SessionError.invalidServerResponse(response)
-        }
-
-        return data
-    }
-
-    private static func profileImage(from url: URL) async -> Data? {
-        do {
-            return try await urlData(from: url)
-        } catch {
-            Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
-                .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
-
-            return nil
-        }
     }
 }

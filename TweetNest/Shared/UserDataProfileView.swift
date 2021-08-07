@@ -15,16 +15,8 @@ struct UserDataProfileView: View {
         Group {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
-                    Group {
-                        if let profileImage = Image(data: userData.profileImageData) {
-                            profileImage
-                                .resizable()
-                        } else {
-                            Color.gray
-                        }
-                    }
-                    .frame(width: 50, height: 50)
-                    .cornerRadius(25)
+                    ProfileImage(userData: userData)
+                        .frame(width: 50, height: 50)
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(userData.name ?? userData.user.flatMap { "#\($0.id)" } ?? "")

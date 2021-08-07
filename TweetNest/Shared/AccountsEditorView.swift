@@ -25,16 +25,8 @@ struct AccountsEditorView: View {
                 Label {
                     Text((account.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\(account.id)")
                 } icon: {
-                    Group {
-                        if let profileImage = Image(data: account.user?.sortedUserDatas?.last?.profileImageData) {
-                            profileImage
-                                .resizable()
-                        } else {
-                            Color.gray
-                        }
-                    }
-                    .frame(width: 24, height: 24)
-                    .cornerRadius(12)
+                    ProfileImage(userData: account.user?.sortedUserDatas?.last)
+                        .frame(width: 24, height: 24)
                 }
             }
             .onDelete(perform: deleteAccounts)
