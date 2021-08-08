@@ -20,6 +20,7 @@ struct UserView: View {
 
     #if os(iOS)
     @State var safariSheetURL: URL? = nil
+    @State var shareSheetURL: URL? = nil
 
     @Environment(\.openURL) private var openURL
     #endif
@@ -61,6 +62,9 @@ struct UserView: View {
                     Button(Text("Open Profile")) {
                         openURL(userProfileURL)
                     }
+                    Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
+                        shareSheetURL = userProfileURL
+                    }
                 }
                 #else
                 Link(destination: userProfileURL) {
@@ -72,6 +76,9 @@ struct UserView: View {
         #if os(iOS)
         .sheet(item: $safariSheetURL) {
             SafariView(url: $0)
+        }
+        .sheet(item: $shareSheetURL) {
+            ShareView(item: $0)
         }
         #endif
     }
