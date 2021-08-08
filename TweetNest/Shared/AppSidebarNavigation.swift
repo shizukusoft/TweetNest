@@ -137,6 +137,7 @@ struct AppSidebarNavigation: View {
             } catch {
                 withAnimation {
                     webAuthenticationSession = nil
+                    Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
                     self.error = error
                     showErrorAlert = true
                     isAddingAccount = false
