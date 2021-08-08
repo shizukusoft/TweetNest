@@ -56,7 +56,13 @@
 "Menu" = "메뉴";
 
 /* No comment provided by engineer. */
+"More" = "더 보기";
+
+/* No comment provided by engineer. */
 "Open Profile" = "프로필 열기";
+
+/* No comment provided by engineer. */
+"Open Profile in Safari" = "Safari에서 프로필 열기";
 
 /* No comment provided by engineer. */
 "Profile" = "프로필";
