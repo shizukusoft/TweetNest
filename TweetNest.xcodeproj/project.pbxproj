@@ -67,6 +67,7 @@
 		195DD4C026BEF6B3008F0309 /* DataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* DataAsset.swift */; };
 		195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C126BEF91C008F0309 /* ProfileImage.swift */; };
 		195DD4C326BEF91C008F0309 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C126BEF91C008F0309 /* ProfileImage.swift */; };
+		195DD4C826BFD32E008F0309 /* Array+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */; };
 		1989B75026BA4A2000755B1E /* AppSidebarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B74F26BA4A2000755B1E /* AppSidebarMenu.swift */; };
 		1989B75126BA4A2000755B1E /* AppSidebarMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B74F26BA4A2000755B1E /* AppSidebarMenu.swift */; };
 		1989B75326BA4AD100755B1E /* AccountsEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75226BA4AD100755B1E /* AccountsEditorView.swift */; };
@@ -256,6 +257,7 @@
 		195DD4B926BEF09D008F0309 /* DataAsset+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataAsset+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		195DD4BE26BEF6B2008F0309 /* DataAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAsset.swift; sourceTree = "<group>"; };
 		195DD4C126BEF91C008F0309 /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
+		195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+TweetNestKit.swift"; sourceTree = "<group>"; };
 		1989B74F26BA4A2000755B1E /* AppSidebarMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarMenu.swift; sourceTree = "<group>"; };
 		1989B75226BA4AD100755B1E /* AccountsEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountsEditorView.swift; sourceTree = "<group>"; };
 		1989B75526BA537900755B1E /* UserDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataView.swift; sourceTree = "<group>"; };
@@ -543,6 +545,14 @@
 			path = ManagedObjects;
 			sourceTree = "<group>";
 		};
+		195DD4C626BFD31E008F0309 /* Swift */ = {
+			isa = PBXGroup;
+			children = (
+				195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */,
+			);
+			path = Swift;
+			sourceTree = "<group>";
+		};
 		19933D2325E901F3006AB4C0 = {
 			isa = PBXGroup;
 			children = (
@@ -697,6 +707,7 @@
 		19C5A2D126BC217900AB1122 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				195DD4C626BFD31E008F0309 /* Swift */,
 				19C5A2D226BC218100AB1122 /* Foundation */,
 			);
 			path = Extensions;
@@ -1219,6 +1230,7 @@
 				19C5A2BD26BC1F8A00AB1122 /* Session.swift in Sources */,
 				19C5A2B326BC1F8A00AB1122 /* SecureUnarchiveFromDataTransformer.swift in Sources */,
 				195DD4BB26BEF09D008F0309 /* DataAsset+CoreDataProperties.swift in Sources */,
+				195DD4C826BFD32E008F0309 /* Array+TweetNestKit.swift in Sources */,
 				19C5A2BA26BC1F8A00AB1122 /* Account+CoreDataProperties.swift in Sources */,
 				190DF4C126BCF1B700E1F062 /* Session+UpdateUser.swift in Sources */,
 				19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */,

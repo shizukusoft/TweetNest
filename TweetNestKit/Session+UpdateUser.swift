@@ -92,7 +92,24 @@ extension Session {
 
         let blockingUsersTask = Task { () -> [Twitter.User] in
             let blockingUsersFetchStartDate = Date()
-            let blockingUsers = try await twitterUser.blockingUsers(session: twitterSession).map { try $0.get() }
+            let blockingUserIDs = try await Twitter.Account.myBlockingIDs(session: twitterSession)
+            let blockingUsers: [Twitter.User] = try await withThrowingTaskGroup(of: (Int, [Twitter.User]).self) { taskGroup in
+                blockingUserIDs
+                    .chunked(into: 100)
+                    .enumerated()
+                    .forEach { element in
+                        taskGroup.addTask {
+                            (element.offset, try await [Twitter.User](ids: element.element, session: twitterSession))
+                        }
+                    }
+
+                return try await taskGroup
+                    .reduce(into: [(Int, [Twitter.User])]()) {
+                        $0.append($1)
+                    }
+                    .sorted(by: { $0.0 < $1.0 })
+                    .flatMap { $0.1 }
+            }
             let blockingUsersFetchEndDate = Date()
 
             for blockingUser in blockingUsers {
