@@ -113,6 +113,8 @@
 		6601075B26BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075926BEC58A0088E240 /* InfoPlist.strings */; };
 		6601075E26BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075C26BEC58A0088E240 /* InfoPlist.strings */; };
 		6601076126BEC58A0088E240 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075F26BEC58A0088E240 /* Localizable.strings */; };
+		66EE523826BF560200B721AC /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523726BF560200B721AC /* ShareView.swift */; };
+		66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523A26BF5C0E00B721AC /* ShareButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -285,6 +287,8 @@
 		6601075A26BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6601075D26BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6601076026BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		66EE523726BF560200B721AC /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
+		66EE523A26BF5C0E00B721AC /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -577,6 +581,7 @@
 			children = (
 				1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */,
 				1995B93526B6F9E000AFCC9E /* SafariView.swift */,
+				66EE523726BF560200B721AC /* ShareView.swift */,
 				19933D3625E901F4006AB4C0 /* Info.plist */,
 				19933EF025E91277006AB4C0 /* TweetNest.entitlements */,
 			);
@@ -587,6 +592,7 @@
 			isa = PBXGroup;
 			children = (
 				1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */,
+				66EE523A26BF5C0E00B721AC /* ShareButton.swift */,
 				19933D3D25E901F5006AB4C0 /* Info.plist */,
 				19933D3E25E901F5006AB4C0 /* TweetNest.entitlements */,
 			);
@@ -1099,6 +1105,7 @@
 				1989B75626BA537900755B1E /* UserDataView.swift in Sources */,
 				194EF57E26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
 				195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */,
+				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
 				193659AF260978F900865D40 /* TweetNestKit.Session.swift in Sources */,
 				190D12EF26B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 			);
@@ -1124,6 +1131,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */,
 				19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */,
 				19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
 				1989B75726BA537900755B1E /* UserDataView.swift in Sources */,
