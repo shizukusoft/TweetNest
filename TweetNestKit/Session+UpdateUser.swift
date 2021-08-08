@@ -34,7 +34,7 @@ extension Session {
         let twitterUser = try await Twitter.User(id: userID, session: twitterSession)
         let twitterUserFetchDate = Date()
 
-        let followingUsersTask = Task { () -> [Twitter.User] in
+        let followingUsersTask = Task.detached { () -> [Twitter.User] in
             let followingUsersFetchStartDate = Date()
             let followingUsers = try await twitterUser.followingUsers(session: twitterSession).map { try $0.get() }
             let followingUsersFetchEndDate = Date()
@@ -62,7 +62,7 @@ extension Session {
             return followingUsers
         }
 
-        let followersTask = Task { () -> [Twitter.User] in
+        let followersTask = Task.detached { () -> [Twitter.User] in
             let followersFetchStartDate = Date()
             let followers = try await twitterUser.followers(session: twitterSession).map { try $0.get() }
             let followersFetchEndDate = Date()
@@ -90,7 +90,7 @@ extension Session {
             return followers
         }
 
-        let blockingUsersTask = Task { () -> [Twitter.User] in
+        let blockingUsersTask = Task.detached { () -> [Twitter.User] in
             let blockingUsersFetchStartDate = Date()
             let blockingUserIDs = try await Twitter.Account.myBlockingIDs(session: twitterSession)
             let blockingUsers: [Twitter.User] = try await withThrowingTaskGroup(of: (Int, [Twitter.User]).self) { taskGroup in
