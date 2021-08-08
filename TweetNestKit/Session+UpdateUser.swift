@@ -125,23 +125,26 @@ extension Session {
         let followers = try await followersTask.value
         let blockingUsers = try await blockingUsersTask.value
 
-        let profileImageOriginalURLs = Set([twitterUser.profileImageOriginalURL] + followingUsers.map(\.profileImageOriginalURL) + followers.map(\.profileImageOriginalURL) + blockingUsers.map(\.profileImageOriginalURL))
-        await withTaskGroup(of: Void.self) { taskGroup in
-            for profileImageOriginalURL in profileImageOriginalURLs {
-                taskGroup.addTask {
-                    do {
-                        _ = try await DataAsset.dataAsset(for: profileImageOriginalURL, context: context)
-                    } catch {
-                        Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
-                            .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+        let profileImageDownloadTask = Task.detached {
+            let profileImageOriginalURLs = Set([twitterUser.profileImageOriginalURL] + followingUsers.map(\.profileImageOriginalURL) + followers.map(\.profileImageOriginalURL) + blockingUsers.map(\.profileImageOriginalURL))
+
+            await withTaskGroup(of: Void.self) { taskGroup in
+                for profileImageOriginalURL in profileImageOriginalURLs {
+                    taskGroup.addTask {
+                        do {
+                            _ = try await DataAsset.dataAsset(for: profileImageOriginalURL, context: context)
+                        } catch {
+                            Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
+                                .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                        }
                     }
                 }
-            }
 
-            await taskGroup.waitForAll()
+                await taskGroup.waitForAll()
+            }
         }
 
-        return try await context.perform {
+        let result: (userObjectID: NSManagedObjectID, hasChanges: Bool) = try await context.perform {
             let fetchRequest = User.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
             fetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
@@ -166,6 +169,10 @@ extension Session {
 
             return (userObjectID: userData.user!.objectID, hasChanges: previousUserData?.objectID != userData.objectID)
         }
+
+        await profileImageDownloadTask.value
+
+        return result
     }
 
     @discardableResult
