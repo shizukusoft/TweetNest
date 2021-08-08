@@ -297,6 +297,11 @@
 		66002D7026BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		66002D7326BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66002D7626BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		66002D7826BF903800B52E30 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66002D7926BF903800B52E30 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66002D7A26BF903800B52E30 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		66002D7B26BF903800B52E30 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		66002D7C26BF903800B52E30 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6601075726BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6601075A26BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6657FDD726BF22C100741FA9 /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
@@ -960,6 +965,7 @@
 			knownRegions = (
 				Base,
 				en,
+				ja,
 				ko,
 			);
 			mainGroup = 19933D2325E901F3006AB4C0;
@@ -1306,6 +1312,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				66002D7026BF897000B52E30 /* ko */,
+				66002D7A26BF903800B52E30 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1314,6 +1321,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				66002D7326BF897000B52E30 /* ko */,
+				66002D7B26BF903800B52E30 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1322,6 +1330,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				66002D7626BF897000B52E30 /* ko */,
+				66002D7C26BF903800B52E30 /* ja */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -1330,6 +1339,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				6601075726BEC58A0088E240 /* ko */,
+				66002D7826BF903800B52E30 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -1338,6 +1348,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				6601075A26BEC58A0088E240 /* ko */,
+				66002D7926BF903800B52E30 /* ja */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
