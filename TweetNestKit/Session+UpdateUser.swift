@@ -17,9 +17,9 @@ extension Session {
     func updateUsers<C>(ids userIDs: C, with twitterSession: Twitter.Session) async throws -> [NSManagedObjectID] where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         let userIDs = OrderedSet(userIDs)
 
-        return try await withThrowingTaskGroup(of: (Date, [Twitter.User], Date).self) { taskGroup in
+        return try await withThrowingTaskGroup(of: (Date, [Twitter.User], Date).self) { chunkedUsersTaskGroup in
             for chunkedUserIDs in userIDs.chunked(into: 100) {
-                taskGroup.addTask {
+                chunkedUsersTaskGroup.addTask {
                     let startDate = Date()
                     let users = try await [Twitter.User](ids: chunkedUserIDs, session: twitterSession)
                     let endDate = Date()
@@ -28,15 +28,13 @@ extension Session {
                 }
             }
 
-            var objectIDsForUserID = [Twitter.User.ID: NSManagedObjectID?]()
-
-            for try await chunkedUsers in taskGroup {
+            return try await withThrowingTaskGroup(of: (Twitter.User.ID, NSManagedObjectID?).self) { objectIDsForUserIDTaskGroup in
                 let context = container.newBackgroundContext()
                 context.undoManager = nil
 
-                let chunkedObjectIDsForUserID: [(Twitter.User.ID, NSManagedObjectID?)] = try await withThrowingTaskGroup(of: (Twitter.User.ID, NSManagedObjectID?).self) { taskGroup in
+                for try await chunkedUsers in chunkedUsersTaskGroup {
                     for user in chunkedUsers.1 {
-                        taskGroup.addTask {
+                        objectIDsForUserIDTaskGroup.addTask {
                             let userObjectIDForUserID: (Twitter.User.ID, NSManagedObjectID?) = try await context.perform {
                                 let userData = try UserData.createOrUpdate(
                                     twitterUser: user,
@@ -74,18 +72,13 @@ extension Session {
                             return userObjectIDForUserID
                         }
                     }
-
-                    return try await taskGroup.reduce(into: []) { $0.append($1) }
                 }
 
-                for chunkedObjectIDForUserID in chunkedObjectIDsForUserID {
-                    objectIDsForUserID[chunkedObjectIDForUserID.0] = chunkedObjectIDForUserID.1
-                }
+                return try await objectIDsForUserIDTaskGroup
+                    .reduce(into: []) { $0.append($1) }
+                    .sorted(by: { userIDs.firstIndex(of: $0.0) ?? -1 < userIDs.firstIndex(of: $1.0) ?? -1 })
+                    .compactMap { $0.1 }
             }
-
-            return objectIDsForUserID
-                .sorted(by: { userIDs.firstIndex(of: $0.key) ?? -1 < userIDs.firstIndex(of: $1.key) ?? -1 })
-                .compactMap { $0.value }
         }
     }
 
