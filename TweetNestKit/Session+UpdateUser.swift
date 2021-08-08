@@ -34,114 +34,56 @@ extension Session {
         let twitterUser = try await Twitter.User(id: userID, session: twitterSession)
         let twitterUserFetchDate = Date()
 
-        let followingUsersTask = Task.detached { () -> [Twitter.User] in
-            let followingUsersFetchStartDate = Date()
-            let followingUsers = try await twitterUser.followingUsers(session: twitterSession).map { try $0.get() }
-            let followingUsersFetchEndDate = Date()
+        let followingUserIDs = try await twitterUser.followingUserIDs(session: twitterSession)
+        let followerIDs = try await twitterUser.followerIDs(session: twitterSession)
+        let myBlockingUserIDs = try await Twitter.User.myBlockingUserIDs(session: twitterSession)
 
-            for followingUser in followingUsers {
-                try await context.perform(schedule: .enqueued) {
-                    try autoreleasepool {
-                        let userData = try UserData.createOrUpdate(
-                            twitterUser: followingUser,
-                            userUpdateStartDate: followingUsersFetchStartDate,
-                            userDataCreationDate: followingUsersFetchEndDate,
-                            context: context
-                        )
+        let usersLookupTask = Task.detached {
+            let context = self.container.newBackgroundContext()
+            let userIDs = Set(followingUserIDs + followerIDs + myBlockingUserIDs)
 
-                        if userData.user?.account != nil {
-                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                            context.delete(userData)
-                        }
-
-                        try context.save()
-                    }
-                }
-            }
-
-            return followingUsers
-        }
-
-        let followersTask = Task.detached { () -> [Twitter.User] in
-            let followersFetchStartDate = Date()
-            let followers = try await twitterUser.followers(session: twitterSession).map { try $0.get() }
-            let followersFetchEndDate = Date()
-
-            for follower in followers {
-                try await context.perform(schedule: .enqueued) {
-                    try autoreleasepool {
-                        let userData = try UserData.createOrUpdate(
-                            twitterUser: follower,
-                            userUpdateStartDate: followersFetchStartDate,
-                            userDataCreationDate: followersFetchEndDate,
-                            context: context
-                        )
-
-                        if userData.user?.account != nil {
-                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                            context.delete(userData)
-                        }
-
-                        try context.save()
-                    }
-                }
-            }
-
-            return followers
-        }
-
-        let blockingUsersTask = Task.detached { () -> [Twitter.User] in
-            let blockingUsersFetchStartDate = Date()
-            let blockingUserIDs = try await Twitter.Account.myBlockingIDs(session: twitterSession)
-            let blockingUsers: [Twitter.User] = try await withThrowingTaskGroup(of: (Int, [Twitter.User]).self) { taskGroup in
-                blockingUserIDs
+            let users: [Twitter.User] = try await withThrowingTaskGroup(of: [Twitter.User].self) { taskGroup in
+                Array(userIDs)
                     .chunked(into: 100)
                     .enumerated()
                     .forEach { element in
                         taskGroup.addTask {
-                            (element.offset, try await [Twitter.User](ids: element.element, session: twitterSession))
+                            let startDate = Date()
+                            let users = try await [Twitter.User](ids: element.element, session: twitterSession)
+                            let endDate = Date()
+
+                            for user in users {
+                                try await context.perform(schedule: .enqueued) {
+                                    try autoreleasepool {
+                                        let userData = try UserData.createOrUpdate(
+                                            twitterUser: user,
+                                            userUpdateStartDate: startDate,
+                                            userDataCreationDate: endDate,
+                                            context: context
+                                        )
+
+                                        if userData.user?.account != nil {
+                                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
+                                            context.delete(userData)
+                                        }
+
+                                        try context.save()
+                                    }
+                                }
+                            }
+
+                            return users
                         }
                     }
 
                 return try await taskGroup
-                    .reduce(into: [(Int, [Twitter.User])]()) {
+                    .reduce(into: [[Twitter.User]]()) {
                         $0.append($1)
                     }
-                    .sorted(by: { $0.0 < $1.0 })
-                    .flatMap { $0.1 }
-            }
-            let blockingUsersFetchEndDate = Date()
-
-            for blockingUser in blockingUsers {
-                try await context.perform(schedule: .enqueued) {
-                    try autoreleasepool {
-                        let userData = try UserData.createOrUpdate(
-                            twitterUser: blockingUser,
-                            userUpdateStartDate: blockingUsersFetchStartDate,
-                            userDataCreationDate: blockingUsersFetchEndDate,
-                            context: context
-                        )
-
-                        if userData.user?.account != nil {
-                            // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                            context.delete(userData)
-                        }
-
-                        try context.save()
-                    }
-                }
+                    .flatMap { $0 }
             }
 
-            return blockingUsers
-        }
-
-        let followingUsers = try await followingUsersTask.value
-        let followers = try await followersTask.value
-        let blockingUsers = try await blockingUsersTask.value
-
-        let profileImageDownloadTask = Task.detached {
-            let context = self.container.newBackgroundContext()
-            let profileImageOriginalURLs = Set([twitterUser.profileImageOriginalURL] + followingUsers.map(\.profileImageOriginalURL) + followers.map(\.profileImageOriginalURL) + blockingUsers.map(\.profileImageOriginalURL))
+            let profileImageOriginalURLs = Set([twitterUser.profileImageOriginalURL] + users.map(\.profileImageOriginalURL))
 
             try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                 for profileImageOriginalURL in profileImageOriginalURLs {
@@ -173,9 +115,9 @@ extension Session {
 
             let userData = try UserData.createOrUpdate(
                 twitterUser: twitterUser,
-                followingUserIDs: followingUsers.map(\.id),
-                followerUserIDs: followers.map(\.id),
-                blockingUserIDs: blockingUsers.map(\.id),
+                followingUserIDs: followingUserIDs,
+                followerUserIDs: followerIDs,
+                blockingUserIDs: myBlockingUserIDs,
                 userUpdateStartDate: updateStartDate,
                 userDataCreationDate: twitterUserFetchDate,
                 context: context
@@ -186,7 +128,7 @@ extension Session {
             return (userObjectID: userData.user!.objectID, hasChanges: previousUserData?.objectID != userData.objectID)
         }
 
-        try await profileImageDownloadTask.value
+        try await usersLookupTask.value
 
         return result
     }
