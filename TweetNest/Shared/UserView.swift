@@ -18,12 +18,20 @@ struct UserView: View {
     @State var showErrorAlert: Bool = false
     @State var error: Error? = nil
 
+    #if os(iOS)
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
 
-    #if os(iOS)
     @State var safariSheetURL: URL? = nil
     @State var shareSheetURL: URL? = nil
     #endif
+
+    var shouldCompactToolbar: Bool {
+        #if os(iOS)
+        return horizontalSizeClass == .compact
+        #else
+        return false
+        #endif
+    }
 
     var userProfileURL: URL {
         URL(string: "https://twitter.com/intent/user?user_id=\(user.id)")!
@@ -55,7 +63,7 @@ struct UserView: View {
         .toolbar {
             let userProfileURL = URL(string: "https://twitter.com/intent/user?user_id=\(user.id)")!
             ToolbarItemGroup(placement: .automatic) {
-                if horizontalSizeClass == .compact {
+                if shouldCompactToolbar {
                     Menu {
                         Link(destination: userProfileURL) {
                             Label(Text("Open Profile"), systemImage: "safari")
