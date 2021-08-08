@@ -56,7 +56,13 @@
 "Menu" = "メニュー";
 
 /* No comment provided by engineer. */
+"More" = "その他";
+
+/* No comment provided by engineer. */
 "Open Profile" = "プロフィールを開く";
+
+/* No comment provided by engineer. */
+"Open Profile in Safari" = "Safariでプロフィールを開く";
 
 /* No comment provided by engineer. */
 "Profile" = "プロフィール";
@@ -77,7 +83,7 @@
 "Tweets" = "ツイート";
 
 /* No comment provided by engineer. */
-"Updated %@ ago" = "％＠前に更新されました";
+"Updated %@ ago" = "%@前に更新されました";
 
 /* No comment provided by engineer. */
 "URL" = "Web";
