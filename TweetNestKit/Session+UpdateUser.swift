@@ -139,8 +139,6 @@ extension Session {
                         }
                     }
                 }
-
-                await taskGroup.waitForAll()
             }
         }
 
