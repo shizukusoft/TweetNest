@@ -113,6 +113,16 @@
 		6601075B26BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075926BEC58A0088E240 /* InfoPlist.strings */; };
 		6601075E26BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075C26BEC58A0088E240 /* InfoPlist.strings */; };
 		6601076126BEC58A0088E240 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075F26BEC58A0088E240 /* Localizable.strings */; };
+		6657FDD826BF22C100741FA9 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDD726BF22C100741FA9 /* Label.swift */; };
+		6657FDD926BF22C100741FA9 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDD726BF22C100741FA9 /* Label.swift */; };
+		6657FDDE26BF278B00741FA9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDDD26BF278B00741FA9 /* Button.swift */; };
+		6657FDDF26BF278B00741FA9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDDD26BF278B00741FA9 /* Button.swift */; };
+		6657FDE426BF2BC900741FA9 /* NavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE326BF2BC900741FA9 /* NavigationLink.swift */; };
+		6657FDE526BF2BC900741FA9 /* NavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE326BF2BC900741FA9 /* NavigationLink.swift */; };
+		6657FDE726BF309300741FA9 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE626BF309300741FA9 /* Menu.swift */; };
+		6657FDE826BF309300741FA9 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE626BF309300741FA9 /* Menu.swift */; };
+		6657FDEA26BF324D00741FA9 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
+		6657FDEB26BF324D00741FA9 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
 		66EE523826BF560200B721AC /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523726BF560200B721AC /* ShareView.swift */; };
 		66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523A26BF5C0E00B721AC /* ShareButton.swift */; };
 /* End PBXBuildFile section */
@@ -287,6 +297,11 @@
 		6601075A26BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6601075D26BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6601076026BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
+		6657FDD726BF22C100741FA9 /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
+		6657FDDD26BF278B00741FA9 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		6657FDE326BF2BC900741FA9 /* NavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLink.swift; sourceTree = "<group>"; };
+		6657FDE626BF309300741FA9 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
+		6657FDE926BF324D00741FA9 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		66EE523726BF560200B721AC /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		66EE523A26BF5C0E00B721AC /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -487,7 +502,12 @@
 		193AB25A26B6FD0000B18D45 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
+				6657FDDD26BF278B00741FA9 /* Button.swift */,
 				19C7378926B6DE25005CFCC9 /* Image.swift */,
+				6657FDD726BF22C100741FA9 /* Label.swift */,
+				6657FDE626BF309300741FA9 /* Menu.swift */,
+				6657FDE326BF2BC900741FA9 /* NavigationLink.swift */,
+				6657FDE926BF324D00741FA9 /* Section.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1091,11 +1111,14 @@
 				1989B75326BA4AD100755B1E /* AccountsEditorView.swift in Sources */,
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
 				193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
+				6657FDE726BF309300741FA9 /* Menu.swift in Sources */,
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
+				6657FDEA26BF324D00741FA9 /* Section.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				1989B75026BA4A2000755B1E /* AppSidebarMenu.swift in Sources */,
 				193659B1260978F900865D40 /* WebAuthenticationView.swift in Sources */,
+				6657FDD826BF22C100741FA9 /* Label.swift in Sources */,
 				19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */,
 				1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */,
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
@@ -1103,9 +1126,11 @@
 				195DD4BF26BEF6B2008F0309 /* DataAsset.swift in Sources */,
 				193659B5260978F900865D40 /* AccountView.swift in Sources */,
 				1989B75626BA537900755B1E /* UserDataView.swift in Sources */,
+				6657FDDE26BF278B00741FA9 /* Button.swift in Sources */,
 				194EF57E26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
 				195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
+				6657FDE426BF2BC900741FA9 /* NavigationLink.swift in Sources */,
 				193659AF260978F900865D40 /* TweetNestKit.Session.swift in Sources */,
 				190D12EF26B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 			);
@@ -1132,11 +1157,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */,
+				6657FDEB26BF324D00741FA9 /* Section.swift in Sources */,
 				19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */,
 				19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
 				1989B75726BA537900755B1E /* UserDataView.swift in Sources */,
 				194EF57F26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
 				19365A6226097B4800865D40 /* AccountView.swift in Sources */,
+				6657FDD926BF22C100741FA9 /* Label.swift in Sources */,
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
@@ -1144,6 +1171,7 @@
 				19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */,
 				19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */,
+				6657FDE826BF309300741FA9 /* Menu.swift in Sources */,
 				1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				195DD4C326BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				195DD4A526BEBB30008F0309 /* ErrorAlert.swift in Sources */,
@@ -1151,7 +1179,9 @@
 				195DD4C026BEF6B3008F0309 /* DataAsset.swift in Sources */,
 				1989B75426BA4AD100755B1E /* AccountsEditorView.swift in Sources */,
 				190D12F026B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
+				6657FDE526BF2BC900741FA9 /* NavigationLink.swift in Sources */,
 				1989B75126BA4A2000755B1E /* AppSidebarMenu.swift in Sources */,
+				6657FDDF26BF278B00741FA9 /* Button.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
