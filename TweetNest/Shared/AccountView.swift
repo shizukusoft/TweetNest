@@ -31,9 +31,7 @@ struct AccountView: View {
             }
         }
         #if os(iOS)
-        .refreshable {
-            await refresh()
-        }
+        .refreshable(action: refresh)
         #else
         .toolbar(content: {
             ToolbarItem(placement: .primaryAction) {
