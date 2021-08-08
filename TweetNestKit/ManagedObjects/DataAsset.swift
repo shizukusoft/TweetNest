@@ -41,21 +41,10 @@ extension DataAsset {
     }
 }
 
-private func urlData(from url: URL) async throws -> Data {
-    let (data, response) = try await URLSession.shared.data(from: url)
-    guard
-        let httpResponse = response as? HTTPURLResponse,
-        (200..<300).contains(httpResponse.statusCode)
-    else {
-        throw SessionError.invalidServerResponse(response)
-    }
-
-    return data
-}
-
 extension DataAsset {
-    static func dataAsset(for url: URL, context: NSManagedObjectContext) async throws -> DataAsset {
-        let data = try await urlData(from: url)
+    static func dataAsset(for url: URL, session: Session, context: NSManagedObjectContext) async throws -> DataAsset {
+        let dataURL = try await session.download(from: url)
+        let data = try Data(contentsOf: dataURL)
 
         return try await context.perform {
             try .dataAsset(data: data, url: url, context: context)

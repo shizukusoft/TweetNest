@@ -27,73 +27,71 @@ extension UserData {
         userDataCreationDate: Date = Date(),
         context: NSManagedObjectContext
     ) throws -> UserData {
-        try context.performAndWait {
-            let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-            userFetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
-            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-            userFetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
+        let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+        userFetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
+        userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+        userFetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
 
-            let user = try context.fetch(userFetchRequest).last ?? {
-                let user = User(context: context)
-                user.id = twitterUser.id
-                user.creationDate = userDataCreationDate
+        let user = try context.fetch(userFetchRequest).last ?? {
+            let user = User(context: context)
+            user.id = twitterUser.id
+            user.creationDate = userDataCreationDate
 
-                return user
-            }()
+            return user
+        }()
 
-            user.lastUpdateStartDate = userUpdateStartDate
-            user.lastUpdateEndDate = userUpdateEndDate
+        user.lastUpdateStartDate = userUpdateStartDate
+        user.lastUpdateEndDate = userUpdateEndDate
 
-            if
-                let lastUserData = user.sortedUserDatas?.last,
+        if
+            let lastUserData = user.sortedUserDatas?.last,
 
-                lastUserData.blockingUserIDs == blockingUserIDs,
-                lastUserData.followingUserIDs == followingUserIDs,
-                lastUserData.followerUserIDs == followerUserIDs,
+            lastUserData.blockingUserIDs == blockingUserIDs,
+            lastUserData.followingUserIDs == followingUserIDs,
+            lastUserData.followerUserIDs == followerUserIDs,
 
-                lastUserData.followersCount == twitterUser.publicMetrics.followersCount,
-                lastUserData.followingUsersCount == twitterUser.publicMetrics.followingUsersCount,
-                lastUserData.isProtected == twitterUser.protected,
-                lastUserData.isVerified == twitterUser.verified,
-                lastUserData.listedCount == twitterUser.publicMetrics.listedCount,
-                lastUserData.location == twitterUser.location,
-                lastUserData.name == twitterUser.name,
-                lastUserData.profileImageURL == twitterUser.profileImageOriginalURL,
-                lastUserData.tweetsCount == twitterUser.publicMetrics.tweetsCount,
-                lastUserData.url == twitterUser.expandedURL,
-                lastUserData.userCreationDate == twitterUser.createdAt,
-                lastUserData.userAttributedDescription == twitterUser.attributedDescription.flatMap({ NSAttributedString($0) }),
-                lastUserData.username == twitterUser.username,
-                lastUserData.user == user
-            {
-                return lastUserData
-            } else {
-                let newUserData = UserData(context: context)
-                newUserData.creationDate = userDataCreationDate
-                
-                newUserData.blockingUserIDs = blockingUserIDs
-                newUserData.followingUserIDs = followingUserIDs
-                newUserData.followerUserIDs = followerUserIDs
+            lastUserData.followersCount == twitterUser.publicMetrics.followersCount,
+            lastUserData.followingUsersCount == twitterUser.publicMetrics.followingUsersCount,
+            lastUserData.isProtected == twitterUser.protected,
+            lastUserData.isVerified == twitterUser.verified,
+            lastUserData.listedCount == twitterUser.publicMetrics.listedCount,
+            lastUserData.location == twitterUser.location,
+            lastUserData.name == twitterUser.name,
+            lastUserData.profileImageURL == twitterUser.profileImageOriginalURL,
+            lastUserData.tweetsCount == twitterUser.publicMetrics.tweetsCount,
+            lastUserData.url == twitterUser.expandedURL,
+            lastUserData.userCreationDate == twitterUser.createdAt,
+            lastUserData.userAttributedDescription == twitterUser.attributedDescription.flatMap({ NSAttributedString($0) }),
+            lastUserData.username == twitterUser.username,
+            lastUserData.user == user
+        {
+            return lastUserData
+        } else {
+            let newUserData = UserData(context: context)
+            newUserData.creationDate = userDataCreationDate
 
-                newUserData.followersCount = Int32(twitterUser.publicMetrics.followersCount)
-                newUserData.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
-                newUserData.isProtected = twitterUser.protected
-                newUserData.isVerified = twitterUser.verified
-                newUserData.listedCount = Int32(twitterUser.publicMetrics.listedCount)
-                newUserData.location = twitterUser.location
-                newUserData.name = twitterUser.name
-                newUserData.profileImageURL = twitterUser.profileImageOriginalURL
-                newUserData.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
-                newUserData.url = twitterUser.expandedURL
-                newUserData.userCreationDate = twitterUser.createdAt
-                newUserData.userAttributedDescription = twitterUser.attributedDescription.flatMap({ NSAttributedString($0) })
-                newUserData.username = twitterUser.username
-                newUserData.user = user
+            newUserData.blockingUserIDs = blockingUserIDs
+            newUserData.followingUserIDs = followingUserIDs
+            newUserData.followerUserIDs = followerUserIDs
 
-                newUserData.user?.modificationDate = userDataCreationDate
+            newUserData.followersCount = Int32(twitterUser.publicMetrics.followersCount)
+            newUserData.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
+            newUserData.isProtected = twitterUser.protected
+            newUserData.isVerified = twitterUser.verified
+            newUserData.listedCount = Int32(twitterUser.publicMetrics.listedCount)
+            newUserData.location = twitterUser.location
+            newUserData.name = twitterUser.name
+            newUserData.profileImageURL = twitterUser.profileImageOriginalURL
+            newUserData.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
+            newUserData.url = twitterUser.expandedURL
+            newUserData.userCreationDate = twitterUser.createdAt
+            newUserData.userAttributedDescription = twitterUser.attributedDescription.flatMap({ NSAttributedString($0) })
+            newUserData.username = twitterUser.username
+            newUserData.user = user
 
-                return newUserData
-            }
+            newUserData.user?.modificationDate = userDataCreationDate
+
+            return newUserData
         }
     }
 }

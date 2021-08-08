@@ -30,8 +30,9 @@ public actor Session {
         }
     }
 
-    private var twitterSessions = [Twitter.Account.ID: Twitter.Session]()
     public nonisolated let container: PersistentContainer
+    private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
+    private var twitterSessions = [Twitter.Account.ID: Twitter.Session]()
 
     public init(inMemory: Bool = false) {
         _twitterAPIConfiguration = .uninitialized { try await .iCloud }
@@ -76,6 +77,20 @@ extension Session {
 
     func destroyTwitterSession(for accountID: Twitter.Account.ID) {
         twitterSessions[accountID] = nil
+    }
+}
+
+extension Session {
+    nonisolated func download(from url: URL) async throws -> URL {
+        let (url, response) = try await urlSession.download(from: url)
+        guard
+            let httpResponse = response as? HTTPURLResponse,
+            (200..<300).contains(httpResponse.statusCode)
+        else {
+            throw SessionError.invalidServerResponse(response)
+        }
+
+        return url
     }
 }
 

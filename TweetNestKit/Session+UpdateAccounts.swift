@@ -30,7 +30,7 @@ extension Session {
         return try await withThrowingTaskGroup(of: (NSManagedObjectID, Bool).self) { taskGroup in
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
-                    return (accountObjectID, try await self.updateUser(forAccountObjectID: accountObjectID))
+                    return try await (accountObjectID, self.updateUser(forAccountObjectID: accountObjectID))
                 }
             }
 
@@ -63,6 +63,11 @@ extension Session {
             logger.info("Start background task for: \(backgroundTask.identifier, privacy: .public)")
             defer {
                 logger.info("Background task finished for: \(backgroundTask.identifier, privacy: .public)")
+            }
+
+            self.container.usersSpotlightDelegate?.stopSpotlightIndexing()
+            defer {
+                self.container.usersSpotlightDelegate?.startSpotlightIndexing()
             }
 
             do {
