@@ -18,12 +18,16 @@ struct UserView: View {
     @State var showErrorAlert: Bool = false
     @State var error: Error? = nil
 
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+
     #if os(iOS)
     @State var safariSheetURL: URL? = nil
     @State var shareSheetURL: URL? = nil
-
-    @Environment(\.openURL) private var openURL
     #endif
+
+    var userProfileURL: URL {
+        URL(string: "https://twitter.com/intent/user?user_id=\(user.id)")!
+    }
 
     var body: some View {
         List {
@@ -51,26 +55,56 @@ struct UserView: View {
         .toolbar {
             let userProfileURL = URL(string: "https://twitter.com/intent/user?user_id=\(user.id)")!
             ToolbarItemGroup(placement: .automatic) {
-                #if os(iOS)
-                Button {
-                    safariSheetURL = userProfileURL
-                } label: {
-                    Label(Text("Open Profile"), systemImage: "safari")
-                    .accessibilityLabel(Text("Open Profile"))
-                }
-                .contextMenu {
-                    Button(Text("Open Profile")) {
-                        openURL(userProfileURL)
+                if horizontalSizeClass == .compact {
+                    Menu {
+                        Link(destination: userProfileURL) {
+                            Label(Text("Open Profile"), systemImage: "safari")
+                        }
+
+                        #if os(iOS)
+                        Button {
+                            safariSheetURL = userProfileURL
+                        } label: {
+                            Label(Text("Open Profile in Safari"), systemImage: "safari")
+                        }
+                        #endif
+
+                        #if os(iOS)
+                        Divider()
+
+                        Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
+                            shareSheetURL = userProfileURL
+                        }
+                        #endif
+
+                    } label: {
+                        Label(Text("More"), systemImage: "ellipsis.circle")
+                            .labelStyle(.iconOnly)
                     }
+                } else {
+                    Link(destination: userProfileURL) {
+                        Label(Text("Open Profile"), systemImage: "safari")
+                    }
+                    #if os(iOS)
+                    .contextMenu {
+                        Link(destination: userProfileURL) {
+                            Label(Text("Open Profile"), systemImage: "safari")
+                        }
+
+                        Button {
+                            safariSheetURL = userProfileURL
+                        } label: {
+                            Label(Text("Open Profile in Safari"), systemImage: "safari")
+                        }
+                    }
+                    #endif
+
+                    #if os(iOS)
                     Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
                         shareSheetURL = userProfileURL
                     }
+                    #endif
                 }
-                #else
-                Link(destination: userProfileURL) {
-                    Label(Text("Open Profile"), systemImage: "safari")
-                }
-                #endif
             }
         }
         #if os(iOS)
