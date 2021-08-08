@@ -14,7 +14,8 @@ struct UserDataView: View {
     @ViewBuilder
     var followingUsersLabel: some View {
         HStack {
-            Label("Following", systemImage: "person.2")
+            Label(Text("Followings"), systemImage: "person.2")
+            .accessibilityLabel(Text("Followings"))
             Spacer()
             Text(userData.followingUsersCount.formatted())
                 .foregroundColor(Color.gray)
@@ -24,7 +25,8 @@ struct UserDataView: View {
     @ViewBuilder
     var followersLabel: some View {
         HStack {
-            Label("Followers", systemImage: "person.2")
+            Label(Text("Followers"), systemImage: "person.2")
+            .accessibilityLabel(Text("Followers"))
             Spacer()
             Text(userData.followersCount.formatted())
                 .foregroundColor(Color.gray)
@@ -33,7 +35,7 @@ struct UserDataView: View {
 
     var body: some View {
         List {
-            Section("Profile") {
+            Section(Text("Profile")) {
                 UserDataProfileView(userData: userData)
             }
 
@@ -63,10 +65,10 @@ struct UserDataView: View {
                 if let blockingUserIDs = userData.blockingUserIDs, blockingUserIDs.isEmpty == false {
                     NavigationLink {
                         UsersList(userIDs: blockingUserIDs)
-                            .navigationTitle(Text("Blockings"))
+                            .navigationTitle(Text("Blocked Accounts"))
                     } label: {
                         HStack {
-                            Label("Blockings", systemImage: "nosign")
+                            Label(Text("Blocked Accounts"), systemImage: "nosign")
                             Spacer()
                             Text(blockingUserIDs.count.formatted())
                                 .foregroundColor(Color.gray)
@@ -77,7 +79,8 @@ struct UserDataView: View {
 
             Section {
                 HStack {
-                    Label("Listed", systemImage: "list.bullet")
+                    Label(Text("Listed"), systemImage: "list.bullet")
+                    .accessibilityLabel(Text("Listed"))
                     Spacer()
                     Text(userData.listedCount.formatted())
                         .foregroundColor(Color.gray)
@@ -86,7 +89,8 @@ struct UserDataView: View {
 
             Section {
                 HStack {
-                    Label("Tweets", systemImage: "text.bubble")
+                    Label(Text("Tweets"), systemImage: "text.bubble")
+                    .accessibilityLabel(Text("Tweets"))
                     Spacer()
                     Text(userData.tweetsCount.formatted())
                         .foregroundColor(Color.gray)

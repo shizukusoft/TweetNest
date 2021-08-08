@@ -22,7 +22,7 @@ struct AppSidebarMenu: View {
         ZStack {
             Menu {
                 Button(action: addAccount) {
-                    Label("Add Account", systemImage: "plus")
+                    Label(Text("Add Account"), systemImage: "plus")
                 }
                 .disabled(isAddingAccount)
 
@@ -32,7 +32,7 @@ struct AppSidebarMenu: View {
                     Text("Edit Accounts")
                 }
             } label: {
-                Label("Menu", systemImage: "ellipsis.circle")
+                Label(Text("Menu"), systemImage: "ellipsis.circle")
                     .labelStyle(.iconOnly)
             }
 
@@ -47,7 +47,7 @@ struct AppSidebarMenu: View {
                 AccountsEditorView()
                     .toolbar {
                         ToolbarItemGroup(placement: .cancellationAction) {
-                            Button("Cancel", role: .cancel) {
+                            Button(Text("Cancel"), role: .cancel) {
                                 showAccountsEditor.toggle()
                             }
                         }

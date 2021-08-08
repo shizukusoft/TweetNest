@@ -23,13 +23,11 @@ struct AccountsEditorView: View {
         List {
             ForEach(accounts) { account in
                 let username = account.user?.sortedUserDatas?.last?.username
-                Label {
-                    Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")
-                } icon: {
+                Label(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")) {
                     ProfileImage(userData: account.user?.sortedUserDatas?.last)
                         .frame(width: 24, height: 24)
                 }
-                .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id)"))
+                .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"))
             }
             .onDelete(perform: deleteAccounts)
             .onMove(perform: moveAccounts)
@@ -37,7 +35,7 @@ struct AccountsEditorView: View {
         #if os(iOS)
         .environment(\.editMode, .constant(.active))
         #endif
-        .navigationTitle("Accounts")
+        .navigationTitle(Text("Accounts"))
     }
 
     private func deleteAccounts(offsets: IndexSet) {

@@ -35,6 +35,7 @@ struct ProfileImage: View {
             }
         }
         .clipShape(Circle())
+        .accessibilityHidden(true)
     }
 }
 

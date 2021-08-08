@@ -54,16 +54,17 @@ struct UserView: View {
                 Button {
                     safariSheetURL = userProfileURL
                 } label: {
-                    Label("Open Profile", systemImage: "safari")
+                    Label(Text("Open Profile"), systemImage: "safari")
+                    .accessibilityLabel(Text("Open Profile"))
                 }
                 .contextMenu {
-                    Button("Open Profile") {
+                    Button(Text("Open Profile")) {
                         openURL(userProfileURL)
                     }
                 }
                 #else
                 Link(destination: userProfileURL) {
-                    Label("Open Profile", systemImage: "safari")
+                    Label(Text("Open Profile"), systemImage: "safari")
                 }
                 #endif
             }

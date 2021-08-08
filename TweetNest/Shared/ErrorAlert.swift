@@ -12,34 +12,34 @@ struct ErrorAlert: ViewModifier {
     @Binding var isPresented: Bool
     @Binding var error: Swift.Error?
 
-    private var titleText: some StringProtocol {
+    private var title: Text {
         switch error {
         case .some(TwitterError.serverError(let payload, urlResponse: _)):
             switch payload {
             case .error(let error):
-                return error.title
+                return Text(LocalizedStringKey(error.title))
             case .string(_):
-                return "Error"
+                return Text("Error")
             case .none:
-                return "Error"
+                return Text("Error")
             }
         default:
-            return "Error"
+            return Text("Error")
         }
     }
 
     func body(content: Content) -> some View {
         content
-            .alert(titleText, isPresented: $isPresented, presenting: error) { _ in
+            .alert(title, isPresented: $isPresented, presenting: error) { _ in
 
             } message: { error in
                 switch error {
                 case TwitterError.serverError(let payload, urlResponse: _):
                     switch payload {
                     case .error(let error):
-                        Text(error.detail)
+                        Text(LocalizedStringKey(error.detail))
                     case .string(let string):
-                        Text(string)
+                        Text(LocalizedStringKey(string))
                             .lineLimit(1)
                     case .none:
                         Text(error.localizedDescription)

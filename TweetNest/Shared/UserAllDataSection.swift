@@ -15,13 +15,16 @@ struct UserAllDataSection: View {
     private var userDatas: FetchedResults<UserData>
 
     var body: some View {
-        Section("All Data") {
+        Section(Text("All Data")) {
             ForEach(userDatas) { userData in
-                NavigationLink {
+                NavigationLink(
+                    Text(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description))
+                {
                     UserDataView(userData: userData)
-                        .navigationTitle(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
-                } label: {
-                    Text(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
+                    .navigationTitle(
+                        Text(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
+                        .accessibilityLabel(Text(userData.creationDate?.formatted(date: .complete, time: .standard) ?? userData.objectID.description))
+                    )
                 }
             }
         }

@@ -37,12 +37,10 @@ struct AccountView: View {
         #else
         .toolbar(content: {
             ToolbarItem(placement: .primaryAction) {
-                Button {
+                Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
                     Task {
                         refresh
                     }
-                } label: {
-                    Label("Refresh", systemImage: "arrow.clockwise")
                 }
                 .disabled(isRefreshing)
             }

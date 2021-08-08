@@ -44,15 +44,17 @@ struct AppSidebarNavigation: View {
         NavigationView {
             List {
                 ForEach(accounts) { account in
-                    Section {
-                        AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
-                    } header: {
-                        Label {
-                            Text((account.user?.sortedUserDatas?.last?.username).flatMap { "@\($0)" } ?? "#\(account.id)")
-                        } icon: {
-                            ProfileImage(userData: account.user?.sortedUserDatas?.last)
+                    Section(
+                        Label(
+                            Text(verbatim: account.user?.sortedUserDatas?.last?.username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"),
+                            icon: {
+                                ProfileImage(userData: account.user?.sortedUserDatas?.last)
                                 .frame(width: 24, height: 24)
-                        }
+                            }
+                        )
+                    )
+                    {
+                        AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
                     }
                 }
             }
@@ -62,10 +64,8 @@ struct AppSidebarNavigation: View {
             .toolbar {
                 #if os(iOS)
                 ToolbarItemGroup(placement: .navigationBarLeading) {
-                    Button {
+                    Button(Text("Edit")) {
                         showAccountsEditor.toggle()
-                    } label: {
-                        Text("Edit")
                     }
                 }
                 #endif
@@ -73,7 +73,7 @@ struct AppSidebarNavigation: View {
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button(action: addAccount) {
                         ZStack {
-                            Label("Add Account", systemImage: "plus")
+                            Label(Text("Add Account"), systemImage: "plus")
 
                             if let webAuthenticationSession = webAuthenticationSession {
                                 WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
@@ -84,14 +84,12 @@ struct AppSidebarNavigation: View {
                     .disabled(isAddingAccount)
 
                     #if !os(iOS)
-                    Button {
+                    Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
                         if let refresh = refreshAction {
                             Task {
                                 refresh
                             }
                         }
-                    } label: {
-                        Label("Refresh", systemImage: "arrow.clockwise")
                     }
                     .disabled(isRefreshing)
                     #endif
@@ -110,7 +108,7 @@ struct AppSidebarNavigation: View {
                     AccountsEditorView()
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
-                                Button("Cancel", role: .cancel) {
+                                Button(Text("Cancel"), role: .cancel) {
                                     showAccountsEditor.toggle()
                                 }
                             }

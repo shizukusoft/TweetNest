@@ -21,9 +21,9 @@ struct UserDataProfileView: View {
                         .frame(width: 50, height: 50)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(userData.name ?? userData.user.flatMap { "#\($0.id)" } ?? "")
+                        Text(verbatim: userData.name ?? userData.user.flatMap({"#\($0.id)"}) ?? "")
                         if let username = userData.username {
-                            Text("@\(username)")
+                            Text(verbatim: "@\(username)")
                                 .foregroundColor(.gray)
                         }
                     }
@@ -39,7 +39,8 @@ struct UserDataProfileView: View {
             if let location = userData.location {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 HStack {
-                    Label("Location", systemImage: "location")
+                    Label(Text("Location"), systemImage: "location")
+                    .accessibilityLabel(Text("Location"))
                     Spacer()
                     if let locationQueryURL = locationQueryURL {
                         Link(location, destination: locationQueryURL)
@@ -53,7 +54,7 @@ struct UserDataProfileView: View {
 
             if let url = userData.url {
                 HStack {
-                    Label("URL", systemImage: "safari")
+                    Label(Text("URL"), systemImage: "safari")
                     Spacer()
                     Link(url.absoluteString, destination: url)
                 }
@@ -62,19 +63,20 @@ struct UserDataProfileView: View {
 
             if let userCreationDate = userData.userCreationDate {
                 HStack {
-                    Label("Joined", systemImage: "calendar")
+                    Label(Text("Joined"), systemImage: "calendar")
                     Spacer()
                     Text(userCreationDate.formatted(date: .numeric, time: .standard))
+                    .accessibilityLabel(Text(userCreationDate.formatted(date: .complete, time: .standard)))
                 }
                 .accessibilityElement(children: .combine)
             }
 
             if userData.isProtected {
-                Label("Protected", systemImage: "lock")
+                Label(Text("Protected"), systemImage: "lock")
             }
 
             if userData.isVerified {
-                Label("Verified", systemImage: "checkmark.seal")
+                Label(Text("Verified"), systemImage: "checkmark.seal")
             }
         }
     }
