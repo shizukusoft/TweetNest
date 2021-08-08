@@ -55,7 +55,6 @@ extension Session {
                         }
 
                         try context.save()
-                        context.reset()
                     }
                 }
             }
@@ -84,7 +83,6 @@ extension Session {
                         }
 
                         try context.save()
-                        context.reset()
                     }
                 }
             }
@@ -113,7 +111,6 @@ extension Session {
                         }
 
                         try context.save()
-                        context.reset()
                     }
                 }
             }
@@ -126,9 +123,10 @@ extension Session {
         let blockingUsers = try await blockingUsersTask.value
 
         let profileImageDownloadTask = Task.detached {
+            let context = self.container.newBackgroundContext()
             let profileImageOriginalURLs = Set([twitterUser.profileImageOriginalURL] + followingUsers.map(\.profileImageOriginalURL) + followers.map(\.profileImageOriginalURL) + blockingUsers.map(\.profileImageOriginalURL))
 
-            await withTaskGroup(of: Void.self) { taskGroup in
+            try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                 for profileImageOriginalURL in profileImageOriginalURLs {
                     taskGroup.addTask {
                         do {
@@ -137,8 +135,14 @@ extension Session {
                             Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
                                 .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                         }
+
+                        try await context.perform {
+                            try context.save()
+                        }
                     }
                 }
+
+                try await taskGroup.waitForAll()
             }
         }
 
@@ -161,14 +165,11 @@ extension Session {
             )
 
             try context.save()
-            defer {
-                context.reset()
-            }
 
             return (userObjectID: userData.user!.objectID, hasChanges: previousUserData?.objectID != userData.objectID)
         }
 
-        await profileImageDownloadTask.value
+        try await profileImageDownloadTask.value
 
         return result
     }
