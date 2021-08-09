@@ -13,7 +13,7 @@ struct UserRow: View {
     @FetchRequest private var userDatas: FetchedResults<UserData>
 
     var body: some View {
-        if let latestUserData = userDatas.last, let user = latestUserData.user {
+        if let latestUserData = userDatas.first, let user = latestUserData.user {
             NavigationLink {
                 UserView(user: user)
             } label: {
@@ -42,9 +42,14 @@ struct UserRow: View {
 
     init(userID: String) {
         self.userID = userID
+
+        let userData = UserData.fetchRequest()
+        userData.sortDescriptors = [NSSortDescriptor(keyPath: \UserData.creationDate, ascending: false)]
+        userData.predicate = NSPredicate(format: "user.id == %@", userID)
+        userData.fetchLimit = 1
+
         self._userDatas = FetchRequest(
-            sortDescriptors: [SortDescriptor(\.creationDate, order: .forward)],
-            predicate: NSPredicate(format: "user.id == %@", userID),
+            fetchRequest: userData,
             animation: .default
         )
     }

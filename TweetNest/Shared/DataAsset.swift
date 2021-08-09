@@ -14,13 +14,17 @@ struct DataAsset<Content>: View where Content: View {
     var contentInitializer: (Data?) -> Content
 
     var body: some View {
-        contentInitializer(dataAssets.last?.data)
+        contentInitializer(dataAssets.first?.data)
     }
 
     init(url: URL?, @ViewBuilder content: @escaping (Data?) -> Content) {
+        let fetchRequest = TweetNestKit.DataAsset.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]
+        fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(format: "false")
+        fetchRequest.fetchLimit = 1
+
         self._dataAssets = FetchRequest(
-            sortDescriptors: [SortDescriptor(\.creationDate)],
-            predicate: url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(format: "false"),
+            fetchRequest:fetchRequest,
             animation: .default
         )
         self.contentInitializer = content
