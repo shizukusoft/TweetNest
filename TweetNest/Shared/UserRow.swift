@@ -36,7 +36,7 @@ struct UserRow: View {
             }
             .accessibilityLabel(Text(verbatim: latestUserData.name ?? "#\(user.id)"))
         } else {
-            Text("#\(Int64(userID)?.formatted() ?? userID)")
+            Text(verbatim: "#\(Int64(userID)?.formatted() ?? userID)")
         }
     }
 
