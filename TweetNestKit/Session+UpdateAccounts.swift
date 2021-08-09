@@ -65,11 +65,6 @@ extension Session {
                 logger.info("Background task finished for: \(backgroundTask.identifier, privacy: .public)")
             }
 
-            self.container.usersSpotlightDelegate?.stopSpotlightIndexing()
-            defer {
-                self.container.usersSpotlightDelegate?.startSpotlightIndexing()
-            }
-
             do {
                 do {
                     try self.scheduleUpdateAccountsBackgroundTask()
