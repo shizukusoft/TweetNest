@@ -129,7 +129,7 @@ extension Session {
         try await self.createNewAccount(tokenResponse: accessToken, twitterAccount: account)
     }
 
-    private func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws {
+    private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws {
         let context = container.newBackgroundContext()
 
         let accountObjectID: NSManagedObjectID = try await context.perform {
@@ -149,7 +149,7 @@ extension Session {
 }
 
 extension Session {
-    private func credential(for accountID: Twitter.Account.ID) async throws -> Twitter.Session.Credential? {
+    private nonisolated func credential(for accountID: Twitter.Account.ID) async throws -> Twitter.Session.Credential? {
         try await container.performBackgroundTask { (context) in
             let accountFetchRequest: NSFetchRequest<Account> = Account.fetchRequest()
             accountFetchRequest.predicate = NSPredicate(format: "id == %ld", accountID)

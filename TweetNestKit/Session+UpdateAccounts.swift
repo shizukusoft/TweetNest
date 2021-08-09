@@ -13,7 +13,7 @@ import UserNotifications
 
 extension Session {
     @discardableResult
-    public func updateAccounts() async throws -> [(NSManagedObjectID, Bool)] {
+    public nonisolated func updateAccounts() async throws -> [(NSManagedObjectID, Bool)] {
         let context = container.newBackgroundContext()
 
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform {

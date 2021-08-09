@@ -13,8 +13,7 @@ import Twitter
 import SwiftUI
 
 extension Session {
-    @discardableResult
-    func updateUsers<C>(ids userIDs: C, with twitterSession: Twitter.Session) async throws -> [NSManagedObjectID] where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
+    nonisolated func updateUsers<C>(ids userIDs: C, with twitterSession: Twitter.Session) async throws where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         let userIDs = OrderedSet(userIDs)
 
         return try await withThrowingTaskGroup(of: (Date, [Twitter.User], Date).self) { chunkedUsersTaskGroup in
@@ -28,21 +27,20 @@ extension Session {
                 }
             }
 
-            return try await withThrowingTaskGroup(of: (Twitter.User.ID, NSManagedObjectID?).self) { objectIDsForUserIDTaskGroup in
+            return try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                 let context = container.newBackgroundContext()
                 context.undoManager = nil
 
                 for try await chunkedUsers in chunkedUsersTaskGroup {
                     for user in chunkedUsers.1 {
-                        objectIDsForUserIDTaskGroup.addTask {
-                            let userObjectIDForUserID: (Twitter.User.ID, NSManagedObjectID?) = try await context.perform {
+                        taskGroup.addTask {
+                            try await context.perform {
                                 let userData = try UserData.createOrUpdate(
                                     twitterUser: user,
                                     userUpdateStartDate: chunkedUsers.0,
                                     userDataCreationDate: chunkedUsers.2,
                                     context: context
                                 )
-                                let userObjectID = userData.user?.objectID
 
                                 if userData.user?.account != nil {
                                     // Don't update user data if user data has account. (Might overwrite followings/followers list)
@@ -52,114 +50,107 @@ extension Session {
                                 if context.hasChanges {
                                     try context.save()
                                 }
-
-                                return (user.id, userObjectID)
                             }
+                        }
 
+                        taskGroup.addTask {
                             do {
                                 _ = try await DataAsset.dataAsset(for: user.profileImageOriginalURL, session: self, context: context)
-
-                                try await context.perform {
-                                    if context.hasChanges {
-                                        try context.save()
-                                    }
-                                }
                             } catch {
                                 Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
                                     .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                             }
 
-                            return userObjectIDForUserID
+                            try await context.perform {
+                                if context.hasChanges {
+                                    try context.save()
+                                }
+                            }
                         }
                     }
                 }
 
-                return try await objectIDsForUserIDTaskGroup
-                    .reduce(into: []) { $0.append($1) }
-                    .sorted(by: { userIDs.firstIndex(of: $0.0) ?? -1 < userIDs.firstIndex(of: $1.0) ?? -1 })
-                    .compactMap { $0.1 }
+                try await taskGroup.waitForAll()
             }
         }
     }
 
     @discardableResult
-    public func updateUser(forAccountObjectID accountObjectID: NSManagedObjectID) async throws -> Bool {
-        try await Task.detached { // FIXME: Code using Task may deadlock in some circumstances. (80688213)
-            let context = self.container.newBackgroundContext()
-            context.undoManager = nil
+    public nonisolated func updateUser(forAccountObjectID accountObjectID: NSManagedObjectID) async throws -> Bool {
+        let context = self.container.newBackgroundContext()
+        context.undoManager = nil
 
-            let accountID = await context.perform {
-                (context.object(with: accountObjectID) as? Account)?.id
+        let accountID = await context.perform {
+            (context.object(with: accountObjectID) as? Account)?.id
+        }
+
+        guard let accountID = accountID else {
+            throw SessionError.unknown
+        }
+
+        let userID = String(accountID)
+
+        let twitterSession = try await self.twitterSession(for: accountID)
+
+        let updateStartDate = Date()
+        try await context.perform {
+            let fetchRequest = User.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
+
+            guard let user = try context.fetch(fetchRequest).last else {
+                return
             }
 
-            guard let accountID = accountID else {
-                throw SessionError.unknown
-            }
+            user.lastUpdateStartDate = updateStartDate
+            user.lastUpdateEndDate = nil
 
-            let userID = String(accountID)
+            try context.save()
+        }
 
-            let twitterSession = try await self.twitterSession(for: accountID)
+        async let _twitterUser = Twitter.User(id: userID, session: twitterSession)
+        async let _followingUserIDs = Twitter.User.followingUserIDs(forUserID: userID, session: twitterSession)
+        async let _followerIDs = Twitter.User.followerIDs(forUserID: userID, session: twitterSession)
+        async let _myBlockingUserIDs = Twitter.User.myBlockingUserIDs(session: twitterSession)
 
-            let updateStartDate = Date()
-            try await context.perform {
-                let fetchRequest = User.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
+        let twitterUser = try await _twitterUser
+        async let _profileImageDataAsset = DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context)
 
-                guard let user = try context.fetch(fetchRequest).last else {
-                    return
-                }
+        let followingUserIDs = try await _followingUserIDs
+        let followerIDs = try await _followerIDs
+        let myBlockingUserIDs = try await _myBlockingUserIDs
+        let twitterUserFetchDate = Date()
 
-                user.lastUpdateStartDate = updateStartDate
-                user.lastUpdateEndDate = nil
+        try await self.updateUsers(ids: OrderedSet(followingUserIDs + followerIDs + myBlockingUserIDs), with: twitterSession)
 
-                try context.save()
-            }
+        _ = try await _profileImageDataAsset
 
-            async let _twitterUser = Twitter.User(id: userID, session: twitterSession)
-            async let _followingUserIDs = Twitter.User.followingUserIDs(forUserID: userID, session: twitterSession)
-            async let _followerIDs = Twitter.User.followerIDs(forUserID: userID, session: twitterSession)
-            async let _myBlockingUserIDs = Twitter.User.myBlockingUserIDs(session: twitterSession)
+        let hasChanges: Bool = try await context.perform {
+            let account = context.object(with: accountObjectID) as? Account
 
-            let twitterUser = try await _twitterUser
-            async let _profileImageDataAsset = DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context)
+            let fetchRequest = User.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
+            fetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
 
-            let followingUserIDs = try await _followingUserIDs
-            let followerIDs = try await _followerIDs
-            let myBlockingUserIDs = try await _myBlockingUserIDs
-            let twitterUserFetchDate = Date()
+            let user = try context.fetch(fetchRequest).last
+            let previousUserData = user?.sortedUserDatas?.last
 
-            try await self.updateUsers(ids: OrderedSet(followingUserIDs + followerIDs + myBlockingUserIDs), with: twitterSession)
+            let userData = try UserData.createOrUpdate(
+                twitterUser: twitterUser,
+                followingUserIDs: followingUserIDs,
+                followerUserIDs: followerIDs,
+                blockingUserIDs: myBlockingUserIDs,
+                userUpdateStartDate: updateStartDate,
+                userDataCreationDate: twitterUserFetchDate,
+                context: context
+            )
 
-            _ = try await _profileImageDataAsset
+            userData.user?.account = account
 
-            let hasChanges: Bool = try await context.perform {
-                let account = context.object(with: accountObjectID) as? Account
+            try context.save()
 
-                let fetchRequest = User.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
-                fetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
+            return previousUserData?.objectID != userData.objectID
+        }
 
-                let user = try context.fetch(fetchRequest).last
-                let previousUserData = user?.sortedUserDatas?.last
-
-                let userData = try UserData.createOrUpdate(
-                    twitterUser: twitterUser,
-                    followingUserIDs: followingUserIDs,
-                    followerUserIDs: followerIDs,
-                    blockingUserIDs: myBlockingUserIDs,
-                    userUpdateStartDate: updateStartDate,
-                    userDataCreationDate: twitterUserFetchDate,
-                    context: context
-                )
-
-                userData.user?.account = account
-
-                try context.save()
-
-                return previousUserData?.objectID != userData.objectID
-            }
-
-            return hasChanges
-        }.value
+        return hasChanges
     }
 }
