@@ -10,9 +10,6 @@ import TweetNestKit
 
 struct AppSidebarAccountRows: View {
     @ObservedObject var account: Account
-    var lastUserData: UserData? {
-        account.user?.sortedUserDatas?.last
-    }
     @Binding var navigationItemSelection: AppSidebarNavigation.NavigationItem?
 
     var body: some View {
@@ -26,40 +23,36 @@ struct AppSidebarAccountRows: View {
             }
             .accessibilityLabel(Text("Account"))
 
-            if let followingUserIDs = lastUserData?.followingUserIDs {
+            if let user = account.user {
                 NavigationLink(
-                    Label(Text("Latest Followings"), systemImage: "person.2"),
+                    Label(Text("Following History"), systemImage: "person.2"),
                     tag: .followings(account),
                     selection: $navigationItemSelection)
                 {
-                    UsersList(userIDs: followingUserIDs)
-                    .navigationTitle(Text("Latest Followings"))
+                    UsersDiffList(user: user, diffKeyPath: \.followingUserIDs)
+                        .navigationTitle(Text("Following History"))
                 }
-                .accessibilityLabel(Text("Latest Followings"))
-            }
+                .accessibilityLabel(Text("Following History"))
 
-            if let followerUserIDs = lastUserData?.followerUserIDs {
                 NavigationLink(
-                    Label(Text("Latest Followers"), systemImage: "person.2"),
+                    Label(Text("Follower History"), systemImage: "person.2"),
                     tag: .followers(account),
                     selection: $navigationItemSelection)
                 {
-                    UsersList(userIDs: followerUserIDs)
-                    .navigationTitle(Text("Latest Followers"))
+                    UsersDiffList(user: user, diffKeyPath: \.followerUserIDs)
+                        .navigationTitle(Text("Follower History"))
                 }
-                .accessibilityLabel(Text("Latest Followers"))
-            }
+                .accessibilityLabel(Text("Follower History"))
 
-            if let blockingUserIDs = lastUserData?.blockingUserIDs {
                 NavigationLink(
-                    Label(Text("Latest Blocked Accounts"), systemImage: "nosign"),
+                    Label(Text("Blocking History"), systemImage: "nosign"),
                     tag: .blockings(account),
                     selection: $navigationItemSelection)
                 {
-                    UsersList(userIDs: blockingUserIDs)
-                    .navigationTitle(Text("Latest Blocked Accounts"))
+                    UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs)
+                        .navigationTitle(Text("Blocking History"))
                 }
-                .accessibilityLabel(Text("Latest Blocked Accounts"))
+                .accessibilityLabel(Text("Blocking History"))
             }
         }
     }
@@ -72,3 +65,4 @@ struct AppSidebarAccountRows: View {
 //    }
 //}
 //#endif
+

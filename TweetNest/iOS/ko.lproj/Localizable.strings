@@ -14,6 +14,9 @@
 "Blocked Accounts" = "차단한 계정";
 
 /* No comment provided by engineer. */
+"Blocking History" = "차단 기록";
+
+/* No comment provided by engineer. */
 "Cancel" = "취소";
 
 /* No comment provided by engineer. */
@@ -26,22 +29,19 @@
 "Error" = "오류";
 
 /* No comment provided by engineer. */
+"Follower History" = "팔로워 기록";
+
+/* No comment provided by engineer. */
 "Followers" = "팔로워";
+
+/* No comment provided by engineer. */
+"Following History" = "팔로잉 기록";
 
 /* No comment provided by engineer. */
 "Followings" = "팔로잉";
 
 /* No comment provided by engineer. */
 "Joined" = "가입 날짜";
-
-/* No comment provided by engineer. */
-"Latest Blocked Accounts" = "최신 차단한 계정";
-
-/* No comment provided by engineer. */
-"Latest Followers" = "최신 팔로워";
-
-/* No comment provided by engineer. */
-"Latest Followings" = "최신 팔로잉";
 
 /* No comment provided by engineer. */
 "Latest Profile" = "최신 프로필";

@@ -109,6 +109,12 @@
 		19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
 		19DA23D126B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
 		19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
+		19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
+		19EE473326C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
+		19EE473526C14554007D2814 /* UsersDiffListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473426C14554007D2814 /* UsersDiffListSection.swift */; };
+		19EE473626C14554007D2814 /* UsersDiffListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473426C14554007D2814 /* UsersDiffListSection.swift */; };
+		19EE473826C14BCD007D2814 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473726C14BCD007D2814 /* UserRow.swift */; };
+		19EE473926C14BCD007D2814 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473726C14BCD007D2814 /* UserRow.swift */; };
 		66002D6E26BF896F00B52E30 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D6C26BF896F00B52E30 /* InfoPlist.strings */; };
 		66002D7126BF897000B52E30 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D6F26BF897000B52E30 /* Localizable.strings */; };
 		66002D7426BF897000B52E30 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D7226BF897000B52E30 /* InfoPlist.strings */; };
@@ -297,6 +303,9 @@
 		19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersSpotlightDelegate.swift; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		19DA23D026B98767002436DC /* UserDataProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataProfileView.swift; sourceTree = "<group>"; };
+		19EE473126C144A2007D2814 /* UsersDiffList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersDiffList.swift; sourceTree = "<group>"; };
+		19EE473426C14554007D2814 /* UsersDiffListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersDiffListSection.swift; sourceTree = "<group>"; };
+		19EE473726C14BCD007D2814 /* UserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRow.swift; sourceTree = "<group>"; };
 		66002D6D26BF896F00B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66002D7026BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		66002D7326BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -585,6 +594,9 @@
 				1989B75526BA537900755B1E /* UserDataView.swift */,
 				19DA23D026B98767002436DC /* UserDataProfileView.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
+				19EE473126C144A2007D2814 /* UsersDiffList.swift */,
+				19EE473426C14554007D2814 /* UsersDiffListSection.swift */,
+				19EE473726C14BCD007D2814 /* UserRow.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
 				19933EE125E90F16006AB4C0 /* TweetNestKit.Session.swift */,
 				195DD4A326BEBB30008F0309 /* ErrorAlert.swift */,
@@ -1139,6 +1151,7 @@
 				6657FDE726BF309300741FA9 /* Menu.swift in Sources */,
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
+				19EE473526C14554007D2814 /* UsersDiffListSection.swift in Sources */,
 				6657FDEA26BF324D00741FA9 /* Section.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				1989B75026BA4A2000755B1E /* AppSidebarMenu.swift in Sources */,
@@ -1149,6 +1162,7 @@
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				195DD4BF26BEF6B2008F0309 /* DataAsset.swift in Sources */,
+				19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				193659B5260978F900865D40 /* AccountView.swift in Sources */,
 				1989B75626BA537900755B1E /* UserDataView.swift in Sources */,
 				6657FDDE26BF278B00741FA9 /* Button.swift in Sources */,
@@ -1156,6 +1170,7 @@
 				195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
 				6657FDE426BF2BC900741FA9 /* NavigationLink.swift in Sources */,
+				19EE473826C14BCD007D2814 /* UserRow.swift in Sources */,
 				193659AF260978F900865D40 /* TweetNestKit.Session.swift in Sources */,
 				190D12EF26B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 			);
@@ -1193,6 +1208,8 @@
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
 				19365A6826097B4800865D40 /* TweetNestKit.Session.swift in Sources */,
+				19EE473326C144A2007D2814 /* UsersDiffList.swift in Sources */,
+				19EE473926C14BCD007D2814 /* UserRow.swift in Sources */,
 				19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */,
 				19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */,
@@ -1201,6 +1218,7 @@
 				195DD4C326BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				195DD4A526BEBB30008F0309 /* ErrorAlert.swift in Sources */,
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
+				19EE473626C14554007D2814 /* UsersDiffListSection.swift in Sources */,
 				195DD4C026BEF6B3008F0309 /* DataAsset.swift in Sources */,
 				1989B75426BA4AD100755B1E /* AccountsEditorView.swift in Sources */,
 				190D12F026B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
