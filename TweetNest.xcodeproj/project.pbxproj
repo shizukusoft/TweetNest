@@ -15,6 +15,8 @@
 		1912A73526B7DC6900A191E4 /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = 1912A73426B7DC6900A191E4 /* _locales */; };
 		1912A73726B7DC6900A191E4 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 1912A73626B7DC6900A191E4 /* icons */; };
 		1912A73926B7DC6900A191E4 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 1912A73826B7DC6900A191E4 /* manifest.json */; };
+		1912A74726B7DC6900A191E4 /* TweetNest MirrorBlock Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1912A72F26B7DC6900A191E4 /* TweetNest MirrorBlock Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		1912A76926B7DC7D00A191E4 /* TweetNest MirrorBlock Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1912A75126B7DC7D00A191E4 /* TweetNest MirrorBlock Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1912A77226B7DCE900A191E4 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1912A77126B7DCE900A191E4 /* SafariWebExtensionHandler.swift */; };
 		1912A77326B7DCE900A191E4 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1912A77126B7DCE900A191E4 /* SafariWebExtensionHandler.swift */; };
 		1912A77426B7DD2500A191E4 /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = 1912A73426B7DC6900A191E4 /* _locales */; };
@@ -136,6 +138,20 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		1912A74526B7DC6900A191E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1912A72E26B7DC6900A191E4;
+			remoteInfo = "TweetNest MirrorBlock Extension (iOS)";
+		};
+		1912A76726B7DC7D00A191E4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1912A75026B7DC7D00A191E4;
+			remoteInfo = "TweetNest MirrorBlock Extension (macOS)";
+		};
 		1936598B260978EB00865D40 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
@@ -195,6 +211,28 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		1912A74926B7DC6900A191E4 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1912A74726B7DC6900A191E4 /* TweetNest MirrorBlock Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		1912A76D26B7DC7D00A191E4 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				1912A76926B7DC7D00A191E4 /* TweetNest MirrorBlock Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		19365A0626097A5F00865D40 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -793,11 +831,13 @@
 				19365977260978EA00865D40 /* Frameworks */,
 				19365978260978EA00865D40 /* Resources */,
 				19365A0626097A5F00865D40 /* Embed Frameworks */,
+				1912A74926B7DC6900A191E4 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				19C5A2C826BC1FFA00AB1122 /* PBXTargetDependency */,
+				1912A74626B7DC6900A191E4 /* PBXTargetDependency */,
 			);
 			name = "TweetNest (iOS)";
 			packageProductDependencies = (
@@ -850,11 +890,13 @@
 				19365A1126097A9500865D40 /* Frameworks */,
 				19365A1226097A9500865D40 /* Resources */,
 				19365ABD26097BFF00865D40 /* Embed Frameworks */,
+				1912A76D26B7DC7D00A191E4 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				19C5A29A26BC1F3500AB1122 /* PBXTargetDependency */,
+				1912A76826B7DC7D00A191E4 /* PBXTargetDependency */,
 			);
 			name = "TweetNest (macOS)";
 			packageProductDependencies = (
@@ -1286,6 +1328,16 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		1912A74626B7DC6900A191E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1912A72E26B7DC6900A191E4 /* TweetNest MirrorBlock Extension (iOS) */;
+			targetProxy = 1912A74526B7DC6900A191E4 /* PBXContainerItemProxy */;
+		};
+		1912A76826B7DC7D00A191E4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1912A75026B7DC7D00A191E4 /* TweetNest MirrorBlock Extension (macOS) */;
+			targetProxy = 1912A76726B7DC7D00A191E4 /* PBXContainerItemProxy */;
+		};
 		1936598C260978EB00865D40 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 19365979260978EA00865D40 /* TweetNest (iOS) */;
@@ -1530,6 +1582,7 @@
 		1936599C260978EB00865D40 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
@@ -1561,6 +1614,7 @@
 		1936599D260978EB00865D40 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
