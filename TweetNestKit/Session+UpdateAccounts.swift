@@ -73,40 +73,54 @@ extension Session {
                 }
 
                 do {
-                    let changedAccountObjectIDs = try await self.updateAccounts()
-                        .lazy
-                        .filter { $0.1 == true }
-                        .map { $0.0 }
+                    let context = self.container.newBackgroundContext()
 
-                    let accountInfo: [(id: Int64, username: String?)] = await self.container.performBackgroundTask { context in
-                        changedAccountObjectIDs
-                            .compactMap { context.object(with: $0) as? Account }
-                            .sorted {
-                                if $0.sortOrder != $1.sortOrder {
-                                    return $0.sortOrder < $1.sortOrder
-                                } else {
-                                    return ($0.creationDate ?? .distantPast) > ($1.creationDate ?? .distantPast)
+                    let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
+                        let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
+                        fetchRequest.sortDescriptors = [
+                            NSSortDescriptor(keyPath: \Account.sortOrder, ascending: true),
+                            NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
+                        ]
+                        fetchRequest.resultType = .managedObjectIDResultType
+
+                        return try context.fetch(fetchRequest)
+                    }
+
+                    try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+                        accountObjectIDs.forEach { accountObjectID in
+                            taskGroup.addTask {
+                                let hasChanges = try await self.updateUser(forAccountObjectID: accountObjectID)
+
+                                if hasChanges {
+                                    let notificationContent: UNMutableNotificationContent = await context.perform {
+                                        let account = context.object(with: accountObjectID) as? Account
+
+                                        let username = account?.user?.sortedUserDatas?.last?.username
+                                        let accountID = account?.id
+
+                                        let accountName = username.flatMap { "@\($0)" } ?? accountID.flatMap { "#\($0)" } ?? accountObjectID.description
+
+                                        let notificationContent = UNMutableNotificationContent()
+                                        notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
+                                        notificationContent.body = String(localized: "New data available for \(accountName).", bundle: .module, comment: "update-accounts notification body.")
+                                        notificationContent.interruptionLevel = .timeSensitive
+                                        notificationContent.threadIdentifier = accountID.flatMap { String($0) } ?? accountObjectID.uriRepresentation().absoluteString
+
+                                        return notificationContent
+                                    }
+
+                                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+
+                                    do {
+                                        try await UNUserNotificationCenter.current().add(notificationRequest)
+                                    } catch {
+                                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                                    }
                                 }
                             }
-                            .map { (id: $0.id, username: $0.user?.sortedUserDatas?.last?.username) }
-                    }
-
-                    let notificationRequests: [UNNotificationRequest] = accountInfo.map {
-                        let notificationContent = UNMutableNotificationContent()
-                        notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
-                        notificationContent.body = String(localized: "New data available for \($0.username.flatMap { "@\($0)" } ?? "#\($0.id)").", bundle: .module, comment: "update-accounts notification body.")
-                        notificationContent.interruptionLevel = .timeSensitive
-                        notificationContent.threadIdentifier = String($0.id)
-
-                        return UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-                    }
-
-                    for notificationRequest in notificationRequests {
-                        do {
-                            try await UNUserNotificationCenter.current().add(notificationRequest)
-                        } catch {
-                            logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                         }
+
+                        try await taskGroup.waitForAll()
                     }
                 } catch {
                     logger.error("Error occurred while update accounts: \(String(describing: error))")
