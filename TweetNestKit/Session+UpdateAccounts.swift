@@ -111,18 +111,23 @@ extension Session {
                 } catch {
                     logger.error("Error occurred while update accounts: \(String(describing: error))")
 
-                    let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
-                    notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "update-accounts notification subtitle.")
-                    notificationContent.body = error.localizedDescription
-                    notificationContent.sound = .default
+                    switch error {
+                    case is CancellationError:
+                        break
+                    default:
+                        let notificationContent = UNMutableNotificationContent()
+                        notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
+                        notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "update-accounts notification subtitle.")
+                        notificationContent.body = error.localizedDescription
+                        notificationContent.sound = .default
 
-                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+                        let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
 
-                    do {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } catch {
-                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                        do {
+                            try await UNUserNotificationCenter.current().add(notificationRequest)
+                        } catch {
+                            logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                        }
                     }
 
                     throw error
