@@ -46,7 +46,7 @@ extension DataAsset {
         let dataURL = try await session.download(from: url)
         let data = try Data(contentsOf: dataURL)
 
-        return try await context.perform {
+        return try await context.perform(schedule: .enqueued) {
             try .dataAsset(data: data, url: url, context: context)
         }
     }

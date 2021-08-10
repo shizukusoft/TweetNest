@@ -132,7 +132,7 @@ extension Session {
     private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws {
         let context = container.newBackgroundContext()
 
-        let accountObjectID: NSManagedObjectID = try await context.perform {
+        let accountObjectID: NSManagedObjectID = try await context.perform(schedule: .enqueued) {
             let account = Account(context: context)
             account.creationDate = Date()
             account.id = twitterAccount.id

@@ -34,7 +34,7 @@ extension Session {
                 for try await chunkedUsers in chunkedUsersTaskGroup {
                     for user in chunkedUsers.1 {
                         taskGroup.addTask {
-                            try await context.perform {
+                            try await context.perform(schedule: .enqueued) {
                                 let userData = try UserData.createOrUpdate(
                                     twitterUser: user,
                                     userUpdateStartDate: chunkedUsers.0,
@@ -61,7 +61,7 @@ extension Session {
                                     .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                             }
 
-                            try await context.perform {
+                            try await context.perform(schedule: .enqueued) {
                                 if context.hasChanges {
                                     try context.save()
                                 }
@@ -124,7 +124,7 @@ extension Session {
 
         _ = try await _profileImageDataAsset
 
-        let hasChanges: Bool = try await context.perform {
+        let hasChanges: Bool = try await context.perform(schedule: .enqueued) {
             let account = context.object(with: accountObjectID) as? Account
 
             let fetchRequest = User.fetchRequest()
