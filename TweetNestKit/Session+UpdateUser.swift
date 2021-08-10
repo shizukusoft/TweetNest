@@ -80,32 +80,23 @@ extension Session {
         let context = self.container.newBackgroundContext()
         context.undoManager = nil
 
-        let accountID = await context.perform {
-            (context.object(with: accountObjectID) as? Account)?.id
-        }
+        let updateStartDate = Date()
+        let accountID: Int64 = try await context.perform {
+            guard let account = context.object(with: accountObjectID) as? Account else {
+                throw SessionError.unknown
+            }
 
-        guard let accountID = accountID else {
-            throw SessionError.unknown
-        }
+            account.user?.lastUpdateStartDate = updateStartDate
+            account.user?.lastUpdateEndDate = nil
 
-        let userID = String(accountID)
+            try context.save()
+
+            return account.id
+        }
 
         let twitterSession = try await self.twitterSession(for: accountID)
 
-        let updateStartDate = Date()
-        try await context.perform {
-            let fetchRequest = User.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
-
-            guard let user = try context.fetch(fetchRequest).last else {
-                return
-            }
-
-            user.lastUpdateStartDate = updateStartDate
-            user.lastUpdateEndDate = nil
-
-            try context.save()
-        }
+        let userID = String(accountID)
 
         async let _twitterUser = Twitter.User(id: userID, session: twitterSession)
         async let _followingUserIDs = Twitter.User.followingUserIDs(forUserID: userID, session: twitterSession)
