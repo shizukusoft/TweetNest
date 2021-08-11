@@ -20,7 +20,7 @@ struct DataAsset<Content>: View where Content: View {
     init(url: URL?, @ViewBuilder content: @escaping (Data?) -> Content) {
         let fetchRequest = TweetNestKit.DataAsset.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]
-        fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(format: "false")
+        fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(value: false)
         fetchRequest.fetchLimit = 1
 
         self._dataAssets = FetchRequest(
