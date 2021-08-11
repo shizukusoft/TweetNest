@@ -47,6 +47,7 @@ struct AccountView: View {
         .alertError(isPresented: $showErrorAlert, error: $error)
     }
 
+    @Sendable
     private func refresh() async {
         guard isRefreshing == false else {
             return

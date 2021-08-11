@@ -146,6 +146,7 @@ struct AppSidebarNavigation: View {
         }
     }
 
+    @Sendable
     private func refresh() async {
         guard isRefreshing == false else {
             return
