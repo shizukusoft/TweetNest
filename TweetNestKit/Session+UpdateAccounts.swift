@@ -13,7 +13,7 @@ import UserNotifications
 
 extension Session {
     @discardableResult
-    public nonisolated func updateAccounts() async throws -> [(NSManagedObjectID, Bool)] {
+    public nonisolated func updateAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
         let context = container.newBackgroundContext()
 
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
@@ -27,14 +27,18 @@ extension Session {
             return try context.fetch(fetchRequest)
         }
 
-        return try await withThrowingTaskGroup(of: (NSManagedObjectID, Bool).self) { taskGroup in
+        return await withTaskGroup(of: (NSManagedObjectID, Result<Bool, Swift.Error>).self) { taskGroup in
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
-                    return try await (accountObjectID, self.updateUser(forAccountObjectID: accountObjectID))
+                    do {
+                        return try await (accountObjectID, .success(self.updateUser(forAccountObjectID: accountObjectID)))
+                    } catch {
+                        return (accountObjectID, .failure(error))
+                    }
                 }
             }
 
-            return try await taskGroup.reduce(into: [], { $0.append($1) })
+            return await taskGroup.reduce(into: [], { $0.append($1) })
         }
     }
 }

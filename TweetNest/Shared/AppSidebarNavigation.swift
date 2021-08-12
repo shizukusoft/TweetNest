@@ -155,7 +155,11 @@ struct AppSidebarNavigation: View {
         isRefreshing = true
 
         let task = Task.detached {
-            try await Session.shared.updateAccounts()
+            let hasChanges = try await Session.shared.updateAccounts()
+            
+            for hasChanges in hasChanges {
+                _ = try hasChanges.1.get()
+            }
         }
 
         #if os(iOS)
