@@ -40,7 +40,7 @@ struct UserDataView: View {
             }
 
             Section {
-                if let followingUserIDs = userData.followingUserIDs, followingUserIDs.isEmpty == false {
+                if let followingUserIDs = userData.followingUserIDs {
                     NavigationLink {
                         UsersList(userIDs: followingUserIDs)
                             .navigationTitle(Text("Followings"))
@@ -51,7 +51,7 @@ struct UserDataView: View {
                     followingUsersLabel
                 }
 
-                if let followerUserIDs = userData.followerUserIDs, followerUserIDs.isEmpty == false {
+                if let followerUserIDs = userData.followerUserIDs {
                     NavigationLink {
                         UsersList(userIDs: followerUserIDs)
                             .navigationTitle(Text("Followers"))
@@ -62,7 +62,7 @@ struct UserDataView: View {
                     followersLabel
                 }
 
-                if let blockingUserIDs = userData.blockingUserIDs, blockingUserIDs.isEmpty == false {
+                if let blockingUserIDs = userData.blockingUserIDs {
                     NavigationLink {
                         UsersList(userIDs: blockingUserIDs)
                             .navigationTitle(Text("Blocked Accounts"))
