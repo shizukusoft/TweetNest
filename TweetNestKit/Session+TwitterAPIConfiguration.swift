@@ -27,15 +27,15 @@ extension Session.TwitterAPIConfiguration {
             let database = container.publicCloudDatabase
 
             let query = CKQuery(recordType: "TwitterAPIConfiguration", predicate: NSPredicate(value: true))
-            query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: true)]
+            query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
+            
+            let record = try await database.records(matching: query, resultsLimit: 1).matchResults.first?.1.get()
 
-            let records = try await database.perform(query, inZoneWith: .default)
-
-            guard let apiKey: String = records.last?["apiKey"] else {
+            guard let apiKey: String = record?["apiKey"] else {
                 throw SessionError.noAPIKey
             }
 
-            guard let apiKeySecret: String = records.last?["apiKeySecret"] else {
+            guard let apiKeySecret: String = record?["apiKeySecret"] else {
                 throw SessionError.noAPIKeySecret
             }
 
