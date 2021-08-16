@@ -185,10 +185,10 @@ struct UserContentView: View {
 
         isRefreshing = true
 
-        let task = Task {
-            if let account = user.account {
+        let task = Task.detached {
+            if let account = await user.account {
                 try await Session.shared.updateAccount(account.objectID)
-            } else if let account = account {
+            } else if let account = await account {
                 try await Session.shared.updateUsers(ids: [], with: .session(for: account))
             }
         }

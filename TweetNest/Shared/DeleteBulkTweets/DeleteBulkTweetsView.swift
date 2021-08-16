@@ -170,11 +170,10 @@ struct DeleteBulkTweetsView: View {
             progress = (value: 0, total: Double(targetTweets.count))
         }
         
-        let task = Task {
+        let task = Task.detached {
             try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                 for tweet in targetTweets {
                     taskGroup.addTask {
-                        try await Task.sleep(nanoseconds: 1_000_000_000)
                         try await tweet.delete(session: .session(for: account))
                     }
                 }
