@@ -33,14 +33,12 @@ struct MainView: View {
                         }
                 }
             }
-            .onAppear {
-                Task {
-                    do {
-                        try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
-                    } catch {
-                        self.error = error
-                        self.showErrorAlert = true
-                    }
+            .task {
+                do {
+                    try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
+                } catch {
+                    self.error = error
+                    self.showErrorAlert = true
                 }
             }
             .onContinueUserActivity(CSSearchableItemActionType, perform: handleSpotlightUserActivity(_:))
