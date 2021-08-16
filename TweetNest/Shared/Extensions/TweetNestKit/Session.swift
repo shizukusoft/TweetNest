@@ -8,7 +8,6 @@
 import Foundation
 import TweetNestKit
 
-#if DEBUG
 extension TweetNestKit.Session {
     public static var preview: Session = {
         let result = Session(inMemory: true)
@@ -30,9 +29,7 @@ extension TweetNestKit.Session {
         return result
     }()
 }
-#endif
 
-#if DEBUG
 extension TweetNestKit.Account {
     public static var preview: Account {
         let account = Account()
@@ -43,4 +40,3 @@ extension TweetNestKit.Account {
         return account
     }
 }
-#endif
