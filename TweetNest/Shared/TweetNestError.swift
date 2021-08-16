@@ -27,8 +27,8 @@ extension TweetNestError {
 
 extension TweetNestError: LocalizedError {
     var errorDescription: String? {
-        switch error {
-        case .some(TwitterError.serverError(.error(let error), urlResponse: _)):
+        switch (kind, error) {
+        case (_, .some(TwitterError.serverError(.error(let error), urlResponse: _))):
             return error.title
         default:
             return error?.localizedDescription
@@ -36,10 +36,10 @@ extension TweetNestError: LocalizedError {
     }
     
     var failureReason: String? {
-        switch error {
-        case .some(TwitterError.serverError(.error(let error), urlResponse: _)):
+        switch (kind, error) {
+        case (_, .some(TwitterError.serverError(.error(let error), urlResponse: _))):
             return error.detail
-        case .some(TwitterError.serverError(.string(let error), urlResponse: _)):
+        case (_, .some(TwitterError.serverError(.string(let error), urlResponse: _))):
             return error
         default:
            return (error as? LocalizedError)?.failureReason
