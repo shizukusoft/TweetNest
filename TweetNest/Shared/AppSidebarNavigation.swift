@@ -32,8 +32,8 @@ struct AppSidebarNavigation: View {
 
     @FetchRequest(
         sortDescriptors: [
-            SortDescriptor.init(\.sortOrder, order: .forward),
-            SortDescriptor.init(\.creationDate, order: .reverse),
+            SortDescriptor(\.preferringSortOrder, order: .forward),
+            SortDescriptor(\.creationDate, order: .reverse),
         ],
         animation: .default)
     private var accounts: FetchedResults<Account>

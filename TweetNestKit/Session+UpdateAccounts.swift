@@ -19,7 +19,7 @@ extension Session {
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \Account.sortOrder, ascending: true),
+                NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
                 NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
             ]
             fetchRequest.resultType = .managedObjectIDResultType
@@ -31,7 +31,7 @@ extension Session {
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
                     do {
-                        return try await (accountObjectID, .success(self.updateUser(forAccountObjectID: accountObjectID)))
+                        return try await (accountObjectID, .success(self.updateAccount(accountObjectID)))
                     } catch {
                         return (accountObjectID, .failure(error))
                     }
@@ -82,7 +82,7 @@ extension Session {
                     let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
                         let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
                         fetchRequest.sortDescriptors = [
-                            NSSortDescriptor(keyPath: \Account.sortOrder, ascending: true),
+                            NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
                             NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
                         ]
                         fetchRequest.resultType = .managedObjectIDResultType
@@ -93,7 +93,7 @@ extension Session {
                     try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                         accountObjectIDs.forEach { accountObjectID in
                             taskGroup.addTask {
-                                let hasChanges = try await self.updateUser(forAccountObjectID: accountObjectID)
+                                let hasChanges = try await self.updateAccount(accountObjectID)
 
                                 if hasChanges {
                                     let notificationContent: UNMutableNotificationContent = await context.perform {

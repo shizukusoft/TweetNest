@@ -1,8 +1,8 @@
 //
 //  Account+CoreDataProperties.swift
-//  TweetNest
+//  Account
 //
-//  Created by Jaehong Kang on 2021/02/26.
+//  Created by Jaehong Kang on 2021/08/16.
 //
 //
 
@@ -18,9 +18,9 @@ extension Account {
 
     @NSManaged public var creationDate: Date?
     @NSManaged public var id: Int64
-    @NSManaged public var sortOrder: Int16
     @NSManaged public var token: String?
     @NSManaged public var tokenSecret: String?
+    @NSManaged public var preferringSortOrder: Int64
     @NSManaged public var user: User?
 
 }

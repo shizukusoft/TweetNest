@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-@objc(TWNKDataAsset)
 public class DataAsset: NSManagedObject {
     public override func awakeFromInsert() {
         setPrimitiveValue(Date(), forKey: "creationDate")

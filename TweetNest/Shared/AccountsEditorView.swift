@@ -13,8 +13,8 @@ struct AccountsEditorView: View {
 
     @FetchRequest(
         sortDescriptors: [
-            SortDescriptor.init(\.sortOrder, order: .forward),
-            SortDescriptor.init(\.creationDate, order: .reverse),
+            SortDescriptor(\.preferringSortOrder, order: .forward),
+            SortDescriptor(\.creationDate, order: .reverse),
         ],
         animation: .default)
     private var accounts: FetchedResults<Account>
@@ -58,7 +58,7 @@ struct AccountsEditorView: View {
             var accounts = Array(accounts)
             accounts.move(fromOffsets: source, toOffset: destination)
             accounts.enumerated().forEach {
-                $0.element.sortOrder = Int16($0.offset)
+                $0.element.preferringSortOrder = Int64($0.offset)
             }
 
             do {

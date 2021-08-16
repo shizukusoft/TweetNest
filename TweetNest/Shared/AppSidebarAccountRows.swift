@@ -47,16 +47,18 @@ struct AppSidebarAccountRows: View {
                 }
                 .accessibilityLabel(Text("Follower History"))
 
-                NavigationLink(
-                    Label(Text("Blocking History"), systemImage: "nosign"),
-                    tag: .blockings(account),
-                    selection: $navigationItemSelection)
-                {
-                    UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs)
-                        .environment(\.account, account)
-                        .navigationTitle(Text("Blocking History"))
+                if account.preferences.fetchBlockingUsers {
+                    NavigationLink(
+                        Label(Text("Blocking History"), systemImage: "nosign"),
+                        tag: .blockings(account),
+                        selection: $navigationItemSelection)
+                    {
+                        UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs)
+                            .environment(\.account, account)
+                            .navigationTitle(Text("Blocking History"))
+                    }
+                    .accessibilityLabel(Text("Blocking History"))
                 }
-                .accessibilityLabel(Text("Blocking History"))
             }
         }
     }

@@ -10,7 +10,6 @@ import Foundation
 import CoreData
 import Twitter
 
-@objc(TWNKUserData)
 public class UserData: NSManagedObject, Identifiable {
     
 }

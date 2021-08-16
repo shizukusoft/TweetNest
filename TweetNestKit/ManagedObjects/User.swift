@@ -10,7 +10,6 @@ import OrderedCollections
 import CoreData
 import Twitter
 
-@objc(TWNKUser)
 public class User: NSManagedObject, Identifiable {
     public dynamic var sortedUserDatas: OrderedSet<UserData>? {
         userDatas.flatMap {

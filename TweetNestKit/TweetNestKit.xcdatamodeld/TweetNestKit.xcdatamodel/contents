@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19197" systemVersion="21A5304g" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Account" representedClassName="TWNKAccount" syncable="YES">
+    <entity name="Account" representedClassName=".Account" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="sortOrder" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TWNKAccountPreferencesTransformer" customClassName="."/>
+        <attribute name="preferringSortOrder" attributeType="Integer 64" defaultValueString="-1" usesScalarValueType="YES"/>
         <attribute name="token" optional="YES" attributeType="String"/>
         <attribute name="tokenSecret" optional="YES" attributeType="String" allowsCloudEncryption="YES"/>
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="account" inverseEntity="User"/>
     </entity>
-    <entity name="DataAsset" representedClassName="TWNKDataAsset" syncable="YES">
+    <entity name="DataAsset" representedClassName=".DataAsset" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
     </entity>
-    <entity name="User" representedClassName="TWNKUser" syncable="YES">
+    <entity name="User" representedClassName=".User" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="lastUpdateEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -22,7 +23,7 @@
         <relationship name="account" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Account" inverseName="user" inverseEntity="Account"/>
         <relationship name="userDatas" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserData" inverseName="user" inverseEntity="UserData" spotlightIndexingEnabled="YES"/>
     </entity>
-    <entity name="UserData" representedClassName="TWNKUserData" syncable="YES">
+    <entity name="UserData" representedClassName=".UserData" syncable="YES">
         <attribute name="blockingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="followersCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
@@ -43,7 +44,7 @@
         <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="userDatas" inverseEntity="User"/>
     </entity>
     <elements>
-        <element name="Account" positionX="-63" positionY="-18" width="128" height="119"/>
+        <element name="Account" positionX="-63" positionY="-18" width="128" height="134"/>
         <element name="DataAsset" positionX="-54" positionY="144" width="128" height="74"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="134"/>
         <element name="UserData" positionX="-45" positionY="27" width="128" height="299"/>
