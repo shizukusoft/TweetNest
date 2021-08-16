@@ -20,7 +20,7 @@ struct UserContentView: View {
     @State var isRefreshing: Bool = false
     
     @State var showErrorAlert: Bool = false
-    @State var error: Error? = nil
+    @State var error: TweetNestError? = nil
 
     #if os(iOS)
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -165,7 +165,7 @@ struct UserContentView: View {
             ShareView(item: $0)
         }
         #endif
-        .alertError(isPresented: $showErrorAlert, error: $error)
+        .alert(isPresented: $showErrorAlert, error: error)
         .sheet(isPresented: $showBulkDeleteRecentTweets) {
             NavigationView {
                 if let account = account {
@@ -205,7 +205,7 @@ struct UserContentView: View {
             isRefreshing = false
         } catch {
             Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-            self.error = error
+            self.error = TweetNestError(error)
             showErrorAlert = true
             isRefreshing = false
         }

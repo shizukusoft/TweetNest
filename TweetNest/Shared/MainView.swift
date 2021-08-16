@@ -13,14 +13,14 @@ import CoreSpotlight
 struct MainView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
-    @State var error: Error?
+    @State var error: TweetNestError?
     @State var showErrorAlert: Bool = false
 
     @State var user: User? = nil
 
     var body: some View {
         AppSidebarNavigation()
-            .alertError(isPresented: $showErrorAlert, error: $error)
+            .alert(isPresented: $showErrorAlert, error: error)
             .sheet(item: $user) { user in
                 NavigationView {
                     UserView(user: user)
@@ -37,7 +37,7 @@ struct MainView: View {
                 do {
                     try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
                 } catch {
-                    self.error = error
+                    self.error = TweetNestError(error)
                     self.showErrorAlert = true
                 }
             }

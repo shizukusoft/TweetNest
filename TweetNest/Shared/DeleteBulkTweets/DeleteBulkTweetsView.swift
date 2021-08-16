@@ -31,7 +31,7 @@ struct DeleteBulkTweetsView: View {
     @State var progress: (value: Double, total: Double)? = nil
     
     @State var showError: Bool = false
-    @State var error: Error? = nil
+    @State var error: TweetNestError? = nil
     
     var body: some View {
         ZStack {
@@ -43,7 +43,7 @@ struct DeleteBulkTweetsView: View {
                 .padding(16)
                 .interactiveDismissDisabled(true)
                 .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
-                .alertError(isPresented: $showError, error: $error) { _ in
+                .alert(isPresented: $showError, error: error) { _ in
                     isPresented = false
                 }
                 .zIndex(1)
@@ -200,7 +200,7 @@ struct DeleteBulkTweetsView: View {
             isPresented = false
         } catch {
             Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-            self.error = error
+            self.error = TweetNestError(error)
             showError = true
         }
 

@@ -13,7 +13,7 @@ struct SettingsAccountView: View {
     @ObservedObject var account: Account
     
     @State var showError: Bool = false
-    @State var error: Error? = nil
+    @State var error: TweetNestError? = nil
     
     var body: some View {
         Form {
@@ -30,14 +30,14 @@ struct SettingsAccountView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .alertError(isPresented: $showError, error: $error)
+        .alert(isPresented: $showError, error: error)
     }
     
     func save() {
         do {
             try viewContext.save()
         } catch {
-            self.error = error
+            self.error = TweetNestError(error)
             showError = true
         }
     }

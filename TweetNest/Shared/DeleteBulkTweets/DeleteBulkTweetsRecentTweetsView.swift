@@ -17,7 +17,7 @@ struct DeleteBulkTweetsRecentTweetsView: View {
     @State var tweets: [Tweet]? = nil
     
     @State var showError: Bool = false
-    @State var error: Error? = nil
+    @State var error: TweetNestError? = nil
     
     var body: some View {
         ZStack {
@@ -30,7 +30,7 @@ struct DeleteBulkTweetsRecentTweetsView: View {
                     .task {
                         await fetchTweets()
                     }
-                    .alertError(isPresented: $showError, error: $error)
+                    .alert(isPresented: $showError, error: error)
             }
         }
         #if os(iOS)
@@ -62,7 +62,7 @@ struct DeleteBulkTweetsRecentTweetsView: View {
                 self.tweets = tweets
             }
         } catch {
-            self.error = error
+            self.error = TweetNestError(error)
             showError = true
         }
     }

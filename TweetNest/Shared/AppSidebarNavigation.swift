@@ -28,7 +28,7 @@ struct AppSidebarNavigation: View {
     @State private var isRefreshing: Bool = false
 
     @State private var showErrorAlert: Bool = false
-    @State private var error: Error? = nil
+    @State private var error: TweetNestError? = nil
 
     @FetchRequest(
         sortDescriptors: [
@@ -106,7 +106,7 @@ struct AppSidebarNavigation: View {
                     }
                 }
             }
-            .alertError(isPresented: $showErrorAlert, error: $error)
+            .alert(isPresented: $showErrorAlert, error: error)
             .sheet(isPresented: $showSettings) {
                 NavigationView {
                     SettingsMainView()
@@ -143,7 +143,7 @@ struct AppSidebarNavigation: View {
                 withAnimation {
                     webAuthenticationSession = nil
                     Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                    self.error = error
+                    self.error = TweetNestError(error)
                     showErrorAlert = true
                     isAddingAccount = false
                 }
@@ -179,7 +179,7 @@ struct AppSidebarNavigation: View {
             isRefreshing = false
         } catch {
             Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-            self.error = error
+            self.error = TweetNestError(error)
             showErrorAlert = true
             isRefreshing = false
         }
