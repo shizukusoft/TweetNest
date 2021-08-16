@@ -189,7 +189,7 @@ struct UserContentView: View {
             if let account = await user.account {
                 try await Session.shared.updateAccount(account.objectID)
             } else if let account = await account {
-                try await Session.shared.updateUsers(ids: [], with: .session(for: account))
+                try await Session.shared.updateUsers(ids: [user.id], with: .session(for: account))
             }
         }
 
