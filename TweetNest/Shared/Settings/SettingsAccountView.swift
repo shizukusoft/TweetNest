@@ -9,12 +9,19 @@ import SwiftUI
 import TweetNestKit
 
 struct SettingsAccountView: View {
+    @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var account: Account
+    
+    @State var showError: Bool = false
+    @State var error: Error? = nil
     
     var body: some View {
         Form {
             Toggle(isOn: $account.preferences.fetchBlockingUsers) {
                 Text("Fetch Blocking Users")
+            }
+            .onChange(of: account.preferences.fetchBlockingUsers) { newValue in
+                save()
             }
         }
         .navigationTitle(
@@ -23,6 +30,16 @@ struct SettingsAccountView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
+        .alertError(isPresented: $showError, error: $error)
+    }
+    
+    func save() {
+        do {
+            try viewContext.save()
+        } catch {
+            self.error = error
+            showError = true
+        }
     }
 }
 
