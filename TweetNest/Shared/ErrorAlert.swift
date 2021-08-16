@@ -11,6 +11,8 @@ import Twitter
 struct ErrorAlert: ViewModifier {
     @Binding var isPresented: Bool
     @Binding var error: Swift.Error?
+    
+    let dismissHandler: ((Error) -> Void)?
 
     private var title: Text {
         switch error {
@@ -30,8 +32,12 @@ struct ErrorAlert: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .alert(title, isPresented: $isPresented, presenting: error) { _ in
-
+            .alert(title, isPresented: $isPresented, presenting: error) { error in
+                Button(role: .cancel) {
+                    dismissHandler?(error)
+                } label: {
+                    Text("Cancel")
+                }
             } message: { error in
                 switch error {
                 case TwitterError.serverError(let payload, urlResponse: _):
@@ -52,9 +58,9 @@ struct ErrorAlert: ViewModifier {
 }
 
 extension View {
-    func alertError(isPresented: Binding<Bool>, error: Binding<Swift.Error?>) -> some View {
+    func alertError(isPresented: Binding<Bool>, error: Binding<Swift.Error?>, onDismiss: ((Swift.Error) -> Void)? = nil) -> some View {
         modifier(
-            ErrorAlert(isPresented: isPresented, error: error)
+            ErrorAlert(isPresented: isPresented, error: error, dismissHandler: onDismiss)
         )
     }
 }

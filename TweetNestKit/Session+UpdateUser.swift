@@ -13,7 +13,7 @@ import Twitter
 import SwiftUI
 
 extension Session {
-    nonisolated func updateUsers<C>(ids userIDs: C, with twitterSession: Twitter.Session) async throws where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
+    public nonisolated func updateUsers<C>(ids userIDs: C, with twitterSession: Twitter.Session) async throws where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         let userIDs = OrderedSet(userIDs)
 
         return try await withThrowingTaskGroup(of: (Date, [Twitter.User], Date).self) { chunkedUsersTaskGroup in

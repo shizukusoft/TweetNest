@@ -19,7 +19,8 @@ struct AppSidebarAccountRows: View {
                 tag: .profile(account),
                 selection: $navigationItemSelection)
             {
-                AccountView(account: account)
+                UserView(user: account.user)
+                    .environment(\.account, account)
             }
             .accessibilityLabel(Text("Account"))
 
@@ -30,6 +31,7 @@ struct AppSidebarAccountRows: View {
                     selection: $navigationItemSelection)
                 {
                     UsersDiffList(user: user, diffKeyPath: \.followingUserIDs)
+                        .environment(\.account, account)
                         .navigationTitle(Text("Following History"))
                 }
                 .accessibilityLabel(Text("Following History"))
@@ -40,6 +42,7 @@ struct AppSidebarAccountRows: View {
                     selection: $navigationItemSelection)
                 {
                     UsersDiffList(user: user, diffKeyPath: \.followerUserIDs)
+                        .environment(\.account, account)
                         .navigationTitle(Text("Follower History"))
                 }
                 .accessibilityLabel(Text("Follower History"))
@@ -50,6 +53,7 @@ struct AppSidebarAccountRows: View {
                     selection: $navigationItemSelection)
                 {
                     UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs)
+                        .environment(\.account, account)
                         .navigationTitle(Text("Blocking History"))
                 }
                 .accessibilityLabel(Text("Blocking History"))
