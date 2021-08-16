@@ -27,10 +27,8 @@ struct DeleteBulkTweetsRecentTweetsView: View {
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
             } else {
                 ProgressView("Loading Recent Tweets...")
-                    .onAppear {
-                        Task {
-                            await fetchTweets()
-                        }
+                    .task {
+                        await fetchTweets()
                     }
                     .alertError(isPresented: $showError, error: $error)
             }
@@ -40,6 +38,15 @@ struct DeleteBulkTweetsRecentTweetsView: View {
         #endif
         .navigationTitle(Text("Delete Tweets"))
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItemGroup(placement: .cancellationAction) {
+                Button(role: .cancel) {
+                    isPresented = false
+                } label: {
+                    Text("Cancel")
+                }
+            }
+        }
     }
     
     func fetchTweets() async {
