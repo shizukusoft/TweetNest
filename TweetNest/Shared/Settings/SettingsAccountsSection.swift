@@ -1,14 +1,14 @@
 //
-//  AccountsEditorView.swift
-//  AccountsEditorView
+//  SettingsAccountsSection.swift
+//  SettingsAccountsSection
 //
-//  Created by Jaehong Kang on 2021/08/04.
+//  Created by Jaehong Kang on 2021/08/16.
 //
 
 import SwiftUI
 import TweetNestKit
 
-struct AccountsEditorView: View {
+struct SettingsAccountsSection: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
@@ -18,26 +18,29 @@ struct AccountsEditorView: View {
         ],
         animation: .default)
     private var accounts: FetchedResults<Account>
-
+    
     var body: some View {
-        List {
+        Section {
             ForEach(accounts) { account in
                 let username = account.user?.sortedUserDatas?.last?.username
-                Label(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")) {
-                    ProfileImage(userData: account.user?.sortedUserDatas?.last)
-                        .frame(width: 24, height: 24)
+                
+                NavigationLink {
+                    SettingsAccountView(account: account)
+                } label: {
+                    Label(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")) {
+                        ProfileImage(userData: account.user?.sortedUserDatas?.last)
+                            .frame(width: 24, height: 24)
+                    }
+                    .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"))
                 }
-                .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"))
             }
             .onDelete(perform: deleteAccounts)
             .onMove(perform: moveAccounts)
+        } header: {
+            Text("Accounts")
         }
-        #if os(iOS)
-        .environment(\.editMode, .constant(.active))
-        #endif
-        .navigationTitle(Text("Accounts"))
     }
-
+    
     private func deleteAccounts(offsets: IndexSet) {
         withAnimation {
             offsets.map { accounts[$0] }.forEach(viewContext.delete)
@@ -73,8 +76,8 @@ struct AccountsEditorView: View {
     }
 }
 
-struct AccountsEditorView_Previews: PreviewProvider {
+struct SettingsAccountsSection_Previews: PreviewProvider {
     static var previews: some View {
-        AccountsEditorView()
+        SettingsAccountsSection()
     }
 }

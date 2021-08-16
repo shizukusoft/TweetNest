@@ -20,7 +20,7 @@ struct AppSidebarNavigation: View {
 
     @State private var navigationItemSelection: NavigationItem? = nil
 
-    @State private var showAccountsEditor: Bool = false
+    @State private var showSettings: Bool = false
 
     @State private var webAuthenticationSession: ASWebAuthenticationSession? = nil
     @State private var isAddingAccount: Bool = false
@@ -62,13 +62,17 @@ struct AppSidebarNavigation: View {
             .refreshable(action: refresh)
             .navigationTitle(Text("TweetNest"))
             .toolbar {
-                #if os(iOS)
                 ToolbarItemGroup(placement: .navigationBarLeading) {
-                    Button(Text("Edit")) {
-                        showAccountsEditor.toggle()
+                    Button {
+                        showSettings.toggle()
+                    } label: {
+                        Label {
+                            Text("Settings")
+                        } icon: {
+                            Image(systemName: "gearshape")
+                        }
                     }
                 }
-                #endif
 
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button(action: addAccount) {
@@ -103,16 +107,17 @@ struct AppSidebarNavigation: View {
                 }
             }
             .alertError(isPresented: $showErrorAlert, error: $error)
-            .sheet(isPresented: $showAccountsEditor) {
+            .sheet(isPresented: $showSettings) {
                 NavigationView {
-                    AccountsEditorView()
+                    SettingsMainView()
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
                                 Button(Text("Cancel"), role: .cancel) {
-                                    showAccountsEditor.toggle()
+                                    showSettings.toggle()
                                 }
                             }
                         }
+                        .navigationTitle(Text("Settings"))
                 }
             }
         }
