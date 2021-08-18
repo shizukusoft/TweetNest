@@ -150,7 +150,9 @@ extension Session {
 
 extension Session {
     private nonisolated func credential(for accountID: Twitter.Account.ID) async throws -> Twitter.Session.Credential? {
-        try await container.performBackgroundTask { (context) in
+        let context = container.newBackgroundContext()
+        
+        return try await context.perform {
             let accountFetchRequest: NSFetchRequest<Account> = Account.fetchRequest()
             accountFetchRequest.predicate = NSPredicate(format: "id == %ld", accountID)
             accountFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
