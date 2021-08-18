@@ -46,17 +46,8 @@ extension Session {
         let followerIDs = try await _followerIDs
         let myBlockingUserIDs = try await _myBlockingUserIDs
         let twitterUserFetchDate = Date()
-        
-        var userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs)
-        if let myBlockingUserIDs = myBlockingUserIDs {
-            userIDs.append(contentsOf: myBlockingUserIDs)
-        }
 
-        try await self.updateUsers(ids: userIDs, with: twitterSession)
-
-        _ = try await _profileImageDataAsset
-
-        let hasChanges: Bool = try await context.perform(schedule: .enqueued) {
+        async let hasChanges: Bool = context.perform(schedule: .enqueued) {
             let account = context.object(with: accountObjectID) as? Account
 
             let fetchRequest = User.fetchRequest()
@@ -82,7 +73,16 @@ extension Session {
 
             return previousUserData?.objectID != userData.objectID
         }
+        
+        var userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs)
+        if let myBlockingUserIDs = myBlockingUserIDs {
+            userIDs.append(contentsOf: myBlockingUserIDs)
+        }
+        
+        try await self.updateUsers(ids: userIDs, with: twitterSession)
+        
+        _ = try await _profileImageDataAsset
 
-        return hasChanges
+        return try await hasChanges
     }
 }
