@@ -1,6 +1,6 @@
 //
-//  SettingsAccountsSection.swift
-//  SettingsAccountsSection
+//  SettingsAccountItems.swift
+//  SettingsAccountItems
 //
 //  Created by Jaehong Kang on 2021/08/16.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 import TweetNestKit
 
-struct SettingsAccountsSection: View {
+struct SettingsAccountItems: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
@@ -20,25 +20,21 @@ struct SettingsAccountsSection: View {
     private var accounts: FetchedResults<Account>
     
     var body: some View {
-        Section {
-            ForEach(accounts) { account in
-                let username = account.user?.sortedUserDatas?.last?.username
-                
-                NavigationLink {
-                    SettingsAccountView(account: account)
-                } label: {
-                    Label(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")) {
-                        ProfileImage(userData: account.user?.sortedUserDatas?.last)
-                            .frame(width: 24, height: 24)
-                    }
-                    .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"))
+        ForEach(accounts) { account in
+            let username = account.user?.sortedUserDatas?.last?.username
+            
+            NavigationLink {
+                SettingsAccountView(account: account)
+            } label: {
+                Label(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")) {
+                    ProfileImage(userData: account.user?.sortedUserDatas?.last)
+                        .frame(width: 24, height: 24)
                 }
+                .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"))
             }
-            .onDelete(perform: deleteAccounts)
-            .onMove(perform: moveAccounts)
-        } header: {
-            Text("Accounts")
         }
+        .onDelete(perform: deleteAccounts)
+        .onMove(perform: moveAccounts)
     }
     
     private func deleteAccounts(offsets: IndexSet) {
@@ -78,6 +74,6 @@ struct SettingsAccountsSection: View {
 
 struct SettingsAccountsSection_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsAccountsSection()
+        SettingsAccountItems()
     }
 }

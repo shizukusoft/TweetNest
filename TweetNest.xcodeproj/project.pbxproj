@@ -57,8 +57,8 @@
 		193AFB6626CA310E008BFF67 /* Session+UpdateAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */; };
 		193AFB6926CA3411008BFF67 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
 		193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
-		193AFB6C26CA3499008BFF67 /* SettingsAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6B26CA3499008BFF67 /* SettingsAccountsSection.swift */; };
-		193AFB6D26CA3499008BFF67 /* SettingsAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6B26CA3499008BFF67 /* SettingsAccountsSection.swift */; };
+		193AFB6C26CA3499008BFF67 /* SettingsAccountItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6B26CA3499008BFF67 /* SettingsAccountItems.swift */; };
+		193AFB6D26CA3499008BFF67 /* SettingsAccountItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6B26CA3499008BFF67 /* SettingsAccountItems.swift */; };
 		193AFB6F26CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */; };
@@ -273,7 +273,7 @@
 		193AFB5B26CA043A008BFF67 /* Account+Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+Preferences.swift"; sourceTree = "<group>"; };
 		193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+UpdateAccount.swift"; sourceTree = "<group>"; };
 		193AFB6826CA3411008BFF67 /* SettingsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMainView.swift; sourceTree = "<group>"; };
-		193AFB6B26CA3499008BFF67 /* SettingsAccountsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountsSection.swift; sourceTree = "<group>"; };
+		193AFB6B26CA3499008BFF67 /* SettingsAccountItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountItems.swift; sourceTree = "<group>"; };
 		193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountView.swift; sourceTree = "<group>"; };
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountRows.swift; sourceTree = "<group>"; };
@@ -589,7 +589,7 @@
 			isa = PBXGroup;
 			children = (
 				193AFB6826CA3411008BFF67 /* SettingsMainView.swift */,
-				193AFB6B26CA3499008BFF67 /* SettingsAccountsSection.swift */,
+				193AFB6B26CA3499008BFF67 /* SettingsAccountItems.swift */,
 				193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */,
 			);
 			path = Settings;
@@ -1229,7 +1229,7 @@
 				1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */,
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */,
-				193AFB6C26CA3499008BFF67 /* SettingsAccountsSection.swift in Sources */,
+				193AFB6C26CA3499008BFF67 /* SettingsAccountItems.swift in Sources */,
 				195DD4BF26BEF6B2008F0309 /* DataAsset.swift in Sources */,
 				19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				19861E4026C901ED00073431 /* UserContentView.swift in Sources */,
@@ -1297,7 +1297,7 @@
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
 				19EE473626C14554007D2814 /* UsersDiffListSection.swift in Sources */,
 				195DD4C026BEF6B3008F0309 /* DataAsset.swift in Sources */,
-				193AFB6D26CA3499008BFF67 /* SettingsAccountsSection.swift in Sources */,
+				193AFB6D26CA3499008BFF67 /* SettingsAccountItems.swift in Sources */,
 				190D12F026B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 				6657FDE526BF2BC900741FA9 /* NavigationLink.swift in Sources */,
 				6657FDDF26BF278B00741FA9 /* Button.swift in Sources */,
