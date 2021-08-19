@@ -120,6 +120,9 @@
 		19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
 		19DA23D126B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
 		19DA23D226B98767002436DC /* UserDataProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDataProfileView.swift */; };
+		19EBA45026CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */; };
+		19EBA45126CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */; };
+		19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */; };
 		19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
 		19EE473326C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
 		19EE473526C14554007D2814 /* UsersDiffListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473426C14554007D2814 /* UsersDiffListSection.swift */; };
@@ -321,6 +324,8 @@
 		19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersSpotlightDelegate.swift; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		19DA23D026B98767002436DC /* UserDataProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataProfileView.swift; sourceTree = "<group>"; };
+		19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBulkTweetsAllTweetsView.swift; sourceTree = "<group>"; };
+		19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterArchive.swift; sourceTree = "<group>"; };
 		19EE473126C144A2007D2814 /* UsersDiffList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersDiffList.swift; sourceTree = "<group>"; };
 		19EE473426C14554007D2814 /* UsersDiffListSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersDiffListSection.swift; sourceTree = "<group>"; };
 		19EE473726C14BCD007D2814 /* UserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRow.swift; sourceTree = "<group>"; };
@@ -431,6 +436,7 @@
 			isa = PBXGroup;
 			children = (
 				19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */,
+				19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */,
 				19BBB88426C8E637009D8DC7 /* DeleteBulkTweetsView.swift */,
 			);
 			path = DeleteBulkTweets;
@@ -759,6 +765,7 @@
 				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
 				19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */,
 				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
+				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
 				195DD4B226BEE7EC008F0309 /* Localizable.strings */,
 				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
 				19C5A2D126BC217900AB1122 /* Extensions */,
@@ -1236,6 +1243,7 @@
 				19EE473826C14BCD007D2814 /* UserRow.swift in Sources */,
 				193659AF260978F900865D40 /* Session.swift in Sources */,
 				190D12EF26B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
+				19EBA45026CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1276,6 +1284,7 @@
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
 				19365A6826097B4800865D40 /* Session.swift in Sources */,
+				19EBA45126CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift in Sources */,
 				19EE473326C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				19EE473926C14BCD007D2814 /* UserRow.swift in Sources */,
 				19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */,
@@ -1333,6 +1342,7 @@
 				19C5A2B126BC1F8A00AB1122 /* Account.swift in Sources */,
 				19C5A2B226BC1F8A00AB1122 /* User.swift in Sources */,
 				19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */,
+				19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */,
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
 				19C5A2B526BC1F8A00AB1122 /* PersistentCloudKitContainer.swift in Sources */,
 				19861E3B26C8F82400073431 /* Session+TweetNestKit.swift in Sources */,

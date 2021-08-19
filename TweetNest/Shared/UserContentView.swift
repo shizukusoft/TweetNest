@@ -44,6 +44,7 @@ struct UserContentView: View {
     }
     
     @State var showBulkDeleteRecentTweets: Bool = false
+    @State var showBulkDeleteAllTweets: Bool = false
     
     @ViewBuilder
     var deleteMenu: some View {
@@ -53,6 +54,12 @@ struct UserContentView: View {
                     showBulkDeleteRecentTweets = true
                 } label: {
                     Text("Delete Recent Tweets")
+                }
+                
+                Button(role: .destructive) {
+                    showBulkDeleteAllTweets = true
+                } label: {
+                    Text("Delete All Tweets")
                 }
             }
         } label: {
@@ -115,6 +122,8 @@ struct UserContentView: View {
                         }
                         #endif
                         
+                        Divider()
+                        
                         deleteMenu
                     } label: {
                         Label(Text("More"), systemImage: "ellipsis.circle")
@@ -170,6 +179,15 @@ struct UserContentView: View {
             NavigationView {
                 if let account = account {
                     DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                } else {
+                    EmptyView()
+                }
+            }
+        }
+        .sheet(isPresented: $showBulkDeleteAllTweets) {
+            NavigationView {
+                if let account = account {
+                    DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
                 } else {
                     EmptyView()
                 }
