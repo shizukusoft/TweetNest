@@ -52,15 +52,19 @@ public actor Session {
 
 extension Session {
     func twitterSession(for accountID: Twitter.Account.ID? = nil) async throws -> Twitter.Session {
-        if let accountID = accountID, let session = twitterSessions[accountID] {
-            return session
-        }
-
         let twitterAPIConfiguration = try await twitterAPIConfiguration
-
-        let twitterSession = await Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
+        
         guard let accountID = accountID else {
-            return twitterSession
+            return Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
+        }
+        
+        let twitterSession: Twitter.Session
+        
+        if let _twitterSession = twitterSessions[accountID] {
+            twitterSession = _twitterSession
+        } else {
+            twitterSession = Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
+            twitterSessions[accountID] = twitterSession
         }
 
         let credential = try await credential(for: accountID)
@@ -69,8 +73,6 @@ extension Session {
         }
 
         await twitterSession.updateCredential(credential)
-
-        twitterSessions[accountID] = twitterSession
 
         return twitterSession
     }
