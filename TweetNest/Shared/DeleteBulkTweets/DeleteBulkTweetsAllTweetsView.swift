@@ -30,18 +30,29 @@ struct DeleteBulkTweetsAllTweetsView: View {
                 Rectangle()
                     .foregroundColor(.clear)
                     .overlay {
-                        DeleteBulkTweetsView(tweets: tweets, isPresented: $isPresented)
+                        DeleteBulkTweetsFormView(tweets: tweets, isPresented: $isPresented)
                             .environment(\.account, account)
                     }
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    .zIndex(3)
             } else if isImporting {
                 Rectangle()
                     .foregroundColor(.clear)
                     .overlay {
                         ProgressView("Loading Archive...")
                             .alert(isPresented: $showError, error: error)
+                            .toolbar {
+                                ToolbarItemGroup(placement: .cancellationAction) {
+                                    Button(role: .cancel) {
+                                        isPresented = false
+                                    } label: {
+                                        Text("Cancel")
+                                    }
+                                }
+                            }
                     }
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    .zIndex(2)
             } else {
                 Rectangle()
                     .foregroundColor(.clear)
@@ -51,9 +62,19 @@ struct DeleteBulkTweetsAllTweetsView: View {
                         } label: {
                             Text("Open Twitter Archive")
                         }
+                        .toolbar {
+                            ToolbarItemGroup(placement: .cancellationAction) {
+                                Button(role: .cancel) {
+                                    isPresented = false
+                                } label: {
+                                    Text("Cancel")
+                                }
+                            }
+                        }
                         .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: [.folder], onCompletion: onFileImporterCompletion(result:))
                     }
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
+                    .zIndex(1)
             }
         }
         #if os(iOS)
@@ -61,15 +82,6 @@ struct DeleteBulkTweetsAllTweetsView: View {
         #endif
         .navigationTitle(Text("Delete Tweets"))
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItemGroup(placement: .cancellationAction) {
-                Button(role: .cancel) {
-                    isPresented = false
-                } label: {
-                    Text("Cancel")
-                }
-            }
-        }
     }
     
     func onFileImporterCompletion(result: Result<URL, Error>) {

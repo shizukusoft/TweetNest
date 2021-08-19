@@ -22,13 +22,22 @@ struct DeleteBulkTweetsRecentTweetsView: View {
     var body: some View {
         ZStack {
             if let tweets = tweets {
-                DeleteBulkTweetsView(tweets: tweets, isPresented: $isPresented)
+                DeleteBulkTweetsFormView(tweets: tweets, isPresented: $isPresented)
                     .environment(\.account, account)
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
             } else {
                 ProgressView("Loading Recent Tweets...")
                     .task {
                         await fetchTweets()
+                    }
+                    .toolbar {
+                        ToolbarItemGroup(placement: .cancellationAction) {
+                            Button(role: .cancel) {
+                                isPresented = false
+                            } label: {
+                                Text("Cancel")
+                            }
+                        }
                     }
                     .alert(isPresented: $showError, error: error)
             }
@@ -38,15 +47,6 @@ struct DeleteBulkTweetsRecentTweetsView: View {
         #endif
         .navigationTitle(Text("Delete Tweets"))
         .navigationBarBackButtonHidden(true)
-        .toolbar {
-            ToolbarItemGroup(placement: .cancellationAction) {
-                Button(role: .cancel) {
-                    isPresented = false
-                } label: {
-                    Text("Cancel")
-                }
-            }
-        }
     }
     
     func fetchTweets() async {

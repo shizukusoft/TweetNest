@@ -27,8 +27,28 @@ extension TwitterArchive {
         get async throws {
             let tweetJSURL = url.appendingPathComponent("data/tweet.js")
             
-            let tweetJS = try String(contentsOf: tweetJSURL)
-            
+            let tweetJS: String = try await withCheckedThrowingContinuation { continuation in
+                var error: NSError? = nil
+                defer {
+                    if let error = error {
+                        continuation.resume(throwing: error)
+                    }
+                }
+                
+                NSFileCoordinator().coordinate(readingItemAt: tweetJSURL, options: [], error: &error) { url in
+                    _ = url.startAccessingSecurityScopedResource()
+                    defer {
+                        url.stopAccessingSecurityScopedResource()
+                    }
+                    
+                    continuation.resume(
+                        with: Result {
+                            try String(contentsOf: url)
+                        }
+                    )
+                }
+            }
+
             let result = JSContext(virtualMachine: jsVirtualMachine)!.evaluateScript("""
             window = {};
             window.YTD = {};
