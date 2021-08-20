@@ -74,14 +74,23 @@ extension Session {
             return previousUserDetail?.objectID != userDetail.objectID
         }
         
-        var userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs)
-        if let myBlockingUserIDs = myBlockingUserIDs {
-            userIDs.append(contentsOf: myBlockingUserIDs)
+        let usersUpdateTask = Task.detached {
+            var userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs)
+            if let myBlockingUserIDs = myBlockingUserIDs {
+                userIDs.append(contentsOf: myBlockingUserIDs)
+            }
+            
+            try await self.updateUsers(ids: userIDs, with: twitterSession)
         }
         
-        try await self.updateUsers(ids: userIDs, with: twitterSession)
+        let profileImageDataAsset = try await _profileImageDataAsset
+        if profileImageDataAsset.hasChanges {
+            try await context.perform {
+                try context.save()
+            }
+        }
         
-        _ = try await _profileImageDataAsset
+        try await usersUpdateTask.result.get()
 
         return try await hasChanges
     }
