@@ -35,16 +35,16 @@ extension Session {
                     for user in chunkedUsers.1 {
                         taskGroup.addTask {
                             try await context.perform(schedule: .enqueued) {
-                                let userData = try UserData.createOrUpdate(
+                                let userDetail = try UserDetail.createOrUpdate(
                                     twitterUser: user,
                                     userUpdateStartDate: chunkedUsers.0,
-                                    userDataCreationDate: chunkedUsers.2,
+                                    userDetailCreationDate: chunkedUsers.2,
                                     context: context
                                 )
 
-                                if userData.user?.account != nil {
+                                if userDetail.user?.account != nil {
                                     // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                                    context.delete(userData)
+                                    context.delete(userDetail)
                                 }
 
                                 if context.hasChanges {

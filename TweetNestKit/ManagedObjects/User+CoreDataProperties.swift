@@ -2,7 +2,7 @@
 //  User+CoreDataProperties.swift
 //  User
 //
-//  Created by Jaehong Kang on 2021/07/31.
+//  Created by Jaehong Kang on 2021/08/20.
 //
 //
 
@@ -17,28 +17,32 @@ extension User {
     }
 
     @NSManaged public var creationDate: Date?
-    @NSManaged public var id: String
-    @NSManaged public var lastUpdateStartDate: Date?
+    @NSManaged public var id: String?
     @NSManaged public var lastUpdateEndDate: Date?
+    @NSManaged public var lastUpdateStartDate: Date?
     @NSManaged public var modificationDate: Date?
     @NSManaged public var account: Account?
-    @NSManaged public var userDatas: NSSet?
+    @NSManaged public var userDetails: NSSet?
 
 }
 
-// MARK: Generated accessors for userDatas
+// MARK: Generated accessors for userDetails
 extension User {
 
-    @objc(addUserDatasObject:)
-    @NSManaged public func addToUserDatas(_ value: UserData)
+    @objc(addUserDetailsObject:)
+    @NSManaged public func addToUserDetails(_ value: UserDetail)
 
-    @objc(removeUserDatasObject:)
-    @NSManaged public func removeFromUserDatas(_ value: UserData)
+    @objc(removeUserDetailsObject:)
+    @NSManaged public func removeFromUserDetails(_ value: UserDetail)
 
-    @objc(addUserDatas:)
-    @NSManaged public func addToUserDatas(_ values: NSSet)
+    @objc(addUserDetails:)
+    @NSManaged public func addToUserDetails(_ values: NSSet)
 
-    @objc(removeUserDatas:)
-    @NSManaged public func removeFromUserDatas(_ values: NSSet)
+    @objc(removeUserDetails:)
+    @NSManaged public func removeFromUserDetails(_ values: NSSet)
+
+}
+
+extension User : Identifiable {
 
 }

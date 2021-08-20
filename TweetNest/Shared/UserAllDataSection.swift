@@ -12,18 +12,18 @@ struct UserAllDataSection: View {
     @ObservedObject var user: User
 
     @FetchRequest
-    private var userDatas: FetchedResults<UserData>
+    private var userDetails: FetchedResults<UserDetail>
 
     var body: some View {
         Section(Text("All Data")) {
-            ForEach(userDatas) { userData in
+            ForEach(userDetails) { userDetail in
                 NavigationLink(
-                    Text(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description))
+                    Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description))
                 {
-                    UserDataView(userData: userData)
+                    UserDetailView(userDetail: userDetail)
                     .navigationTitle(
-                        Text(userData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userData.objectID.description)
-                        .accessibilityLabel(Text(userData.creationDate?.formatted(date: .complete, time: .standard) ?? userData.objectID.description))
+                        Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
+                        .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
                     )
                 }
             }
@@ -32,9 +32,9 @@ struct UserAllDataSection: View {
 
     init(user: User) {
         self.user = user
-        self._userDatas = FetchRequest(
+        self._userDetails = FetchRequest(
             sortDescriptors: [NSSortDescriptor(keyPath: \User.creationDate, ascending: false)],
-            predicate: NSPredicate(format: "user.id == %@", user.id),
+            predicate: NSPredicate(format: "user == %@", user),
             animation: .default
         )
     }

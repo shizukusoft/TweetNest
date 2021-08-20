@@ -13,8 +13,8 @@ struct UserContentView: View {
     @Environment(\.account) var account: Account?
     @ObservedObject var user: User
 
-    var lastUserData: UserData? {
-        user.sortedUserDatas?.last
+    var lastUserDetail: UserDetail? {
+        user.sortedUserDetails?.last
     }
 
     @State var isRefreshing: Bool = false
@@ -39,8 +39,10 @@ struct UserContentView: View {
     @State var shareSheetURL: URL? = nil
     #endif
 
-    var userProfileURL: URL {
-        URL(string: "https://twitter.com/intent/user?user_id=\(user.id)")!
+    var userProfileURL: URL? {
+        user.id.flatMap {
+            URL(string: "https://twitter.com/intent/user?user_id=\($0)")!
+        }
     }
     
     @State var showBulkDeleteRecentTweets: Bool = false
@@ -73,14 +75,14 @@ struct UserContentView: View {
 
     var body: some View {
         List {
-            if let lastUserData = lastUserData {
+            if let lastUserDetail = lastUserDetail {
                 Section {
-                    UserDataProfileView(userData: lastUserData)
+                    UserDetailProfileView(userDetail: lastUserDetail)
                 } header: {
                     Text("Latest Profile")
                 } footer: {
                     VStack(alignment: .leading) {
-                        Text(verbatim: "#\(Int64(user.id)?.formatted() ?? user.id)")
+                        user.id.flatMap { Text(verbatim: "#\(Int64($0)?.formatted() ?? $0)") }
                         if let lastUpdateDate = user.lastUpdateEndDate {
                             Text("Updated \(lastUpdateDate, style: .relative) ago")
                             .accessibilityAddTraits(.updatesFrequently)
@@ -93,27 +95,28 @@ struct UserContentView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .navigationTitle(Text(verbatim: lastUserData?.username.flatMap({"@\($0)"}) ?? "#\(user.id)"))
+        .navigationTitle(Text(verbatim: lastUserDetail?.username.flatMap {"@\($0)"} ?? user.id.flatMap { "#\(Int64($0)?.formatted() ?? $0)" } ?? user.description))
         #if os(iOS)
         .refreshable(action: refresh)
         #endif
         .toolbar {
-            let userProfileURL = URL(string: "https://twitter.com/intent/user?user_id=\(user.id)")!
             ToolbarItemGroup(placement: .automatic) {
                 if shouldCompactToolbar {
                     Menu {
-                        Link(destination: userProfileURL) {
-                            Label(Text("Open Profile"), systemImage: "safari")
-                        }
+                        if let userProfileURL = userProfileURL {
+                            Link(destination: userProfileURL) {
+                                Label(Text("Open Profile"), systemImage: "safari")
+                            }
 
-                        #if os(iOS)
-                        Button {
-                            safariSheetURL = userProfileURL
-                        } label: {
-                            Label(Text("Open Profile in Safari"), systemImage: "safari")
+                            #if os(iOS)
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label(Text("Open Profile in Safari"), systemImage: "safari")
+                            }
+                            #endif
                         }
-                        #endif
-
+                        
                         #if os(iOS)
                         Divider()
 
@@ -130,28 +133,30 @@ struct UserContentView: View {
                             .labelStyle(.iconOnly)
                     }
                 } else {
-                    Link(destination: userProfileURL) {
-                        Label(Text("Open Profile"), systemImage: "safari")
-                    }
-                    #if os(iOS)
-                    .contextMenu {
+                    if let userProfileURL = userProfileURL {
                         Link(destination: userProfileURL) {
                             Label(Text("Open Profile"), systemImage: "safari")
                         }
+                        #if os(iOS)
+                        .contextMenu {
+                            Link(destination: userProfileURL) {
+                                Label(Text("Open Profile"), systemImage: "safari")
+                            }
 
-                        Button {
-                            safariSheetURL = userProfileURL
-                        } label: {
-                            Label(Text("Open Profile in Safari"), systemImage: "safari")
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label(Text("Open Profile in Safari"), systemImage: "safari")
+                            }
                         }
+                        #endif
+                        
+                        #if os(iOS)
+                        Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
+                            shareSheetURL = userProfileURL
+                        }
+                        #endif
                     }
-                    #endif
-
-                    #if os(iOS)
-                    Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
-                        shareSheetURL = userProfileURL
-                    }
-                    #endif
                     
                     #if !os(iOS)
                     Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
@@ -207,7 +212,7 @@ struct UserContentView: View {
             if let account = await user.account {
                 try await Session.shared.updateAccount(account.objectID)
             } else if let account = await account {
-                try await Session.shared.updateUsers(ids: [user.id], with: .session(for: account))
+                try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, with: .session(for: account))
             }
         }
 

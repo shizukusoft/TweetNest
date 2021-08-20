@@ -46,9 +46,9 @@ struct AppSidebarNavigation: View {
                 ForEach(accounts) { account in
                     Section(
                         Label(
-                            Text(verbatim: account.user?.sortedUserDatas?.last?.username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"),
+                            Text(verbatim: account.user?.sortedUserDetails?.last?.username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"),
                             icon: {
-                                ProfileImage(userData: account.user?.sortedUserDatas?.last)
+                                ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
                                 .frame(width: 24, height: 24)
                             }
                         )

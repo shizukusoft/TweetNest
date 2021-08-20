@@ -52,26 +52,26 @@ extension Session {
 
             let fetchRequest = User.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
-            fetchRequest.relationshipKeyPathsForPrefetching = ["userDatas"]
+            fetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
 
             let user = try context.fetch(fetchRequest).last
-            let previousUserData = user?.sortedUserDatas?.last
+            let previousUserDetail = user?.sortedUserDetails?.last
 
-            let userData = try UserData.createOrUpdate(
+            let userDetail = try UserDetail.createOrUpdate(
                 twitterUser: twitterUser,
                 followingUserIDs: followingUserIDs,
                 followerUserIDs: followerIDs,
                 blockingUserIDs: myBlockingUserIDs,
                 userUpdateStartDate: updateStartDate,
-                userDataCreationDate: twitterUserFetchDate,
+                userDetailCreationDate: twitterUserFetchDate,
                 context: context
             )
 
-            userData.user?.account = account
+            userDetail.user?.account = account
 
             try context.save()
 
-            return previousUserData?.objectID != userData.objectID
+            return previousUserDetail?.objectID != userDetail.objectID
         }
         
         var userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs)

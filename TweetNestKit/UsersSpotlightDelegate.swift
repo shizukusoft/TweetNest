@@ -21,12 +21,12 @@ class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
         if let user = object as? User {
             let attributeSet = CSSearchableItemAttributeSet(contentType: .contact)
 
-            let sortedUserDatas = user.sortedUserDatas
+            let sortedUserDetails = user.sortedUserDetails
 
             attributeSet.identifier = user.id
-            attributeSet.displayName = sortedUserDatas?.last?.name
-            attributeSet.alternateNames = sortedUserDatas?.last?.username.flatMap { ["@\($0)"] }
-            attributeSet.thumbnailData = try? sortedUserDatas?.last?.profileImageURL.flatMap {
+            attributeSet.displayName = sortedUserDetails?.last?.name
+            attributeSet.alternateNames = sortedUserDetails?.last?.username.flatMap { ["@\($0)"] }
+            attributeSet.thumbnailData = try? sortedUserDetails?.last?.profileImageURL.flatMap {
                 let fetchRequest = DataAsset.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "url == %@", $0 as NSURL)
                 fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -34,7 +34,7 @@ class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
 
                 return try user.managedObjectContext?.fetch(fetchRequest).first?.data
             }
-            attributeSet.keywords = (sortedUserDatas?.compactMap(\.name) ?? []) + (sortedUserDatas?.compactMap(\.username) ?? [])
+            attributeSet.keywords = (sortedUserDetails?.compactMap(\.name) ?? []) + (sortedUserDetails?.compactMap(\.username) ?? [])
 
             return attributeSet
         }

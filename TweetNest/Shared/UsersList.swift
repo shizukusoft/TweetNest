@@ -18,21 +18,21 @@ struct UsersList: View {
     var body: some View {
         List {
             ForEach(
-                users.sorted(by: { userIDs.firstIndex(of: $0.id) ?? -1 < userIDs.firstIndex(of: $1.id) ?? -1})
+                users.sorted(by: { $0.id.flatMap { userIDs.firstIndex(of: $0) } ?? -1 < $1.id.flatMap { userIDs.firstIndex(of: $0) } ?? -1})
             ) { user in
-                let latestUserData = user.sortedUserDatas?.last
+                let latestUserDetail = user.sortedUserDetails?.last
                 NavigationLink {
                     UserView(user: user)
                 } label: {
                     HStack(spacing: 8) {
-                        ProfileImage(userData: latestUserData)
+                        ProfileImage(userDetail: latestUserDetail)
                             .frame(width: 24, height: 24)
 
                         HStack(spacing: 4) {
-                            Text(verbatim: latestUserData?.name ?? "#\(user.id)")
+                            Text(verbatim: latestUserDetail?.name ?? user.id.flatMap { "#\($0)" } ?? user.description)
                                 .lineLimit(1)
 
-                            if let username = latestUserData?.username {
+                            if let username = latestUserDetail?.username {
                                 Text(verbatim: "@\(username)")
                                     .lineLimit(1)
                                     .foregroundColor(Color.gray)
@@ -41,7 +41,7 @@ struct UsersList: View {
                         }
                     }
                 }
-                .accessibilityLabel(Text(verbatim: latestUserData?.name ?? "#\(user.id)"))
+                .accessibilityLabel(Text(verbatim: latestUserDetail?.name ?? user.id.flatMap { "#\($0)" } ?? user.description))
             }
         }
         .searchable(text: $searchQuery)
@@ -53,8 +53,8 @@ struct UsersList: View {
                     andPredicateWithSubpredicates: [
                         NSPredicate(format: "id IN %@", Array(userIDs)),
                         NSCompoundPredicate(orPredicateWithSubpredicates: [
-                            NSPredicate(format: "ANY userDatas.name CONTAINS[cd] %@", newSearchQuery),
-                            NSPredicate(format: "ANY userDatas.username CONTAINS[cd] %@", newSearchQuery)
+                            NSPredicate(format: "ANY userDetails.name CONTAINS[cd] %@", newSearchQuery),
+                            NSPredicate(format: "ANY userDetails.username CONTAINS[cd] %@", newSearchQuery)
                         ])
                     ]
                 )

@@ -9,13 +9,13 @@ import SwiftUI
 import TweetNestKit
 
 struct ProfileImage: View {
-    var userData: UserData?
+    var userDetail: UserDetail?
 
     struct Content: View {
-        @ObservedObject var userData: UserData
+        @ObservedObject var userDetail: UserDetail
 
         var body: some View {
-            DataAsset(url: userData.profileImageURL) { data in
+            DataAsset(url: userDetail.profileImageURL) { data in
                 if let image = Image(data: data) {
                     image
                         .resizable()
@@ -28,8 +28,8 @@ struct ProfileImage: View {
 
     var body: some View {
         Group {
-            if let userData = userData {
-                Content(userData: userData)
+            if let userDetail = userDetail {
+                Content(userDetail: userDetail)
             } else {
                 Color.gray
             }
@@ -42,7 +42,7 @@ struct ProfileImage: View {
 #if DEBUG
 struct ProfileImage_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileImage(userData: nil)
+        ProfileImage(userDetail: nil)
     }
 }
 #endif

@@ -10,22 +10,22 @@ import TweetNestKit
 
 struct UserRow: View {
     let userID: String
-    @FetchRequest private var userDatas: FetchedResults<UserData>
+    @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
     var body: some View {
-        if let latestUserData = userDatas.first, let user = latestUserData.user {
+        if let latestUserDetail = userDetails.first, let user = latestUserDetail.user {
             NavigationLink {
                 UserView(user: user)
             } label: {
                 HStack(spacing: 8) {
-                    ProfileImage(userData: latestUserData)
+                    ProfileImage(userDetail: latestUserDetail)
                         .frame(width: 24, height: 24)
 
                     HStack(spacing: 4) {
-                        Text(verbatim: latestUserData.name ?? "#\(user.id)")
+                        Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.description)
                             .lineLimit(1)
 
-                        if let username = latestUserData.username {
+                        if let username = latestUserDetail.username {
                             Text(verbatim: "@\(username)")
                                 .lineLimit(1)
                                 .foregroundColor(Color.gray)
@@ -34,7 +34,7 @@ struct UserRow: View {
                     }
                 }
             }
-            .accessibilityLabel(Text(verbatim: latestUserData.name ?? "#\(user.id)"))
+            .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.description))
         } else {
             Text(verbatim: "#\(Int64(userID)?.formatted() ?? userID)")
         }
@@ -43,13 +43,13 @@ struct UserRow: View {
     init(userID: String) {
         self.userID = userID
 
-        let userData = UserData.fetchRequest()
-        userData.sortDescriptors = [NSSortDescriptor(keyPath: \UserData.creationDate, ascending: false)]
-        userData.predicate = NSPredicate(format: "user.id == %@", userID)
-        userData.fetchLimit = 1
+        let userDetailsFetchRequest = UserDetail.fetchRequest()
+        userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
+        userDetailsFetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
+        userDetailsFetchRequest.fetchLimit = 1
 
-        self._userDatas = FetchRequest(
-            fetchRequest: userData,
+        self._userDetails = FetchRequest(
+            fetchRequest: userDetailsFetchRequest,
             animation: .default
         )
     }

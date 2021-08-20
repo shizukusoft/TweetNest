@@ -1,6 +1,6 @@
 //
-//  UserDataProfileView.swift
-//  UserDataProfileView
+//  UserDetailProfileView.swift
+//  UserDetailProfileView
 //
 //  Created by Jaehong Kang on 2021/08/03.
 //
@@ -8,8 +8,8 @@
 import SwiftUI
 import TweetNestKit
 
-struct UserDataProfileView: View {
-    @ObservedObject var userData: UserData
+struct UserDetailProfileView: View {
+    @ObservedObject var userDetail: UserDetail
 
     @Environment(\.openURL) private var openURL
 
@@ -17,26 +17,26 @@ struct UserDataProfileView: View {
         Group {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
-                    ProfileImage(userData: userData)
+                    ProfileImage(userDetail: userDetail)
                         .frame(width: 50, height: 50)
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(verbatim: userData.name ?? userData.user.flatMap({"#\($0.id)"}) ?? "")
-                        if let username = userData.username {
+                        Text(verbatim: userDetail.name ?? userDetail.user?.id.flatMap({"#\($0)"}) ?? "")
+                        if let username = userDetail.username {
                             Text(verbatim: "@\(username)")
                                 .foregroundColor(.gray)
                         }
                     }
                 }
 
-                if let userAttributedDescription = userData.userAttributedDescription.flatMap({AttributedString($0)}), userAttributedDescription.startIndex != userAttributedDescription.endIndex {
+                if let userAttributedDescription = userDetail.userAttributedDescription.flatMap({AttributedString($0)}), userAttributedDescription.startIndex != userAttributedDescription.endIndex {
                     Text(userAttributedDescription)
                         .frame(maxHeight: .infinity)
                 }
             }
             .padding([.top, .bottom], 8)
 
-            if let location = userData.location {
+            if let location = userDetail.location {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 HStack {
                     Label(Text("Location"), systemImage: "location")
@@ -52,7 +52,7 @@ struct UserDataProfileView: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if let url = userData.url {
+            if let url = userDetail.url {
                 HStack {
                     Label(Text("URL"), systemImage: "safari")
                     Spacer()
@@ -61,7 +61,7 @@ struct UserDataProfileView: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if let userCreationDate = userData.userCreationDate {
+            if let userCreationDate = userDetail.userCreationDate {
                 HStack {
                     Label(Text("Joined"), systemImage: "calendar")
                     Spacer()
@@ -71,11 +71,11 @@ struct UserDataProfileView: View {
                 .accessibilityElement(children: .combine)
             }
 
-            if userData.isProtected {
+            if userDetail.isProtected {
                 Label(Text("Protected"), systemImage: "lock")
             }
 
-            if userData.isVerified {
+            if userDetail.isVerified {
                 Label(Text("Verified"), systemImage: "checkmark.seal")
             }
         }
@@ -83,9 +83,9 @@ struct UserDataProfileView: View {
 }
 
 //#if DEBUG
-//struct UserProfileSection_Previews: PreviewProvider {
+//struct UserDetailProfileView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        UserDataProfileView(userData: nil)
+//        UserDetailProfileView(userDetail: nil)
 //    }
 //}
 //#endif

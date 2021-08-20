@@ -10,12 +10,12 @@ import OrderedCollections
 import CoreData
 import Twitter
 
-public class User: NSManagedObject, Identifiable {
-    public dynamic var sortedUserDatas: OrderedSet<UserData>? {
-        userDatas.flatMap {
+public class User: NSManagedObject {
+    public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
+        userDetails.flatMap {
             OrderedSet(
                 $0.lazy
-                    .compactMap { $0 as? UserData }
+                    .compactMap { $0 as? UserDetail }
                     .sorted { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
             )
         }
@@ -24,8 +24,8 @@ public class User: NSManagedObject, Identifiable {
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
         let keyPaths = super.keyPathsForValuesAffectingValue(forKey: key)
         switch key {
-        case "sortedUserDatas":
-            return keyPaths.union(Set(["userDatas"]))
+        case "sortedUserDetails":
+            return keyPaths.union(Set(["userDetails"]))
         default:
             return keyPaths
         }

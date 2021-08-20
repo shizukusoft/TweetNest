@@ -10,16 +10,16 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffListSection: View {
-    var previousUserData: UserData?
-    @ObservedObject var currentUserData: UserData
-    @Binding var diffKeyPath: KeyPath<UserData, [String]?>
+    var previousUserDetail: UserDetail?
+    @ObservedObject var currentUserDetail: UserDetail
+    @Binding var diffKeyPath: KeyPath<UserDetail, [String]?>
 
     var previousUserIDs: OrderedSet<String> {
-        OrderedSet(previousUserData?[keyPath: diffKeyPath] ?? [])
+        OrderedSet(previousUserDetail?[keyPath: diffKeyPath] ?? [])
     }
 
     var currentUserIDs: OrderedSet<String>  {
-        OrderedSet(currentUserData[keyPath: diffKeyPath] ?? [])
+        OrderedSet(currentUserDetail[keyPath: diffKeyPath] ?? [])
     }
 
     var appendedUserIDs: OrderedSet<String> {
@@ -32,7 +32,7 @@ struct UsersDiffListSection: View {
 
     var body: some View {
         if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
-            Section(currentUserData.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserData.objectID.description) {
+            Section(currentUserDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserDetail.objectID.description) {
                 ForEach(appendedUserIDs, id: \.self) { userID in
                     Label {
                         UserRow(userID: userID)

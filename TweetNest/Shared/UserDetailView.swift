@@ -1,6 +1,6 @@
 //
-//  UserDataView.swift
-//  UserDataView
+//  UserDetailView.swift
+//  UserDetailView
 //
 //  Created by Jaehong Kang on 2021/08/04.
 //
@@ -8,8 +8,8 @@
 import SwiftUI
 import TweetNestKit
 
-struct UserDataView: View {
-    @ObservedObject var userData: UserData
+struct UserDetailView: View {
+    @ObservedObject var userDetail: UserDetail
 
     @ViewBuilder
     var followingUsersLabel: some View {
@@ -17,7 +17,7 @@ struct UserDataView: View {
             Label(Text("Followings"), systemImage: "person.2")
             .accessibilityLabel(Text("Followings"))
             Spacer()
-            Text(userData.followingUsersCount.formatted())
+            Text(userDetail.followingUsersCount.formatted())
                 .foregroundColor(Color.gray)
         }
     }
@@ -28,7 +28,7 @@ struct UserDataView: View {
             Label(Text("Followers"), systemImage: "person.2")
             .accessibilityLabel(Text("Followers"))
             Spacer()
-            Text(userData.followersCount.formatted())
+            Text(userDetail.followersCount.formatted())
                 .foregroundColor(Color.gray)
         }
     }
@@ -36,11 +36,11 @@ struct UserDataView: View {
     var body: some View {
         List {
             Section(Text("Profile")) {
-                UserDataProfileView(userData: userData)
+                UserDetailProfileView(userDetail: userDetail)
             }
 
             Section {
-                if let followingUserIDs = userData.followingUserIDs {
+                if let followingUserIDs = userDetail.followingUserIDs {
                     NavigationLink {
                         UsersList(userIDs: followingUserIDs)
                             .navigationTitle(Text("Followings"))
@@ -51,7 +51,7 @@ struct UserDataView: View {
                     followingUsersLabel
                 }
 
-                if let followerUserIDs = userData.followerUserIDs {
+                if let followerUserIDs = userDetail.followerUserIDs {
                     NavigationLink {
                         UsersList(userIDs: followerUserIDs)
                             .navigationTitle(Text("Followers"))
@@ -62,7 +62,7 @@ struct UserDataView: View {
                     followersLabel
                 }
 
-                if let blockingUserIDs = userData.blockingUserIDs {
+                if let blockingUserIDs = userDetail.blockingUserIDs {
                     NavigationLink {
                         UsersList(userIDs: blockingUserIDs)
                             .navigationTitle(Text("Blocked Accounts"))
@@ -82,7 +82,7 @@ struct UserDataView: View {
                     Label(Text("Listed"), systemImage: "list.bullet")
                     .accessibilityLabel(Text("Listed"))
                     Spacer()
-                    Text(userData.listedCount.formatted())
+                    Text(userDetail.listedCount.formatted())
                         .foregroundColor(Color.gray)
                 }
             }
@@ -92,7 +92,7 @@ struct UserDataView: View {
                     Label(Text("Tweets"), systemImage: "text.bubble")
                     .accessibilityLabel(Text("Tweets"))
                     Spacer()
-                    Text(userData.tweetsCount.formatted())
+                    Text(userDetail.tweetsCount.formatted())
                         .foregroundColor(Color.gray)
                 }
             }
@@ -104,9 +104,9 @@ struct UserDataView: View {
 }
 
 //#if DEBUG
-//struct UserDataView_Previews: PreviewProvider {
+//struct UserDetailView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        UserDataView()
+//        UserDetailView()
 //    }
 //}
 //#endif

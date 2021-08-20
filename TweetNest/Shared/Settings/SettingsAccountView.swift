@@ -25,7 +25,7 @@ struct SettingsAccountView: View {
             }
         }
         .navigationTitle(
-            Text(verbatim: account.user?.sortedUserDatas?.last?.username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")
+            Text(verbatim: account.user?.sortedUserDetails?.last?.username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")
         )
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

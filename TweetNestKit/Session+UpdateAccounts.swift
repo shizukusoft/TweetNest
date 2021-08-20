@@ -99,7 +99,7 @@ extension Session {
                                     let notificationContent: UNMutableNotificationContent = await context.perform {
                                         let account = context.object(with: accountObjectID) as? Account
 
-                                        let username = account?.user?.sortedUserDatas?.last?.username
+                                        let username = account?.user?.sortedUserDetails?.last?.username
                                         let accountID = account?.id
 
                                         let accountName = username.flatMap { "@\($0)" } ?? accountID.flatMap { "#\($0)" } ?? accountObjectID.description
