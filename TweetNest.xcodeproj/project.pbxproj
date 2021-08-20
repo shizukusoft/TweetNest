@@ -1486,7 +1486,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_ENTITLEMENTS = "TweetNest MirrorBlock Extension/iOS/TweetNest MirrorBlock Extension (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TweetNest MirrorBlock Extension/iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "TweetNest MirrorBlock Extension";
@@ -1501,7 +1501,7 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.tweetnest.TweetNest.MirrorBlock-Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tweetnest.TweetNest.MirrorBlock-Extension";
 				PRODUCT_NAME = "TweetNest MirrorBlock Extension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1518,7 +1518,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_ENTITLEMENTS = "TweetNest MirrorBlock Extension/iOS/TweetNest MirrorBlock Extension (iOS).entitlements";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "TweetNest MirrorBlock Extension/iOS/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "TweetNest MirrorBlock Extension";
@@ -1533,7 +1533,7 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.tweetnest.TweetNest.MirrorBlock-Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tweetnest.TweetNest.MirrorBlock-Extension";
 				PRODUCT_NAME = "TweetNest MirrorBlock Extension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
@@ -1551,7 +1551,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -1569,7 +1569,7 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.tweetnest.TweetNest.MirrorBlock-Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tweetnest.TweetNest.MirrorBlock-Extension";
 				PRODUCT_NAME = "TweetNest MirrorBlock Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1584,7 +1584,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
@@ -1602,7 +1602,7 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "app.tweetnest.TweetNest.MirrorBlock-Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.tweetnest.TweetNest.MirrorBlock-Extension";
 				PRODUCT_NAME = "TweetNest MirrorBlock Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1619,7 +1619,7 @@
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
@@ -1633,7 +1633,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
@@ -1650,7 +1650,7 @@
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
@@ -1664,7 +1664,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
 				SDKROOT = iphoneos;
 				SUPPORTS_MACCATALYST = YES;
@@ -1680,7 +1680,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestTests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1689,7 +1689,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = TweetNestTests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1704,7 +1704,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestTests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1713,7 +1713,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = TweetNestTests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1728,7 +1728,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestUITests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1737,7 +1737,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = TweetNestUITests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1751,7 +1751,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestUITests/iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
@@ -1760,7 +1760,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = TweetNestUITests;
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
@@ -1781,7 +1781,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1791,9 +1791,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.tweetnest.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1810,7 +1810,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -1820,9 +1820,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_app.tweetnest.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.tweetnest.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
@@ -1835,7 +1835,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestTests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1844,7 +1844,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = TweetNestTests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1859,7 +1859,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestTests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1868,7 +1868,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = TweetNestTests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1882,7 +1882,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestUITests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1891,7 +1891,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = TweetNestUITests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -1905,7 +1905,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNestUITests/macOS/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1914,7 +1914,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = TweetNestUITests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
@@ -2049,7 +2049,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 59;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2063,7 +2063,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
@@ -2083,7 +2083,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 59;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2097,7 +2097,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
@@ -2116,7 +2116,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2124,7 +2124,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKitTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;
@@ -2140,7 +2140,7 @@
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 83XZ8ZBS6L;
+				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2148,7 +2148,7 @@
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.tweetnest.TweetNestKitTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = NO;

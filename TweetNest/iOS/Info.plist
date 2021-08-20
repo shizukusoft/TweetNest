@@ -4,7 +4,7 @@
 <dict>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>app.tweetnest.TweetNestKit.update-accounts</string>
+		<string>com.tweetnest.TweetNestKit.update-accounts</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
