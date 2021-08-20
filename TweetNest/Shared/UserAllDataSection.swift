@@ -9,6 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserAllDataSection: View {
+    @Environment(\.account) var account: Account?
     @ObservedObject var user: User
 
     @FetchRequest
@@ -21,10 +22,11 @@ struct UserAllDataSection: View {
                     Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description))
                 {
                     UserDetailView(userDetail: userDetail)
-                    .navigationTitle(
-                        Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
-                        .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
-                    )
+                        .navigationTitle(
+                            Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
+                            .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
+                        )
+                        .environment(\.account, account)
                 }
             }
         }

@@ -10,6 +10,7 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersList: View {
+    @Environment(\.account) var account: Account?
     private let userIDs: OrderedSet<String>
 
     @FetchRequest private var users: FetchedResults<User>
@@ -23,6 +24,7 @@ struct UsersList: View {
                 let latestUserDetail = user.sortedUserDetails?.last
                 NavigationLink {
                     UserView(user: user)
+                        .environment(\.account, account)
                 } label: {
                     HStack(spacing: 8) {
                         ProfileImage(userDetail: latestUserDetail)

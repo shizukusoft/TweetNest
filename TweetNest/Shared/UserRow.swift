@@ -9,6 +9,8 @@ import SwiftUI
 import TweetNestKit
 
 struct UserRow: View {
+    @Environment(\.account) var account: Account?
+    
     let userID: String
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
@@ -16,6 +18,7 @@ struct UserRow: View {
         if let latestUserDetail = userDetails.first, let user = latestUserDetail.user {
             NavigationLink {
                 UserView(user: user)
+                    .environment(\.account, account)
             } label: {
                 HStack(spacing: 8) {
                     ProfileImage(userDetail: latestUserDetail)

@@ -9,6 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserDetailView: View {
+    @Environment(\.account) var account: Account?
     @ObservedObject var userDetail: UserDetail
 
     @ViewBuilder
@@ -44,6 +45,7 @@ struct UserDetailView: View {
                     NavigationLink {
                         UsersList(userIDs: followingUserIDs)
                             .navigationTitle(Text("Followings"))
+                            .environment(\.account, account)
                     } label: {
                         followingUsersLabel
                     }
@@ -55,6 +57,7 @@ struct UserDetailView: View {
                     NavigationLink {
                         UsersList(userIDs: followerUserIDs)
                             .navigationTitle(Text("Followers"))
+                            .environment(\.account, account)
                     } label: {
                         followersLabel
                     }
@@ -66,6 +69,7 @@ struct UserDetailView: View {
                     NavigationLink {
                         UsersList(userIDs: blockingUserIDs)
                             .navigationTitle(Text("Blocked Accounts"))
+                            .environment(\.account, account)
                     } label: {
                         HStack {
                             Label(Text("Blocked Accounts"), systemImage: "nosign")
