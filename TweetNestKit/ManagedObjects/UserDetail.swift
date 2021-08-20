@@ -49,7 +49,7 @@ extension UserDetail {
             lastUserDetails.followingUserIDs == followingUserIDs,
             lastUserDetails.followerUserIDs == followerUserIDs,
 
-            lastUserDetails.followersCount == twitterUser.publicMetrics.followersCount,
+            lastUserDetails.followerUsersCount == twitterUser.publicMetrics.followersCount,
             lastUserDetails.followingUsersCount == twitterUser.publicMetrics.followingUsersCount,
             lastUserDetails.isProtected == twitterUser.protected,
             lastUserDetails.isVerified == twitterUser.verified,
@@ -73,7 +73,7 @@ extension UserDetail {
             newUserDetail.followingUserIDs = followingUserIDs
             newUserDetail.followerUserIDs = followerUserIDs
 
-            newUserDetail.followersCount = Int32(twitterUser.publicMetrics.followersCount)
+            newUserDetail.followerUsersCount = Int32(twitterUser.publicMetrics.followersCount)
             newUserDetail.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
             newUserDetail.isProtected = twitterUser.protected
             newUserDetail.isVerified = twitterUser.verified

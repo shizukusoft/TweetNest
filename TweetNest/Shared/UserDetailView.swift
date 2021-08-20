@@ -29,7 +29,7 @@ struct UserDetailView: View {
             Label(Text("Followers"), systemImage: "person.2")
             .accessibilityLabel(Text("Followers"))
             Spacer()
-            Text(userDetail.followersCount.formatted())
+            Text(userDetail.followerUsersCount.formatted())
                 .foregroundColor(Color.gray)
         }
     }

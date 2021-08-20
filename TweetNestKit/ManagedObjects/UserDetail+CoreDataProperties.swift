@@ -18,7 +18,7 @@ extension UserDetail {
 
     @NSManaged public var blockingUserIDs: [String]?
     @NSManaged public var creationDate: Date?
-    @NSManaged public var followersCount: Int32
+    @NSManaged public var followerUsersCount: Int32
     @NSManaged public var followerUserIDs: [String]?
     @NSManaged public var followingUserIDs: [String]?
     @NSManaged public var followingUsersCount: Int32
