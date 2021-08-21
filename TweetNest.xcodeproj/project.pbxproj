@@ -1630,9 +1630,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -1661,9 +1660,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
 				SDKROOT = iphoneos;
-				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,6";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
