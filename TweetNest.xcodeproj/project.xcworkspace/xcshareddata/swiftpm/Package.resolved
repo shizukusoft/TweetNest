@@ -36,6 +36,15 @@
           "revision": "08fbd351e4370c4b0008bc9dfa8c24a9135c059d",
           "version": "1.0.0"
         }
+      },
+      {
+        "package": "swift-zip",
+        "repositoryURL": "https://github.com/sinoru/swift-zip.git",
+        "state": {
+          "branch": null,
+          "revision": "f0fc65ac6a4e7efb21e802f2b431f3fb38dbdd4f",
+          "version": "0.0.1"
+        }
       }
     ]
   },

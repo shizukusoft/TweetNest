@@ -7,10 +7,12 @@
 
 import Foundation
 import JavaScriptCore
+import ZIP
 import Twitter
 
 public enum TwitterArchiveError: Error {
     case dataCorrupted
+    case fileNotFound
 }
 
 public struct TwitterArchive {
@@ -23,11 +25,9 @@ public struct TwitterArchive {
 }
 
 extension TwitterArchive {
-    public var tweets: [Tweet] {
-        get async throws {
-            let tweetJSURL = url.appendingPathComponent("data/tweet.js")
-            
-            let tweetJS: String = try await withCheckedThrowingContinuation { continuation in
+    func data(atPath path: String) async throws -> Data {
+        if try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true {
+            return try await withCheckedThrowingContinuation { continuation in
                 var error: NSError? = nil
                 defer {
                     if let error = error {
@@ -35,7 +35,7 @@ extension TwitterArchive {
                     }
                 }
                 
-                NSFileCoordinator().coordinate(readingItemAt: tweetJSURL, options: [], error: &error) { url in
+                NSFileCoordinator().coordinate(readingItemAt: url.appendingPathComponent(path), options: [], error: &error) { url in
                     _ = url.startAccessingSecurityScopedResource()
                     defer {
                         url.stopAccessingSecurityScopedResource()
@@ -43,10 +43,30 @@ extension TwitterArchive {
                     
                     continuation.resume(
                         with: Result {
-                            try String(contentsOf: url)
+                            try Data(contentsOf: url)
                         }
                     )
                 }
+            }
+        } else {
+            let zip = try await ZIP(url: url)
+            
+            guard let data = try await zip.data(atPath: path)?.data else {
+                throw TwitterArchiveError.fileNotFound
+            }
+            
+            return data
+        }
+    }
+}
+
+extension TwitterArchive {
+    public var tweets: [Tweet] {
+        get async throws {
+            let tweetJSData = try await data(atPath: "data/tweet.js")
+            
+            guard let tweetJS = String(data: tweetJSData, encoding: .utf8) else {
+                throw TwitterArchiveError.dataCorrupted
             }
 
             let result = JSContext(virtualMachine: jsVirtualMachine)!.evaluateScript("""

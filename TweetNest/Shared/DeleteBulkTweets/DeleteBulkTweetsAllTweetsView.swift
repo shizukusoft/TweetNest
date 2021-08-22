@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UniformTypeIdentifiers
 import UnifiedLogging
 import TweetNestKit
 import Twitter
@@ -18,6 +19,7 @@ struct DeleteBulkTweetsAllTweetsView: View {
     @State var tweets: [Tweet]? = nil
     
     @State var isFileImporterPresented: Bool = false
+    @State var allowedFileImporterContentTypes: [UTType] = []
     
     @State var isImporting: Bool = false
     
@@ -57,10 +59,25 @@ struct DeleteBulkTweetsAllTweetsView: View {
                 Rectangle()
                     .foregroundColor(.clear)
                     .overlay {
-                        Button {
-                            isFileImporterPresented = true
+                        Menu {
+                            Button {
+                                allowedFileImporterContentTypes = [.zip]
+                                isFileImporterPresented = true
+                            } label: {
+                                Text("Open ZIP File")
+                            }
+                            
+                            Button {
+                                allowedFileImporterContentTypes = [.folder]
+                                isFileImporterPresented = true
+                            } label: {
+                                Text("Open Folder")
+                            }
                         } label: {
                             Text("Open Twitter Archive")
+                        } primaryAction: {
+                            allowedFileImporterContentTypes = [.zip]
+                            isFileImporterPresented = true
                         }
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
@@ -71,7 +88,7 @@ struct DeleteBulkTweetsAllTweetsView: View {
                                 }
                             }
                         }
-                        .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: [.folder], onCompletion: onFileImporterCompletion(result:))
+                        .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: allowedFileImporterContentTypes, onCompletion: onFileImporterCompletion(result:))
                     }
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                     .zIndex(1)

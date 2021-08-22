@@ -85,6 +85,7 @@
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
 		199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
+		19B4862E26D1E4A900A80D85 /* ZIP in Frameworks */ = {isa = PBXBuildFile; productRef = 19B4862D26D1E4A900A80D85 /* ZIP */; };
 		19BBB88226C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */; };
 		19BBB88326C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */; };
 		19BBB88526C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88426C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift */; };
@@ -417,6 +418,7 @@
 			files = (
 				19C5A2CB26BC205000AB1122 /* OrderedCollections in Frameworks */,
 				19C5A2C426BC1FD600AB1122 /* Twitter in Frameworks */,
+				19B4862E26D1E4A900A80D85 /* ZIP in Frameworks */,
 				19C5A2D026BC208700AB1122 /* UnifiedLogging in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -981,6 +983,7 @@
 				19C5A2C326BC1FD600AB1122 /* Twitter */,
 				19C5A2CA26BC205000AB1122 /* OrderedCollections */,
 				19C5A2CF26BC208700AB1122 /* UnifiedLogging */,
+				19B4862D26D1E4A900A80D85 /* ZIP */,
 			);
 			productName = TweetNestKit;
 			productReference = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */;
@@ -1066,6 +1069,7 @@
 				19C5A2C226BC1FD600AB1122 /* XCRemoteSwiftPackageReference "swift-twitter" */,
 				19C5A2C926BC204300AB1122 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				19C5A2CC26BC207D00AB1122 /* XCRemoteSwiftPackageReference "swift-unified-log" */,
+				19B4862C26D1E4A900A80D85 /* XCRemoteSwiftPackageReference "swift-zip" */,
 			);
 			productRefGroup = 19933D3425E901F4006AB4C0 /* Products */;
 			projectDirPath = "";
@@ -1950,6 +1954,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 60;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -2013,6 +2018,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 60;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2254,6 +2260,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		19B4862C26D1E4A900A80D85 /* XCRemoteSwiftPackageReference "swift-zip" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sinoru/swift-zip.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.0.1;
+			};
+		};
 		19C5A2C226BC1FD600AB1122 /* XCRemoteSwiftPackageReference "swift-twitter" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tweetnest/swift-twitter";
@@ -2281,6 +2295,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		19B4862D26D1E4A900A80D85 /* ZIP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19B4862C26D1E4A900A80D85 /* XCRemoteSwiftPackageReference "swift-zip" */;
+			productName = ZIP;
+		};
 		19C5A2C326BC1FD600AB1122 /* Twitter */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 19C5A2C226BC1FD600AB1122 /* XCRemoteSwiftPackageReference "swift-twitter" */;
