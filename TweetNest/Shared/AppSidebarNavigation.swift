@@ -105,7 +105,7 @@ struct AppSidebarNavigation: View {
                     SettingsMainView()
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(Text("Close"), role: .cancel) {
+                                Button(Text("Cancel"), role: .cancel) {
                                     showSettings.toggle()
                                 }
                             }
