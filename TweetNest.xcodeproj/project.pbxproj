@@ -1983,6 +1983,7 @@
 				STRIP_STYLE = "non-global";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZE_OBJECT_LIFETIME = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -2041,6 +2042,7 @@
 				STRIP_STYLE = "non-global";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_OPTIMIZE_OBJECT_LIFETIME = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
