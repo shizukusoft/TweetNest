@@ -112,9 +112,15 @@ struct AppSidebarNavigation: View {
                     SettingsMainView()
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(Text("Cancel"), role: .cancel) {
+                                #if os(iOS)
+                                CloseButton {
                                     showSettings.toggle()
                                 }
+                                #else
+                                Button(Text("Close"), role: .cancel) {
+                                    showSettings.toggle()
+                                }
+                                #endif
                             }
                         }
                         .navigationTitle(Text("Settings"))
