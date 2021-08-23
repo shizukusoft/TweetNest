@@ -50,9 +50,6 @@ struct DeleteBulkTweetsView: View {
     
     @State var showResults: Bool = false
     
-    @State var showError: Bool = false
-    @State var error: TweetNestError? = nil
-    
     var body: some View {
         Group {
             ProgressView(progress)
@@ -100,11 +97,12 @@ struct DeleteBulkTweetsView: View {
             await withTaskGroup(of: (Int,  Result<Void, Error>).self) { taskGroup in
                 for (offset, tweet) in targetTweets.enumerated() {
                     taskGroup.addTask {
-                        let task = Task {
+                        do {
                             try await tweet.delete(session: .session(for: account))
+                            return (offset, .success(()))
+                        } catch {
+                            return (offset, .failure(error))
                         }
-                        
-                        return await (offset, task.result)
                     }
                 }
                 
@@ -120,11 +118,12 @@ struct DeleteBulkTweetsView: View {
         #if os(iOS)
         let backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
             task.cancel()
+            progress.cancel()
         }
         #endif
         
         _ = await task.value
-
+ 
         #if os(iOS)
         await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
         #endif
