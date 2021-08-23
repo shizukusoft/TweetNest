@@ -50,6 +50,7 @@ struct SettingsMainView: View {
                 }
             }
         }
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             EditButton()
         }
