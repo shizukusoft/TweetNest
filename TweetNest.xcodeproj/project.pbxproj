@@ -146,6 +146,7 @@
 		6657FDE826BF309300741FA9 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE626BF309300741FA9 /* Menu.swift */; };
 		6657FDEA26BF324D00741FA9 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
 		6657FDEB26BF324D00741FA9 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
+		66AAA3C426D3CB330014A5A5 /* CloseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66AAA3C326D3C7290014A5A5 /* CloseButton.swift */; };
 		66EE523826BF560200B721AC /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523726BF560200B721AC /* ShareView.swift */; };
 		66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523A26BF5C0E00B721AC /* ShareButton.swift */; };
 /* End PBXBuildFile section */
@@ -349,6 +350,7 @@
 		6657FDE326BF2BC900741FA9 /* NavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLink.swift; sourceTree = "<group>"; };
 		6657FDE626BF309300741FA9 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
 		6657FDE926BF324D00741FA9 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		66AAA3C326D3C7290014A5A5 /* CloseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseButton.swift; sourceTree = "<group>"; };
 		66EE523726BF560200B721AC /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		66EE523A26BF5C0E00B721AC /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -695,6 +697,7 @@
 			isa = PBXGroup;
 			children = (
 				1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */,
+				66AAA3C326D3C7290014A5A5 /* CloseButton.swift */,
 				1995B93526B6F9E000AFCC9E /* SafariView.swift */,
 				66EE523726BF560200B721AC /* ShareView.swift */,
 				19933D3625E901F4006AB4C0 /* Info.plist */,
@@ -1223,6 +1226,7 @@
 				6657FDE726BF309300741FA9 /* Menu.swift in Sources */,
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				197ACF0F26CE2D820040388C /* DeleteBulkTweetsView.swift in Sources */,
+				66AAA3C426D3CB330014A5A5 /* CloseButton.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
 				199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */,
 				19EE473526C14554007D2814 /* UsersDiffListSection.swift in Sources */,
