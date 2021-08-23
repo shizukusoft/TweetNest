@@ -10,6 +10,6 @@ import Twitter
 
 extension Twitter.Session {
     public static func session(for account: Account, session: Session = .shared) async throws -> Twitter.Session {
-        try await session.twitterSession(for: account.id)
+        try await session.twitterSession(for: account.objectID)
     }
 }

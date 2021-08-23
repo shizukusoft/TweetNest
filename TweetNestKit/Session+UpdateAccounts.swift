@@ -16,7 +16,7 @@ extension Session {
     public nonisolated func updateAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
         let context = container.newBackgroundContext()
 
-        let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
+        let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
@@ -79,7 +79,7 @@ extension Session {
                 do {
                     let context = self.container.newBackgroundContext()
 
-                    let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
+                    let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
                         let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
                         fetchRequest.sortDescriptors = [
                             NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
@@ -96,7 +96,7 @@ extension Session {
                                 let hasChanges = try await self.updateAccount(accountObjectID)
 
                                 if hasChanges {
-                                    let notificationContent: UNMutableNotificationContent = await context.perform {
+                                    let notificationContent: UNMutableNotificationContent = await context.perform(schedule: .enqueued) {
                                         let account = context.object(with: accountObjectID) as? Account
 
                                         let username = account?.user?.sortedUserDetails?.last?.username

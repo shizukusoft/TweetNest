@@ -32,7 +32,7 @@ public actor Session {
 
     public nonisolated let container: PersistentContainer
     private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
-    private var twitterSessions = [Twitter.Account.ID: Twitter.Session]()
+    private var twitterSessions = [URL: Twitter.Session]()
 
     public init(inMemory: Bool = false) {
         _twitterAPIConfiguration = .uninitialized { try await .iCloud }
@@ -51,34 +51,33 @@ public actor Session {
 }
 
 extension Session {
-    func twitterSession(for accountID: Twitter.Account.ID? = nil) async throws -> Twitter.Session {
+    public func twitterSession(for accountObjectID: NSManagedObjectID? = nil) async throws -> Twitter.Session {
         let twitterAPIConfiguration = try await twitterAPIConfiguration
         
-        guard let accountID = accountID else {
+        guard let accountObjectID = accountObjectID else {
             return Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
         }
         
         let twitterSession: Twitter.Session
         
-        if let _twitterSession = twitterSessions[accountID] {
+        if let _twitterSession = twitterSessions[accountObjectID.uriRepresentation()] {
             twitterSession = _twitterSession
         } else {
             twitterSession = Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
-            twitterSessions[accountID] = twitterSession
+            updateTwitterSession(twitterSession, for: accountObjectID)
         }
 
-        let credential = try await credential(for: accountID)
-        guard let credential = credential else {
-            return twitterSession
-        }
-
-        await twitterSession.updateCredential(credential)
+        try await twitterSession.updateCredential(credential(for: accountObjectID))
 
         return twitterSession
     }
-
-    func destroyTwitterSession(for accountID: Twitter.Account.ID) {
-        twitterSessions[accountID] = nil
+    
+    private func updateTwitterSession(_ twitterSession: Twitter.Session?, for accountObjectID: NSManagedObjectID) {
+        guard accountObjectID.isTemporaryID == false else {
+            return
+        }
+        
+        twitterSessions[accountObjectID.uriRepresentation()] = twitterSession
     }
 }
 
@@ -125,16 +124,19 @@ extension Session {
 
         await twitterSession.updateCredential(.init(accessToken))
 
-        let account = try await Twitter.Account.me(session: twitterSession)
-
-        self.twitterSessions[account.id] = twitterSession
-        try await self.createNewAccount(tokenResponse: accessToken, twitterAccount: account)
+        let twitterAccount = try await Twitter.Account.me(session: twitterSession)
+        
+        let accountObjectID = try await self.createNewAccount(tokenResponse: accessToken, twitterAccount: twitterAccount)
+        
+        updateTwitterSession(twitterSession, for: accountObjectID)
+        
+        try await updateAccount(accountObjectID)
     }
 
-    private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws {
+    private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws -> NSManagedObjectID {
         let context = container.newBackgroundContext()
 
-        let accountObjectID: NSManagedObjectID = try await context.perform(schedule: .enqueued) {
+        return try await context.perform(schedule: .enqueued) {
             let account = Account(context: context)
             account.creationDate = Date()
             account.id = twitterAccount.id
@@ -145,22 +147,16 @@ extension Session {
 
             return account.objectID
         }
-
-        try await updateAccount(accountObjectID)
     }
 }
 
 extension Session {
-    private nonisolated func credential(for accountID: Twitter.Account.ID) async throws -> Twitter.Session.Credential? {
+    private nonisolated func credential(for accountObjectID: NSManagedObjectID) async throws -> Twitter.Session.Credential? {
         let context = container.newBackgroundContext()
         
-        return try await context.perform {
-            let accountFetchRequest: NSFetchRequest<Account> = Account.fetchRequest()
-            accountFetchRequest.predicate = NSPredicate(format: "id == %ld", accountID)
-            accountFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
-
+        return await context.perform(schedule: .enqueued) {
             guard
-                let account = try context.fetch(accountFetchRequest).first,
+                let account = context.object(with: accountObjectID) as? Account,
                 let token = account.token,
                 let tokenSecret = account.tokenSecret
             else {

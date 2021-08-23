@@ -30,7 +30,7 @@ extension Session {
             return (account.id, account.preferences)
         }
 
-        let twitterSession = try await self.twitterSession(for: accountID)
+        let twitterSession = try await self.twitterSession(for: accountObjectID)
 
         let userID = String(accountID)
 
