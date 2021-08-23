@@ -21,28 +21,7 @@ struct UsersList: View {
             ForEach(
                 users.sorted(by: { $0.id.flatMap { userIDs.firstIndex(of: $0) } ?? -1 < $1.id.flatMap { userIDs.firstIndex(of: $0) } ?? -1})
             ) { user in
-                let latestUserDetail = user.sortedUserDetails?.last
-                NavigationLink {
-                    UserView(user: user)
-                        .environment(\.account, account)
-                } label: {
-                    HStack(spacing: 8) {
-                        ProfileImage(userDetail: latestUserDetail)
-                            .frame(width: 24, height: 24)
-
-                        HStack(spacing: 4) {
-                            Text(verbatim: user.displayUsername)
-                                .lineLimit(1)
-
-                            if let username = latestUserDetail?.username {
-                                Text(verbatim: "@\(username)")
-                                    .lineLimit(1)
-                                    .foregroundColor(Color.gray)
-                                    .layoutPriority(1)
-                            }
-                        }
-                    }
-                }
+                UserRow(user: user)
             }
         }
         .searchable(text: $searchQuery)

@@ -11,7 +11,7 @@ import TweetNestKit
 struct UserRow: View {
     @Environment(\.account) var account: Account?
     
-    let userID: String
+    let placeholderName: String
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
     var body: some View {
@@ -39,16 +39,30 @@ struct UserRow: View {
             }
             .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.description))
         } else {
-            Text(verbatim: "#\(Int64(userID)?.formatted() ?? userID)")
+            Text(verbatim: placeholderName)
         }
     }
 
     init(userID: String) {
-        self.userID = userID
+        self.placeholderName = "#\(Int64(userID)?.formatted() ?? userID)"
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
         userDetailsFetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
+        userDetailsFetchRequest.fetchLimit = 1
+
+        self._userDetails = FetchRequest(
+            fetchRequest: userDetailsFetchRequest,
+            animation: .default
+        )
+    }
+    
+    init(user: User) {
+        self.placeholderName = user.id.flatMap { "#\(Int64($0)?.formatted() ?? $0)" } ?? user.description
+
+        let userDetailsFetchRequest = UserDetail.fetchRequest()
+        userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
+        userDetailsFetchRequest.predicate = NSPredicate(format: "user == %@", user)
         userDetailsFetchRequest.fetchLimit = 1
 
         self._userDetails = FetchRequest(
