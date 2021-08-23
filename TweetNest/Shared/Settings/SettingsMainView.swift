@@ -23,7 +23,7 @@ struct SettingsMainView: View {
             }
             .tag(Tabs.accounts)
         }
-        #else
+        #elseif os(iOS)
         Form {
             Section {
                 SettingsAccountItems()
@@ -50,11 +50,9 @@ struct SettingsMainView: View {
                 }
             }
         }
-        #if os(iOS)
         .toolbar {
             EditButton()
         }
-        #endif
         #endif
     }
 }
