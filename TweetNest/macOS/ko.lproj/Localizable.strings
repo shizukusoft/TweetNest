@@ -1,4 +1,19 @@
 /* No comment provided by engineer. */
+"%@'s Account" = "%@의 계정";
+
+/* No comment provided by engineer. */
+"%@'s Blocks History" = "%@의 차단 기록";
+
+/* No comment provided by engineer. */
+"%@'s Followers History" = "%@의 팔로워 기록";
+
+/* No comment provided by engineer. */
+"%@'s Following History" = "%@의 팔로잉 기록";
+
+/* No comment provided by engineer. */
+"About" = "정보";
+
+/* No comment provided by engineer. */
 "Account" = "계정";
 
 /* No comment provided by engineer. */
@@ -11,34 +26,43 @@
 "All Data" = "모든 데이터";
 
 /* No comment provided by engineer. */
+"App Version" = "앱 버전";
+
+/* No comment provided by engineer. */
 "Blocked Accounts" = "차단한 계정";
 
 /* No comment provided by engineer. */
-"Blocking History" = "차단 기록";
+"Blocks History" = "차단 기록";
 
 /* No comment provided by engineer. */
 "Cancel" = "취소";
 
 /* No comment provided by engineer. */
-"Edit" = "편집";
+"Close" = "닫기";
 
 /* No comment provided by engineer. */
-"Edit Accounts" = "계정 편집";
+"Delete" = "삭제";
 
 /* No comment provided by engineer. */
-"Error" = "오류";
+"Delete All Tweets" = "모든 트윗 삭제";
 
 /* No comment provided by engineer. */
-"Follower History" = "팔로워 기록";
+"Delete Recent Tweets" = "최근 트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets" = "";
 
 /* No comment provided by engineer. */
 "Followers" = "팔로워";
 
 /* No comment provided by engineer. */
-"Following History" = "팔로잉 기록";
+"Followers History" = "팔로워 기록";
 
 /* No comment provided by engineer. */
 "Followings" = "팔로잉";
+
+/* No comment provided by engineer. */
+"Followings History" = "팔로잉 기록";
 
 /* No comment provided by engineer. */
 "Joined" = "가입 날짜";
@@ -53,10 +77,10 @@
 "Location" = "위치";
 
 /* No comment provided by engineer. */
-"Menu" = "메뉴";
+"More" = "더 보기";
 
 /* No comment provided by engineer. */
-"More" = "더 보기";
+"OK" = "확인";
 
 /* No comment provided by engineer. */
 "Open Profile" = "프로필 열기";
@@ -72,6 +96,12 @@
 
 /* No comment provided by engineer. */
 "Refresh" = "새로 고침";
+
+/* No comment provided by engineer. */
+"Results" = "결과";
+
+/* No comment provided by engineer. */
+"Settings" = "설정";
 
 /* No comment provided by engineer. */
 "Share" = "공유";
