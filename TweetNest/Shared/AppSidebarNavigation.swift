@@ -133,12 +133,22 @@ struct AppSidebarNavigation: View {
                     isAddingAccount = false
                 }
             } catch {
-                withAnimation {
+                if let error = error as? ASWebAuthenticationSessionError,
+                   case .canceledLogin = error.code
+                {
                     webAuthenticationSession = nil
-                    Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                    self.error = TweetNestError(error)
-                    showErrorAlert = true
-                    isAddingAccount = false
+                    withAnimation {
+                        isAddingAccount = false
+                    }
+                }
+                else {
+                    withAnimation {
+                        webAuthenticationSession = nil
+                        Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+                        self.error = TweetNestError(error)
+                        showErrorAlert = true
+                        isAddingAccount = false
+                    }
                 }
             }
         }
