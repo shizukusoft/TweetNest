@@ -43,7 +43,6 @@ struct UsersList: View {
                         }
                     }
                 }
-                .accessibilityLabel(Text(verbatim: latestUserDetail?.name ?? user.id.flatMap { "#\($0)" } ?? user.description))
             }
         }
         .searchable(text: $searchQuery)

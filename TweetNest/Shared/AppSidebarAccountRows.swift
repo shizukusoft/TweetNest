@@ -22,42 +22,50 @@ struct AppSidebarAccountRows: View {
                 UserView(user: account.user)
                     .environment(\.account, account)
             }
-            .accessibilityLabel(Text("Account"))
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text("\(account.usernameOrID)'s Account"))
+            .accessibilityAddTraits(.isButton)
 
             if let user = account.user {
                 NavigationLink(
-                    Label(Text("Following History"), systemImage: "person.2"),
+                    Label(Text("Followings History"), systemImage: "person.2"),
                     tag: .followings(account),
                     selection: $navigationItemSelection)
                 {
                     UsersDiffList(user: user, diffKeyPath: \.followingUserIDs)
                         .environment(\.account, account)
-                        .navigationTitle(Text("Following History"))
+                        .navigationTitle(Text("Followings History"))
                 }
-                .accessibilityLabel(Text("Following History"))
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("\(account.usernameOrID)'s Following History"))
+                .accessibilityAddTraits(.isButton)
 
                 NavigationLink(
-                    Label(Text("Follower History"), systemImage: "person.2"),
+                    Label(Text("Followers History"), systemImage: "person.2"),
                     tag: .followers(account),
                     selection: $navigationItemSelection)
                 {
                     UsersDiffList(user: user, diffKeyPath: \.followerUserIDs)
                         .environment(\.account, account)
-                        .navigationTitle(Text("Follower History"))
+                        .navigationTitle(Text("Followers History"))
                 }
-                .accessibilityLabel(Text("Follower History"))
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel(Text("\(account.usernameOrID)'s Followers History"))
+                .accessibilityAddTraits(.isButton)
 
                 if account.preferences.fetchBlockingUsers {
                     NavigationLink(
-                        Label(Text("Blocking History"), systemImage: "nosign"),
+                        Label(Text("Blocks History"), systemImage: "nosign"),
                         tag: .blockings(account),
                         selection: $navigationItemSelection)
                     {
                         UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs)
                             .environment(\.account, account)
-                            .navigationTitle(Text("Blocking History"))
+                            .navigationTitle(Text("Blocks History"))
                     }
-                    .accessibilityLabel(Text("Blocking History"))
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel(Text("\(account.usernameOrID)'s Blocks History"))
+                    .accessibilityAddTraits(.isButton)
                 }
             }
         }
