@@ -89,11 +89,27 @@ struct DeleteBulkTweetsView: View {
     }
     
     private func delete() async {
-        guard let account = account else {
-            return
-        }
+        #if os(iOS)
+        let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
+            Task.detached {
+                await UIApplication.shared.beginBackgroundTask {
+                    task?.cancel()
+                }
+            }
+        }.value
         
-        let task = Task.detached {
+        defer {
+            Task.detached {
+                await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+            }
+        }
+        #endif
+        
+        await withTaskCancellationHandler {
+            guard let account = account else {
+                return
+            }
+            
             await withTaskGroup(of: (Int,  Result<Void, Error>).self) { taskGroup in
                 for (offset, tweet) in targetTweets.enumerated() {
                     taskGroup.addTask {
@@ -113,20 +129,9 @@ struct DeleteBulkTweetsView: View {
                     updateProgressDescription()
                 }
             }
-        }
-        
-        #if os(iOS)
-        let backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
-            task.cancel()
+        } onCancel: {
             progress.cancel()
         }
-        #endif
-        
-        _ = await task.value
- 
-        #if os(iOS)
-        await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
-        #endif
     }
     
     private func updateProgressDescription() {
