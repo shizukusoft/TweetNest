@@ -33,7 +33,7 @@ public class User: NSManagedObject {
 }
 
 extension User {
-    public var displayUsername: String {
+    public var displayUsername: String? {
         if let displayUsername = sortedUserDetails?.last?.displayUsername {
             return displayUsername
         }
@@ -42,6 +42,14 @@ extension User {
             return "#\(Int64(id)?.formatted() ?? id)"
         }
         
-        return description
+        return nil
+    }
+    
+    public var displayName: String? {
+        if let name = sortedUserDetails?.last?.name {
+            return name
+        }
+        
+        return nil
     }
 }

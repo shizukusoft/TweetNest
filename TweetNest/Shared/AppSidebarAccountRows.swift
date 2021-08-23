@@ -23,7 +23,7 @@ struct AppSidebarAccountRows: View {
                     .environment(\.account, account)
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text("\(account.displayUsername)'s Account"))
+            .accessibilityLabel(Text("\(account.user?.displayUsername ?? account.description)'s Account"))
             .accessibilityAddTraits(.isButton)
 
             if let user = account.user {
@@ -37,7 +37,7 @@ struct AppSidebarAccountRows: View {
                         .navigationTitle(Text("Followings History"))
                 }
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text("\(account.displayUsername)'s Following History"))
+                .accessibilityLabel(Text("\(account.user?.displayUsername ?? account.description)'s Following History"))
                 .accessibilityAddTraits(.isButton)
 
                 NavigationLink(
@@ -50,7 +50,7 @@ struct AppSidebarAccountRows: View {
                         .navigationTitle(Text("Followers History"))
                 }
                 .accessibilityElement(children: .ignore)
-                .accessibilityLabel(Text("\(account.displayUsername)'s Followers History"))
+                .accessibilityLabel(Text("\(account.user?.displayUsername ?? account.description)'s Followers History"))
                 .accessibilityAddTraits(.isButton)
 
                 if account.preferences.fetchBlockingUsers {
@@ -64,7 +64,7 @@ struct AppSidebarAccountRows: View {
                             .navigationTitle(Text("Blocks History"))
                     }
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(Text("\(account.displayUsername)'s Blocks History"))
+                    .accessibilityLabel(Text("\(account.user?.displayUsername ?? account.description)'s Blocks History"))
                     .accessibilityAddTraits(.isButton)
                 }
             }

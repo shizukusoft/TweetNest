@@ -21,7 +21,7 @@ struct SettingsAccountItems: View {
     
     var body: some View {
         ForEach(accounts) { account in
-            let displayUsername = account.displayUsername
+            let displayUsername = account.user?.displayUsername ?? account.description
             
             NavigationLink {
                 SettingsAccountView(account: account)

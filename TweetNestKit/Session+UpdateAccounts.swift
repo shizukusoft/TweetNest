@@ -100,7 +100,7 @@ extension Session {
                                         let account = context.object(with: accountObjectID) as? Account
 
                                         let accountID = account?.id
-                                        let displayUsername = account?.displayUsername ?? accountObjectID.description
+                                        let displayUsername = account?.user?.displayUsername ?? accountObjectID.description
 
                                         let notificationContent = UNMutableNotificationContent()
                                         notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")

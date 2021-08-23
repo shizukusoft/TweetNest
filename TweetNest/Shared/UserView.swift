@@ -106,7 +106,7 @@ extension UserView {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationTitle(Text(verbatim: user.displayUsername))
+            .navigationTitle(Text(verbatim: user.displayUsername ?? user.description))
             #if os(iOS)
             .refreshable(action: refresh)
             #endif
