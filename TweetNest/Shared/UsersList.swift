@@ -31,7 +31,7 @@ struct UsersList: View {
                             .frame(width: 24, height: 24)
 
                         HStack(spacing: 4) {
-                            Text(verbatim: latestUserDetail?.name ?? user.id.flatMap { "#\($0)" } ?? user.description)
+                            Text(verbatim: user.displayUsername)
                                 .lineLimit(1)
 
                             if let username = latestUserDetail?.username {

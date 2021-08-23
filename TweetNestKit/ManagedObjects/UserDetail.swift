@@ -94,3 +94,11 @@ extension UserDetail {
         }
     }
 }
+
+extension UserDetail {
+    public var displayUsername: String? {
+        username.flatMap {
+            "@\($0)"
+        }
+    }
+}

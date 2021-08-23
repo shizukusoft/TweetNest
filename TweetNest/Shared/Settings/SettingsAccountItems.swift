@@ -21,16 +21,16 @@ struct SettingsAccountItems: View {
     
     var body: some View {
         ForEach(accounts) { account in
-            let username = account.user?.sortedUserDetails?.last?.username
+            let displayUsername = account.displayUsername
             
             NavigationLink {
                 SettingsAccountView(account: account)
             } label: {
-                Label(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())")) {
+                Label(Text(verbatim: displayUsername)) {
                     ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
                         .frame(width: 24, height: 24)
                 }
-                .accessibilityLabel(Text(verbatim: username.flatMap({"@\($0)"}) ?? "#\(account.id.formatted())"))
+                .accessibilityLabel(Text(verbatim: displayUsername))
             }
         }
         .onDelete(perform: deleteAccounts)

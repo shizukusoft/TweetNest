@@ -106,7 +106,7 @@ extension UserView {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationTitle(Text(verbatim: lastUserDetail?.username.flatMap {"@\($0)"} ?? user.id.flatMap { "#\(Int64($0)?.formatted() ?? $0)" } ?? user.description))
+            .navigationTitle(Text(verbatim: user.displayUsername))
             #if os(iOS)
             .refreshable(action: refresh)
             #endif

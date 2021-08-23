@@ -99,14 +99,12 @@ extension Session {
                                     let notificationContent: UNMutableNotificationContent = await context.perform(schedule: .enqueued) {
                                         let account = context.object(with: accountObjectID) as? Account
 
-                                        let username = account?.user?.sortedUserDetails?.last?.username
                                         let accountID = account?.id
-
-                                        let accountName = username.flatMap { "@\($0)" } ?? accountID.flatMap { "#\($0)" } ?? accountObjectID.description
+                                        let displayUsername = account?.displayUsername ?? accountObjectID.description
 
                                         let notificationContent = UNMutableNotificationContent()
                                         notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
-                                        notificationContent.body = String(localized: "New data available for \(accountName).", bundle: .module, comment: "update-accounts notification body.")
+                                        notificationContent.body = String(localized: "New data available for \(displayUsername).", bundle: .module, comment: "update-accounts notification body.")
                                         notificationContent.interruptionLevel = .timeSensitive
                                         notificationContent.threadIdentifier = accountID.flatMap { String($0) } ?? accountObjectID.uriRepresentation().absoluteString
 

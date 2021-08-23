@@ -40,3 +40,13 @@ extension Account {
         }
     }
 }
+
+extension Account {
+    public var displayUsername: String {
+        if let displayUsername = user?.displayUsername {
+            return displayUsername
+        }
+        
+        return description
+    }
+}

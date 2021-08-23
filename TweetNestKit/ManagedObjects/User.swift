@@ -31,3 +31,17 @@ public class User: NSManagedObject {
         }
     }
 }
+
+extension User {
+    public var displayUsername: String {
+        if let displayUsername = sortedUserDetails?.last?.displayUsername {
+            return displayUsername
+        }
+        
+        if let id = id {
+            return "#\(Int64(id)?.formatted() ?? id)"
+        }
+        
+        return description
+    }
+}
