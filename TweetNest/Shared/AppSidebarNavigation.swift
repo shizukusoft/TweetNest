@@ -99,13 +99,6 @@ struct AppSidebarNavigation: View {
                     #endif
                 }
             }
-            .accessibilityAction(named: "Refresh") {
-                if let refresh = refreshAction {
-                    Task {
-                        refresh
-                    }
-                }
-            }
             .alert(isPresented: $showErrorAlert, error: error)
             .sheet(isPresented: $showSettings) {
                 NavigationView {
