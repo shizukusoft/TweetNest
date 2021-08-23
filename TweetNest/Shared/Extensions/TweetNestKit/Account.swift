@@ -10,6 +10,9 @@ import TweetNestKit
 extension Account {
 
     var usernameOrID: String {
-        user?.sortedUserDetails?.last?.username ?? "#\(id.formatted())"
+        if let username = user?.sortedUserDetails?.last?.username {
+            return "@\(username)"
+        }
+        return "#\(id.formatted())"
     }
 }
