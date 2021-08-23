@@ -65,33 +65,35 @@ extension TwitterArchive {
         get async throws {
             let tweetJSData = try await data(atPath: "data/tweet.js")
             
-            guard let tweetJS = String(data: tweetJSData, encoding: .utf8) else {
-                throw TwitterArchiveError.dataCorrupted
-            }
+            return try autoreleasepool {
+                guard let tweetJS = String(data: tweetJSData, encoding: .utf8) else {
+                    throw TwitterArchiveError.dataCorrupted
+                }
 
-            let result = JSContext(virtualMachine: jsVirtualMachine)!.evaluateScript("""
-            window = {};
-            window.YTD = {};
-            window.YTD.tweet = {};
-            
-            \(tweetJS)
-            
-            var tweets = [];
-            
-            for (const property in window.YTD.tweet) {
-                tweets = tweets.concat(window.YTD.tweet[property]);
-            }
-            
-            tweets.map(x => x.tweet);
-            """)
-            
-            guard let tweets = result?.toArray() else {
-                throw TwitterArchiveError.dataCorrupted
-            }
-            
-            let jsonData = try JSONSerialization.data(withJSONObject: tweets, options: [])
+                let result = JSContext(virtualMachine: jsVirtualMachine)!.evaluateScript("""
+                window = {};
+                window.YTD = {};
+                window.YTD.tweet = {};
+                
+                \(tweetJS)
+                
+                var tweets = [];
+                
+                for (const property in window.YTD.tweet) {
+                    tweets = tweets.concat(window.YTD.tweet[property]);
+                }
+                
+                tweets.map(x => x.tweet);
+                """)
+                
+                guard let tweets = result?.toArray() else {
+                    throw TwitterArchiveError.dataCorrupted
+                }
+                
+                let jsonData = try JSONSerialization.data(withJSONObject: tweets, options: [])
 
-            return try JSONDecoder.twt_default.decode([Tweet].self, from: jsonData)
+                return try JSONDecoder.twt_default.decode([Tweet].self, from: jsonData)
+            }
         }
     }
 }
