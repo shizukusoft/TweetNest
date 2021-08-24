@@ -46,9 +46,11 @@ struct UserDetailProfileView: View {
                     Spacer()
                     if let locationQueryURL = locationQueryURL {
                         Link(location, destination: locationQueryURL)
+                        .multilineTextAlignment(.trailing)
                     }
                     else {
                         Text(location)
+                        .multilineTextAlignment(.trailing)
                     }
                 }
                 .accessibilityElement()
@@ -65,6 +67,7 @@ struct UserDetailProfileView: View {
                     .allowsTightening(true)
                     Spacer()
                     Link(url.absoluteString, destination: url)
+                    .multilineTextAlignment(.trailing)
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("URL"))
