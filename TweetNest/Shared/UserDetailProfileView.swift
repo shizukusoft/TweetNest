@@ -40,7 +40,9 @@ struct UserDetailProfileView: View {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 HStack {
                     Label(Text("Location"), systemImage: "location")
-                    .accessibilityLabel(Text("Location"))
+                    .layoutPriority(1)
+                    .lineLimit(1)
+                    .allowsTightening(true)
                     Spacer()
                     if let locationQueryURL = locationQueryURL {
                         Link(location, destination: locationQueryURL)
@@ -49,26 +51,40 @@ struct UserDetailProfileView: View {
                         Text(location)
                     }
                 }
-                .accessibilityElement(children: .combine)
+                .accessibilityElement()
+                .accessibilityLabel(Text("Location"))
+                .accessibilityValue(Text(location))
+                .accessibilityAddTraits(locationQueryURL != nil ? .isButton : [])
             }
 
             if let url = userDetail.url {
                 HStack {
                     Label(Text("URL"), systemImage: "safari")
+                    .layoutPriority(1)
+                    .lineLimit(1)
+                    .allowsTightening(true)
                     Spacer()
                     Link(url.absoluteString, destination: url)
                 }
-                .accessibilityElement(children: .combine)
+                .accessibilityElement()
+                .accessibilityLabel(Text("URL"))
+                .accessibilityValue(Text(url.absoluteString))
+                .accessibilityAddTraits(.isButton)
             }
 
             if let userCreationDate = userDetail.userCreationDate {
                 HStack {
                     Label(Text("Joined"), systemImage: "calendar")
+                    .layoutPriority(1)
+                    .lineLimit(1)
+                    .allowsTightening(true)
                     Spacer()
                     Text(userCreationDate.formatted(date: .numeric, time: .standard))
-                    .accessibilityLabel(Text(userCreationDate.formatted(date: .complete, time: .standard)))
+                    .multilineTextAlignment(.trailing)
                 }
-                .accessibilityElement(children: .combine)
+                .accessibilityElement()
+                .accessibilityLabel(Text("Joined"))
+                .accessibilityValue(Text(userCreationDate.formatted(date: .long, time: .standard)))
             }
 
             if userDetail.isProtected {
