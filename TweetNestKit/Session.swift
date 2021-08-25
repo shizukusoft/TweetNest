@@ -97,16 +97,14 @@ extension Session {
             return Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
         }
         
-        let twitterSession: Twitter.Session
-        
-        if let _twitterSession = twitterSessions[accountObjectID.uriRepresentation()] {
-            twitterSession = _twitterSession
-        } else {
-            twitterSession = Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
+        guard let twitterSession: Twitter.Session = twitterSessions[accountObjectID.uriRepresentation()] else {
+            let twitterSession = Twitter.Session(twitterAPIConfiguration: twitterAPIConfiguration)
             try await twitterSession.updateCredential(credential(for: accountObjectID))
             updateTwitterSession(twitterSession, for: accountObjectID)
+            
+            return twitterSession
         }
-
+        
         return twitterSession
     }
     
