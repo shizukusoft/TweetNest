@@ -25,7 +25,7 @@ struct SettingsAccountView: View {
             }
         }
         .navigationTitle(
-            Text(verbatim: account.user?.displayUsername ?? account.description)
+            Text(verbatim: account.user?.displayUsername ?? account.objectID.description)
         )
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

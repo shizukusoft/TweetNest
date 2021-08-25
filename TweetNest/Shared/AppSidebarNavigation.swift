@@ -50,7 +50,7 @@ struct AppSidebarNavigation: View {
                 ForEach(accounts) { account in
                     Section(
                         Label(
-                            Text(verbatim: account.user?.displayUsername ?? account.description),
+                            Text(verbatim: account.user?.displayUsername ?? account.objectID.description),
                             icon: {
                                 ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
                                 .frame(width: 24, height: 24)

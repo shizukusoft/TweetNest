@@ -110,7 +110,7 @@ extension UserView {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationTitle(Text(verbatim: user.displayUsername ?? user.description))
+            .navigationTitle(Text(verbatim: user.displayUsername ?? user.objectID.description))
             .refreshable(action: refresh)
             #if os(iOS) || os(macOS)
             .toolbar {

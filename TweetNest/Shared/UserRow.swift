@@ -25,7 +25,7 @@ struct UserRow: View {
                         .frame(width: 24, height: 24)
 
                     HStack(spacing: 4) {
-                        Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.description)
+                        Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description)
                             .lineLimit(1)
 
                         if let username = latestUserDetail.username {
@@ -37,7 +37,7 @@ struct UserRow: View {
                     }
                 }
             }
-            .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.description))
+            .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description))
         } else {
             Text(verbatim: placeholderName)
         }
@@ -58,7 +58,7 @@ struct UserRow: View {
     }
     
     init(user: User) {
-        self.placeholderName = user.id.flatMap { "#\(Int64($0)?.formatted() ?? $0)" } ?? user.description
+        self.placeholderName = user.id.flatMap { "#\(Int64($0)?.formatted() ?? $0)" } ?? user.objectID.description
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
