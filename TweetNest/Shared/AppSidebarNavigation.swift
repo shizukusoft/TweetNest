@@ -147,40 +147,42 @@ struct AppSidebarNavigation: View {
 
     @Sendable
     private func refresh() async {
+        #if os(iOS)
+        let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
+            Task {
+                await UIApplication.shared.beginBackgroundTask {
+                    task?.cancel()
+                }
+            }
+        }.value
+
+        defer {
+            Task {
+                await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+            }
+        }
+        #endif
+        
         guard isRefreshing == false else {
             return
         }
 
         isRefreshing = true
+        defer {
+            isRefreshing = false
+        }
 
-        let task = Task.detached {
+        do {
             let hasChanges = try await Session.shared.updateAccounts()
             
             for hasChanges in hasChanges {
                 _ = try hasChanges.1.get()
             }
-        }
-
-        #if os(iOS)
-        let backgroundTaskIdentifier = await UIApplication.shared.beginBackgroundTask {
-            task.cancel()
-        }
-        #endif
-
-        do {
-            _ = try await task.value
-
-            isRefreshing = false
         } catch {
             Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
             self.error = TweetNestError(error)
             showErrorAlert = true
-            isRefreshing = false
         }
-
-        #if os(iOS)
-        await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
-        #endif
     }
 }
 

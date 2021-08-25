@@ -217,40 +217,42 @@ extension UserView {
         
         @Sendable
         private func refresh() async {
+            #if os(iOS)
+            let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
+                Task {
+                    await UIApplication.shared.beginBackgroundTask {
+                        task?.cancel()
+                    }
+                }
+            }.value
+
+            defer {
+                Task {
+                    await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+                }
+            }
+            #endif
+            
             guard isRefreshing == false else {
                 return
             }
 
             isRefreshing = true
+            defer {
+                isRefreshing = false
+            }
 
-            let task = Task.detached {
+            do {
                 if let account = await user.account {
                     try await Session.shared.updateAccount(account.objectID)
                 } else if let account = await account {
                     try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, with: .session(for: account))
                 }
-            }
-
-            #if os(iOS)
-            let backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask {
-                task.cancel()
-            }
-            #endif
-
-            do {
-                _ = try await task.value
-
-                isRefreshing = false
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
                 self.error = TweetNestError(error)
                 showErrorAlert = true
-                isRefreshing = false
             }
-
-            #if os(iOS)
-            UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
-            #endif
         }
     }
 }
