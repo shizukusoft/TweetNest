@@ -86,7 +86,7 @@
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
 		199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
-		19A6FF1E26D6836000AB7B7E /* TweetNest Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		19A6FF1E26D6836000AB7B7E /* TweetNest WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		19A6FF2726D6836000AB7B7E /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2626D6836000AB7B7E /* NotificationController.swift */; };
 		19A6FF2926D6836000AB7B7E /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2826D6836000AB7B7E /* NotificationView.swift */; };
 		19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */; };
@@ -331,7 +331,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				19A6FF1E26D6836000AB7B7E /* TweetNest Extension.appex in Embed App Extensions */,
+				19A6FF1E26D6836000AB7B7E /* TweetNest WatchKit Extension.appex in Embed App Extensions */,
 			);
 			name = "Embed App Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -418,7 +418,7 @@
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestError.swift; sourceTree = "<group>"; };
 		19A6FF1526D6835F00AB7B7E /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19A6FF2626D6836000AB7B7E /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
 		19A6FF2826D6836000AB7B7E /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
@@ -841,7 +841,7 @@
 				19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */,
 				19C5A28F26BC1F3500AB1122 /* TweetNestKitTests.xctest */,
 				19A6FF1526D6835F00AB7B7E /* TweetNest.app */,
-				19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */,
+				19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */,
 				19A6FF3726D6836100AB7B7E /* TweetNestTests (watchOS).xctest */,
 				19A6FF4126D6836100AB7B7E /* TweetNestUITests (watchOS).xctest */,
 			);
@@ -1176,9 +1176,9 @@
 			productReference = 19A6FF1526D6835F00AB7B7E /* TweetNest.app */;
 			productType = "com.apple.product-type.application.watchapp2";
 		};
-		19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */ = {
+		19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) WatchKit Extension */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 19A6FF5626D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS) Extension" */;
+			buildConfigurationList = 19A6FF5626D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS) WatchKit Extension" */;
 			buildPhases = (
 				19A6FF1926D6836000AB7B7E /* Sources */,
 				19A6FF1A26D6836000AB7B7E /* Frameworks */,
@@ -1190,9 +1190,9 @@
 			dependencies = (
 				19EABBEA26D6879E00D3B003 /* PBXTargetDependency */,
 			);
-			name = "TweetNest (watchOS) Extension";
+			name = "TweetNest (watchOS) WatchKit Extension";
 			productName = "TweetNest Extension";
-			productReference = 19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */;
+			productReference = 19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */;
 			productType = "com.apple.product-type.watchkit2-extension";
 		};
 		19A6FF3626D6836100AB7B7E /* TweetNestTests (watchOS) */ = {
@@ -1358,7 +1358,7 @@
 				19365979260978EA00865D40 /* TweetNest (iOS) */,
 				19365A1326097A9500865D40 /* TweetNest (macOS) */,
 				19A6FF1426D6835F00AB7B7E /* TweetNest (watchOS) */,
-				19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */,
+				19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) WatchKit Extension */,
 				19365989260978EB00865D40 /* TweetNestTests (iOS) */,
 				19365A2926097A9700865D40 /* TweetNestTests (macOS) */,
 				19A6FF3626D6836100AB7B7E /* TweetNestTests (watchOS) */,
@@ -1765,12 +1765,12 @@
 		};
 		19A6FF2026D6836000AB7B7E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */;
+			target = 19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) WatchKit Extension */;
 			targetProxy = 19A6FF1F26D6836000AB7B7E /* PBXContainerItemProxy */;
 		};
 		19A6FF3926D6836100AB7B7E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */;
+			target = 19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) WatchKit Extension */;
 			targetProxy = 19A6FF3826D6836100AB7B7E /* PBXContainerItemProxy */;
 		};
 		19A6FF4326D6836100AB7B7E /* PBXTargetDependency */ = {
@@ -2515,8 +2515,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/watchOS/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "TweetNest Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = TweetNest_Extension.ComplicationController;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2525,7 +2525,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "TweetNest Extension";
+				PRODUCT_NAME = "TweetNest WatchKit Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2547,8 +2547,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/watchOS/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = "TweetNest Extension";
-				INFOPLIST_KEY_CLKComplicationPrincipalClass = TweetNest_Extension.ComplicationController;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -2557,7 +2557,7 @@
 					"@executable_path/../../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
-				PRODUCT_NAME = "TweetNest Extension";
+				PRODUCT_NAME = "TweetNest WatchKit Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2588,7 +2588,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest Extension.appex/TweetNest Extension";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest WatchKit Extension.appex/TweetNest WatchKit Extension";
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Debug;
@@ -2613,7 +2613,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest Extension.appex/TweetNest Extension";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest WatchKit Extension.appex/TweetNest WatchKit Extension";
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
@@ -2868,7 +2868,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		19A6FF5626D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS) Extension" */ = {
+		19A6FF5626D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS) WatchKit Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				19A6FF5026D6836100AB7B7E /* Debug */,
