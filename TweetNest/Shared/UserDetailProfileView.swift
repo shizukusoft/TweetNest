@@ -40,17 +40,16 @@ struct UserDetailProfileView: View {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 HStack {
                     Label(Text("Location"), systemImage: "location")
-                    .layoutPriority(1)
-                    .lineLimit(1)
-                    .allowsTightening(true)
+                        .layoutPriority(1)
+                        .lineLimit(1)
                     Spacer()
                     if let locationQueryURL = locationQueryURL {
                         Link(location, destination: locationQueryURL)
-                        .multilineTextAlignment(.trailing)
+                            .multilineTextAlignment(.trailing)
                     }
                     else {
                         Text(location)
-                        .multilineTextAlignment(.trailing)
+                            .multilineTextAlignment(.trailing)
                     }
                 }
                 .accessibilityElement()
@@ -62,12 +61,11 @@ struct UserDetailProfileView: View {
             if let url = userDetail.url {
                 HStack {
                     Label(Text("URL"), systemImage: "safari")
-                    .layoutPriority(1)
-                    .lineLimit(1)
-                    .allowsTightening(true)
+                        .layoutPriority(1)
+                        .lineLimit(1)
                     Spacer()
                     Link(url.absoluteString, destination: url)
-                    .multilineTextAlignment(.trailing)
+                        .multilineTextAlignment(.trailing)
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("URL"))
@@ -78,12 +76,11 @@ struct UserDetailProfileView: View {
             if let userCreationDate = userDetail.userCreationDate {
                 HStack {
                     Label(Text("Joined"), systemImage: "calendar")
-                    .layoutPriority(1)
-                    .lineLimit(1)
-                    .allowsTightening(true)
+                        .layoutPriority(1)
+                        .lineLimit(1)
                     Spacer()
                     Text(userCreationDate.formatted(date: .numeric, time: .standard))
-                    .multilineTextAlignment(.trailing)
+                        .multilineTextAlignment(.trailing)
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
