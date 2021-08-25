@@ -220,7 +220,7 @@ extension UserView {
             #if os(iOS)
             let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
                 Task {
-                    await UIApplication.shared.beginBackgroundTask {
+                    UIApplication.shared.beginBackgroundTask {
                         task?.cancel()
                     }
                 }
@@ -228,7 +228,7 @@ extension UserView {
 
             defer {
                 Task {
-                    await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+                    UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
                 }
             }
             #endif
@@ -243,9 +243,9 @@ extension UserView {
             }
 
             do {
-                if let account = await user.account {
+                if let account = user.account {
                     try await Session.shared.updateAccount(account.objectID)
-                } else if let account = await account {
+                } else if let account = account {
                     try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, with: .session(for: account))
                 }
             } catch {
