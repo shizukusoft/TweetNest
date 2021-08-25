@@ -123,32 +123,23 @@ struct AppSidebarNavigation: View {
 
         Task {
             do {
+                defer {
+                    withAnimation {
+                        webAuthenticationSession = nil
+                        isAddingAccount = false
+                    }
+                }
+                
                 try await Session.shared.authorizeNewAccount { webAuthenticationSession in
                     self.webAuthenticationSession = webAuthenticationSession
                 }
-
-                webAuthenticationSession = nil
-
-                withAnimation {
-                    isAddingAccount = false
-                }
+            } catch ASWebAuthenticationSessionError.canceledLogin {
+                Logger().error("Error occurred: \(String(reflecting: ASWebAuthenticationSessionError.canceledLogin), privacy: .public)")
             } catch {
-                if let error = error as? ASWebAuthenticationSessionError,
-                   case .canceledLogin = error.code
-                {
-                    webAuthenticationSession = nil
-                    withAnimation {
-                        isAddingAccount = false
-                    }
-                }
-                else {
-                    withAnimation {
-                        webAuthenticationSession = nil
-                        Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                        self.error = TweetNestError(error)
-                        showErrorAlert = true
-                        isAddingAccount = false
-                    }
+                withAnimation {
+                    Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+                    self.error = TweetNestError(error)
+                    showErrorAlert = true
                 }
             }
         }
