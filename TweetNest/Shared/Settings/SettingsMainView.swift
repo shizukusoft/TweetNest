@@ -12,6 +12,8 @@ struct SettingsMainView: View {
         case accounts
     }
     
+    @State var editMode: EditMode = .inactive
+    
     var body: some View {
         #if os(macOS)
         TabView {
@@ -54,6 +56,7 @@ struct SettingsMainView: View {
         .toolbar {
             EditButton()
         }
+        .environment(\.editMode, $editMode)
         #endif
     }
 }
