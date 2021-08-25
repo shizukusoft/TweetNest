@@ -54,8 +54,7 @@ struct AppSidebarNavigation: View {
                                 .frame(width: 24, height: 24)
                             }
                         )
-                    )
-                    {
+                    ) {
                         AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
                     }
                 }
