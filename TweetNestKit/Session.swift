@@ -99,8 +99,9 @@ extension Session {
         
         guard let twitterSession: Twitter.Session = twitterSessions[accountObjectID.uriRepresentation()] else {
             let twitterSession = Twitter.Session(twitterAPIConfiguration: twitterAPIConfiguration)
-            try await twitterSession.updateCredential(credential(for: accountObjectID))
             updateTwitterSession(twitterSession, for: accountObjectID)
+            
+            try await twitterSession.updateCredential(credential(for: accountObjectID))
             
             return twitterSession
         }
