@@ -37,6 +37,7 @@ struct DeleteBulkTweetsView: View {
     var failedResults: [Error] {
         results
             .sorted { $0.key < $1.key }
+            .lazy
             .map(\.value)
             .compactMap {
                 switch $0 {
@@ -91,7 +92,7 @@ struct DeleteBulkTweetsView: View {
     private func delete() async {
         #if os(iOS)
         let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
-            Task.detached {
+            Task {
                 await UIApplication.shared.beginBackgroundTask {
                     task?.cancel()
                 }
@@ -99,7 +100,7 @@ struct DeleteBulkTweetsView: View {
         }.value
         
         defer {
-            Task.detached {
+            Task {
                 await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
             }
         }
