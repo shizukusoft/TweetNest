@@ -12,7 +12,9 @@ struct SettingsMainView: View {
         case accounts
     }
     
+    #if os(iOS)
     @State var editMode: EditMode = .inactive
+    #endif
     
     var body: some View {
         #if os(macOS)
