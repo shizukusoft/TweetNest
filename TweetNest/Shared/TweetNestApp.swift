@@ -43,5 +43,11 @@ struct TweetNestApp: App {
                 break
             }
         }
+        
+        #if os(macOS)
+        Settings {
+            SettingsMainView()
+        }
+        #endif
     }
 }

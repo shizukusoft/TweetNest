@@ -98,7 +98,6 @@ struct DeleteBulkTweetsAllTweetsView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .navigationTitle(Text("Delete Tweets"))
-        .navigationBarBackButtonHidden(true)
     }
     
     func onFileImporterCompletion(result: Result<URL, Error>) {

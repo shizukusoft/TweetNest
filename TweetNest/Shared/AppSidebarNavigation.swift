@@ -20,7 +20,9 @@ struct AppSidebarNavigation: View {
 
     @State private var navigationItemSelection: NavigationItem? = nil
 
+    #if os(iOS)
     @State private var showSettings: Bool = false
+    #endif
 
     @State private var webAuthenticationSession: ASWebAuthenticationSession? = nil
     @State private var isAddingAccount: Bool = false
@@ -62,6 +64,7 @@ struct AppSidebarNavigation: View {
             .refreshable(action: refresh)
             .navigationTitle(Text("TweetNest"))
             .toolbar {
+                #if os(iOS)
                 ToolbarItemGroup(placement: .navigationBarLeading) {
                     Button {
                         showSettings.toggle()
@@ -73,6 +76,7 @@ struct AppSidebarNavigation: View {
                         }
                     }
                 }
+                #endif
 
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button(action: addAccount) {
@@ -100,6 +104,7 @@ struct AppSidebarNavigation: View {
                 }
             }
             .alert(isPresented: $showErrorAlert, error: error)
+            #if os(iOS)
             .sheet(isPresented: $showSettings) {
                 NavigationView {
                     SettingsMainView()
@@ -113,6 +118,7 @@ struct AppSidebarNavigation: View {
                         .navigationTitle(Text("Settings"))
                 }
             }
+            #endif
         }
     }
 

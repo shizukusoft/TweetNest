@@ -46,7 +46,6 @@ struct DeleteBulkTweetsRecentTweetsView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .navigationTitle(Text("Delete Tweets"))
-        .navigationBarBackButtonHidden(true)
     }
     
     func fetchTweets() async {

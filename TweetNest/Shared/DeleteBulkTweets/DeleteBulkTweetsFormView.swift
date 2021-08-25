@@ -128,7 +128,6 @@ struct DeleteBulkTweetsFormView: View {
         .navigationBarTitleDisplayMode(.inline)
         #endif
         .navigationTitle(Text("Delete Tweets"))
-        .navigationBarBackButtonHidden(true)
     }
     
     init(tweets: [Tweet], isPresented: Binding<Bool>) {
