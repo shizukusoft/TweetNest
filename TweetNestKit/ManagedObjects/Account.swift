@@ -7,9 +7,23 @@
 
 import Foundation
 import CoreData
+import Twitter
 
 public class Account: NSManagedObject {
     
+}
+
+extension Account {
+    var credential: Twitter.Session.Credential? {
+        guard
+            let token = token,
+            let tokenSecret = tokenSecret
+        else {
+            return nil
+        }
+
+        return Twitter.Session.Credential(token: token, tokenSecret: tokenSecret)
+    }
 }
 
 extension Account {

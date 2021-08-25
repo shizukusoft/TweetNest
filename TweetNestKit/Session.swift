@@ -77,7 +77,7 @@ extension Session {
             let updatedAccounts = (inserted ?? []).union(updated ?? []).compactMap { $0 as? Account }
             
             for updatedAccount in updatedAccounts {
-                let credential = credential(for: updatedAccount)
+                let credential = updatedAccount.credential
                 
                 Task { [self] in
                     if let twitterSession = await twitterSessions[updatedAccount.objectID.uriRepresentation()] {
@@ -189,17 +189,6 @@ extension Session {
 }
 
 extension Session {
-    private nonisolated func credential(for account: Account) -> Twitter.Session.Credential? {
-        guard
-            let token = account.token,
-            let tokenSecret = account.tokenSecret
-        else {
-            return nil
-        }
-
-        return Twitter.Session.Credential(token: token, tokenSecret: tokenSecret)
-    }
-    
     private nonisolated func credential(for accountObjectID: NSManagedObjectID) async throws -> Twitter.Session.Credential? {
         let context = container.newBackgroundContext()
         
@@ -210,7 +199,7 @@ extension Session {
                 return nil
             }
 
-            return self.credential(for: account)
+            return account.credential
         }
     }
 }
