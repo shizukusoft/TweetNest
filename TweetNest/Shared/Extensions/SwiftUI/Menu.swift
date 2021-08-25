@@ -5,6 +5,8 @@
 //  Created by Mina Her on 2021/08/08.
 //
 
+#if os(iOS) || os(macOS)
+
 import SwiftUI
 
 extension Menu {
@@ -37,3 +39,5 @@ where Label == Text {
         self.init(content: content, label: label, primaryAction: primaryAction)
     }
 }
+
+#endif

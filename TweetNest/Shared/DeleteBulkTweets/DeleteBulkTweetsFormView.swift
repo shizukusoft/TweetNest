@@ -5,6 +5,8 @@
 //  Created by Jaehong Kang on 2021/08/15.
 //
 
+#if os(iOS) || os(macOS)
+
 import SwiftUI
 import Twitter
 import TweetNestKit
@@ -159,3 +161,5 @@ struct DeleteBulkTweetsFormView_Previews: PreviewProvider {
         DeleteBulkTweetsFormView(tweets: [], isPresented: .constant(true))
     }
 }
+
+#endif

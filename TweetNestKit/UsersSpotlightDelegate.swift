@@ -5,6 +5,8 @@
 //  Created by Jaehong Kang on 2021/08/06.
 //
 
+#if os(iOS) || os(macOS)
+
 import CoreData
 import CoreSpotlight
 
@@ -42,3 +44,5 @@ class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
         return nil
     }
 }
+
+#endif

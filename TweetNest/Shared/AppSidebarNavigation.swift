@@ -24,8 +24,10 @@ struct AppSidebarNavigation: View {
     @State private var showSettings: Bool = false
     #endif
 
+    #if os(iOS) || os(macOS)
     @State private var webAuthenticationSession: ASWebAuthenticationSession? = nil
     @State private var isAddingAccount: Bool = false
+    #endif
 
     @State private var isRefreshing: Bool = false
 
@@ -59,7 +61,9 @@ struct AppSidebarNavigation: View {
                     }
                 }
             }
+            #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
+            #endif
             .refreshable(action: refresh)
             .navigationTitle(Text("TweetNest"))
             .toolbar {
@@ -77,6 +81,7 @@ struct AppSidebarNavigation: View {
                 }
                 #endif
 
+                #if os(iOS) || os(macOS)
                 ToolbarItemGroup(placement: .primaryAction) {
                     Button(action: addAccount) {
                         ZStack {
@@ -101,6 +106,7 @@ struct AppSidebarNavigation: View {
                     .disabled(isRefreshing)
                     #endif
                 }
+                #endif
             }
             .alert(isPresented: $showErrorAlert, error: error)
             #if os(iOS)
@@ -120,7 +126,8 @@ struct AppSidebarNavigation: View {
             #endif
         }
     }
-
+    
+    #if os(iOS) || os(macOS)
     private func addAccount() {
         withAnimation {
             isAddingAccount = true
@@ -149,6 +156,7 @@ struct AppSidebarNavigation: View {
             }
         }
     }
+    #endif
 
     @Sendable
     private func refresh() async {

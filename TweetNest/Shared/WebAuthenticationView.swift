@@ -5,6 +5,7 @@
 //  Created by Jaehong Kang on 2021/02/24.
 //
 
+#if os(iOS) || os(macOS)
 import SwiftUI
 import AuthenticationServices
 
@@ -119,3 +120,5 @@ extension WebAuthenticationView.View: ASWebAuthenticationPresentationContextProv
         return window!
     }
 }
+
+#endif

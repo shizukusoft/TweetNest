@@ -5,6 +5,8 @@
 //  Created by Jaehong Kang on 2021/08/18.
 //
 
+#if os(iOS) || os(macOS)
+
 import SwiftUI
 import UniformTypeIdentifiers
 import UnifiedLogging
@@ -135,3 +137,5 @@ struct DeleteBulkTweetsAllTweetsView_Previews: PreviewProvider {
         DeleteBulkTweetsAllTweetsView(account: .preview, isPresented: .constant(true))
     }
 }
+
+#endif

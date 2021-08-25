@@ -5,6 +5,8 @@
 //  Created by Jaehong Kang on 2021/08/18.
 //
 
+#if os(iOS) || os(macOS)
+
 import Foundation
 import JavaScriptCore
 import ZIP
@@ -97,3 +99,5 @@ extension TwitterArchive {
         }
     }
 }
+
+#endif

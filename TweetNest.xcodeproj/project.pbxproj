@@ -62,6 +62,7 @@
 		193AFB6F26CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */; };
+		1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1946203C26D68F0E003DB010 /* CloudKit.framework */; };
 		194EF57E26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */; };
 		194EF57F26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */; };
 		195DD4B026BEE7EC008F0309 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 195DD4B226BEE7EC008F0309 /* Localizable.strings */; };
@@ -85,6 +86,16 @@
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
 		199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
+		19A6FF1E26D6836000AB7B7E /* TweetNest Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		19A6FF2726D6836000AB7B7E /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2626D6836000AB7B7E /* NotificationController.swift */; };
+		19A6FF2926D6836000AB7B7E /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2826D6836000AB7B7E /* NotificationView.swift */; };
+		19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */; };
+		19A6FF3C26D6836100AB7B7E /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF3B26D6836100AB7B7E /* TweetNestTests.swift */; };
+		19A6FF4626D6836100AB7B7E /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF4526D6836100AB7B7E /* TweetNestUITests.swift */; };
+		19A6FF4826D6836100AB7B7E /* TweetNestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF4726D6836100AB7B7E /* TweetNestUITestsLaunchTests.swift */; };
+		19A6FF4B26D6836100AB7B7E /* TweetNest.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 19A6FF1526D6835F00AB7B7E /* TweetNest.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		19A6FF5B26D6844E00AB7B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
+		19A6FF5C26D6844F00AB7B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		19B4862E26D1E4A900A80D85 /* ZIP in Frameworks */ = {isa = PBXBuildFile; productRef = 19B4862D26D1E4A900A80D85 /* ZIP */; };
 		19BBB88226C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */; };
 		19BBB88326C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */; };
@@ -121,6 +132,42 @@
 		19C7378B26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
 		19DA23D126B98767002436DC /* UserDetailProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDetailProfileView.swift */; };
 		19DA23D226B98767002436DC /* UserDetailProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDetailProfileView.swift */; };
+		19EABBC626D6877600D3B003 /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */; };
+		19EABBC726D6877600D3B003 /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
+		19EABBC826D6877600D3B003 /* UserDetailProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19DA23D026B98767002436DC /* UserDetailProfileView.swift */; };
+		19EABBC926D6877600D3B003 /* UsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12F126B682C20090E474 /* UsersList.swift */; };
+		19EABBCA26D6877600D3B003 /* AppSidebarNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */; };
+		19EABBCB26D6877600D3B003 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C126BEF91C008F0309 /* ProfileImage.swift */; };
+		19EABBCC26D6877600D3B003 /* TweetNestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */; };
+		19EABBCD26D6877600D3B003 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EB925E90ECD006AB4C0 /* MainView.swift */; };
+		19EABBCE26D6877600D3B003 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */; };
+		19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
+		19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
+		19EABBD126D6877600D3B003 /* AppSidebarAccountRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */; };
+		19EABBD226D6877600D3B003 /* UsersDiffListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473426C14554007D2814 /* UsersDiffListSection.swift */; };
+		19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
+		19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */; };
+		19EABBD526D6877600D3B003 /* UserAllDataSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12EE26B67F5F0090E474 /* UserAllDataSection.swift */; };
+		19EABBD626D6877600D3B003 /* DataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* DataAsset.swift */; };
+		19EABBD726D6877600D3B003 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473726C14BCD007D2814 /* UserRow.swift */; };
+		19EABBD826D6877A00D3B003 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
+		19EABBD926D6877A00D3B003 /* SettingsAccountItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6B26CA3499008BFF67 /* SettingsAccountItems.swift */; };
+		19EABBDA26D6877A00D3B003 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
+		19EABBDB26D6877D00D3B003 /* DeleteBulkTweetsFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88426C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift */; };
+		19EABBDC26D6877D00D3B003 /* DeleteBulkTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197ACF0E26CE2D820040388C /* DeleteBulkTweetsView.swift */; };
+		19EABBDD26D6877D00D3B003 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */; };
+		19EABBDE26D6877D00D3B003 /* DeleteBulkTweetsAllTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */; };
+		19EABBDF26D6878400D3B003 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
+		19EABBE026D6878400D3B003 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* Session.swift */; };
+		19EABBE126D6878700D3B003 /* NavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE326BF2BC900741FA9 /* NavigationLink.swift */; };
+		19EABBE226D6878700D3B003 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
+		19EABBE326D6878700D3B003 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDDD26BF278B00741FA9 /* Button.swift */; };
+		19EABBE426D6878700D3B003 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE626BF309300741FA9 /* Menu.swift */; };
+		19EABBE526D6878700D3B003 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
+		19EABBE626D6878700D3B003 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDD726BF22C100741FA9 /* Label.swift */; };
+		19EABBE726D6879E00D3B003 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; };
+		19EABBE826D6879E00D3B003 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EABBEC26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift */; };
 		19EBA45026CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */; };
 		19EBA45126CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */; };
 		19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */; };
@@ -179,6 +226,34 @@
 			remoteGlobalIDString = 19365A1326097A9500865D40;
 			remoteInfo = TweetNest;
 		};
+		19A6FF1F26D6836000AB7B7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 19A6FF1C26D6836000AB7B7E;
+			remoteInfo = "TweetNest Extension";
+		};
+		19A6FF3826D6836100AB7B7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 19A6FF1C26D6836000AB7B7E;
+			remoteInfo = "TweetNest Extension";
+		};
+		19A6FF4226D6836100AB7B7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 19A6FF1426D6835F00AB7B7E;
+			remoteInfo = TweetNest;
+		};
+		19A6FF4926D6836100AB7B7E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 19A6FF1426D6835F00AB7B7E;
+			remoteInfo = TweetNest;
+		};
 		19C5A29126BC1F3500AB1122 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
@@ -207,6 +282,13 @@
 			remoteGlobalIDString = 19C5A28526BC1F3500AB1122;
 			remoteInfo = TweetNestKit;
 		};
+		19EABBE926D6879E00D3B003 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 19C5A28526BC1F3500AB1122;
+			remoteInfo = TweetNestKit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -228,6 +310,39 @@
 			dstSubfolderSpec = 10;
 			files = (
 				19C5A29C26BC1F3500AB1122 /* TweetNestKit.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF4C26D6836100AB7B7E /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				19A6FF4B26D6836100AB7B7E /* TweetNest.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF4F26D6836100AB7B7E /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				19A6FF1E26D6836000AB7B7E /* TweetNest Extension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19EABBEB26D6879E00D3B003 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				19EABBE826D6879E00D3B003 /* TweetNestKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -277,6 +392,7 @@
 		193AFB6B26CA3499008BFF67 /* SettingsAccountItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountItems.swift; sourceTree = "<group>"; };
 		193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountView.swift; sourceTree = "<group>"; };
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
+		1946203C26D68F0E003DB010 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountRows.swift; sourceTree = "<group>"; };
 		195DD4B326BEE7ED008F0309 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		195DD4B826BEF09D008F0309 /* DataAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAsset.swift; sourceTree = "<group>"; };
@@ -301,6 +417,18 @@
 		1995B92B26B6F1ED00AFCC9E /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestError.swift; sourceTree = "<group>"; };
+		19A6FF1526D6835F00AB7B7E /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		19A6FF2626D6836000AB7B7E /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
+		19A6FF2826D6836000AB7B7E /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
+		19A6FF3126D6836100AB7B7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		19A6FF3226D6836100AB7B7E /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
+		19A6FF3726D6836100AB7B7E /* TweetNestTests (watchOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNestTests (watchOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		19A6FF3B26D6836100AB7B7E /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
+		19A6FF4126D6836100AB7B7E /* TweetNestUITests (watchOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNestUITests (watchOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		19A6FF4526D6836100AB7B7E /* TweetNestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITests.swift; sourceTree = "<group>"; };
+		19A6FF4726D6836100AB7B7E /* TweetNestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBulkTweetsRecentTweetsView.swift; sourceTree = "<group>"; };
 		19BBB88426C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBulkTweetsFormView.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
@@ -325,6 +453,8 @@
 		19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersSpotlightDelegate.swift; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		19DA23D026B98767002436DC /* UserDetailProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailProfileView.swift; sourceTree = "<group>"; };
+		19EABBEC26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+WKExtensionDelegate.swift"; sourceTree = "<group>"; };
+		19EABC4326D68EB200D3B003 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBulkTweetsAllTweetsView.swift; sourceTree = "<group>"; };
 		19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterArchive.swift; sourceTree = "<group>"; };
 		19EE473126C144A2007D2814 /* UsersDiffList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersDiffList.swift; sourceTree = "<group>"; };
@@ -406,6 +536,29 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		19365A3226097A9700865D40 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF1A26D6836000AB7B7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19EABBE726D6879E00D3B003 /* TweetNestKit.framework in Frameworks */,
+				1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF3426D6836100AB7B7E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF3E26D6836100AB7B7E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -687,6 +840,10 @@
 				1912A75126B7DC7D00A191E4 /* TweetNest MirrorBlock Extension.appex */,
 				19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */,
 				19C5A28F26BC1F3500AB1122 /* TweetNestKitTests.xctest */,
+				19A6FF1526D6835F00AB7B7E /* TweetNest.app */,
+				19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */,
+				19A6FF3726D6836100AB7B7E /* TweetNestTests (watchOS).xctest */,
+				19A6FF4126D6836100AB7B7E /* TweetNestUITests (watchOS).xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -721,8 +878,40 @@
 		19933E5B25E90E02006AB4C0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1946203C26D68F0E003DB010 /* CloudKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		19A6FF5A26D6841F00AB7B7E /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				19EABBEC26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift */,
+				19A6FF2626D6836000AB7B7E /* NotificationController.swift */,
+				19A6FF2826D6836000AB7B7E /* NotificationView.swift */,
+				19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */,
+				19A6FF3126D6836100AB7B7E /* Info.plist */,
+				19EABC4326D68EB200D3B003 /* TweetNest.entitlements */,
+				19A6FF3226D6836100AB7B7E /* PushNotificationPayload.apns */,
+			);
+			path = watchOS;
+			sourceTree = "<group>";
+		};
+		19A6FF5D26D6846A00AB7B7E /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				19A6FF3B26D6836100AB7B7E /* TweetNestTests.swift */,
+			);
+			path = watchOS;
+			sourceTree = "<group>";
+		};
+		19A6FF5E26D6847900AB7B7E /* watchOS */ = {
+			isa = PBXGroup;
+			children = (
+				19A6FF4526D6836100AB7B7E /* TweetNestUITests.swift */,
+				19A6FF4726D6836100AB7B7E /* TweetNestUITestsLaunchTests.swift */,
+			);
+			path = watchOS;
 			sourceTree = "<group>";
 		};
 		19B042522609D2540009ECF8 /* TweetNest */ = {
@@ -731,6 +920,7 @@
 				19933D2825E901F3006AB4C0 /* Shared */,
 				19933D3525E901F4006AB4C0 /* iOS */,
 				19933D3C25E901F5006AB4C0 /* macOS */,
+				19A6FF5A26D6841F00AB7B7E /* watchOS */,
 			);
 			path = TweetNest;
 			sourceTree = "<group>";
@@ -741,6 +931,7 @@
 				19365ACE26097C3F00865D40 /* Shared */,
 				1936598D260978EB00865D40 /* iOS */,
 				19365A2D26097A9700865D40 /* macOS */,
+				19A6FF5D26D6846A00AB7B7E /* watchOS */,
 			);
 			path = TweetNestTests;
 			sourceTree = "<group>";
@@ -750,6 +941,7 @@
 			children = (
 				19365998260978EB00865D40 /* iOS */,
 				19365A3826097A9700865D40 /* macOS */,
+				19A6FF5E26D6847900AB7B7E /* watchOS */,
 			);
 			path = TweetNestUITests;
 			sourceTree = "<group>";
@@ -859,11 +1051,13 @@
 				19365977260978EA00865D40 /* Frameworks */,
 				19365978260978EA00865D40 /* Resources */,
 				19365A0626097A5F00865D40 /* Embed Frameworks */,
+				19A6FF4C26D6836100AB7B7E /* Embed Watch Content */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				19C5A2C826BC1FFA00AB1122 /* PBXTargetDependency */,
+				19A6FF4A26D6836100AB7B7E /* PBXTargetDependency */,
 			);
 			name = "TweetNest (iOS)";
 			packageProductDependencies = (
@@ -965,6 +1159,78 @@
 			productReference = 19365A3526097A9700865D40 /* TweetNestUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		19A6FF1426D6835F00AB7B7E /* TweetNest (watchOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19A6FF5726D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS)" */;
+			buildPhases = (
+				19A6FF1326D6835F00AB7B7E /* Resources */,
+				19A6FF4F26D6836100AB7B7E /* Embed App Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19A6FF2026D6836000AB7B7E /* PBXTargetDependency */,
+			);
+			name = "TweetNest (watchOS)";
+			productName = TweetNest;
+			productReference = 19A6FF1526D6835F00AB7B7E /* TweetNest.app */;
+			productType = "com.apple.product-type.application.watchapp2";
+		};
+		19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19A6FF5626D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS) Extension" */;
+			buildPhases = (
+				19A6FF1926D6836000AB7B7E /* Sources */,
+				19A6FF1A26D6836000AB7B7E /* Frameworks */,
+				19A6FF1B26D6836000AB7B7E /* Resources */,
+				19EABBEB26D6879E00D3B003 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19EABBEA26D6879E00D3B003 /* PBXTargetDependency */,
+			);
+			name = "TweetNest (watchOS) Extension";
+			productName = "TweetNest Extension";
+			productReference = 19A6FF1D26D6836000AB7B7E /* TweetNest Extension.appex */;
+			productType = "com.apple.product-type.watchkit2-extension";
+		};
+		19A6FF3626D6836100AB7B7E /* TweetNestTests (watchOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19A6FF5826D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNestTests (watchOS)" */;
+			buildPhases = (
+				19A6FF3326D6836100AB7B7E /* Sources */,
+				19A6FF3426D6836100AB7B7E /* Frameworks */,
+				19A6FF3526D6836100AB7B7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19A6FF3926D6836100AB7B7E /* PBXTargetDependency */,
+			);
+			name = "TweetNestTests (watchOS)";
+			productName = TweetNestTests;
+			productReference = 19A6FF3726D6836100AB7B7E /* TweetNestTests (watchOS).xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		19A6FF4026D6836100AB7B7E /* TweetNestUITests (watchOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 19A6FF5926D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNestUITests (watchOS)" */;
+			buildPhases = (
+				19A6FF3D26D6836100AB7B7E /* Sources */,
+				19A6FF3E26D6836100AB7B7E /* Frameworks */,
+				19A6FF3F26D6836100AB7B7E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				19A6FF4326D6836100AB7B7E /* PBXTargetDependency */,
+			);
+			name = "TweetNestUITests (watchOS)";
+			productName = TweetNestUITests;
+			productReference = 19A6FF4126D6836100AB7B7E /* TweetNestUITests (watchOS).xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		19C5A28526BC1F3500AB1122 /* TweetNestKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 19C5A29D26BC1F3500AB1122 /* Build configuration list for PBXNativeTarget "TweetNestKit" */;
@@ -1045,6 +1311,20 @@
 						CreatedOnToolsVersion = 12.4;
 						TestTargetID = 19365A1326097A9500865D40;
 					};
+					19A6FF1426D6835F00AB7B7E = {
+						CreatedOnToolsVersion = 13.0;
+					};
+					19A6FF1C26D6836000AB7B7E = {
+						CreatedOnToolsVersion = 13.0;
+					};
+					19A6FF3626D6836100AB7B7E = {
+						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 19A6FF1C26D6836000AB7B7E;
+					};
+					19A6FF4026D6836100AB7B7E = {
+						CreatedOnToolsVersion = 13.0;
+						TestTargetID = 19A6FF1426D6835F00AB7B7E;
+					};
 					19C5A28526BC1F3500AB1122 = {
 						CreatedOnToolsVersion = 13.0;
 					};
@@ -1077,10 +1357,14 @@
 			targets = (
 				19365979260978EA00865D40 /* TweetNest (iOS) */,
 				19365A1326097A9500865D40 /* TweetNest (macOS) */,
+				19A6FF1426D6835F00AB7B7E /* TweetNest (watchOS) */,
+				19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */,
 				19365989260978EB00865D40 /* TweetNestTests (iOS) */,
 				19365A2926097A9700865D40 /* TweetNestTests (macOS) */,
+				19A6FF3626D6836100AB7B7E /* TweetNestTests (watchOS) */,
 				19365994260978EB00865D40 /* TweetNestUITests (iOS) */,
 				19365A3426097A9700865D40 /* TweetNestUITests (macOS) */,
+				19A6FF4026D6836100AB7B7E /* TweetNestUITests (watchOS) */,
 				19C5A28526BC1F3500AB1122 /* TweetNestKit */,
 				19C5A28E26BC1F3500AB1122 /* TweetNestKitTests */,
 				1912A72E26B7DC6900A191E4 /* TweetNest MirrorBlock Extension (iOS) */,
@@ -1168,6 +1452,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		19365A3326097A9700865D40 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF1326D6835F00AB7B7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19A6FF5B26D6844E00AB7B7E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF1B26D6836000AB7B7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19A6FF5C26D6844F00AB7B7E /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF3526D6836100AB7B7E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF3F26D6836100AB7B7E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1324,6 +1638,67 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		19A6FF1926D6836000AB7B7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19EABBCA26D6877600D3B003 /* AppSidebarNavigation.swift in Sources */,
+				19EABBD226D6877600D3B003 /* UsersDiffListSection.swift in Sources */,
+				19EABBD926D6877A00D3B003 /* SettingsAccountItems.swift in Sources */,
+				19EABBDC26D6877D00D3B003 /* DeleteBulkTweetsView.swift in Sources */,
+				19A6FF2726D6836000AB7B7E /* NotificationController.swift in Sources */,
+				19EABBC626D6877600D3B003 /* TweetNestApp.swift in Sources */,
+				19EABBDA26D6877A00D3B003 /* SettingsAccountView.swift in Sources */,
+				19EABBD626D6877600D3B003 /* DataAsset.swift in Sources */,
+				19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */,
+				19EABBE226D6878700D3B003 /* Image.swift in Sources */,
+				19EABBE526D6878700D3B003 /* Section.swift in Sources */,
+				19EABBE326D6878700D3B003 /* Button.swift in Sources */,
+				19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */,
+				19EABBCE26D6877600D3B003 /* WebAuthenticationView.swift in Sources */,
+				19EABBE626D6878700D3B003 /* Label.swift in Sources */,
+				19EABBC726D6877600D3B003 /* UserView.swift in Sources */,
+				19EABBCB26D6877600D3B003 /* ProfileImage.swift in Sources */,
+				19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */,
+				19EABBCC26D6877600D3B003 /* TweetNestAppDelegate.swift in Sources */,
+				19EABBDE26D6877D00D3B003 /* DeleteBulkTweetsAllTweetsView.swift in Sources */,
+				19EABBCD26D6877600D3B003 /* MainView.swift in Sources */,
+				19EABBDD26D6877D00D3B003 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */,
+				19EABBD526D6877600D3B003 /* UserAllDataSection.swift in Sources */,
+				19EABBDF26D6878400D3B003 /* URL.swift in Sources */,
+				19EABBE026D6878400D3B003 /* Session.swift in Sources */,
+				19EABBE126D6878700D3B003 /* NavigationLink.swift in Sources */,
+				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
+				19EABBC926D6877600D3B003 /* UsersList.swift in Sources */,
+				19EABBDB26D6877D00D3B003 /* DeleteBulkTweetsFormView.swift in Sources */,
+				19EABBC826D6877600D3B003 /* UserDetailProfileView.swift in Sources */,
+				19EABBD826D6877A00D3B003 /* SettingsMainView.swift in Sources */,
+				19EABBD126D6877600D3B003 /* AppSidebarAccountRows.swift in Sources */,
+				19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */,
+				19EABBE426D6878700D3B003 /* Menu.swift in Sources */,
+				19EABBD726D6877600D3B003 /* UserRow.swift in Sources */,
+				19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */,
+				19A6FF2926D6836000AB7B7E /* NotificationView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF3326D6836100AB7B7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19A6FF3C26D6836100AB7B7E /* TweetNestTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		19A6FF3D26D6836100AB7B7E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				19A6FF4826D6836100AB7B7E /* TweetNestUITestsLaunchTests.swift in Sources */,
+				19A6FF4626D6836100AB7B7E /* TweetNestUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		19C5A28226BC1F3500AB1122 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1388,6 +1763,26 @@
 			target = 19365A1326097A9500865D40 /* TweetNest (macOS) */;
 			targetProxy = 19365A3626097A9700865D40 /* PBXContainerItemProxy */;
 		};
+		19A6FF2026D6836000AB7B7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */;
+			targetProxy = 19A6FF1F26D6836000AB7B7E /* PBXContainerItemProxy */;
+		};
+		19A6FF3926D6836100AB7B7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 19A6FF1C26D6836000AB7B7E /* TweetNest (watchOS) Extension */;
+			targetProxy = 19A6FF3826D6836100AB7B7E /* PBXContainerItemProxy */;
+		};
+		19A6FF4326D6836100AB7B7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 19A6FF1426D6835F00AB7B7E /* TweetNest (watchOS) */;
+			targetProxy = 19A6FF4226D6836100AB7B7E /* PBXContainerItemProxy */;
+		};
+		19A6FF4A26D6836100AB7B7E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 19A6FF1426D6835F00AB7B7E /* TweetNest (watchOS) */;
+			targetProxy = 19A6FF4926D6836100AB7B7E /* PBXContainerItemProxy */;
+		};
 		19C5A29226BC1F3500AB1122 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 19C5A28526BC1F3500AB1122 /* TweetNestKit */;
@@ -1407,6 +1802,11 @@
 			isa = PBXTargetDependency;
 			target = 19C5A28526BC1F3500AB1122 /* TweetNestKit */;
 			targetProxy = 19C5A2C726BC1FFA00AB1122 /* PBXContainerItemProxy */;
+		};
+		19EABBEA26D6879E00D3B003 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 19C5A28526BC1F3500AB1122 /* TweetNestKit */;
+			targetProxy = 19EABBE926D6879E00D3B003 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1621,6 +2021,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -1652,6 +2053,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -1784,6 +2186,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -1814,6 +2217,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2048,6 +2452,220 @@
 			};
 			name = Release;
 		};
+		19A6FF4D26D6836100AB7B7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYA56G458A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IBSC_MODULE = TweetNest_Extension;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
+				PRODUCT_NAME = TweetNest;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Debug;
+		};
+		19A6FF4E26D6836100AB7B7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYA56G458A;
+				GENERATE_INFOPLIST_FILE = YES;
+				IBSC_MODULE = TweetNest_Extension;
+				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
+				PRODUCT_NAME = TweetNest;
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Release;
+		};
+		19A6FF5026D6836100AB7B7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_TEAM = SYA56G458A;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TweetNest/watchOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TweetNest Extension";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = TweetNest_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "TweetNest Extension";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Debug;
+		};
+		19A6FF5126D6836100AB7B7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_TEAM = SYA56G458A;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = TweetNest/watchOS/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "TweetNest Extension";
+				INFOPLIST_KEY_CLKComplicationPrincipalClass = TweetNest_Extension.ComplicationController;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
+				PRODUCT_NAME = "TweetNest Extension";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Release;
+		};
+		19A6FF5226D6836100AB7B7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYA56G458A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest Extension.appex/TweetNest Extension";
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Debug;
+		};
+		19A6FF5326D6836100AB7B7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYA56G458A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest Extension.appex/TweetNest Extension";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Release;
+		};
+		19A6FF5426D6836100AB7B7E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYA56G458A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = TweetNest;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Debug;
+		};
+		19A6FF5526D6836100AB7B7E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = SYA56G458A;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = TweetNest;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 8.0;
+			};
+			name = Release;
+		};
 		19C5A29E26BC1F3500AB1122 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2246,6 +2864,42 @@
 			buildConfigurations = (
 				19933D5F25E901F5006AB4C0 /* Debug */,
 				19933D6025E901F5006AB4C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19A6FF5626D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS) Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19A6FF5026D6836100AB7B7E /* Debug */,
+				19A6FF5126D6836100AB7B7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19A6FF5726D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNest (watchOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19A6FF4D26D6836100AB7B7E /* Debug */,
+				19A6FF4E26D6836100AB7B7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19A6FF5826D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNestTests (watchOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19A6FF5226D6836100AB7B7E /* Debug */,
+				19A6FF5326D6836100AB7B7E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		19A6FF5926D6836100AB7B7E /* Build configuration list for PBXNativeTarget "TweetNestUITests (watchOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19A6FF5426D6836100AB7B7E /* Debug */,
+				19A6FF5526D6836100AB7B7E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

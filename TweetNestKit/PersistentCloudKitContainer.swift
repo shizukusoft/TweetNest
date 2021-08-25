@@ -15,7 +15,9 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             .appendingPathComponent("Application Support/\(Bundle.module.name!)") ?? super.defaultDirectoryURL()
     }
 
+    #if os(iOS) || os(macOS)
     var usersSpotlightDelegate: UsersSpotlightDelegate?
+    #endif
 
     init(inMemory: Bool = false) {
         super.init(name: Bundle.module.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.module.url(forResource: Bundle.module.name!, withExtension: "momd")!)!)
@@ -44,10 +46,12 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
 
+            #if os(iOS) || os(macOS)
             if inMemory == false, storeDescription.type == NSSQLiteStoreType {
                 self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
                 self.usersSpotlightDelegate?.startSpotlightIndexing()
             }
+            #endif
         })
 
         viewContext.automaticallyMergesChangesFromParent = true

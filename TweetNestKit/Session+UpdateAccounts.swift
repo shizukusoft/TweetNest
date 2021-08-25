@@ -8,7 +8,6 @@
 import Foundation
 import CoreData
 import UnifiedLogging
-import BackgroundTasks
 import UserNotifications
 
 extension Session {
@@ -44,6 +43,8 @@ extension Session {
 }
 
 #if os(iOS)
+import BackgroundTasks
+
 extension Session {
     public static let updateAccountsBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).update-accounts"
 

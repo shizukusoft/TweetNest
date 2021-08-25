@@ -8,7 +8,10 @@
 import SwiftUI
 import TweetNestKit
 import UserNotifications
+
+#if canImport(CoreSpotlight)
 import CoreSpotlight
+#endif
 
 struct MainView: View {
     @Environment(\.managedObjectContext) private var viewContext
@@ -41,9 +44,12 @@ struct MainView: View {
                     self.showErrorAlert = true
                 }
             }
+            #if canImport(CoreSpotlight)
             .onContinueUserActivity(CSSearchableItemActionType, perform: handleSpotlightUserActivity(_:))
+            #endif
     }
 
+    #if canImport(CoreSpotlight)
     func handleSpotlightUserActivity(_ userActivity: NSUserActivity) {
         guard
             let identifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
@@ -56,6 +62,7 @@ struct MainView: View {
 
         self.user = user
     }
+    #endif
 }
 
 #if DEBUG

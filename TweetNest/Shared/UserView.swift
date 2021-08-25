@@ -58,9 +58,12 @@ extension UserView {
             }
         }
         
+        #if os(iOS) || os(macOS)
         @State var showBulkDeleteRecentTweets: Bool = false
         @State var showBulkDeleteAllTweets: Bool = false
+        #endif
         
+        #if os(iOS) || os(macOS)
         @ViewBuilder
         var deleteMenu: some View {
             Menu {
@@ -83,6 +86,7 @@ extension UserView {
                 }
             }
         }
+        #endif
 
         var body: some View {
             List {
@@ -107,9 +111,8 @@ extension UserView {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .navigationTitle(Text(verbatim: user.displayUsername ?? user.description))
-            #if os(iOS)
             .refreshable(action: refresh)
-            #endif
+            #if os(iOS) || os(macOS)
             .toolbar {
                 ToolbarItemGroup(placement: .automatic) {
                     if shouldCompactToolbar {
@@ -186,6 +189,7 @@ extension UserView {
                     }
                 }
             }
+            #endif
             #if os(iOS)
             .sheet(item: $safariSheetURL) {
                 SafariView(url: $0)
@@ -195,6 +199,7 @@ extension UserView {
             }
             #endif
             .alert(isPresented: $showErrorAlert, error: error)
+            #if os(iOS) || os(macOS)
             .sheet(isPresented: $showBulkDeleteRecentTweets) {
                 NavigationView {
                     if let account = account, account == user.account {
@@ -213,6 +218,7 @@ extension UserView {
                     }
                 }
             }
+            #endif
         }
         
         @Sendable

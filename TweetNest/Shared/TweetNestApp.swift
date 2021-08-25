@@ -13,6 +13,8 @@ import UnifiedLogging
 typealias ApplicationDelegateAdaptor = UIApplicationDelegateAdaptor
 #elseif os(macOS)
 typealias ApplicationDelegateAdaptor = NSApplicationDelegateAdaptor
+#elseif os(watchOS)
+typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 #endif
 
 @main

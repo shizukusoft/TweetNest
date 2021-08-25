@@ -5,6 +5,8 @@
 //  Created by Jaehong Kang on 2021/08/15.
 //
 
+#if os(iOS) || os(macOS)
+
 import SwiftUI
 import TweetNestKit
 import Twitter
@@ -72,3 +74,5 @@ struct DeleteBulkTweetsRecentTweetsView_Previews: PreviewProvider {
         DeleteBulkTweetsRecentTweetsView(account: .preview, isPresented: .constant(true))
     }
 }
+
+#endif
