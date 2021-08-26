@@ -21,11 +21,13 @@ typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
+    
+    let session = Session.shared
 
     var body: some Scene {
         WindowGroup {
             MainView()
-                .environment(\.managedObjectContext, Session.shared.container.viewContext)
+                .environment(\.managedObjectContext, session.container.viewContext)
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

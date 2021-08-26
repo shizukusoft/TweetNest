@@ -5,7 +5,7 @@
 //  Created by Jaehong Kang on 2021/08/06.
 //
 
-#if os(iOS) || os(macOS)
+#if canImport(CoreSpotlight)
 
 import CoreData
 import CoreSpotlight

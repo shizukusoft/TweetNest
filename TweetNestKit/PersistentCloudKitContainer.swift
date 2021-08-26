@@ -15,7 +15,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             .appendingPathComponent("Application Support/\(Bundle.module.name!)") ?? super.defaultDirectoryURL()
     }
 
-    #if os(iOS) || os(macOS)
+    #if canImport(CoreSpotlight)
     var usersSpotlightDelegate: UsersSpotlightDelegate?
     #endif
 
@@ -24,7 +24,9 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
 
         persistentStoreDescriptions.forEach { description in
             if inMemory == false {
+                description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
                 description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+                description.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
             } else {
                 description.url = URL(fileURLWithPath: "/dev/null")
             }
@@ -45,17 +47,19 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 */
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
-
-            #if os(iOS) || os(macOS)
-            if inMemory == false, storeDescription.type == NSSQLiteStoreType {
-                self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
-                self.usersSpotlightDelegate?.startSpotlightIndexing()
-            }
-            #endif
         })
 
         viewContext.automaticallyMergesChangesFromParent = true
         viewContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
+        
+        #if canImport(CoreSpotlight)
+        DispatchQueue.global(qos: .background).async {
+            if inMemory == false, let storeDescription = self.persistentStoreDescriptions.first(where: { $0.type == NSSQLiteStoreType }) {
+                self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
+                self.usersSpotlightDelegate!.startSpotlightIndexing()
+            }
+        }
+        #endif
     }
 
     public override func newBackgroundContext() -> NSManagedObjectContext {
