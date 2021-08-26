@@ -112,7 +112,7 @@
 		19C5A2B226BC1F8A00AB1122 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A426BC1F8900AB1122 /* User.swift */; };
 		19C5A2B326BC1F8A00AB1122 /* SecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */; };
 		19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A626BC1F8900AB1122 /* UserDetail+CoreDataProperties.swift */; };
-		19C5A2B526BC1F8A00AB1122 /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A726BC1F8900AB1122 /* PersistentCloudKitContainer.swift */; };
+		19C5A2B526BC1F8A00AB1122 /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */; };
 		19C5A2B626BC1F8A00AB1122 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */; };
 		19C5A2B726BC1F8A00AB1122 /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A926BC1F8900AB1122 /* SessionError.swift */; };
 		19C5A2BA26BC1F8A00AB1122 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */; };
@@ -440,7 +440,7 @@
 		19C5A2A426BC1F8900AB1122 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
 		19C5A2A626BC1F8900AB1122 /* UserDetail+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDetail+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19C5A2A726BC1F8900AB1122 /* PersistentCloudKitContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentCloudKitContainer.swift; sourceTree = "<group>"; };
+		19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
 		19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19C5A2A926BC1F8900AB1122 /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
 		19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -949,7 +949,7 @@
 		19C5A28726BC1F3500AB1122 /* TweetNestKit */ = {
 			isa = PBXGroup;
 			children = (
-				19C5A2A726BC1F8900AB1122 /* PersistentCloudKitContainer.swift */,
+				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
 				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
 				19C5A2AF26BC1F8A00AB1122 /* Session.swift */,
 				19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */,
@@ -1723,7 +1723,7 @@
 				19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */,
 				19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */,
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
-				19C5A2B526BC1F8A00AB1122 /* PersistentCloudKitContainer.swift in Sources */,
+				19C5A2B526BC1F8A00AB1122 /* PersistentContainer.swift in Sources */,
 				19861E3B26C8F82400073431 /* Session+TweetNestKit.swift in Sources */,
 				19C5A2D626BC34A600AB1122 /* UsersSpotlightDelegate.swift in Sources */,
 				1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */,

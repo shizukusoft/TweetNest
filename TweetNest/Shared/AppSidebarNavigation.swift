@@ -203,7 +203,7 @@ struct AppSidebarNavigation: View {
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
         AppSidebarNavigation()
-            .environment(\.managedObjectContext, Session.preview.container.viewContext)
+            .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }
 }
 #endif

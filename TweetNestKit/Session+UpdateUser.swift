@@ -28,7 +28,7 @@ extension Session {
             }
 
             return try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-                let context = container.newBackgroundContext()
+                let context = persistentContainer.newBackgroundContext()
                 context.undoManager = nil
 
                 for try await chunkedUsers in chunkedUsersTaskGroup {

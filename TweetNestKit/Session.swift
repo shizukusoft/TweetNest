@@ -30,9 +30,9 @@ public actor Session {
         }
     }
 
-    public nonisolated let container: PersistentContainer
+    public nonisolated let persistentContainer: PersistentContainer
     private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
-    private nonisolated lazy var managedObjectContextForChanges = container.newBackgroundContext()
+    private nonisolated lazy var managedObjectContextForChanges = persistentContainer.newBackgroundContext()
     private nonisolated lazy var managedObjectContextDidMergeChanges = NotificationCenter.default
         .publisher(for: NSManagedObjectContext.didMergeChangesObjectIDsNotification, object: managedObjectContextForChanges)
         .sink { [weak self] notification in
@@ -46,7 +46,7 @@ public actor Session {
     
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
         _twitterAPIConfiguration = .uninitialized { try await twitterAPIConfiguration() }
-        container = PersistentContainer(inMemory: inMemory)
+        persistentContainer = PersistentContainer(inMemory: inMemory)
     }
     
     public convenience init(inMemory: Bool = false) {
@@ -171,7 +171,7 @@ extension Session {
     }
 
     private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws -> NSManagedObjectID {
-        let context = container.newBackgroundContext()
+        let context = persistentContainer.newBackgroundContext()
 
         return try await context.perform(schedule: .enqueued) {
             let account = Account(context: context)
@@ -189,7 +189,7 @@ extension Session {
 
 extension Session {
     private nonisolated func credential(for accountObjectID: NSManagedObjectID) async throws -> Twitter.Session.Credential? {
-        let context = container.newBackgroundContext()
+        let context = persistentContainer.newBackgroundContext()
         
         return await context.perform(schedule: .enqueued) {
             guard

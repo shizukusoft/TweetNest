@@ -13,7 +13,7 @@ import OrderedCollections
 extension Session {
     @discardableResult
     public nonisolated func updateAccount(_ accountObjectID: NSManagedObjectID) async throws -> Bool {
-        let context = self.container.newBackgroundContext()
+        let context = self.persistentContainer.newBackgroundContext()
         context.undoManager = nil
 
         let updateStartDate = Date()

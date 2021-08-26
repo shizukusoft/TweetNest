@@ -11,7 +11,7 @@ import TweetNestKit
 extension TweetNestKit.Session {
     public static var preview: Session = {
         let result = Session(inMemory: true)
-        let viewContext = result.container.viewContext
+        let viewContext = result.persistentContainer.viewContext
         for _ in 0..<3 {
             let newAccount = Account(context: viewContext)
             newAccount.creationDate = Date()

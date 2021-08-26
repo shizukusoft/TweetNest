@@ -27,7 +27,7 @@ struct TweetNestApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
-                .environment(\.managedObjectContext, session.container.viewContext)
+                .environment(\.managedObjectContext, session.persistentContainer.viewContext)
         }
         .onChange(of: scenePhase) { phase in
             switch phase {

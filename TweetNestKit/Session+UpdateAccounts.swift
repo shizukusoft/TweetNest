@@ -13,7 +13,7 @@ import UserNotifications
 extension Session {
     @discardableResult
     public nonisolated func updateAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
-        let context = container.newBackgroundContext()
+        let context = persistentContainer.newBackgroundContext()
 
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
@@ -78,7 +78,7 @@ extension Session {
                 }
 
                 do {
-                    let context = self.container.newBackgroundContext()
+                    let context = self.persistentContainer.newBackgroundContext()
 
                     let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
                         let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
