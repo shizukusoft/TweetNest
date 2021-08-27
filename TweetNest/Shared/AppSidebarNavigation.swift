@@ -50,6 +50,30 @@ struct AppSidebarNavigation: View {
     private var accounts: FetchedResults<Account>
 
     @Environment(\.refresh) private var refreshAction
+    
+    @ViewBuilder
+    var persistentContainerEventsView: some View {
+        ForEach(persistentContainerEvents, id: \.identifier) { event in
+            HStack(spacing: 8) {
+                ProgressView()
+                
+                Group {
+                    switch event.type {
+                    case .setup:
+                        Text("Starting...")
+                    case .import:
+                        Text("Importing...")
+                    case .export:
+                        Text("Exporting...")
+                    @unknown default:
+                        Text("Syncing...")
+                    }
+                }
+                .font(.system(.callout))
+                .foregroundColor(.gray)
+            }
+        }
+    }
 
     var body: some View {
         NavigationView {
@@ -67,30 +91,10 @@ struct AppSidebarNavigation: View {
                         AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
                     }
                 }
-            }
-            .safeAreaInset(edge: .bottom, spacing: 0) {
-                VStack {
-                    ForEach(persistentContainerEvents, id: \.identifier) { event in
-                        HStack(spacing: 8) {
-                            ProgressView()
-                            
-                            Group {
-                                switch event.type {
-                                case .setup:
-                                    Text("Starting...")
-                                case .import:
-                                    Text("Importing...")
-                                case .export:
-                                    Text("Exporting...")
-                                @unknown default:
-                                    Text("Syncing...")
-                                }
-                            }
-                            .font(.system(.callout))
-                            .foregroundColor(.gray)
-                        }
-                    }
-                }
+                
+                #if os(watchOS)
+                persistentContainerEventsView
+                #endif
             }
             .task {
                 await session.$persistentContainerEvents
@@ -145,6 +149,14 @@ struct AppSidebarNavigation: View {
                     }
                     .disabled(isRefreshing)
                     #endif
+                }
+                #endif
+                
+                #if os(iOS) || os(macOS)
+                ToolbarItemGroup(placement: .status) {
+                    VStack {
+                        persistentContainerEventsView
+                    }
                 }
                 #endif
             }
