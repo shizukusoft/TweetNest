@@ -8,6 +8,7 @@
 import CoreData
 import CloudKit
 import AuthenticationServices
+import OrderedCollections
 import Twitter
 
 public actor Session {
@@ -29,9 +30,22 @@ public actor Session {
             }
         }
     }
+    
+    private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
 
     public nonisolated let persistentContainer: PersistentContainer
-    private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
+    
+    @Published
+    public private(set) var persistentContainerEvents: OrderedDictionary<UUID, PersistentContainer.Event> = [:]
+    private nonisolated lazy var persistentContainerEventDidChanges = NotificationCenter.default
+        .publisher(for: PersistentContainer.eventChangedNotification, object: persistentContainer)
+        .compactMap { $0.userInfo?[PersistentContainer.eventNotificationUserInfoKey] as? PersistentContainer.Event }
+        .sink { [weak self] event in
+            Task.detached { [self] in
+                await self?.addPersistentContainerEvent(event)
+            }
+        }
+    
     private nonisolated lazy var managedObjectContextForChanges = persistentContainer.newBackgroundContext()
     private nonisolated lazy var managedObjectContextDidMergeChanges = NotificationCenter.default
         .publisher(for: NSManagedObjectContext.didMergeChangesObjectIDsNotification, object: managedObjectContextForChanges)
@@ -53,18 +67,27 @@ public actor Session {
         self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
         
         _ = managedObjectContextDidMergeChanges
+        _ = persistentContainerEventDidChanges
     }
 
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
         self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
         
         _ = managedObjectContextDidMergeChanges
+        _ = persistentContainerEventDidChanges
     }
 
     public convenience init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { twitterAPIConfiguration }, inMemory: inMemory)
         
         _ = managedObjectContextDidMergeChanges
+        _ = persistentContainerEventDidChanges
+    }
+}
+
+extension Session {
+    private func addPersistentContainerEvent(_ event: PersistentContainer.Event) {
+        persistentContainerEvents.updateValue(event, forKey: event.identifier)
     }
 }
 

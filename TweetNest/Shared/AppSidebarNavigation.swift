@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 import AuthenticationServices
 import TweetNestKit
 import UnifiedLogging
@@ -19,6 +20,12 @@ struct AppSidebarNavigation: View {
     }
 
     @State private var navigationItemSelection: NavigationItem? = nil
+    
+    @Environment(\.session) private var session: Session
+
+    @State private var disposables = Set<AnyCancellable>()
+    
+    @State private var persistentContainerEvents: [PersistentContainer.Event] = []
 
     #if os(iOS)
     @State private var showSettings: Bool = false
@@ -60,6 +67,39 @@ struct AppSidebarNavigation: View {
                         AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
                     }
                 }
+            }
+            .safeAreaInset(edge: .bottom, spacing: 0) {
+                VStack {
+                    ForEach(persistentContainerEvents, id: \.identifier) { event in
+                        HStack(spacing: 8) {
+                            ProgressView()
+                            
+                            Group {
+                                switch event.type {
+                                case .setup:
+                                    Text("Starting...")
+                                case .import:
+                                    Text("Importing...")
+                                case .export:
+                                    Text("Exporting...")
+                                @unknown default:
+                                    Text("Syncing...")
+                                }
+                            }
+                            .font(.system(.callout))
+                            .foregroundColor(.gray)
+                        }
+                    }
+                }
+            }
+            .task {
+                await session.$persistentContainerEvents
+                    .sink {
+                        persistentContainerEvents = $0.lazy
+                            .map { $0.value }
+                            .filter { $0.endDate == nil }
+                    }
+                    .store(in: &disposables)
             }
             #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
