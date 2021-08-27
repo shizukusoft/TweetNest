@@ -11,11 +11,15 @@ import TweetNestKit
 struct AppSidebarAccountRows: View {
     @ObservedObject var account: Account
     @Binding var navigationItemSelection: AppSidebarNavigation.NavigationItem?
-
+    
     var body: some View {
         Group {
             NavigationLink(
-                Label(Text("Account"), systemImage: "person"),
+                Label {
+                    Text("Account")
+                } icon: {
+                    Image(systemName: "person")
+                },
                 tag: .profile(account),
                 selection: $navigationItemSelection)
             {
@@ -28,7 +32,11 @@ struct AppSidebarAccountRows: View {
 
             if let user = account.user {
                 NavigationLink(
-                    Label(Text("Followings History"), systemImage: "person.2"),
+                    Label {
+                        Text("Followings History")
+                    } icon: {
+                        Image(systemName: "person.2")
+                    },
                     tag: .followings(account),
                     selection: $navigationItemSelection)
                 {
@@ -41,7 +49,11 @@ struct AppSidebarAccountRows: View {
                 .accessibilityAddTraits(.isButton)
 
                 NavigationLink(
-                    Label(Text("Followers History"), systemImage: "person.2"),
+                    Label {
+                        Text("Followers History")
+                    } icon: {
+                        Image(systemName: "person.2")
+                    },
                     tag: .followers(account),
                     selection: $navigationItemSelection)
                 {
@@ -55,7 +67,11 @@ struct AppSidebarAccountRows: View {
 
                 if account.preferences.fetchBlockingUsers {
                     NavigationLink(
-                        Label(Text("Blocks History"), systemImage: "nosign"),
+                        Label {
+                            Text("Blocks History")
+                        } icon: {
+                            Image(systemName: "nosign")
+                        },
                         tag: .blockings(account),
                         selection: $navigationItemSelection)
                     {
@@ -69,6 +85,9 @@ struct AppSidebarAccountRows: View {
                 }
             }
         }
+        #if os(watchOS)
+        .labelStyle(TweetNestWatchLabelStyle(iconSize: 32))
+        #endif
     }
 }
 

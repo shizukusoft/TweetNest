@@ -51,6 +51,9 @@ struct UsersDiffListSection: View {
                     }
                 }
             }
+            #if os(watchOS)
+            .labelStyle(TweetNestWatchLabelStyle())
+            #endif
         }
     }
 }

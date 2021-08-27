@@ -5,7 +5,6 @@
 //  Created by Jaehong Kang on 2021/02/24.
 //
 
-#if os(iOS) || os(macOS)
 import SwiftUI
 import AuthenticationServices
 
@@ -50,8 +49,6 @@ extension WebAuthenticationView: NSViewRepresentable {
     }
 
     func makeNSView(context: Context) -> View {
-        webAuthenticationSession.prefersEphemeralWebBrowserSession = true
-
         let view = View(authenticationSession: webAuthenticationSession)
 
         return view
@@ -98,8 +95,6 @@ extension WebAuthenticationView: UIViewRepresentable {
     }
 
     func makeUIView(context: Context) -> View {
-        webAuthenticationSession.prefersEphemeralWebBrowserSession = true
-
         let view = View(authenticationSession: webAuthenticationSession)
 
         return view
@@ -113,12 +108,23 @@ extension WebAuthenticationView: UIViewRepresentable {
         uiView.cancel()
     }
 }
+#else
+extension WebAuthenticationView: View {
+    var body: some View {
+        Rectangle()
+            .foregroundColor(.clear)
+            .frame(width: 0, height: 0)
+            .onAppear {
+                webAuthenticationSession.start()
+            }
+    }
+}
 #endif
 
+#if os(macOS) || os(iOS)
 extension WebAuthenticationView.View: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return window!
     }
 }
-
 #endif

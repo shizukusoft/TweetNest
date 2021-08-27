@@ -31,10 +31,8 @@ struct AppSidebarNavigation: View {
     @State private var showSettings: Bool = false
     #endif
 
-    #if os(iOS) || os(macOS)
     @State private var webAuthenticationSession: ASWebAuthenticationSession? = nil
     @State private var isAddingAccount: Bool = false
-    #endif
 
     @State private var isRefreshing: Bool = false
 
@@ -53,11 +51,14 @@ struct AppSidebarNavigation: View {
     
     @ViewBuilder
     var persistentContainerEventView: some View {
-        HStack {
-            if let event = persistentContainerEvents.first(where: { $0.endDate == nil }) {
+        if let event = persistentContainerEvents.first(where: { $0.endDate == nil }) {
+            HStack {
                 Spacer()
                 HStack(spacing: 8) {
                     ProgressView()
+                        #if os(watchOS)
+                        .frame(width: 29.5, height: 29.5, alignment: .center)
+                        #endif
                     
                     Group {
                         switch event.type {
@@ -81,24 +82,34 @@ struct AppSidebarNavigation: View {
 
     var body: some View {
         NavigationView {
-            List {
-                ForEach(accounts) { account in
-                    Section(
-                        Label(
-                            Text(verbatim: account.user?.displayUsername ?? account.objectID.description),
-                            icon: {
+            ZStack {
+                List {
+                    ForEach(accounts) { account in
+                        Section {
+                            AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
+                        } header: {
+                            Label {
+                                Text(verbatim: account.user?.displayUsername ?? account.objectID.description)
+                                    #if os(watchOS)
+                                    .padding([.top], 4)
+                                    .padding([.bottom], 2)
+                                    #endif
+                            } icon: {
                                 ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
-                                .frame(width: 24, height: 24)
+                                    #if os(watchOS)
+                                    .frame(width: 16, height: 16)
+                                    #else
+                                    .frame(width: 24, height: 24)
+                                    #endif
                             }
-                        )
-                    ) {
-                        AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
+                        }
                     }
                 }
                 
-                #if os(watchOS)
-                persistentContainerEventView
-                #endif
+                if let webAuthenticationSession = webAuthenticationSession {
+                    WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
+                        .zIndex(-1)
+                }
             }
             .task {
                 await session.$persistentContainerEvents
@@ -127,22 +138,22 @@ struct AppSidebarNavigation: View {
                     }
                 }
                 #endif
-
-                #if os(iOS) || os(macOS)
+                
                 ToolbarItemGroup(placement: .primaryAction) {
-                    Button(action: addAccount) {
-                        ZStack {
+                    VStack {
+                        #if os(watchOS)
+                        persistentContainerEventView
+                        #endif
+                        
+                        Button(action: addAccount) {
                             Label(Text("Add Account"), systemImage: "plus")
-
-                            if let webAuthenticationSession = webAuthenticationSession {
-                                WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
-                                    .zIndex(1.0)
-                            }
                         }
+                        .disabled(isAddingAccount)
                     }
-                    .disabled(isAddingAccount)
-
-                    #if !os(iOS)
+                }
+                
+                #if os(macOS)
+                ToolbarItemGroup(placement: .automatic) {
                     Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
                         if let refresh = refreshAction {
                             Task {
@@ -151,11 +162,10 @@ struct AppSidebarNavigation: View {
                         }
                     }
                     .disabled(isRefreshing)
-                    #endif
                 }
                 #endif
                 
-                #if os(iOS) || os(macOS)
+                #if os(macOS) || os(iOS)
                 ToolbarItemGroup(placement: .status) {
                     persistentContainerEventView
                 }
@@ -179,8 +189,7 @@ struct AppSidebarNavigation: View {
             #endif
         }
     }
-    
-    #if os(iOS) || os(macOS)
+
     private func addAccount() {
         withAnimation {
             isAddingAccount = true
@@ -196,6 +205,8 @@ struct AppSidebarNavigation: View {
                 }
                 
                 try await session.authorizeNewAccount { webAuthenticationSession in
+                    webAuthenticationSession.prefersEphemeralWebBrowserSession = true
+                    
                     self.webAuthenticationSession = webAuthenticationSession
                 }
             } catch ASWebAuthenticationSessionError.canceledLogin {
@@ -209,7 +220,6 @@ struct AppSidebarNavigation: View {
             }
         }
     }
-    #endif
 
     @Sendable
     private func refresh() async {

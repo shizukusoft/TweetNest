@@ -20,22 +20,23 @@ struct UserRow: View {
                 UserView(user: user)
                     .environment(\.account, account)
             } label: {
-                HStack(spacing: 8) {
+                Label {
+                    #if os(watchOS)
+                    VStack(alignment: .leading, spacing: nil) {
+                        userLabelTitle(latestUserDetail: latestUserDetail, user: user)
+                    }
+                    #else
+                    HStack(spacing: nil) {
+                        userLabelTitle(latestUserDetail: latestUserDetail, user: user)
+                    }
+                    #endif
+                } icon: {
                     ProfileImage(userDetail: latestUserDetail)
                         .frame(width: 24, height: 24)
-
-                    HStack(spacing: 4) {
-                        Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description)
-                            .lineLimit(1)
-
-                        if let username = latestUserDetail.username {
-                            Text(verbatim: "@\(username)")
-                                .lineLimit(1)
-                                .foregroundColor(Color.gray)
-                                .layoutPriority(1)
-                        }
-                    }
                 }
+                #if os(watchOS)
+                .labelStyle(.titleOnly)
+                #endif
             }
             .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description))
         } else {
@@ -69,6 +70,19 @@ struct UserRow: View {
             fetchRequest: userDetailsFetchRequest,
             animation: .default
         )
+    }
+    
+    @ViewBuilder
+    func userLabelTitle(latestUserDetail: UserDetail, user: User) -> some View {
+        Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description)
+            .lineLimit(1)
+
+        if let username = latestUserDetail.username {
+            Text(verbatim: "@\(username)")
+                .lineLimit(1)
+                .layoutPriority(1)
+                .foregroundColor(Color.gray)
+        }
     }
 }
 
