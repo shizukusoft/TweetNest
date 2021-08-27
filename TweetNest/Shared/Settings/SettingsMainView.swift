@@ -27,7 +27,7 @@ struct SettingsMainView: View {
             }
             .tag(Tabs.accounts)
         }
-        #elseif os(iOS)
+        #else
         Form {
             Section {
                 SettingsAccountItems()
@@ -39,26 +39,34 @@ struct SettingsMainView: View {
                 let marketingVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 let versionString = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String).flatMap { String("(\($0))") }
                 
-                HStack {
+                TweetNestStack {
                     Text("App Version")
+                    #if !os(watchOS)
                     Spacer()
+                    #endif
                     Text(verbatim: [marketingVersionString, versionString].compactMap { $0 }.joined(separator: " "))
+                        .foregroundColor(.secondary)
                 }
             } header: {
                 Text("About")
             }
             
+            #if os(iOS)
             Section {
                 Link(destination: URL(string: UIApplication.openSettingsURLString)!) {
                     Text("Additional Settings")
                 }
             }
+            #endif
         }
+        .navigationTitle(Text("Settings"))
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             EditButton()
         }
         .environment(\.editMode, $editMode)
+        #endif
         #endif
     }
 }

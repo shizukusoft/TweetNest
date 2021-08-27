@@ -55,6 +55,18 @@ struct AppSidebarNavigation: View {
     @Environment(\.refresh) private var refreshAction
     
     @ViewBuilder
+    var showSettingsLabel: some View {
+        Label {
+            Text("Settings")
+        } icon: {
+            Image(systemName: "gearshape")
+        }
+        #if os(watchOS)
+        .labelStyle(TweetNestWatchLabelStyle(iconSize: 32))
+        #endif
+    }
+    
+    @ViewBuilder
     var addAccountButton: some View {
         Button(action: addAccount) {
             Label(Text("Add Account"), systemImage: "plus")
@@ -86,6 +98,16 @@ struct AppSidebarNavigation: View {
                             }
                         }
                     }
+                    
+                    #if os(watchOS)
+                    Section {
+                        NavigationLink {
+                            SettingsMainView()
+                        } label: {
+                            showSettingsLabel
+                        }
+                    }
+                    #endif
                 }
                 
                 if let webAuthenticationSession = webAuthenticationSession {
@@ -112,11 +134,7 @@ struct AppSidebarNavigation: View {
                     Button {
                         showSettings.toggle()
                     } label: {
-                        Label {
-                            Text("Settings")
-                        } icon: {
-                            Image(systemName: "gearshape")
-                        }
+                        showSettingsLabel
                     }
                 }
                 #endif
@@ -169,7 +187,6 @@ struct AppSidebarNavigation: View {
                                 }
                             }
                         }
-                        .navigationTitle(Text("Settings"))
                 }
             }
             #endif
