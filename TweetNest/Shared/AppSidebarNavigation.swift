@@ -52,25 +52,29 @@ struct AppSidebarNavigation: View {
     @Environment(\.refresh) private var refreshAction
     
     @ViewBuilder
-    var persistentContainerEventsView: some View {
-        ForEach(persistentContainerEvents, id: \.identifier) { event in
-            HStack(spacing: 8) {
-                ProgressView()
-                
-                Group {
-                    switch event.type {
-                    case .setup:
-                        Text("Starting...")
-                    case .import:
-                        Text("Importing...")
-                    case .export:
-                        Text("Exporting...")
-                    @unknown default:
-                        Text("Syncing...")
+    var persistentContainerEventView: some View {
+        HStack {
+            if let event = persistentContainerEvents.first(where: { $0.endDate == nil }) {
+                Spacer()
+                HStack(spacing: 8) {
+                    ProgressView()
+                    
+                    Group {
+                        switch event.type {
+                        case .setup:
+                            Text("Starting...")
+                        case .import:
+                            Text("Importing...")
+                        case .export:
+                            Text("Exporting...")
+                        @unknown default:
+                            Text("Syncing...")
+                        }
                     }
+                    .font(.system(.callout))
+                    .foregroundColor(.gray)
                 }
-                .font(.system(.callout))
-                .foregroundColor(.gray)
+                Spacer()
             }
         }
     }
@@ -93,7 +97,7 @@ struct AppSidebarNavigation: View {
                 }
                 
                 #if os(watchOS)
-                persistentContainerEventsView
+                persistentContainerEventView
                 #endif
             }
             .task {
@@ -101,7 +105,6 @@ struct AppSidebarNavigation: View {
                     .sink {
                         persistentContainerEvents = $0.lazy
                             .map { $0.value }
-                            .filter { $0.endDate == nil }
                     }
                     .store(in: &disposables)
             }
@@ -154,9 +157,7 @@ struct AppSidebarNavigation: View {
                 
                 #if os(iOS) || os(macOS)
                 ToolbarItemGroup(placement: .status) {
-                    VStack {
-                        persistentContainerEventsView
-                    }
+                    persistentContainerEventView
                 }
                 #endif
             }
