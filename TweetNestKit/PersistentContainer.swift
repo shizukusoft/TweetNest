@@ -53,11 +53,9 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         viewContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
         
         #if canImport(CoreSpotlight)
-        DispatchQueue.global(qos: .background).async {
-            if inMemory == false, let storeDescription = self.persistentStoreDescriptions.first(where: { $0.type == NSSQLiteStoreType }) {
-                self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
-                self.usersSpotlightDelegate!.startSpotlightIndexing()
-            }
+        if inMemory == false, let storeDescription = self.persistentStoreDescriptions.first(where: { $0.type == NSSQLiteStoreType }) {
+            self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
+            self.usersSpotlightDelegate!.startSpotlightIndexing()
         }
         #endif
     }
