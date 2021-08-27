@@ -26,6 +26,11 @@ struct AppSidebarNavigation: View {
     @State private var disposables = Set<AnyCancellable>()
     
     @State private var persistentContainerEvents: [PersistentContainer.Event] = []
+    private var inProgressPersistentContainerEvent: PersistentContainer.Event? {
+        persistentContainerEvents.first { $0.endDate == nil }
+    }
+    
+    @State private var something: String? = nil
 
     #if os(iOS)
     @State private var showSettings: Bool = false
@@ -50,34 +55,11 @@ struct AppSidebarNavigation: View {
     @Environment(\.refresh) private var refreshAction
     
     @ViewBuilder
-    var persistentContainerEventView: some View {
-        if let event = persistentContainerEvents.first(where: { $0.endDate == nil }) {
-            HStack {
-                Spacer()
-                HStack(spacing: 8) {
-                    ProgressView()
-                        #if os(watchOS)
-                        .frame(width: 29.5, height: 29.5, alignment: .center)
-                        #endif
-                    
-                    Group {
-                        switch event.type {
-                        case .setup:
-                            Text("Starting...")
-                        case .import:
-                            Text("Importing...")
-                        case .export:
-                            Text("Exporting...")
-                        @unknown default:
-                            Text("Syncing...")
-                        }
-                    }
-                    .font(.system(.callout))
-                    .foregroundColor(.gray)
-                }
-                Spacer()
-            }
+    var addAccountButton: some View {
+        Button(action: addAccount) {
+            Label(Text("Add Account"), systemImage: "plus")
         }
+        .disabled(isAddingAccount)
     }
 
     var body: some View {
@@ -140,16 +122,18 @@ struct AppSidebarNavigation: View {
                 #endif
                 
                 ToolbarItemGroup(placement: .primaryAction) {
-                    VStack {
-                        #if os(watchOS)
-                        persistentContainerEventView
-                        #endif
-                        
-                        Button(action: addAccount) {
-                            Label(Text("Add Account"), systemImage: "plus")
+                    #if os(watchOS)
+                    if let inProgressPersistentContainerEvent = inProgressPersistentContainerEvent {
+                        VStack {
+                            persistentContainerEventView(for: inProgressPersistentContainerEvent)
+                            addAccountButton
                         }
-                        .disabled(isAddingAccount)
+                    } else {
+                        addAccountButton
                     }
+                    #else
+                    addAccountButton
+                    #endif
                 }
                 
                 #if os(macOS)
@@ -167,7 +151,9 @@ struct AppSidebarNavigation: View {
                 
                 #if os(macOS) || os(iOS)
                 ToolbarItemGroup(placement: .status) {
-                    persistentContainerEventView
+                    if let inProgressPersistentContainerEvent = inProgressPersistentContainerEvent {
+                        persistentContainerEventView(for: inProgressPersistentContainerEvent)
+                    }
                 }
                 #endif
             }
@@ -187,6 +173,35 @@ struct AppSidebarNavigation: View {
                 }
             }
             #endif
+        }
+    }
+
+    @ViewBuilder
+    func persistentContainerEventView(for event: PersistentContainer.Event) -> some View {
+        HStack {
+            Spacer()
+            HStack(spacing: 8) {
+                ProgressView()
+                    #if os(watchOS)
+                    .frame(width: 29.5, height: 29.5, alignment: .center)
+                    #endif
+                
+                Group {
+                    switch event.type {
+                    case .setup:
+                        Text("Starting...")
+                    case .import:
+                        Text("Importing...")
+                    case .export:
+                        Text("Exporting...")
+                    @unknown default:
+                        Text("Syncing...")
+                    }
+                }
+                .font(.system(.callout))
+                .foregroundColor(.gray)
+            }
+            Spacer()
         }
     }
 
