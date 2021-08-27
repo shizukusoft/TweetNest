@@ -37,7 +37,7 @@ struct TweetNestApp: App {
             case .background:
                 #if os(iOS)
                 do {
-                    try Session.shared.scheduleUpdateAccountsBackgroundTask()
+                    try session.scheduleUpdateAccountsBackgroundTask()
                 } catch {
                     Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
                 }

@@ -195,7 +195,7 @@ struct AppSidebarNavigation: View {
                     }
                 }
                 
-                try await Session.shared.authorizeNewAccount { webAuthenticationSession in
+                try await session.authorizeNewAccount { webAuthenticationSession in
                     self.webAuthenticationSession = webAuthenticationSession
                 }
             } catch ASWebAuthenticationSessionError.canceledLogin {
@@ -239,7 +239,7 @@ struct AppSidebarNavigation: View {
         }
 
         do {
-            let hasChanges = try await Session.shared.updateAccounts()
+            let hasChanges = try await session.updateAccounts()
             
             for hasChanges in hasChanges {
                 _ = try hasChanges.1.get()
@@ -256,6 +256,7 @@ struct AppSidebarNavigation: View {
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
         AppSidebarNavigation()
+            .environment(\.session, Session.preview)
             .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }
 }
