@@ -25,9 +25,9 @@ struct AppSidebarNavigation: View {
 
     @State private var disposables = Set<AnyCancellable>()
     
-    @State private var persistentContainerEvents: [PersistentContainer.Event] = []
-    private var inProgressPersistentContainerEvent: PersistentContainer.Event? {
-        persistentContainerEvents.first { $0.endDate == nil }
+    @State private var persistentContainerCloudKitEvents: [PersistentContainer.CloudKitEvent] = []
+    private var inProgressPersistentContainerCloudKitEvent: PersistentContainer.CloudKitEvent? {
+        persistentContainerCloudKitEvents.first { $0.endDate == nil }
     }
     
     @State private var something: String? = nil
@@ -116,12 +116,14 @@ struct AppSidebarNavigation: View {
                 }
             }
             .task {
-                await session.$persistentContainerEvents
-                    .sink {
-                        persistentContainerEvents = $0.lazy
-                            .map { $0.value }
-                    }
+                await session.$persistentContainerCloudKitEvents
+                    .map { $0.map { $0.value } }
+                    .receive(on: DispatchQueue.main)
+                    .assign(to: \.persistentContainerCloudKitEvents, on: self)
                     .store(in: &disposables)
+            }
+            .onChange(of: persistentContainerCloudKitEvents) {
+                debugPrint($0)
             }
             #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
@@ -141,9 +143,9 @@ struct AppSidebarNavigation: View {
                 
                 ToolbarItemGroup(placement: .primaryAction) {
                     #if os(watchOS)
-                    if let inProgressPersistentContainerEvent = inProgressPersistentContainerEvent {
+                    if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
                         VStack {
-                            persistentContainerEventView(for: inProgressPersistentContainerEvent)
+                            persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
                             addAccountButton
                         }
                     } else {
@@ -169,8 +171,8 @@ struct AppSidebarNavigation: View {
                 
                 #if os(macOS) || os(iOS)
                 ToolbarItemGroup(placement: .status) {
-                    if let inProgressPersistentContainerEvent = inProgressPersistentContainerEvent {
-                        persistentContainerEventView(for: inProgressPersistentContainerEvent)
+                    if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
+                        persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
                     }
                 }
                 #endif
@@ -194,31 +196,28 @@ struct AppSidebarNavigation: View {
     }
 
     @ViewBuilder
-    func persistentContainerEventView(for event: PersistentContainer.Event) -> some View {
-        HStack {
-            Spacer()
-            HStack(spacing: 8) {
-                ProgressView()
-                    #if os(watchOS)
-                    .frame(width: 29.5, height: 29.5, alignment: .center)
-                    #endif
-                
-                Group {
-                    switch event.type {
-                    case .setup:
-                        Text("Starting...")
-                    case .import:
-                        Text("Importing...")
-                    case .export:
-                        Text("Exporting...")
-                    @unknown default:
-                        Text("Syncing...")
-                    }
+    func persistentContainerCloudKitEventView(for event: PersistentContainer.CloudKitEvent) -> some View {
+        HStack(spacing: 4) {
+            ProgressView()
+                #if os(watchOS)
+                .frame(width: 29.5, height: 29.5, alignment: .center)
+                #endif
+            
+            Group {
+                switch event.type {
+                case .setup:
+                    Text("Preparing...")
+                case .import:
+                    Text("Importing...")
+                case .export:
+                    Text("Exporting...")
+                case .unknown:
+                    Text("Syncing...")
                 }
-                .font(.system(.callout))
-                .foregroundColor(.gray)
             }
-            Spacer()
+            .font(.system(.callout))
+            .fixedSize()
+            .foregroundColor(.gray)
         }
     }
 

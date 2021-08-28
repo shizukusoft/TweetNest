@@ -36,13 +36,13 @@ public actor Session {
     public nonisolated let persistentContainer: PersistentContainer
     
     @Published
-    public private(set) var persistentContainerEvents: OrderedDictionary<UUID, PersistentContainer.Event> = [:]
+    public private(set) var persistentContainerCloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
     private nonisolated lazy var persistentContainerEventDidChanges = NotificationCenter.default
-        .publisher(for: PersistentContainer.eventChangedNotification, object: persistentContainer)
-        .compactMap { $0.userInfo?[PersistentContainer.eventNotificationUserInfoKey] as? PersistentContainer.Event }
+        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: persistentContainer)
+        .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
         .sink { [weak self] event in
             Task.detached { [self] in
-                await self?.addPersistentContainerEvent(event)
+                await self?.updatePersistentContainerCloudKitEvent(PersistentContainer.CloudKitEvent(event))
             }
         }
     
@@ -86,8 +86,8 @@ public actor Session {
 }
 
 extension Session {
-    private func addPersistentContainerEvent(_ event: PersistentContainer.Event) {
-        persistentContainerEvents.updateValue(event, forKey: event.identifier)
+    private func updatePersistentContainerCloudKitEvent(_ event: PersistentContainer.CloudKitEvent) {
+        persistentContainerCloudKitEvents[event.identifier] = event
     }
 }
 
