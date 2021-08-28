@@ -10,13 +10,13 @@ import CoreData
 import UserNotifications
 import UnifiedLogging
 
-#if canImport(BackgroundTasks)
+#if canImport(BackgroundTasks) && !os(macOS)
 import BackgroundTasks
 #elseif canImport(WatchKit)
 import WatchKit
 #endif
 
-#if canImport(BackgroundTasks) || canImport(WatchKit)
+#if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
 
 extension Session {
     static var preferredBackgroundRefreshDate: Date {
@@ -148,7 +148,7 @@ extension Session {
 }
 #endif
 
-#if canImport(BackgroundTasks)
+#if (canImport(BackgroundTasks) && !os(macOS))
 extension Session {
     nonisolated func handleBackgroundRefresh(_ backgroundTask: BGTask) {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")

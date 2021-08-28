@@ -32,7 +32,7 @@ struct TweetNestApp: App {
                 .environment(\.session, session)
                 .environment(\.managedObjectContext, session.persistentContainer.viewContext)
         }
-        #if canImport(BackgroundTasks) || canImport(WatchKit)
+        #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
         .onChange(of: scenePhase) { phase in
             switch phase {
             case .active, .inactive:
