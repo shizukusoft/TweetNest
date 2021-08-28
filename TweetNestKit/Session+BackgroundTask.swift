@@ -171,9 +171,9 @@ extension Session {
 }
 #elseif canImport(WatchKit)
 extension Session {
-    public nonisolated func handleBackgroundRefresh(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
+    public nonisolated func handleBackgroundRefresh(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
         guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshTaskIdentifier as NSString }) else {
-            return
+            return []
         }
         
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
@@ -192,6 +192,8 @@ extension Session {
             logger.info("Background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
             task.cancel()
         }
+        
+        return [backgroundTask]
     }
 }
 #endif

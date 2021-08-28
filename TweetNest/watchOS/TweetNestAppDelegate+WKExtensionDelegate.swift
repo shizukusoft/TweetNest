@@ -9,6 +9,10 @@ import WatchKit
 
 extension TweetNestAppDelegate: WKExtensionDelegate {
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
-        session.handleBackgroundRefresh(backgroundTasks)
+        let handledBackgroundTasksBySession = session.handleBackgroundRefresh(backgroundTasks)
+        
+        for task in backgroundTasks.subtracting(handledBackgroundTasksBySession) {
+            task.setTaskCompletedWithSnapshot(false)
+        }
     }
 }
