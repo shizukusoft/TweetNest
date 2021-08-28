@@ -8,5 +8,7 @@
 import WatchKit
 
 extension TweetNestAppDelegate: WKExtensionDelegate {
-    
+    func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
+        session.handleBackgroundRefresh(backgroundTasks)
+    }
 }
