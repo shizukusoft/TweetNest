@@ -104,7 +104,7 @@ extension Session {
                 try context.save()
             }
             
-            let userDetails = user.sortedUserDetails ?? []
+            var userDetails = user.sortedUserDetails ?? []
             
             for userDetail in userDetails {
                 guard
@@ -119,6 +119,8 @@ extension Session {
                 if previousUserDetail ~= userDetail {
                     context.delete(userDetail)
                     try context.save()
+                    
+                    userDetails.remove(userDetail)
                 }
             }
         }
