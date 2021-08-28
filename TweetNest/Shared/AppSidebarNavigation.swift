@@ -207,11 +207,7 @@ struct AppSidebarNavigation: View {
                 switch event.type {
                 case .setup:
                     Text("Preparing...")
-                case .import:
-                    Text("Importing...")
-                case .export:
-                    Text("Exporting...")
-                case .unknown:
+                case .import, .export, .unknown:
                     Text("Syncing...")
                 }
             }
