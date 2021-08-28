@@ -7,10 +7,11 @@
 
 import Foundation
 import UserNotifications
-import Combine
+import TweetNestKit
 
+@MainActor
 class TweetNestAppDelegate: NSObject, ObservableObject {
-    
+    let session = Session.shared
 }
 
 extension TweetNestAppDelegate: UNUserNotificationCenterDelegate {

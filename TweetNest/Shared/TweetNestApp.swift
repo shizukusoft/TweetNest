@@ -22,7 +22,9 @@ struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
     
-    let session = Session.shared
+    var session: Session {
+        delegate.session
+    }
 
     var body: some Scene {
         WindowGroup {
