@@ -124,7 +124,7 @@ extension Session {
             logger.error("Error occurred while update accounts: \(String(describing: error))")
 
             switch error {
-            case is CancellationError:
+            case is CancellationError, URLError.cancelled:
                 break
             default:
                 let notificationContent = UNMutableNotificationContent()
