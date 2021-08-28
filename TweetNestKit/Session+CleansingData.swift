@@ -100,6 +100,24 @@ extension Session {
                 context.delete(duplicatedUser)
                 try context.save()
             }
+            
+            let userDetails = user.sortedUserDetails ?? []
+            
+            for userDetail in userDetails {
+                guard
+                    let previousUserIndex = userDetails.firstIndex(of: userDetail).flatMap({ $0 - 1 }),
+                    userDetails.indices ~= previousUserIndex
+                else {
+                    continue
+                }
+                
+                let previousUserDetail = userDetails[previousUserIndex]
+                
+                if previousUserDetail ~= userDetail {
+                    context.delete(userDetail)
+                    try context.save()
+                }
+            }
         }
     }
 }

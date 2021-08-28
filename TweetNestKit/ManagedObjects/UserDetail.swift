@@ -41,55 +41,35 @@ extension UserDetail {
 
         user.lastUpdateStartDate = userUpdateStartDate
         user.lastUpdateEndDate = userUpdateEndDate
+        
+        let newUserDetail = UserDetail(context: context)
+        newUserDetail.blockingUserIDs = blockingUserIDs
+        newUserDetail.followingUserIDs = followingUserIDs
+        newUserDetail.followerUserIDs = followerUserIDs
 
-        if
-            let lastUserDetails = user.sortedUserDetails?.last,
-
-            lastUserDetails.blockingUserIDs == blockingUserIDs,
-            lastUserDetails.followingUserIDs == followingUserIDs,
-            lastUserDetails.followerUserIDs == followerUserIDs,
-
-            lastUserDetails.followerUsersCount == twitterUser.publicMetrics.followersCount,
-            lastUserDetails.followingUsersCount == twitterUser.publicMetrics.followingUsersCount,
-            lastUserDetails.isProtected == twitterUser.protected,
-            lastUserDetails.isVerified == twitterUser.verified,
-            lastUserDetails.listedCount == twitterUser.publicMetrics.listedCount,
-            lastUserDetails.location == twitterUser.location,
-            lastUserDetails.name == twitterUser.name,
-            lastUserDetails.profileImageURL == twitterUser.profileImageOriginalURL,
-            lastUserDetails.tweetsCount == twitterUser.publicMetrics.tweetsCount,
-            lastUserDetails.url == twitterUser.expandedURL,
-            lastUserDetails.userCreationDate == twitterUser.createdAt,
-            lastUserDetails.userAttributedDescription == twitterUser.attributedDescription.flatMap({ NSAttributedString($0) }),
-            lastUserDetails.username == twitterUser.username,
-            lastUserDetails.user == user
-        {
-            return lastUserDetails
+        newUserDetail.followerUsersCount = Int32(twitterUser.publicMetrics.followersCount)
+        newUserDetail.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
+        newUserDetail.isProtected = twitterUser.protected
+        newUserDetail.isVerified = twitterUser.verified
+        newUserDetail.listedCount = Int32(twitterUser.publicMetrics.listedCount)
+        newUserDetail.location = twitterUser.location
+        newUserDetail.name = twitterUser.name
+        newUserDetail.profileImageURL = twitterUser.profileImageOriginalURL
+        newUserDetail.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
+        newUserDetail.url = twitterUser.expandedURL
+        newUserDetail.userCreationDate = twitterUser.createdAt
+        newUserDetail.userAttributedDescription = twitterUser.attributedDescription.flatMap({ NSAttributedString($0) })
+        newUserDetail.username = twitterUser.username
+        
+        if let lastUserDetail = user.sortedUserDetails?.last, lastUserDetail ~= newUserDetail {
+            context.delete(newUserDetail)
+            
+            return lastUserDetail
         } else {
-            let newUserDetail = UserDetail(context: context)
             newUserDetail.creationDate = userDetailCreationDate
-
-            newUserDetail.blockingUserIDs = blockingUserIDs
-            newUserDetail.followingUserIDs = followingUserIDs
-            newUserDetail.followerUserIDs = followerUserIDs
-
-            newUserDetail.followerUsersCount = Int32(twitterUser.publicMetrics.followersCount)
-            newUserDetail.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
-            newUserDetail.isProtected = twitterUser.protected
-            newUserDetail.isVerified = twitterUser.verified
-            newUserDetail.listedCount = Int32(twitterUser.publicMetrics.listedCount)
-            newUserDetail.location = twitterUser.location
-            newUserDetail.name = twitterUser.name
-            newUserDetail.profileImageURL = twitterUser.profileImageOriginalURL
-            newUserDetail.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
-            newUserDetail.url = twitterUser.expandedURL
-            newUserDetail.userCreationDate = twitterUser.createdAt
-            newUserDetail.userAttributedDescription = twitterUser.attributedDescription.flatMap({ NSAttributedString($0) })
-            newUserDetail.username = twitterUser.username
             newUserDetail.user = user
-
-            newUserDetail.user?.modificationDate = userDetailCreationDate
-
+            newUserDetail.user!.modificationDate = userDetailCreationDate
+            
             return newUserDetail
         }
     }
@@ -100,5 +80,26 @@ extension UserDetail {
         username.flatMap {
             "@\($0)"
         }
+    }
+}
+
+extension UserDetail {
+    static func ~= (lhs: UserDetail, rhs: UserDetail) -> Bool {
+        lhs.blockingUserIDs == rhs.blockingUserIDs &&
+        lhs.followingUserIDs == rhs.followingUserIDs &&
+        lhs.followerUserIDs == rhs.followerUserIDs &&
+        lhs.followerUsersCount == rhs.followerUsersCount &&
+        lhs.followingUsersCount == rhs.followingUsersCount &&
+        lhs.isProtected == rhs.isProtected &&
+        lhs.isVerified == rhs.isVerified &&
+        lhs.listedCount == rhs.listedCount &&
+        lhs.location == rhs.location &&
+        lhs.name == rhs.name &&
+        lhs.profileImageURL == rhs.profileImageURL &&
+        lhs.tweetsCount == rhs.tweetsCount &&
+        lhs.url == rhs.url &&
+        lhs.userCreationDate == rhs.userCreationDate &&
+        lhs.userAttributedDescription == rhs.userAttributedDescription &&
+        lhs.username == rhs.username
     }
 }
