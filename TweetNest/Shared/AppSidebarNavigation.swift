@@ -85,7 +85,6 @@ struct AppSidebarNavigation: View {
                             Label {
                                 Text(verbatim: account.user?.displayUsername ?? account.objectID.description)
                                     #if os(watchOS)
-                                    .padding([.top], 4)
                                     .padding([.bottom], 2)
                                     #endif
                             } icon: {
@@ -140,14 +139,17 @@ struct AppSidebarNavigation: View {
                 
                 ToolbarItemGroup(placement: .primaryAction) {
                     #if os(watchOS)
-                    if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
-                        VStack {
-                            persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
+                    Group {
+                        if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
+                            VStack {
+                                persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
+                                addAccountButton
+                            }
+                        } else {
                             addAccountButton
                         }
-                    } else {
-                        addAccountButton
                     }
+                    .padding(.bottom)
                     #else
                     addAccountButton
                     #endif
