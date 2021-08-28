@@ -16,60 +16,60 @@ private var numberFormatter: NumberFormatter {
 
 extension Int {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension UInt {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension Int8 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension UInt8 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension Int16 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension UInt16 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension Int32 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension UInt32 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension Int64 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
 
 extension UInt64 {
     public func twnk_formatted() -> String {
-        numberFormatter.string(from: NSNumber(value: self)) ?? String(self)
+        numberFormatter.string(from: self as NSNumber) ?? String(self)
     }
 }
