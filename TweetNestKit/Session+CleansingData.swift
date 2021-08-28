@@ -23,14 +23,17 @@ extension Session {
         }
         
         for accountObjectID in accountObjectIDs {
-            try await cleansingAccount(for: accountObjectID)
+            try await cleansingAccount(for: accountObjectID, context: context)
         }
         
-        try await cleansingAllUsers()
+        try await cleansingAllUsers(context: context)
     }
     
     public nonisolated func cleansingAccount(for accountObjectID: NSManagedObjectID) async throws {
-        let context = persistentContainer.newBackgroundContext()
+        try await cleansingAccount(for: accountObjectID, context: persistentContainer.newBackgroundContext())
+    }
+    
+    nonisolated func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext) async throws {
         let userObjectID: NSManagedObjectID? = await context.perform(schedule: .enqueued) {
             guard let account = context.object(with: accountObjectID) as? Account else {
                 return nil
@@ -47,15 +50,15 @@ extension Session {
             return
         }
         
-        try await cleansingUser(for: userObjectID)
+        try await cleansingUser(for: userObjectID, context: context)
     }
     
-    nonisolated func cleansingAllUsers() async throws {
-        let context = persistentContainer.newBackgroundContext()
+    nonisolated func cleansingAllUsers(context: NSManagedObjectContext) async throws {
         let userObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let userFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: User.entity().name!)
             userFetchRequest.predicate = NSPredicate(format: "account == NULL")
             userFetchRequest.resultType = .managedObjectIDResultType
+            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
             
             return try context.fetch(userFetchRequest)
         }
@@ -63,7 +66,7 @@ extension Session {
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for userObjectID in userObjectIDs {
                 taskGroup.addTask {
-                    try await self.cleansingUser(for: userObjectID)
+                    try await self.cleansingUser(for: userObjectID, context: context)
                 }
             }
             
@@ -71,8 +74,7 @@ extension Session {
         }
     }
     
-    nonisolated func cleansingUser(for userObjectID: NSManagedObjectID) async throws {
-        let context = persistentContainer.newBackgroundContext()
+    nonisolated func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext) async throws {
         try await context.perform(schedule: .enqueued) {
             guard let user = context.object(with: userObjectID) as? User else {
                 return
@@ -82,10 +84,11 @@ extension Session {
             userFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
                     NSPredicate(format: "account == NULL"),
+                    NSPredicate(format: "SELF != %@", user),
                     NSPredicate(format: "id == %@", user.id ?? ""),
                 ]
             )
-            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: true)]
+            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
             
             let duplicatedUsers = try context.fetch(userFetchRequest)
             
