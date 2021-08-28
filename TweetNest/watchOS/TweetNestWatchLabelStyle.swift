@@ -40,12 +40,12 @@ struct TweetNestWatchLabelStyle_Previews: PreviewProvider {
                 NavigationLink {
                     EmptyView()
                 } label: {
-                    Label("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", systemImage: "plus")
+                    Label(Text(verbertim: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."), systemImage: "plus")
                         .labelStyle(TweetNestWatchLabelStyle())
                 }
-                Label("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", systemImage: "person.3")
+                Label(Text(verbertim: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."), systemImage: "person.3")
                     .labelStyle(TweetNestWatchLabelStyle())
-                Label("Lorem ipsum dolor sit amet, consectetur adipiscing elit.", systemImage: "person")
+                Label(Text(verbertim: "Lorem ipsum dolor sit amet, consectetur adipiscing elit."), systemImage: "person")
                     .labelStyle(TweetNestWatchLabelStyle())
             }
         }
