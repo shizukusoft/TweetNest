@@ -45,7 +45,7 @@ struct UserRow: View {
     }
 
     init(userID: String) {
-        self.placeholderName = "#\(Int64(userID)?.formatted() ?? userID)"
+        self.placeholderName = "#\(Int64(userID)?.twnk_formatted() ?? userID)"
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
@@ -59,7 +59,7 @@ struct UserRow: View {
     }
     
     init(user: User) {
-        self.placeholderName = user.id.flatMap { "#\(Int64($0)?.formatted() ?? $0)" } ?? user.objectID.description
+        self.placeholderName = user.id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" } ?? user.objectID.description
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]

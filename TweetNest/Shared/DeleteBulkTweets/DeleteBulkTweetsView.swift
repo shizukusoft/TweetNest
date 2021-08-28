@@ -79,7 +79,7 @@ struct DeleteBulkTweetsView: View {
                 Text("OK")
             }
         } message: {
-            Text("Deleting \(succeedResultsCount.formatted()) of \(targetTweets.count.formatted()) tweets succeed. \(failedResults.count.formatted()) tweets failed.")
+            Text("Deleting \(succeedResultsCount.twnk_formatted()) of \(targetTweets.count.twnk_formatted()) tweets succeed. \(failedResults.count.twnk_formatted()) tweets failed.")
         }
     }
     
@@ -138,15 +138,15 @@ struct DeleteBulkTweetsView: View {
     }
     
     private func updateProgressDescription() {
-        progress.localizedDescription = String(localized: "Deleting \(progress.totalUnitCount.formatted()) tweets...")
+        progress.localizedDescription = String(localized: "Deleting \(progress.totalUnitCount.twnk_formatted()) tweets...")
         progress.localizedAdditionalDescription = {
-            var localizedAdditionalDescription = String(localized: "\(progress.completedUnitCount.formatted()) of \(progress.totalUnitCount.formatted()) tweets.")
+            var localizedAdditionalDescription = String(localized: "\(progress.completedUnitCount.twnk_formatted()) of \(progress.totalUnitCount.twnk_formatted()) tweets.")
             
             let failedResultsCount = failedResults.count
             
             if failedResultsCount > 0 {
                 localizedAdditionalDescription.append("\n")
-                localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.formatted()) tweets failed."))
+                localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.twnk_formatted()) tweets failed."))
             }
             
             return localizedAdditionalDescription

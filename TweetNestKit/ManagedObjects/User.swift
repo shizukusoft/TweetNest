@@ -39,7 +39,7 @@ extension User {
         }
         
         if let id = id {
-            return "#\(Int64(id)?.formatted() ?? id)"
+            return "#\(Int64(id)?.twnk_formatted() ?? id)"
         }
         
         return nil

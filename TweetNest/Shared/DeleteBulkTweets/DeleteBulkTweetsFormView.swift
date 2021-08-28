@@ -51,7 +51,7 @@ struct DeleteBulkTweetsFormView: View {
                                 HStack {
                                     Text("Loaded Tweets")
                                     Spacer()
-                                    Text(tweets.count.formatted())
+                                    Text(tweets.count.twnk_formatted())
                                 }
                             }
                             Section {
@@ -85,7 +85,7 @@ struct DeleteBulkTweetsFormView: View {
                                 HStack {
                                     Text("Target Tweets")
                                     Spacer()
-                                    Text(targetTweets.count.formatted())
+                                    Text(targetTweets.count.twnk_formatted())
                                 }
                             }
                             Section {
@@ -108,7 +108,7 @@ struct DeleteBulkTweetsFormView: View {
                                         Text("Delete")
                                     }
                                 } message: {
-                                    Text("\(targetTweets.count.formatted()) tweets will be deleted.")
+                                    Text("\(targetTweets.count.twnk_formatted()) tweets will be deleted.")
                                 }
                             }
                         }

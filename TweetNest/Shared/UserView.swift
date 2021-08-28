@@ -97,7 +97,7 @@ extension UserView {
                         Text("Latest Profile")
                     } footer: {
                         VStack(alignment: .leading) {
-                            user.id.flatMap { Text(verbatim: "#\(Int64($0)?.formatted() ?? $0)") }
+                            user.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
                             if let lastUpdateDate = user.lastUpdateEndDate {
                                 Text("Updated \(lastUpdateDate, style: .relative) ago")
                                 .accessibilityAddTraits(.updatesFrequently)

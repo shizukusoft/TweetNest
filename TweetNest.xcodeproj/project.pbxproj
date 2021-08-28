@@ -77,6 +77,7 @@
 		195DD4C326BEF91C008F0309 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C126BEF91C008F0309 /* ProfileImage.swift */; };
 		195DD4C826BFD32E008F0309 /* Array+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */; };
 		195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */; };
+		197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */; };
 		197ACF0F26CE2D820040388C /* DeleteBulkTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197ACF0E26CE2D820040388C /* DeleteBulkTweetsView.swift */; };
 		197ACF1026CE2D820040388C /* DeleteBulkTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197ACF0E26CE2D820040388C /* DeleteBulkTweetsView.swift */; };
 		19861E3B26C8F82400073431 /* Session+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3A26C8F82400073431 /* Session+TweetNestKit.swift */; };
@@ -411,6 +412,7 @@
 		195DD4C126BEF91C008F0309 /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
 		195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+TweetNestKit.swift"; sourceTree = "<group>"; };
 		195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionConfiguration+TweetNestKit.swift"; sourceTree = "<group>"; };
+		197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNumber+TwetNestKit.swift"; sourceTree = "<group>"; };
 		197ACF0E26CE2D820040388C /* DeleteBulkTweetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBulkTweetsView.swift; sourceTree = "<group>"; };
 		19861E3A26C8F82400073431 /* Session+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountEnvironmentKey.swift; sourceTree = "<group>"; };
@@ -785,6 +787,7 @@
 			isa = PBXGroup;
 			children = (
 				195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */,
+				197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -1742,6 +1745,7 @@
 				19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */,
 				19C5A28A26BC1F3500AB1122 /* TweetNestKit.docc in Sources */,
 				19C5A2BB26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift in Sources */,
+				197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */,
 				195DD4BA26BEF09D008F0309 /* DataAsset.swift in Sources */,
 				193AFB6626CA310E008BFF67 /* Session+UpdateAccount.swift in Sources */,
 				19C5A2B726BC1F8A00AB1122 /* SessionError.swift in Sources */,

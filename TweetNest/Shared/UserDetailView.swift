@@ -18,7 +18,7 @@ struct UserDetailView: View {
             Label(Text("Followings"), systemImage: "person.2")
             .accessibilityLabel(Text("Followings"))
             Spacer()
-            Text(userDetail.followingUsersCount.formatted())
+            Text(userDetail.followingUsersCount.twnk_formatted())
                 .foregroundColor(Color.gray)
         }
     }
@@ -29,7 +29,7 @@ struct UserDetailView: View {
             Label(Text("Followers"), systemImage: "person.2")
             .accessibilityLabel(Text("Followers"))
             Spacer()
-            Text(userDetail.followerUsersCount.formatted())
+            Text(userDetail.followerUsersCount.twnk_formatted())
                 .foregroundColor(Color.gray)
         }
     }
@@ -74,7 +74,7 @@ struct UserDetailView: View {
                         HStack {
                             Label(Text("Blocked Accounts"), systemImage: "nosign")
                             Spacer()
-                            Text(blockingUserIDs.count.formatted())
+                            Text(blockingUserIDs.count.twnk_formatted())
                                 .foregroundColor(Color.gray)
                         }
                     }
@@ -86,7 +86,7 @@ struct UserDetailView: View {
                     Label(Text("Listed"), systemImage: "list.bullet")
                     .accessibilityLabel(Text("Listed"))
                     Spacer()
-                    Text(userDetail.listedCount.formatted())
+                    Text(userDetail.listedCount.twnk_formatted())
                         .foregroundColor(Color.gray)
                 }
             }
@@ -96,7 +96,7 @@ struct UserDetailView: View {
                     Label(Text("Tweets"), systemImage: "text.bubble")
                     .accessibilityLabel(Text("Tweets"))
                     Spacer()
-                    Text(userDetail.tweetsCount.formatted())
+                    Text(userDetail.tweetsCount.twnk_formatted())
                         .foregroundColor(Color.gray)
                 }
             }
