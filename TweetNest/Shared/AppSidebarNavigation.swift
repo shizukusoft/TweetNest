@@ -122,9 +122,6 @@ struct AppSidebarNavigation: View {
                     .assign(to: \.persistentContainerCloudKitEvents, on: self)
                     .store(in: &disposables)
             }
-            .onChange(of: persistentContainerCloudKitEvents) {
-                debugPrint($0)
-            }
             #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
             #endif
@@ -212,7 +209,9 @@ struct AppSidebarNavigation: View {
                 }
             }
             .font(.system(.callout))
+            #if os(iOS)
             .fixedSize()
+            #endif
             .foregroundColor(.gray)
         }
     }
