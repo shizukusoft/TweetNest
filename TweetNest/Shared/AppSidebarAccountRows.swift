@@ -85,9 +85,6 @@ struct AppSidebarAccountRows: View {
                 }
             }
         }
-        #if os(watchOS)
-        .labelStyle(TweetNestWatchLabelStyle(iconSize: 32))
-        #endif
     }
 }
 
