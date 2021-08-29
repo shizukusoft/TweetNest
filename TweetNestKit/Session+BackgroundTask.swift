@@ -106,9 +106,9 @@ extension Session {
                                 let displayUsername = account?.user?.displayUsername ?? accountObjectID.description
 
                                 let notificationContent = UNMutableNotificationContent()
-                                notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
-                                notificationContent.body = String(localized: "New data available for \(displayUsername).", bundle: .module, comment: "update-accounts notification body.")
-                                notificationContent.interruptionLevel = .timeSensitive
+                                notificationContent.title = displayUsername
+                                notificationContent.subtitle = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification subtitle.")
+                                notificationContent.body = String(localized: "New data available.", bundle: .module, comment: "update-accounts notification body.")
                                 notificationContent.threadIdentifier = accountID.flatMap { String($0) } ?? accountObjectID.uriRepresentation().absoluteString
 
                                 return notificationContent

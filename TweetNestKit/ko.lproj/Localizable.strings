@@ -10,7 +10,7 @@
 "Update accounts" = "계정 업데이트";
 
 /* update-accounts notification body. */
-"New data available for %@." = "%@에 새로운 데이터가 있습니다.";
+"New data available." = "새로운 데이터가 있습니다.";
 
 /* update-accounts notification subtitle. */
 "Error" = "오류";
