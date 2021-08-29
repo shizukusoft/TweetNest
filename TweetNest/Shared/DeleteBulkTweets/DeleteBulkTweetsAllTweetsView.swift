@@ -43,7 +43,7 @@ struct DeleteBulkTweetsAllTweetsView: View {
                 Rectangle()
                     .foregroundColor(.clear)
                     .overlay {
-                        ProgressView("Loading Archive...")
+                        ProgressView(String(localized: "Loading Archive..."))
                             .alert(isPresented: $showError, error: error)
                             .toolbar {
                                 ToolbarItemGroup(placement: .cancellationAction) {
