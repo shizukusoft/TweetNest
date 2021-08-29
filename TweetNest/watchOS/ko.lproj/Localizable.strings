@@ -20,6 +20,9 @@
 "Accounts" = "계정";
 
 /* No comment provided by engineer. */
+"Add Account" = "계정 추가";
+
+/* No comment provided by engineer. */
 "All Data" = "모든 데이터";
 
 /* No comment provided by engineer. */
@@ -50,10 +53,16 @@
 "Joined" = "가입 날짜";
 
 /* No comment provided by engineer. */
+"Latest Profile" = "최신 프로필";
+
+/* No comment provided by engineer. */
 "Listed" = "리스트";
 
 /* No comment provided by engineer. */
 "Location" = "위치";
+
+/* No comment provided by engineer. */
+"Preparing..." = "준비 중...";
 
 /* No comment provided by engineer. */
 "Profile" = "프로필";
@@ -65,7 +74,13 @@
 "Settings" = "설정";
 
 /* No comment provided by engineer. */
+"Syncing..." = "동기화 중...";
+
+/* No comment provided by engineer. */
 "Tweets" = "트윗";
+
+/* No comment provided by engineer. */
+"Updated %@ ago" = "%@ 전에 갱신됨";
 
 /* No comment provided by engineer. */
 "URL" = "웹사이트";
