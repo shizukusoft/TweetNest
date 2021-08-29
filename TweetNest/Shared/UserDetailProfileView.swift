@@ -47,14 +47,15 @@ struct UserDetailProfileView: View {
                         .layoutPriority(1)
                         .lineLimit(1)
                     Spacer()
-                    if let locationQueryURL = locationQueryURL {
-                        Link(location, destination: locationQueryURL)
-                            .multilineTextAlignment(.trailing)
+                    Group {
+                        if let locationQueryURL = locationQueryURL {
+                            Link(location, destination: locationQueryURL)
+                        }
+                        else {
+                            Text(location)
+                        }
                     }
-                    else {
-                        Text(location)
-                            .multilineTextAlignment(.trailing)
-                    }
+                    .multilineTextAlignment(.trailing)
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Location"))
