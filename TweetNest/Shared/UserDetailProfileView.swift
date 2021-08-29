@@ -18,7 +18,11 @@ struct UserDetailProfileView: View {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
                     ProfileImage(userDetail: userDetail)
-                        .frame(width: 50, height: 50)
+                        #if !os(watchOS)
+                        .frame(width: 48, height: 48)
+                        #else
+                        .frame(width: 36, height: 36)
+                        #endif
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(verbatim: userDetail.name ?? userDetail.user?.id.flatMap({"#\($0)"}) ?? "")
