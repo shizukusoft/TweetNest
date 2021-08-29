@@ -277,7 +277,7 @@ struct AppSidebarNavigation: View {
         }
 
         do {
-            let hasChanges = try await session.updateAccounts()
+            let hasChanges = try await session.updateAllAccounts()
             try await session.cleansingAllAccounts()
             
             for hasChanges in hasChanges {

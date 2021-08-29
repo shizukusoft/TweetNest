@@ -12,9 +12,44 @@ import OrderedCollections
 
 extension Session {
     @discardableResult
-    public nonisolated func updateAccount(_ accountObjectID: NSManagedObjectID) async throws -> Bool {
-        let context = self.persistentContainer.newBackgroundContext()
+    public nonisolated func updateAllAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
+        let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
+
+        let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+            let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
+                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
+            ]
+            fetchRequest.resultType = .managedObjectIDResultType
+
+            return try context.fetch(fetchRequest)
+        }
+
+        return await withTaskGroup(of: (NSManagedObjectID, Result<Bool, Swift.Error>).self) { taskGroup in
+            accountObjectIDs.forEach { accountObjectID in
+                taskGroup.addTask {
+                    do {
+                        let updateResults = try await self.updateAccount(accountObjectID, context: context)
+                        return (accountObjectID, .success(updateResults.previousUserDetailObjectID != updateResults.latestUserDetailObjectID))
+                    } catch {
+                        return (accountObjectID, .failure(error))
+                    }
+                }
+            }
+
+            return await taskGroup.reduce(into: [], { $0.append($1) })
+        }
+    }
+    
+    @discardableResult
+    public nonisolated func updateAccount(
+        _ accountObjectID: NSManagedObjectID,
+        context _context: NSManagedObjectContext? = nil
+    ) async throws -> (previousUserDetailObjectID: NSManagedObjectID?, latestUserDetailObjectID: NSManagedObjectID) {
+        let context = _context ?? persistentContainer.newBackgroundContext()
+        context.undoManager = _context?.undoManager
 
         let updateStartDate = Date()
         let (accountID, accountPreferences) = try await context.perform { () -> (Int64, Account.Preferences) in
@@ -47,7 +82,7 @@ extension Session {
         let myBlockingUserIDs = try await _myBlockingUserIDs
         let twitterUserFetchDate = Date()
 
-        async let hasChanges: Bool = context.perform(schedule: .enqueued) {
+        async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
             let account = context.object(with: accountObjectID) as? Account
 
             let fetchRequest = User.fetchRequest()
@@ -71,7 +106,7 @@ extension Session {
 
             try context.save()
 
-            return previousUserDetail?.objectID != userDetail.objectID
+            return (previousUserDetail?.objectID, userDetail.objectID)
         }
         
         let usersUpdateTask = Task.detached {
@@ -80,7 +115,7 @@ extension Session {
                 userIDs.append(contentsOf: myBlockingUserIDs)
             }
             
-            try await self.updateUsers(ids: userIDs, with: twitterSession)
+            try await self.updateUsers(ids: userIDs, twitterSession: twitterSession, context: context)
         }
         
         let profileImageDataAsset = try await _profileImageDataAsset
@@ -92,6 +127,6 @@ extension Session {
         
         try await usersUpdateTask.result.get()
 
-        return try await hasChanges
+        return try await userDetailObjectIDs
     }
 }

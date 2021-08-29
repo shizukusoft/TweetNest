@@ -81,6 +81,7 @@ extension Session {
 
         do {
             let context = self.persistentContainer.newBackgroundContext()
+            context.undoManager = nil
 
             let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
                 let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
@@ -96,31 +97,59 @@ extension Session {
             try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                 accountObjectIDs.forEach { accountObjectID in
                     taskGroup.addTask {
-                        let hasChanges = try await self.updateAccount(accountObjectID)
+                        let updateResults = try await self.updateAccount(accountObjectID, context: context)
+                        
+                        guard
+                            updateResults.previousUserDetailObjectID != updateResults.latestUserDetailObjectID
+                        else {
+                            return
+                        }
+                        
+                        let notificationContent: UNMutableNotificationContent = await context.perform(schedule: .enqueued) {
+                            let account = context.object(with: accountObjectID) as? Account
+                            
+                            let previousUserDetail = updateResults.previousUserDetailObjectID.flatMap { context.object(with: $0) as? UserDetail }
+                            let latestUserDetail = context.object(with: updateResults.latestUserDetailObjectID) as? UserDetail
 
-                        if hasChanges {
-                            let notificationContent: UNMutableNotificationContent = await context.perform(schedule: .enqueued) {
-                                let account = context.object(with: accountObjectID) as? Account
+                            let (newFollowingUsersCount, newUnfollowingUsersCount) = Self.followingUserChanges(oldUserDetail: previousUserDetail, newUserDetail: latestUserDetail)
+                            let (newFollowerUsersCount, newUnfollowerUsersCount) = Self.followerUserChanges(oldUserDetail: previousUserDetail, newUserDetail: latestUserDetail)
 
-                                let accountID = account?.id
-                                let displayUsername = account?.user?.displayUsername ?? accountObjectID.description
+                            let displayUsername = latestUserDetail?.displayUsername ?? (account?.id).flatMap { $0.twnk_formatted() } ?? accountObjectID.uriRepresentation().absoluteString
 
-                                let notificationContent = UNMutableNotificationContent()
-                                notificationContent.title = displayUsername
-                                notificationContent.subtitle = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification subtitle.")
-                                notificationContent.body = String(localized: "New data available.", bundle: .module, comment: "update-accounts notification body.")
-                                notificationContent.threadIdentifier = accountID.flatMap { String($0) } ?? accountObjectID.uriRepresentation().absoluteString
-
-                                return notificationContent
+                            let notificationContent = UNMutableNotificationContent()
+                            notificationContent.threadIdentifier = accountObjectID.uriRepresentation().absoluteString
+                            notificationContent.title = displayUsername
+                            
+                            var changes: [String] = []
+                            if newFollowingUsersCount > 0 {
+                                changes.append(String(localized: "\(newFollowingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
+                            }
+                            if newUnfollowingUsersCount > 0 {
+                                changes.append(String(localized: "\(newUnfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
+                            }
+                            if newFollowerUsersCount > 0 {
+                                changes.append(String(localized: "\(newFollowerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
+                            }
+                            if newUnfollowerUsersCount > 0 {
+                                changes.append(String(localized: "\(newUnfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
+                            }
+                            
+                            if changes.isEmpty == false {
+                                notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+                                notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+                            } else {
+                                notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
                             }
 
-                            let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+                            return notificationContent
+                        }
 
-                            do {
-                                try await UNUserNotificationCenter.current().add(notificationRequest)
-                            } catch {
-                                logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
-                            }
+                        let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+
+                        do {
+                            try await UNUserNotificationCenter.current().add(notificationRequest)
+                        } catch {
+                            logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                         }
                     }
                 }
@@ -135,8 +164,8 @@ extension Session {
                 break
             default:
                 let notificationContent = UNMutableNotificationContent()
-                notificationContent.title = String(localized: "Update accounts", bundle: .module, comment: "update-accounts notification title.")
-                notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "update-accounts notification subtitle.")
+                notificationContent.title = String(localized: "Background Refresh", bundle: .module, comment: "background-refresh notification title.")
+                notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "background-refresh notification subtitle.")
                 notificationContent.body = error.localizedDescription
                 notificationContent.sound = .default
 
@@ -151,6 +180,42 @@ extension Session {
 
             throw error
         }
+    }
+    
+    static func followingUserChanges(oldUserDetail: UserDetail?, newUserDetail: UserDetail?) -> (followingUsersCount: Int, unfollowingUsersCount: Int) {
+        let previousFollowingUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followingUserIDs.flatMap { Set($0) }
+        let latestFollowingUserIDs = newUserDetail?.followingUserIDs.flatMap { Set($0) }
+        
+        let newFollowingUsersCount: Int
+        let newUnfollowingUsersCount: Int
+        
+        if let latestFollowingUserIDs = latestFollowingUserIDs, let previousFollowingUserIDs = previousFollowingUserIDs {
+            newFollowingUsersCount = latestFollowingUserIDs.subtracting(previousFollowingUserIDs).count
+            newUnfollowingUsersCount = previousFollowingUserIDs.subtracting(latestFollowingUserIDs).count
+        } else {
+            newFollowingUsersCount = max(Int(newUserDetail?.followingUsersCount ?? 0) - Int(oldUserDetail?.followingUsersCount ?? 0), 0)
+            newUnfollowingUsersCount = max(Int(oldUserDetail?.followingUsersCount ?? 0) - Int(newUserDetail?.followingUsersCount ?? 0), 0)
+        }
+        
+        return (newFollowingUsersCount, newUnfollowingUsersCount)
+    }
+    
+    static func followerUserChanges(oldUserDetail: UserDetail?, newUserDetail: UserDetail?) -> (followerUsersCount: Int, unfollowerUsersCount: Int) {
+        let previousFollowerUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followerUserIDs.flatMap { Set($0) }
+        let latestFollowerUserIDs = newUserDetail?.followerUserIDs.flatMap { Set($0) }
+        
+        let newFollowerUsersCount: Int
+        let newUnfollowerUsersCount: Int
+        
+        if let latestFollowerUserIDs = latestFollowerUserIDs, let previousFollowerUserIDs = previousFollowerUserIDs {
+            newFollowerUsersCount = latestFollowerUserIDs.subtracting(previousFollowerUserIDs).count
+            newUnfollowerUsersCount = previousFollowerUserIDs.subtracting(latestFollowerUserIDs).count
+        } else {
+            newFollowerUsersCount = max(Int(newUserDetail?.followerUsersCount ?? 0) - Int(oldUserDetail?.followerUsersCount ?? 0), 0)
+            newUnfollowerUsersCount = max(Int(oldUserDetail?.followerUsersCount ?? 0) - Int(newUserDetail?.followerUsersCount ?? 0), 0)
+        }
+        
+        return (newFollowerUsersCount, newUnfollowerUsersCount)
     }
 }
 #endif

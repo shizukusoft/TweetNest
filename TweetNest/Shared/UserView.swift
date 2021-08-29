@@ -253,7 +253,7 @@ extension UserView {
                     try await Session.shared.updateAccount(account.objectID)
                     try await Session.shared.cleansingAccount(for: account.objectID)
                 } else if let account = account {
-                    try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, with: .session(for: account))
+                    try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, twitterSession: .session(for: account))
                     try await Session.shared.cleansingUser(for: user.objectID)
                 }
             } catch {

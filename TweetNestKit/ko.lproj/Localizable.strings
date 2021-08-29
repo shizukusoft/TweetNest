@@ -6,11 +6,11 @@
   
 */
 
-/* update-accounts notification title. */
-"Update accounts" = "계정 업데이트";
+/* background-refresh notification. */
+"New Data Available" = "새로운 데이터 있음";
 
-/* update-accounts notification body. */
-"New data available." = "새로운 데이터가 있습니다.";
+/* background-refresh notification title. */
+"Background Refresh" = "백그라운드 새로 고침";
 
-/* update-accounts notification subtitle. */
+/* background-refresh notification subtitle. */
 "Error" = "오류";
