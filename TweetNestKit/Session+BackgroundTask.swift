@@ -213,6 +213,7 @@ extension Session {
 }
 #elseif canImport(WatchKit)
 extension Session {
+    @discardableResult
     public nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
         guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString }) else {
             return []
