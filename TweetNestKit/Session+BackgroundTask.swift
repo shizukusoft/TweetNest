@@ -23,20 +23,23 @@ extension Session {
         Date(timeIntervalSinceNow: 5 * 60) // Fetch no earlier than 5 minutes from now
     }
     
-    public static let backgroundRefreshTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).background-refresh"
+    public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).background-refresh"
     
-    #if canImport(BackgroundTasks)
+    #if canImport(BackgroundTasks) && !os(macOS)
+    public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).data-cleansing"
+    
     @available(iOSApplicationExtension, unavailable)
     @available(tvOSApplicationExtension, unavailable)
     @discardableResult
-    public nonisolated func registerAppRefreshBackgroundTask() -> Bool {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.backgroundRefreshTaskIdentifier, using: nil, launchHandler: handleBackgroundRefresh(_:))
+    public nonisolated func registerBackgroundTasks() -> Bool {
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier, using: nil, launchHandler: handleBackgroundRefreshBackgroundTask(_:)) &&
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier, using: nil, launchHandler: handleDataCleansingBackgroundTask(_:))
     }
     #endif
 
     public nonisolated func scheduleBackgroundRefreshTask() async throws {
-        #if canImport(BackgroundTasks)
-        let request = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshTaskIdentifier)
+        #if canImport(BackgroundTasks) && !os(macOS)
+        let request = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
         request.earliestBeginDate = Self.preferredBackgroundRefreshDate
 
         try BGTaskScheduler.shared.submit(request)
@@ -45,7 +48,7 @@ extension Session {
             Task {
                 await WKExtension.shared().scheduleBackgroundRefresh(
                     withPreferredDate: Self.preferredBackgroundRefreshDate,
-                    userInfo: Self.backgroundRefreshTaskIdentifier as NSString
+                    userInfo: Self.backgroundRefreshBackgroundTaskIdentifier as NSString
                 ) { error in
                     if let error = error {
                         continuation.resume(throwing: error)
@@ -57,6 +60,16 @@ extension Session {
         }
         #endif
     }
+    
+    #if canImport(BackgroundTasks) && !os(macOS)
+    public nonisolated func scheduleDataCleansingBackgroundTask() async throws {
+        let request = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
+        request.requiresNetworkConnectivity = true
+        request.requiresExternalPower = false
+
+        try BGTaskScheduler.shared.submit(request)
+    }
+    #endif
 
     nonisolated func backgroundRefresh() async throws {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
@@ -64,12 +77,6 @@ extension Session {
         logger.info("Start background refresh")
         defer {
             logger.info("Background refresh finished")
-        }
-        
-        do {
-            try await self.scheduleBackgroundRefreshTask()
-        } catch {
-            logger.error("Error occurred while schedule background refresh: \(error as NSError, privacy: .public)")
         }
 
         do {
@@ -150,8 +157,16 @@ extension Session {
 
 #if (canImport(BackgroundTasks) && !os(macOS))
 extension Session {
-    nonisolated func handleBackgroundRefresh(_ backgroundTask: BGTask) {
+    nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
+        
+        Task { [self] in
+            do {
+                try await scheduleBackgroundRefreshTask()
+            } catch {
+                logger.error("Error occurred while schedule background refresh: \(error as NSError, privacy: .public)")
+            }
+        }
         
         let task = Task { [self] in
             do {
@@ -168,11 +183,38 @@ extension Session {
             task.cancel()
         }
     }
+    
+    nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
+        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "data-cleansing")
+        
+        Task { [self] in
+            do {
+                try await scheduleDataCleansingBackgroundTask()
+            } catch {
+                logger.error("Error occurred while schedule data cleansing: \(error as NSError, privacy: .public)")
+            }
+        }
+        
+        let task = Task { [self] in
+            do {
+                try await cleansingAllData()
+                
+                backgroundTask.setTaskCompleted(success: true)
+            } catch {
+                backgroundTask.setTaskCompleted(success: false)
+            }
+        }
+        
+        backgroundTask.expirationHandler = {
+            logger.info("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
+            task.cancel()
+        }
+    }
 }
 #elseif canImport(WatchKit)
 extension Session {
-    public nonisolated func handleBackgroundRefresh(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
-        guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshTaskIdentifier as NSString }) else {
+    public nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
+        guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString }) else {
             return []
         }
         

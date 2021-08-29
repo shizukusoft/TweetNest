@@ -254,6 +254,7 @@ extension UserView {
                     try await Session.shared.cleansingAccount(for: account.objectID)
                 } else if let account = account {
                     try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, with: .session(for: account))
+                    try await Session.shared.cleansingUser(for: user.objectID)
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")

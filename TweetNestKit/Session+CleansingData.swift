@@ -9,8 +9,15 @@ import Foundation
 import CoreData
 
 extension Session {
-    public nonisolated func cleansingAllAccounts() async throws {
+    public nonisolated func cleansingAllData() async throws {
         let context = persistentContainer.newBackgroundContext()
+        
+        try await cleansingAllAccounts(context: context)
+        try await cleansingAllUsers(context: context)
+    }
+    
+    public nonisolated func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
+        let context = context ?? persistentContainer.newBackgroundContext()
         
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
@@ -25,15 +32,11 @@ extension Session {
         for accountObjectID in accountObjectIDs {
             try await cleansingAccount(for: accountObjectID, context: context)
         }
+    }
+
+    public nonisolated func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+        let context = context ?? persistentContainer.newBackgroundContext()
         
-        try await cleansingAllUsers(context: context)
-    }
-    
-    public nonisolated func cleansingAccount(for accountObjectID: NSManagedObjectID) async throws {
-        try await cleansingAccount(for: accountObjectID, context: persistentContainer.newBackgroundContext())
-    }
-    
-    nonisolated func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext) async throws {
         let userObjectID: NSManagedObjectID? = await context.perform(schedule: .enqueued) {
             guard let account = context.object(with: accountObjectID) as? Account else {
                 return nil
@@ -74,7 +77,9 @@ extension Session {
         }
     }
     
-    nonisolated func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext) async throws {
+    public nonisolated func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+        let context = context ?? persistentContainer.newBackgroundContext()
+        
         try await context.perform(schedule: .enqueued) {
             guard let user = context.object(with: userObjectID) as? User else {
                 return
@@ -117,10 +122,9 @@ extension Session {
                 let previousUserDetail = userDetails[previousUserIndex]
                 
                 if previousUserDetail ~= userDetail {
+                    userDetails.remove(userDetail)
                     context.delete(userDetail)
                     try context.save()
-                    
-                    userDetails.remove(userDetail)
                 }
             }
         }

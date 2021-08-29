@@ -14,8 +14,8 @@ extension TweetNestAppDelegate: UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         UNUserNotificationCenter.current().delegate = self
 
-        if (Session.shared.registerAppRefreshBackgroundTask() == false) {
-            Logger().error("Failed to register update accounts background task: \(Session.backgroundRefreshTaskIdentifier, privacy: .public)")
+        if (Session.shared.registerBackgroundTasks() == false) {
+            Logger().error("Failed to register background tasks")
         }
 
         return true
