@@ -92,48 +92,34 @@ struct DeleteBulkTweetsView: View {
     }
     
     private func delete() async {
-        #if os(iOS)
-        let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
-            Task {
-                await UIApplication.shared.beginBackgroundTask {
-                    task?.cancel()
-                }
-            }
-        }.value
-        
-        defer {
-            Task {
-                await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
-            }
-        }
-        #endif
-        
-        await withTaskCancellationHandler {
-            guard let account = account else {
-                return
-            }
-            
-            await withTaskGroup(of: (Int,  Result<Void, Error>).self) { taskGroup in
-                for (offset, tweet) in targetTweets.enumerated() {
-                    taskGroup.addTask {
-                        do {
-                            try await tweet.delete(session: .session(for: account))
-                            return (offset, .success(()))
-                        } catch {
-                            return (offset, .failure(error))
-                        }
-                    }
+        await withExtendedBackgroundExecution {
+            await withTaskCancellationHandler {
+                guard let account = account else {
+                    return
                 }
                 
-                for await result in taskGroup {
-                    results[result.0] = result.1
+                await withTaskGroup(of: (Int,  Result<Void, Error>).self) { taskGroup in
+                    for (offset, tweet) in targetTweets.enumerated() {
+                        taskGroup.addTask {
+                            do {
+                                try await tweet.delete(session: .session(for: account))
+                                return (offset, .success(()))
+                            } catch {
+                                return (offset, .failure(error))
+                            }
+                        }
+                    }
                     
-                    progress.completedUnitCount = Int64(results.count)
-                    updateProgressDescription()
+                    for await result in taskGroup {
+                        results[result.0] = result.1
+                        
+                        progress.completedUnitCount = Int64(results.count)
+                        updateProgressDescription()
+                    }
                 }
+            } onCancel: {
+                progress.cancel()
             }
-        } onCancel: {
-            progress.cancel()
         }
     }
     

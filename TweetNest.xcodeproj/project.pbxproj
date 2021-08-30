@@ -189,6 +189,7 @@
 		19EE473626C14554007D2814 /* UsersDiffListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473426C14554007D2814 /* UsersDiffListSection.swift */; };
 		19EE473826C14BCD007D2814 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473726C14BCD007D2814 /* UserRow.swift */; };
 		19EE473926C14BCD007D2814 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473726C14BCD007D2814 /* UserRow.swift */; };
+		19F1117526DD216C004D6DE3 /* withExtendedBackgroundExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117426DD216C004D6DE3 /* withExtendedBackgroundExecution.swift */; };
 		66002D6E26BF896F00B52E30 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D6C26BF896F00B52E30 /* InfoPlist.strings */; };
 		66002D7126BF897000B52E30 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D6F26BF897000B52E30 /* Localizable.strings */; };
 		66002D7426BF897000B52E30 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D7226BF897000B52E30 /* InfoPlist.strings */; };
@@ -484,6 +485,7 @@
 		19EE473726C14BCD007D2814 /* UserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRow.swift; sourceTree = "<group>"; };
 		19EE473B26C15439007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19EE473C26C1543E007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		19F1117426DD216C004D6DE3 /* withExtendedBackgroundExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = withExtendedBackgroundExecution.swift; sourceTree = "<group>"; };
 		66002D6D26BF896F00B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66002D7026BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		66002D7326BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -988,6 +990,7 @@
 				19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */,
 				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
+				19F1117426DD216C004D6DE3 /* withExtendedBackgroundExecution.swift */,
 				195DD4B226BEE7EC008F0309 /* Localizable.strings */,
 				19E0040E26DBF41600A55963 /* Localizable.stringsdict */,
 				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
@@ -1751,6 +1754,7 @@
 				19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */,
 				19C5A2BE26BC1F8A00AB1122 /* UserDetail.swift in Sources */,
 				19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */,
+				19F1117526DD216C004D6DE3 /* withExtendedBackgroundExecution.swift in Sources */,
 				19C5A28A26BC1F3500AB1122 /* TweetNestKit.docc in Sources */,
 				19C5A2BB26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift in Sources */,
 				197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */,

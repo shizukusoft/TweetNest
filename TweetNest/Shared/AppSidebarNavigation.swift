@@ -251,42 +251,28 @@ struct AppSidebarNavigation: View {
 
     @Sendable
     private func refresh() async {
-        #if os(iOS)
-        let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
-            Task {
-                await UIApplication.shared.beginBackgroundTask {
-                    task?.cancel()
+        await withExtendedBackgroundExecution {
+            guard isRefreshing == false else {
+                return
+            }
+
+            isRefreshing = true
+            defer {
+                isRefreshing = false
+            }
+
+            do {
+                let hasChanges = try await session.updateAllAccounts()
+                try await session.cleansingAllAccounts()
+                
+                for hasChanges in hasChanges {
+                    _ = try hasChanges.1.get()
                 }
+            } catch {
+                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+                self.error = TweetNestError(error)
+                showErrorAlert = true
             }
-        }.value
-
-        defer {
-            Task {
-                await UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
-            }
-        }
-        #endif
-        
-        guard isRefreshing == false else {
-            return
-        }
-
-        isRefreshing = true
-        defer {
-            isRefreshing = false
-        }
-
-        do {
-            let hasChanges = try await session.updateAllAccounts()
-            try await session.cleansingAllAccounts()
-            
-            for hasChanges in hasChanges {
-                _ = try hasChanges.1.get()
-            }
-        } catch {
-            Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-            self.error = TweetNestError(error)
-            showErrorAlert = true
         }
     }
 }

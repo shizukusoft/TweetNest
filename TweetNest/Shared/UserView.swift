@@ -223,43 +223,32 @@ extension UserView {
         
         @Sendable
         private func refresh() async {
-            #if os(iOS)
-            let backgroundTaskIdentifier = await withUnsafeCurrentTask { task in
-                Task {
-                    UIApplication.shared.beginBackgroundTask {
-                        task?.cancel()
+            await withExtendedBackgroundExecution {
+                guard isRefreshing == false else {
+                    return
+                }
+
+                isRefreshing = true
+                defer {
+                    // FIXME: https://github.com/apple/swift/pull/38481/files
+                    DispatchQueue.main.async {
+                        isRefreshing = false
                     }
                 }
-            }.value
 
-            defer {
-                Task {
-                    UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+                do {
+                    if let account = user.account {
+                        try await Session.shared.updateAccount(account.objectID)
+                        try await Session.shared.cleansingAccount(for: account.objectID)
+                    } else if let account = account {
+                        try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, twitterSession: .session(for: account))
+                        try await Session.shared.cleansingUser(for: user.objectID)
+                    }
+                } catch {
+                    Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+                    self.error = TweetNestError(error)
+                    showErrorAlert = true
                 }
-            }
-            #endif
-            
-            guard isRefreshing == false else {
-                return
-            }
-
-            isRefreshing = true
-            defer {
-                isRefreshing = false
-            }
-
-            do {
-                if let account = user.account {
-                    try await Session.shared.updateAccount(account.objectID)
-                    try await Session.shared.cleansingAccount(for: account.objectID)
-                } else if let account = account {
-                    try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, twitterSession: .session(for: account))
-                    try await Session.shared.cleansingUser(for: user.objectID)
-                }
-            } catch {
-                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                self.error = TweetNestError(error)
-                showErrorAlert = true
             }
         }
     }
