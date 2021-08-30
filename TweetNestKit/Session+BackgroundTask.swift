@@ -111,8 +111,8 @@ extension Session {
                             let previousUserDetail = updateResults.previousUserDetailObjectID.flatMap { context.object(with: $0) as? UserDetail }
                             let latestUserDetail = context.object(with: updateResults.latestUserDetailObjectID) as? UserDetail
 
-                            let (newFollowingUsersCount, newUnfollowingUsersCount) = Self.followingUserChanges(oldUserDetail: previousUserDetail, newUserDetail: latestUserDetail)
-                            let (newFollowerUsersCount, newUnfollowerUsersCount) = Self.followerUserChanges(oldUserDetail: previousUserDetail, newUserDetail: latestUserDetail)
+                            let followingUserChanges = latestUserDetail?.followingUserChanges(from: previousUserDetail)
+                            let followerUserChanges = latestUserDetail?.followerUserChanges(from: previousUserDetail)
 
                             let displayUsername = latestUserDetail?.displayUsername ?? (account?.id).flatMap { $0.twnk_formatted() } ?? accountObjectID.uriRepresentation().absoluteString
 
@@ -121,16 +121,16 @@ extension Session {
                             notificationContent.title = displayUsername
                             
                             var changes: [String] = []
-                            if newFollowingUsersCount > 0 {
+                            if let newFollowingUsersCount = followingUserChanges?.followingUsersCount, newFollowingUsersCount > 0 {
                                 changes.append(String(localized: "\(newFollowingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
                             }
-                            if newUnfollowingUsersCount > 0 {
+                            if let newUnfollowingUsersCount = followingUserChanges?.unfollowingUsersCount, newUnfollowingUsersCount > 0 {
                                 changes.append(String(localized: "\(newUnfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
                             }
-                            if newFollowerUsersCount > 0 {
+                            if let newFollowerUsersCount = followerUserChanges?.followerUsersCount, newFollowerUsersCount > 0 {
                                 changes.append(String(localized: "\(newFollowerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
                             }
-                            if newUnfollowerUsersCount > 0 {
+                            if let newUnfollowerUsersCount = followerUserChanges?.unfollowerUsersCount, newUnfollowerUsersCount > 0 {
                                 changes.append(String(localized: "\(newUnfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
                             }
                             
@@ -180,42 +180,6 @@ extension Session {
 
             throw error
         }
-    }
-    
-    static func followingUserChanges(oldUserDetail: UserDetail?, newUserDetail: UserDetail?) -> (followingUsersCount: Int, unfollowingUsersCount: Int) {
-        let previousFollowingUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followingUserIDs.flatMap { Set($0) }
-        let latestFollowingUserIDs = newUserDetail?.followingUserIDs.flatMap { Set($0) }
-        
-        let newFollowingUsersCount: Int
-        let newUnfollowingUsersCount: Int
-        
-        if let latestFollowingUserIDs = latestFollowingUserIDs, let previousFollowingUserIDs = previousFollowingUserIDs {
-            newFollowingUsersCount = latestFollowingUserIDs.subtracting(previousFollowingUserIDs).count
-            newUnfollowingUsersCount = previousFollowingUserIDs.subtracting(latestFollowingUserIDs).count
-        } else {
-            newFollowingUsersCount = max(Int(newUserDetail?.followingUsersCount ?? 0) - Int(oldUserDetail?.followingUsersCount ?? 0), 0)
-            newUnfollowingUsersCount = max(Int(oldUserDetail?.followingUsersCount ?? 0) - Int(newUserDetail?.followingUsersCount ?? 0), 0)
-        }
-        
-        return (newFollowingUsersCount, newUnfollowingUsersCount)
-    }
-    
-    static func followerUserChanges(oldUserDetail: UserDetail?, newUserDetail: UserDetail?) -> (followerUsersCount: Int, unfollowerUsersCount: Int) {
-        let previousFollowerUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followerUserIDs.flatMap { Set($0) }
-        let latestFollowerUserIDs = newUserDetail?.followerUserIDs.flatMap { Set($0) }
-        
-        let newFollowerUsersCount: Int
-        let newUnfollowerUsersCount: Int
-        
-        if let latestFollowerUserIDs = latestFollowerUserIDs, let previousFollowerUserIDs = previousFollowerUserIDs {
-            newFollowerUsersCount = latestFollowerUserIDs.subtracting(previousFollowerUserIDs).count
-            newUnfollowerUsersCount = previousFollowerUserIDs.subtracting(latestFollowerUserIDs).count
-        } else {
-            newFollowerUsersCount = max(Int(newUserDetail?.followerUsersCount ?? 0) - Int(oldUserDetail?.followerUsersCount ?? 0), 0)
-            newUnfollowerUsersCount = max(Int(oldUserDetail?.followerUsersCount ?? 0) - Int(newUserDetail?.followerUsersCount ?? 0), 0)
-        }
-        
-        return (newFollowerUsersCount, newUnfollowerUsersCount)
     }
 }
 #endif

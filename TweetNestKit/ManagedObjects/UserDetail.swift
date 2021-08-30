@@ -103,3 +103,41 @@ extension UserDetail {
         lhs.username == rhs.username
     }
 }
+
+extension UserDetail {
+    func followingUserChanges(from oldUserDetail: UserDetail?) -> (followingUsersCount: Int, unfollowingUsersCount: Int) {
+        let previousFollowingUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followingUserIDs.flatMap { Set($0) }
+        let latestFollowingUserIDs = followingUserIDs.flatMap { Set($0) }
+        
+        let newFollowingUsersCount: Int
+        let newUnfollowingUsersCount: Int
+        
+        if let latestFollowingUserIDs = latestFollowingUserIDs, let previousFollowingUserIDs = previousFollowingUserIDs {
+            newFollowingUsersCount = latestFollowingUserIDs.subtracting(previousFollowingUserIDs).count
+            newUnfollowingUsersCount = previousFollowingUserIDs.subtracting(latestFollowingUserIDs).count
+        } else {
+            newFollowingUsersCount = max(Int(followingUsersCount) - Int(oldUserDetail?.followingUsersCount ?? 0), 0)
+            newUnfollowingUsersCount = max(Int(oldUserDetail?.followingUsersCount ?? 0) - Int(followingUsersCount), 0)
+        }
+        
+        return (newFollowingUsersCount, newUnfollowingUsersCount)
+    }
+    
+    func followerUserChanges(from oldUserDetail: UserDetail?) -> (followerUsersCount: Int, unfollowerUsersCount: Int) {
+        let previousFollowerUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followerUserIDs.flatMap { Set($0) }
+        let latestFollowerUserIDs = followerUserIDs.flatMap { Set($0) }
+        
+        let newFollowerUsersCount: Int
+        let newUnfollowerUsersCount: Int
+        
+        if let latestFollowerUserIDs = latestFollowerUserIDs, let previousFollowerUserIDs = previousFollowerUserIDs {
+            newFollowerUsersCount = latestFollowerUserIDs.subtracting(previousFollowerUserIDs).count
+            newUnfollowerUsersCount = previousFollowerUserIDs.subtracting(latestFollowerUserIDs).count
+        } else {
+            newFollowerUsersCount = max(Int(followerUsersCount) - Int(oldUserDetail?.followerUsersCount ?? 0), 0)
+            newUnfollowerUsersCount = max(Int(oldUserDetail?.followerUsersCount ?? 0) - Int(followerUsersCount), 0)
+        }
+        
+        return (newFollowerUsersCount, newUnfollowerUsersCount)
+    }
+}
