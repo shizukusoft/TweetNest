@@ -7,7 +7,6 @@
 
 import CoreData
 import CloudKit
-import AuthenticationServices
 import OrderedCollections
 import Twitter
 
@@ -62,7 +61,9 @@ public actor Session {
         _twitterAPIConfiguration = .uninitialized { try await twitterAPIConfiguration() }
         persistentContainer = PersistentContainer(inMemory: inMemory)
     }
-    
+}
+
+extension Session {
     public convenience init(inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
         
@@ -132,96 +133,11 @@ extension Session {
         return twitterSession
     }
     
-    private func updateTwitterSession(_ twitterSession: Twitter.Session?, for accountObjectID: NSManagedObjectID) {
+    func updateTwitterSession(_ twitterSession: Twitter.Session?, for accountObjectID: NSManagedObjectID) {
         guard accountObjectID.isTemporaryID == false else {
             return
         }
         
         twitterSessions[accountObjectID.uriRepresentation()] = twitterSession
-    }
-}
-
-extension Session {
-    nonisolated func download(from url: URL) async throws -> URL {
-        let (url, response) = try await urlSession.download(from: url)
-        guard
-            let httpResponse = response as? HTTPURLResponse,
-            (200..<300).contains(httpResponse.statusCode)
-        else {
-            throw SessionError.invalidServerResponse(response)
-        }
-
-        return url
-    }
-}
-
-extension Session {
-    public nonisolated func authorizeNewAccount(
-        webAuthenticationSessionHandler: @escaping (ASWebAuthenticationSession) -> Void
-    ) async throws {
-        let twitterSession = try await twitterSession()
-
-        let requestToken = try await twitterSession.fetchRequestToken(callback: "tweet-nest://")
-
-        let url: URL = try await withCheckedThrowingContinuation { continuation in
-            webAuthenticationSessionHandler(
-                ASWebAuthenticationSession(url: URL(twitterOAuthAuthorizeURLWithOAuthToken: requestToken.token), callbackURLScheme: "tweet-nest", completionHandler: { (url, error) in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume(returning: url!)
-                    }
-                })
-            )
-        }
-
-        let urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
-
-        let token = urlComponents?.queryItems?.first(where: { $0.name == "oauth_token" })?.value ?? ""
-        let verifier = urlComponents?.queryItems?.first(where: { $0.name == "oauth_verifier" })?.value ?? ""
-
-        let accessToken = try await twitterSession.fetchAccessToken(token: token, verifier: verifier)
-
-        await twitterSession.updateCredential(.init(accessToken))
-
-        let twitterAccount = try await Twitter.Account.me(session: twitterSession)
-        
-        let accountObjectID = try await self.createNewAccount(tokenResponse: accessToken, twitterAccount: twitterAccount)
-        
-        await updateTwitterSession(twitterSession, for: accountObjectID)
-        
-        try await updateAccount(accountObjectID)
-    }
-
-    private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws -> NSManagedObjectID {
-        let context = persistentContainer.newBackgroundContext()
-
-        return try await context.perform(schedule: .enqueued) {
-            let account = Account(context: context)
-            account.creationDate = Date()
-            account.id = twitterAccount.id
-            account.token = tokenResponse.token
-            account.tokenSecret = tokenResponse.tokenSecret
-
-            try context.save()
-
-            return account.objectID
-        }
-    }
-}
-
-extension Session {
-    private nonisolated func credential(for accountObjectID: NSManagedObjectID) async throws -> Twitter.Session.Credential? {
-        let context = persistentContainer.newBackgroundContext()
-        
-        return await context.perform(schedule: .enqueued) {
-            guard
-                let account = context.object(with: accountObjectID) as? Account
-            else {
-                return nil
-            }
-
-            return account.credential
-        }
     }
 }
