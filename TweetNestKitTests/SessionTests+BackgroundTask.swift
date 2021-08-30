@@ -10,8 +10,7 @@ import XCTest
 
 extension SessionTests {
     func testFollowingUserChanges() {
-        let session = Session(inMemory: true)
-        withExtendedLifetime(session) { session in
+        withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             
@@ -25,8 +24,7 @@ extension SessionTests {
         }
     }
     func testFollowingUserChangesUsingUserIDs() {
-        let session = Session(inMemory: true)
-        withExtendedLifetime(session) { session in
+        withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             
@@ -39,8 +37,7 @@ extension SessionTests {
     }
     
     func testFollowingUserChangesUsingCount() {
-        let session = Session(inMemory: true)
-        withExtendedLifetime(session) { session in
+        withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             
@@ -57,8 +54,7 @@ extension SessionTests {
     }
     
     func testFollowerUserChanges() {
-        let session = Session(inMemory: true)
-        withExtendedLifetime(session) { session in
+        withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             
@@ -72,8 +68,7 @@ extension SessionTests {
         }
     }
     func testFollowerUserChangesUsingUserIDs() {
-        let session = Session(inMemory: true)
-        withExtendedLifetime(session) { session in
+        withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             
@@ -86,8 +81,7 @@ extension SessionTests {
     }
     
     func testFollowerUserChangesUsingCount() {
-        let session = Session(inMemory: true)
-        withExtendedLifetime(session) { session in
+        withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
             
