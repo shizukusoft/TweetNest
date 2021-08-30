@@ -7,12 +7,14 @@
 
 import Foundation
 import CoreData
+import UserNotifications
+import UnifiedLogging
 import Twitter
 import OrderedCollections
 
 extension Session {
     @discardableResult
-    public nonisolated func updateAllAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
+    public nonisolated func updateAllAccounts(requestUserNotificationForChanges: Bool = true) async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
 
@@ -31,7 +33,7 @@ extension Session {
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
                     do {
-                        let updateResults = try await self.updateAccount(accountObjectID, context: context)
+                        let updateResults = try await self.updateAccount(accountObjectID, context: context, requestUserNotificationForChanges: requestUserNotificationForChanges)
                         return (accountObjectID, .success(updateResults.previousUserDetailObjectID != updateResults.latestUserDetailObjectID))
                     } catch {
                         return (accountObjectID, .failure(error))
@@ -46,7 +48,8 @@ extension Session {
     @discardableResult
     public nonisolated func updateAccount(
         _ accountObjectID: NSManagedObjectID,
-        context _context: NSManagedObjectContext? = nil
+        context _context: NSManagedObjectContext? = nil,
+        requestUserNotificationForChanges: Bool = true
     ) async throws -> (previousUserDetailObjectID: NSManagedObjectID?, latestUserDetailObjectID: NSManagedObjectID) {
         let context = _context ?? persistentContainer.newBackgroundContext()
         context.undoManager = _context?.undoManager
@@ -83,7 +86,7 @@ extension Session {
         let twitterUserFetchDate = Date()
 
         async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
-            let account = context.object(with: accountObjectID) as? Account
+            let account = context.object(with: accountObjectID) as! Account
 
             let fetchRequest = User.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
@@ -105,6 +108,10 @@ extension Session {
             userDetail.user?.account = account
 
             try context.save()
+            
+            if requestUserNotificationForChanges {
+                self.requestUserNotificationForChanges(account: account, oldUserDetail: previousUserDetail, newUserDetail: userDetail)
+            }
 
             return (previousUserDetail?.objectID, userDetail.objectID)
         }
@@ -128,5 +135,55 @@ extension Session {
         try await usersUpdateTask.result.get()
 
         return try await userDetailObjectIDs
+    }
+    
+    private nonisolated func requestUserNotificationForChanges(account: Account, oldUserDetail: UserDetail?, newUserDetail: UserDetail) {
+        let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
+        let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
+        
+        let notificationContentTitle: String
+        if let name = newUserDetail.name, let displayUsername = newUserDetail.displayUsername, name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
+            notificationContentTitle = "\(name) (\(displayUsername))"
+        } else if let displayUsername = newUserDetail.displayUsername {
+            notificationContentTitle = displayUsername
+        } else {
+            notificationContentTitle = "#\(account.id.twnk_formatted())"
+        }
+
+        let notificationContent = UNMutableNotificationContent()
+        notificationContent.threadIdentifier = account.objectID.uriRepresentation().absoluteString
+        notificationContent.title = notificationContentTitle
+        
+        var changes: [String] = []
+        if followingUserChanges.followingUsersCount > 0 {
+            changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
+        }
+        if followingUserChanges.unfollowingUsersCount > 0 {
+            changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
+        }
+        if followerUserChanges.followerUsersCount > 0 {
+            changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
+        }
+        if followerUserChanges.unfollowerUsersCount > 0 {
+            changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
+        }
+        
+        if changes.isEmpty == false {
+            notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+            notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+        } else {
+            notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+        }
+
+        let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+
+        Task.detached {
+            do {
+                try await UNUserNotificationCenter.current().add(notificationRequest)
+            } catch {
+                Logger(subsystem: Bundle.module.bundleIdentifier!, category: "update-account")
+                    .error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+            }
+        }
     }
 }

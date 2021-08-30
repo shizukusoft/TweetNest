@@ -97,60 +97,7 @@ extension Session {
             try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                 accountObjectIDs.forEach { accountObjectID in
                     taskGroup.addTask {
-                        let updateResults = try await self.updateAccount(accountObjectID, context: context)
-                        
-                        guard
-                            updateResults.previousUserDetailObjectID != updateResults.latestUserDetailObjectID
-                        else {
-                            return
-                        }
-                        
-                        let notificationContent: UNMutableNotificationContent = await context.perform(schedule: .enqueued) {
-                            let account = context.object(with: accountObjectID) as? Account
-                            
-                            let previousUserDetail = updateResults.previousUserDetailObjectID.flatMap { context.object(with: $0) as? UserDetail }
-                            let latestUserDetail = context.object(with: updateResults.latestUserDetailObjectID) as? UserDetail
-
-                            let followingUserChanges = latestUserDetail?.followingUserChanges(from: previousUserDetail)
-                            let followerUserChanges = latestUserDetail?.followerUserChanges(from: previousUserDetail)
-
-                            let displayUsername = latestUserDetail?.displayUsername ?? (account?.id).flatMap { $0.twnk_formatted() } ?? accountObjectID.uriRepresentation().absoluteString
-
-                            let notificationContent = UNMutableNotificationContent()
-                            notificationContent.threadIdentifier = accountObjectID.uriRepresentation().absoluteString
-                            notificationContent.title = displayUsername
-                            
-                            var changes: [String] = []
-                            if let newFollowingUsersCount = followingUserChanges?.followingUsersCount, newFollowingUsersCount > 0 {
-                                changes.append(String(localized: "\(newFollowingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
-                            }
-                            if let newUnfollowingUsersCount = followingUserChanges?.unfollowingUsersCount, newUnfollowingUsersCount > 0 {
-                                changes.append(String(localized: "\(newUnfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
-                            }
-                            if let newFollowerUsersCount = followerUserChanges?.followerUsersCount, newFollowerUsersCount > 0 {
-                                changes.append(String(localized: "\(newFollowerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
-                            }
-                            if let newUnfollowerUsersCount = followerUserChanges?.unfollowerUsersCount, newUnfollowerUsersCount > 0 {
-                                changes.append(String(localized: "\(newUnfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
-                            }
-                            
-                            if changes.isEmpty == false {
-                                notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
-                                notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
-                            } else {
-                                notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
-                            }
-
-                            return notificationContent
-                        }
-
-                        let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-
-                        do {
-                            try await UNUserNotificationCenter.current().add(notificationRequest)
-                        } catch {
-                            logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
-                        }
+                        try await self.updateAccount(accountObjectID, context: context, requestUserNotificationForChanges: true)
                     }
                 }
 
