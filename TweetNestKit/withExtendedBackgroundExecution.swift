@@ -21,13 +21,9 @@ public func withExtendedBackgroundExecution<T>(identifier: String = #function, b
         }
     }
     
-    return try await withTaskCancellationHandler { () -> T in
-        defer {
-            semaphore.signal()
-        }
-        
-        return try await body()
-    } onCancel: {
+    defer {
         semaphore.signal()
     }
+    
+    return try await body()
 }
