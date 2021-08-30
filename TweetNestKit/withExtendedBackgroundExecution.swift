@@ -11,6 +11,9 @@ import UIKit
 public func withExtendedBackgroundExecution<T>(identifier: String = #function, body: () async throws -> T) async rethrows -> T {
     #if !os(macOS)
     let semaphore = DispatchSemaphore(value: 0)
+    defer {
+        semaphore.signal()
+    }
     
     withUnsafeCurrentTask { task in
         ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
@@ -20,10 +23,6 @@ public func withExtendedBackgroundExecution<T>(identifier: String = #function, b
                 semaphore.wait()
             }
         }
-    }
-    
-    defer {
-        semaphore.signal()
     }
     #else
     let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
