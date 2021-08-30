@@ -6,7 +6,10 @@
 //
 
 import AppKit
+import UserNotifications
 
 extension TweetNestAppDelegate: NSApplicationDelegate {
-
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        UNUserNotificationCenter.current().delegate = self
+    }
 }
