@@ -23,6 +23,7 @@ extension SessionTests {
             XCTAssertEqual(Session.followingUserChanges(oldUserDetail: oldUserDetail, newUserDetail: newUserDetail).unfollowingUsersCount, 3)
         }
     }
+    
     func testFollowingUserChangesUsingUserIDs() {
         withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
@@ -33,6 +34,17 @@ extension SessionTests {
             
             XCTAssertEqual(Session.followingUserChanges(oldUserDetail: oldUserDetail, newUserDetail: newUserDetail).followingUsersCount, 1)
             XCTAssertEqual(Session.followingUserChanges(oldUserDetail: oldUserDetail, newUserDetail: newUserDetail).unfollowingUsersCount, 3)
+        }
+    }
+    
+    func testFollowingUserChangesUsingUserIDsWithoutOldUserDetail() {
+        withExtendedLifetime(Session(inMemory: true)) { session in
+            let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
+            
+            newUserDetail.followingUserIDs = [2, 3, 6].map { String($0) }
+            
+            XCTAssertEqual(Session.followingUserChanges(oldUserDetail: nil, newUserDetail: newUserDetail).followingUsersCount, 3)
+            XCTAssertEqual(Session.followingUserChanges(oldUserDetail: nil, newUserDetail: newUserDetail).unfollowingUsersCount, 0)
         }
     }
     
@@ -67,6 +79,7 @@ extension SessionTests {
             XCTAssertEqual(Session.followerUserChanges(oldUserDetail: oldUserDetail, newUserDetail: newUserDetail).unfollowerUsersCount, 3)
         }
     }
+    
     func testFollowerUserChangesUsingUserIDs() {
         withExtendedLifetime(Session(inMemory: true)) { session in
             let oldUserDetail = UserDetail(context: session.persistentContainer.viewContext)
@@ -77,6 +90,17 @@ extension SessionTests {
             
             XCTAssertEqual(Session.followerUserChanges(oldUserDetail: oldUserDetail, newUserDetail: newUserDetail).followerUsersCount, 1)
             XCTAssertEqual(Session.followerUserChanges(oldUserDetail: oldUserDetail, newUserDetail: newUserDetail).unfollowerUsersCount, 3)
+        }
+    }
+    
+    func testFollowerUserChangesUsingUserIDsWithoutOldUserDetail() {
+        withExtendedLifetime(Session(inMemory: true)) { session in
+            let newUserDetail = UserDetail(context: session.persistentContainer.viewContext)
+            
+            newUserDetail.followerUserIDs = [2, 3, 6].map { String($0) }
+            
+            XCTAssertEqual(Session.followerUserChanges(oldUserDetail: nil, newUserDetail: newUserDetail).followerUsersCount, 3)
+            XCTAssertEqual(Session.followerUserChanges(oldUserDetail: nil, newUserDetail: newUserDetail).unfollowerUsersCount, 0)
         }
     }
     
