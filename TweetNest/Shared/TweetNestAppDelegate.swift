@@ -15,5 +15,7 @@ class TweetNestAppDelegate: NSObject, ObservableObject {
 }
 
 extension TweetNestAppDelegate: UNUserNotificationCenterDelegate {
-    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {
+        return [.badge, .sound, .list, .banner]
+    }
 }
