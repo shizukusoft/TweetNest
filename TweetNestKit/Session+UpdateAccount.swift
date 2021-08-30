@@ -138,6 +138,8 @@ extension Session {
     }
     
     private nonisolated func requestUserNotificationForChanges(account: Account, oldUserDetail: UserDetail?, newUserDetail: UserDetail) {
+        guard oldUserDetail?.objectID != newUserDetail.objectID else { return }
+        
         let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
         let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
         
