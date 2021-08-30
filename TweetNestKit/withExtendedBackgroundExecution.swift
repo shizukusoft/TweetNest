@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 public func withExtendedBackgroundExecution<T>(identifier: String = #function, body: () async throws -> T) async rethrows -> T {
+    #if !os(macOS)
     let semaphore = DispatchSemaphore(value: 0)
     
     withUnsafeCurrentTask { task in
@@ -24,6 +25,12 @@ public func withExtendedBackgroundExecution<T>(identifier: String = #function, b
     defer {
         semaphore.signal()
     }
+    #else
+    let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
+    defer {
+        ProcessInfo.processInfo.endActivity(token)
+    }
+    #endif
     
     return try await body()
 }
