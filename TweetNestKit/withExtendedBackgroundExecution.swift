@@ -12,8 +12,8 @@ public func withExtendedBackgroundExecution<T>(identifier: String = #function, b
     let semaphore = DispatchSemaphore(value: 0)
     
     withUnsafeCurrentTask { task in
-        ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { shouldCancel in
-            if shouldCancel {
+        ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
+            if expired {
                 task?.cancel()
             } else {
                 semaphore.wait()
