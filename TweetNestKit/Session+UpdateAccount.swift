@@ -117,7 +117,7 @@ extension Session {
                 return (previousUserDetail?.objectID, userDetail.objectID)
             }
             
-            let usersUpdateTask = Task.detached {
+            let usersUpdateTask = Task {
                 var userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs)
                 if let myBlockingUserIDs = myBlockingUserIDs {
                     userIDs.append(contentsOf: myBlockingUserIDs)
@@ -181,7 +181,7 @@ extension Session {
 
         let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
 
-        Task.detached {
+        Task {
             do {
                 try await UNUserNotificationCenter.current().add(notificationRequest)
             } catch {
