@@ -17,6 +17,7 @@ extension DataAsset {
     }
 
     @NSManaged public var data: Data?
+    @NSManaged public var dataSHA512Hash: Data?
     @NSManaged public var url: URL?
     @NSManaged public var creationDate: Date?
 

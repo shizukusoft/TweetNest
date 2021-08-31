@@ -30,6 +30,7 @@ extension Session {
         }
         
         for accountObjectID in accountObjectIDs {
+            try Task.checkCancellation()
             try await cleansingAccount(for: accountObjectID, context: context)
         }
     }
@@ -68,9 +69,8 @@ extension Session {
         
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             for userObjectID in userObjectIDs {
-                taskGroup.addTask {
-                    try await self.cleansingUser(for: userObjectID, context: context)
-                }
+                try Task.checkCancellation()
+                try await self.cleansingUser(for: userObjectID, context: context)
             }
             
             try await taskGroup.waitForAll()
@@ -106,7 +106,6 @@ extension Session {
                 user.addToUserDetails(duplicatedUser.userDetails ?? [])
                 
                 context.delete(duplicatedUser)
-                try context.save()
             }
             
             var userDetails = user.sortedUserDetails ?? []
@@ -124,9 +123,10 @@ extension Session {
                 if previousUserDetail ~= userDetail {
                     userDetails.remove(userDetail)
                     context.delete(userDetail)
-                    try context.save()
                 }
             }
+            
+            try context.save()
         }
     }
 }

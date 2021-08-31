@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import CryptoKit
 
 public class DataAsset: NSManagedObject {
     public override func awakeFromInsert() {
@@ -21,18 +22,25 @@ extension DataAsset {
         url: URL,
         context: NSManagedObjectContext
     ) throws -> DataAsset {
+        let dataSHA512Hash = Data(SHA512.hash(data: data))
+        
         let dataAssetFetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
         dataAssetFetchRequest.predicate = NSPredicate(format: "url == %@", url as NSURL)
         dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        dataAssetFetchRequest.propertiesToFetch = ["dataSHA512Hash"]
         dataAssetFetchRequest.fetchLimit = 1
 
         let lastDataAsset = try context.fetch(dataAssetFetchRequest).first
 
-        if let lastDataAsset = lastDataAsset, lastDataAsset.data == data {
+        if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash || lastDataAsset.data.flatMap({ Data(SHA512.hash(data: $0)) }) == dataSHA512Hash {
+            if lastDataAsset.dataSHA512Hash == nil {
+                lastDataAsset.dataSHA512Hash = dataSHA512Hash
+            }
             return lastDataAsset
         } else {
             let newDataAsset = DataAsset(context: context)
             newDataAsset.data = data
+            newDataAsset.dataSHA512Hash = dataSHA512Hash
             newDataAsset.url = url
 
             return newDataAsset

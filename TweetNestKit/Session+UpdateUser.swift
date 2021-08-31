@@ -37,6 +37,8 @@ extension Session {
                         
                         for user in chunkedUsers.1 {
                             taskGroup.addTask {
+                                try Task.checkCancellation()
+                                
                                 try await context.perform(schedule: .enqueued) {
                                     try Task.checkCancellation()
                                     
@@ -51,33 +53,29 @@ extension Session {
                                         // Don't update user data if user data has account. (Might overwrite followings/followers list)
                                         context.delete(userDetail)
                                     }
-
-                                    if context.hasChanges {
-                                        try context.save()
-                                    }
                                 }
                             }
 
                             taskGroup.addTask {
+                                try Task.checkCancellation()
+                                
                                 do {
                                     _ = try await DataAsset.dataAsset(for: user.profileImageOriginalURL, session: self, context: context)
                                 } catch {
                                     Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
                                         .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                                 }
-
-                                try await context.perform(schedule: .enqueued) {
-                                    try Task.checkCancellation()
-                                    
-                                    if context.hasChanges {
-                                        try context.save()
-                                    }
-                                }
                             }
                         }
                     }
 
                     try await taskGroup.waitForAll()
+                    
+                    try await context.perform {
+                        if context.hasChanges {
+                            try context.save()
+                        }
+                    }
                 }
             }
         }

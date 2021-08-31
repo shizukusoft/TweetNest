@@ -189,7 +189,7 @@
 		19EE473626C14554007D2814 /* UsersDiffListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473426C14554007D2814 /* UsersDiffListSection.swift */; };
 		19EE473826C14BCD007D2814 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473726C14BCD007D2814 /* UserRow.swift */; };
 		19EE473926C14BCD007D2814 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473726C14BCD007D2814 /* UserRow.swift */; };
-		19F1117526DD216C004D6DE3 /* withExtendedBackgroundExecution.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117426DD216C004D6DE3 /* withExtendedBackgroundExecution.swift */; };
+		19F1117526DD216C004D6DE3 /* BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */; };
 		19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */; };
 		19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117826DD28A1004D6DE3 /* Session+Credential.swift */; };
 		19F1117B26DD28DB004D6DE3 /* Session+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117A26DD28DB004D6DE3 /* Session+URL.swift */; };
@@ -488,7 +488,7 @@
 		19EE473726C14BCD007D2814 /* UserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRow.swift; sourceTree = "<group>"; };
 		19EE473B26C15439007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19EE473C26C1543E007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		19F1117426DD216C004D6DE3 /* withExtendedBackgroundExecution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = withExtendedBackgroundExecution.swift; sourceTree = "<group>"; };
+		19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasks.swift; sourceTree = "<group>"; };
 		19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		19F1117826DD28A1004D6DE3 /* Session+Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
 		19F1117A26DD28DB004D6DE3 /* Session+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+URL.swift"; sourceTree = "<group>"; };
@@ -999,7 +999,7 @@
 				19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */,
 				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
-				19F1117426DD216C004D6DE3 /* withExtendedBackgroundExecution.swift */,
+				19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */,
 				195DD4B226BEE7EC008F0309 /* Localizable.strings */,
 				19E0040E26DBF41600A55963 /* Localizable.stringsdict */,
 				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
@@ -1763,7 +1763,7 @@
 				19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */,
 				19C5A2BE26BC1F8A00AB1122 /* UserDetail.swift in Sources */,
 				19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */,
-				19F1117526DD216C004D6DE3 /* withExtendedBackgroundExecution.swift in Sources */,
+				19F1117526DD216C004D6DE3 /* BackgroundTasks.swift in Sources */,
 				19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */,
 				19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */,
 				19C5A28A26BC1F3500AB1122 /* TweetNestKit.docc in Sources */,

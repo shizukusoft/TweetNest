@@ -33,7 +33,7 @@ extension Session {
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
                     do {
-                        let updateResults = try await self.updateAccount(accountObjectID, context: context, requestUserNotificationForChanges: requestUserNotificationForChanges)
+                        let updateResults = try await self.updateAccount(accountObjectID, requestUserNotificationForChanges: requestUserNotificationForChanges)
                         return (accountObjectID, .success(updateResults.previousUserDetailObjectID != updateResults.latestUserDetailObjectID))
                     } catch {
                         return (accountObjectID, .failure(error))
@@ -85,6 +85,9 @@ extension Session {
             let followerIDs = try await _followerIDs
             let myBlockingUserIDs = try await _myBlockingUserIDs
             let twitterUserFetchDate = Date()
+            
+            let userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs + (myBlockingUserIDs ?? []))
+            async let _updatingUsers: Void = self.updateUsers(ids: userIDs, twitterSession: twitterSession, context: context)
 
             async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
                 try Task.checkCancellation()
@@ -119,27 +122,14 @@ extension Session {
                 return (previousUserDetail?.objectID, userDetail.objectID)
             }
             
-            let usersUpdateTask = Task {
-                var userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs)
-                if let myBlockingUserIDs = myBlockingUserIDs {
-                    userIDs.append(contentsOf: myBlockingUserIDs)
-                }
-                
-                try await self.updateUsers(ids: userIDs, twitterSession: twitterSession, context: context)
-            }
-            
             let profileImageDataAsset = try await _profileImageDataAsset
             if profileImageDataAsset.hasChanges {
                 try await context.perform {
                     try context.save()
                 }
             }
-            
-            try await withTaskCancellationHandler {
-                try await usersUpdateTask.result.get()
-            } onCancel: {
-                usersUpdateTask.cancel()
-            }
+
+            try await _updatingUsers
 
             return try await userDetailObjectIDs
         }

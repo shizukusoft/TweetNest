@@ -1,6 +1,6 @@
 //
-//  withExtendedBackgroundExecution.swift
-//  withExtendedBackgroundExecution
+//  BackgroundTasks.swift
+//  BackgroundTasks
 //
 //  Created by Jaehong Kang on 2021/08/30.
 //
@@ -13,34 +13,49 @@ public func withExtendedBackgroundExecution<T>(identifier: String = #function, b
     let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "process-activity")
     
     let taskSemaphore = DispatchSemaphore(value: 0)
-    let cancellationSemaphore = DispatchSemaphore(value: 0)
     defer {
         taskSemaphore.signal()
-        cancellationSemaphore.signal()
+        
+        logger.notice("\(identifier): Process activity finished with cancelled: \(Task.isCancelled)")
     }
-
-    withUnsafeCurrentTask { task in
+    
+    return try await withTaskExpirationHandler { expirationHandler in
         ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
             if expired {
                 logger.notice("\(identifier): Canceling process activity")
-                task?.cancel()
-                logger.notice("\(identifier): Waiting for process activity cancelled")
-                cancellationSemaphore.wait()
+                expirationHandler()
                 logger.notice("\(identifier): Process activity cancelled")
             } else {
-                logger.notice("\(identifier): Waiting for process activity done")
                 taskSemaphore.wait()
-                logger.notice("\(identifier): Process activity done")
             }
         }
+        
+        logger.notice("\(identifier): Starting process activity")
+        return try await body()
     }
     #else
     let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
     defer {
         ProcessInfo.processInfo.endActivity(token)
     }
-    #endif
     
     logger.notice("\(identifier): Starting process activity")
     return try await body()
+    #endif
+}
+
+public func withTaskExpirationHandler<T>(body: (@escaping () -> Void) async throws -> T) async rethrows -> T {
+    let cancellationSemaphore = DispatchSemaphore(value: 0)
+    defer {
+        cancellationSemaphore.signal()
+    }
+    
+    let expirationHandler: () -> Void = withUnsafeCurrentTask { unsafeCurrentTask in
+        {
+            unsafeCurrentTask?.cancel()
+            cancellationSemaphore.wait()
+        }
+    }
+    
+    return try await body(expirationHandler)
 }
