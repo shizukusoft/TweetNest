@@ -133,7 +133,11 @@ extension Session {
                 }
             }
             
-            try await usersUpdateTask.result.get()
+            try await withTaskCancellationHandler {
+                try await usersUpdateTask.result.get()
+            } onCancel: {
+                usersUpdateTask.cancel()
+            }
 
             return try await userDetailObjectIDs
         }
