@@ -14,6 +14,17 @@ extension TweetNestAppDelegate: WKExtensionDelegate {
     }
     
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
-        session.handleBackgroundRefreshBackgroundTask(backgroundTasks)
+        let handledBackgroundTasks = session.handleBackgroundRefreshBackgroundTask(backgroundTasks)
+        
+        for backgroundTask in backgroundTasks.subtracting(handledBackgroundTasks) {
+            switch backgroundTask {
+            case let backgroundTask as WKSnapshotRefreshBackgroundTask:
+                DispatchQueue.main.async {
+                    backgroundTask.setTaskCompleted(restoredDefaultState: false, estimatedSnapshotExpiration: .distantFuture, userInfo: nil)
+                }
+            default:
+                break
+            }
+        }
     }
 }
