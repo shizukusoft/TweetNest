@@ -74,9 +74,9 @@ extension Session {
     nonisolated func backgroundRefresh() async throws {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
         
-        logger.info("Start background refresh")
+        logger.notice("Start background refresh")
         defer {
-            logger.info("Background refresh finished")
+            logger.notice("Background refresh finished")
         }
 
         do {
@@ -155,7 +155,7 @@ extension Session {
         }
         
         backgroundTask.expirationHandler = {
-            logger.info("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
+            logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
             task.cancel()
         }
     }
@@ -182,7 +182,7 @@ extension Session {
         }
         
         backgroundTask.expirationHandler = {
-            logger.info("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
+            logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
             task.cancel()
         }
     }
@@ -208,7 +208,7 @@ extension Session {
         }
         
         backgroundTask.expirationHandler = {
-            logger.info("Background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
+            logger.notice("Background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
             task.cancel()
         }
         
