@@ -87,6 +87,8 @@ extension Session {
             let twitterUserFetchDate = Date()
 
             async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
+                try Task.checkCancellation()
+                
                 let account = context.object(with: accountObjectID) as! Account
 
                 let fetchRequest = User.fetchRequest()

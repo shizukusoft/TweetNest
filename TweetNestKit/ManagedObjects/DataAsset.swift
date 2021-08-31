@@ -46,7 +46,9 @@ extension DataAsset {
         let data = try Data(contentsOf: dataURL)
 
         return try await context.perform(schedule: .enqueued) {
-            try .dataAsset(data: data, url: url, context: context)
+            try Task.checkCancellation()
+            
+            return try .dataAsset(data: data, url: url, context: context)
         }
     }
 }

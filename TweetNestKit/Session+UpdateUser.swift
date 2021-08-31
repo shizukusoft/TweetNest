@@ -15,6 +15,9 @@ import SwiftUI
 extension Session {
     public nonisolated func updateUsers<C>(ids userIDs: C, twitterSession: Twitter.Session, context _context: NSManagedObjectContext? = nil) async throws where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         try await withExtendedBackgroundExecution {
+            let context = _context ?? persistentContainer.newBackgroundContext()
+            context.undoManager = _context?.undoManager
+            
             let userIDs = OrderedSet(userIDs)
 
             try await withThrowingTaskGroup(of: (Date, [Twitter.User], Date).self) { chunkedUsersTaskGroup in
@@ -29,13 +32,14 @@ extension Session {
                 }
 
                 try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-                    let context = _context ?? persistentContainer.newBackgroundContext()
-                    context.undoManager = _context?.undoManager
-
                     for try await chunkedUsers in chunkedUsersTaskGroup {
+                        try Task.checkCancellation()
+                        
                         for user in chunkedUsers.1 {
                             taskGroup.addTask {
                                 try await context.perform(schedule: .enqueued) {
+                                    try Task.checkCancellation()
+                                    
                                     let userDetail = try UserDetail.createOrUpdate(
                                         twitterUser: user,
                                         userUpdateStartDate: chunkedUsers.0,
@@ -63,6 +67,8 @@ extension Session {
                                 }
 
                                 try await context.perform(schedule: .enqueued) {
+                                    try Task.checkCancellation()
+                                    
                                     if context.hasChanges {
                                         try context.save()
                                     }
