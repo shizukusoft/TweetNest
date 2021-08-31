@@ -80,29 +80,7 @@ extension Session {
         }
 
         do {
-            let context = self.persistentContainer.newBackgroundContext()
-            context.undoManager = nil
-
-            let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
-                let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
-                fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
-                    NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
-                ]
-                fetchRequest.resultType = .managedObjectIDResultType
-
-                return try context.fetch(fetchRequest)
-            }
-
-            try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-                accountObjectIDs.forEach { accountObjectID in
-                    taskGroup.addTask {
-                        try await self.updateAccount(accountObjectID, context: context, requestUserNotificationForChanges: true)
-                    }
-                }
-
-                try await taskGroup.waitForAll()
-            }
+            try await updateAllAccounts(requestUserNotificationForChanges: true)
         } catch {
             logger.error("Error occurred while update accounts: \(String(describing: error))")
 
