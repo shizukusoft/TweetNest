@@ -6,21 +6,23 @@
 //
 
 import Foundation
-import UIKit
 
 public func withExtendedBackgroundExecution<T>(identifier: String = #function, body: () async throws -> T) async rethrows -> T {
     #if !os(macOS)
-    let semaphore = DispatchSemaphore(value: 0)
+    let taskSemaphore = DispatchSemaphore(value: 0)
+    let cancellationSemaphore = DispatchSemaphore(value: 0)
     defer {
-        semaphore.signal()
+        taskSemaphore.signal()
+        cancellationSemaphore.signal()
     }
-    
+
     withUnsafeCurrentTask { task in
         ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
             if expired {
                 task?.cancel()
+                cancellationSemaphore.wait()
             } else {
-                semaphore.wait()
+                taskSemaphore.wait()
             }
         }
     }
