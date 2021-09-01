@@ -6,13 +6,25 @@
 //
 
 import Foundation
+import Twitter
 
 extension URLSessionConfiguration {
     public static var twnk_default: URLSessionConfiguration {
-        let configuration = URLSessionConfiguration.default
+        let urlSessionConfiguration = URLSessionConfiguration.twt_default
+        urlSessionConfiguration.httpCookieStorage = nil
+        urlSessionConfiguration.httpShouldSetCookies = false
+        urlSessionConfiguration.httpCookieAcceptPolicy = .never
+        
+        urlSessionConfiguration.urlCredentialStorage = nil
+        
+        urlSessionConfiguration.sharedContainerIdentifier = Session.applicationGroupIdentifier
+        
+        urlSessionConfiguration.shouldUseExtendedBackgroundIdleMode = true
+        
+        #if os(iOS)
+        urlSessionConfiguration.multipathServiceType = .interactive
+        #endif
 
-        configuration.sharedContainerIdentifier = Session.applicationGroupIdentifier
-
-        return configuration
+        return urlSessionConfiguration
     }
 }

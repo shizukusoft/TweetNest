@@ -10,16 +10,7 @@ import Twitter
 
 extension Twitter.Session {
     convenience init(twitterAPIConfiguration: Session.TwitterAPIConfiguration) {
-        let urlSessionConfiguration = URLSessionConfiguration.twt_default
-        urlSessionConfiguration.httpCookieStorage = nil
-        urlSessionConfiguration.httpShouldSetCookies = false
-        urlSessionConfiguration.httpCookieAcceptPolicy = .never
-        
-        urlSessionConfiguration.urlCredentialStorage = nil
-        
-        urlSessionConfiguration.sharedContainerIdentifier = Session.applicationGroupIdentifier
-        
-        self.init(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret, urlSessionConfiguration: urlSessionConfiguration)
+        self.init(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret, urlSessionConfiguration: .twnk_default)
     }
 }
 
