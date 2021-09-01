@@ -25,17 +25,17 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: () asyn
 
         ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
             if expired {
-                logger.notice("\(identifier): Canceling process activity")
+                logger.notice("\(identifier, privacy: .public): Canceling process activity")
                 expirationHandler()
-                logger.notice("\(identifier): Process activity cancelled")
+                logger.notice("\(identifier, privacy: .public): Process activity cancelled")
             } else {
                 taskSemaphore.wait()
             }
         }
         
-        logger.notice("\(identifier): Starting process activity")
+        logger.notice("\(identifier, privacy: .public): Starting process activity")
         defer {
-            logger.notice("\(identifier): Process activity finished with cancelled: \(Task.isCancelled)")
+            logger.notice("\(identifier, privacy: .public): Process activity finished with cancelled: \(Task.isCancelled)")
         }
 
         return try await body()
@@ -46,9 +46,9 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: () asyn
         ProcessInfo.processInfo.endActivity(token)
     }
     
-    logger.notice("\(identifier): Starting process activity")
+    logger.notice("\(identifier, privacy: .public): Starting process activity")
     defer {
-        logger.notice("\(identifier): Process activity finished with cancelled: \(Task.isCancelled)")
+        logger.notice("\(identifier, privacy: .public): Process activity finished with cancelled: \(Task.isCancelled)")
     }
 
     return try await body()
