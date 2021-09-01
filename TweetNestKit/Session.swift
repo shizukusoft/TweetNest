@@ -34,17 +34,13 @@ public actor Session {
 
     public nonisolated let persistentContainer: PersistentContainer
     
-    private nonisolated lazy var managedObjectContextForChanges = persistentContainer.newBackgroundContext()
-    private nonisolated lazy var managedObjectContextDidMergeChanges = NotificationCenter.default
-        .publisher(for: NSManagedObjectContext.didMergeChangesObjectIDsNotification, object: managedObjectContextForChanges)
-        .sink { [weak self] notification in
-            self?.managedObjectContextDidMergeChanges(
-                inserted: notification.userInfo?[NSInsertedObjectIDsKey] as? Set<NSManagedObjectID>,
-                updated: notification.userInfo?[NSUpdatedObjectIDsKey] as? Set<NSManagedObjectID>
-            )
+    private nonisolated lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
+        .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
+        .sink { [weak self] _ in
+            self?.fetchChanges()
         }
     
-    private var twitterSessions = [URL: Twitter.Session]()
+    private(set) var twitterSessions = [URL: Twitter.Session]()
     
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
         _twitterAPIConfiguration = .uninitialized { try await twitterAPIConfiguration() }
@@ -56,40 +52,19 @@ extension Session {
     public convenience init(inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
         
-        _ = managedObjectContextDidMergeChanges
+        _ = persistentStoreRemoteChangeNotification
     }
 
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
         self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
         
-        _ = managedObjectContextDidMergeChanges
+        _ = persistentStoreRemoteChangeNotification
     }
 
     public convenience init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { twitterAPIConfiguration }, inMemory: inMemory)
         
-        _ = managedObjectContextDidMergeChanges
-    }
-}
-
-extension Session {
-    private nonisolated func managedObjectContextDidMergeChanges(inserted: Set<NSManagedObjectID>?, updated: Set<NSManagedObjectID>?) {
-        managedObjectContextForChanges.perform { [self] in
-            let inserted = inserted.flatMap { Set($0.map { managedObjectContextForChanges.object(with: $0) }) }
-            let updated = updated.flatMap { Set($0.map { managedObjectContextForChanges.object(with: $0) }) }
-            
-            let updatedAccounts = (inserted ?? []).union(updated ?? []).compactMap { $0 as? Account }
-            
-            for updatedAccount in updatedAccounts {
-                let credential = updatedAccount.credential
-                
-                Task { [self] in
-                    if let twitterSession = await twitterSessions[updatedAccount.objectID.uriRepresentation()] {
-                        await twitterSession.updateCredential(credential)
-                    }
-                }
-            }
-        }
+        _ = persistentStoreRemoteChangeNotification
     }
 }
 

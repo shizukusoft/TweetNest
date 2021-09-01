@@ -14,7 +14,7 @@ import OrderedCollections
 
 extension Session {
     @discardableResult
-    public nonisolated func updateAllAccounts(requestUserNotificationForChanges: Bool = true) async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
+    public nonisolated func updateAllAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
 
@@ -33,7 +33,7 @@ extension Session {
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
                     do {
-                        let updateResults = try await self.updateAccount(accountObjectID, requestUserNotificationForChanges: requestUserNotificationForChanges)
+                        let updateResults = try await self.updateAccount(accountObjectID)
                         return (accountObjectID, .success(updateResults.previousUserDetailObjectID != updateResults.latestUserDetailObjectID))
                     } catch {
                         return (accountObjectID, .failure(error))
@@ -48,8 +48,7 @@ extension Session {
     @discardableResult
     public nonisolated func updateAccount(
         _ accountObjectID: NSManagedObjectID,
-        context _context: NSManagedObjectContext? = nil,
-        requestUserNotificationForChanges: Bool = true
+        context _context: NSManagedObjectContext? = nil
     ) async throws -> (previousUserDetailObjectID: NSManagedObjectID?, latestUserDetailObjectID: NSManagedObjectID) {
         try await withExtendedBackgroundExecution {
             let context = _context ?? persistentContainer.newBackgroundContext()
@@ -114,10 +113,6 @@ extension Session {
                 userDetail.user?.account = account
 
                 try context.save()
-                
-                if requestUserNotificationForChanges {
-                    self.requestUserNotificationForChanges(account: account, oldUserDetail: previousUserDetail, newUserDetail: userDetail)
-                }
 
                 return (previousUserDetail?.objectID, userDetail.objectID)
             }
@@ -132,58 +127,6 @@ extension Session {
             try await _updatingUsers
 
             return try await userDetailObjectIDs
-        }
-    }
-    
-    private nonisolated func requestUserNotificationForChanges(account: Account, oldUserDetail: UserDetail?, newUserDetail: UserDetail) {
-        guard oldUserDetail?.objectID != newUserDetail.objectID else { return }
-        
-        let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
-        let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
-        
-        let notificationContentTitle: String
-        if let name = newUserDetail.name, let displayUsername = newUserDetail.displayUsername, name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
-            notificationContentTitle = "\(name) (\(displayUsername))"
-        } else if let displayUsername = newUserDetail.displayUsername {
-            notificationContentTitle = displayUsername
-        } else {
-            notificationContentTitle = "#\(account.id.twnk_formatted())"
-        }
-
-        let notificationContent = UNMutableNotificationContent()
-        notificationContent.threadIdentifier = account.objectID.uriRepresentation().absoluteString
-        notificationContent.title = notificationContentTitle
-        
-        var changes: [String] = []
-        if followingUserChanges.followingUsersCount > 0 {
-            changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
-        }
-        if followingUserChanges.unfollowingUsersCount > 0 {
-            changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
-        }
-        if followerUserChanges.followerUsersCount > 0 {
-            changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
-        }
-        if followerUserChanges.unfollowerUsersCount > 0 {
-            changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
-        }
-        
-        if changes.isEmpty == false {
-            notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
-            notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
-        } else {
-            notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
-        }
-
-        let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-
-        Task {
-            do {
-                try await UNUserNotificationCenter.current().add(notificationRequest)
-            } catch {
-                Logger(subsystem: Bundle.module.bundleIdentifier!, category: "update-account")
-                    .error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
-            }
         }
     }
 }

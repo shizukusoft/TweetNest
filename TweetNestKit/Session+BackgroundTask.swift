@@ -80,7 +80,7 @@ extension Session {
         }
 
         do {
-            try await updateAllAccounts(requestUserNotificationForChanges: true)
+            try await updateAllAccounts()
         } catch {
             logger.error("Error occurred while update accounts: \(String(describing: error))")
 
