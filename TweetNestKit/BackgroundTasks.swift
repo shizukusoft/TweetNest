@@ -8,18 +8,21 @@
 import Foundation
 import UnifiedLogging
 
-public func withExtendedBackgroundExecution<T>(identifier: String = #function, body: () async throws -> T) async rethrows -> T {
+@inlinable
+public func withExtendedBackgroundExecution<T>(function: String = #function, fileID: String = #fileID, line: Int = #line, body: () async throws -> T) async rethrows -> T {
+    try await withExtendedBackgroundExecution(identifier: "\(function) (\(fileID):\(line))", body: body)
+}
+
+public func withExtendedBackgroundExecution<T>(identifier: String, body: () async throws -> T) async rethrows -> T {
     #if !os(macOS)
-    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "process-activity")
-    
-    let taskSemaphore = DispatchSemaphore(value: 0)
-    defer {
-        taskSemaphore.signal()
+    try await withTaskExpirationHandler { expirationHandler in
+        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "process-activity")
         
-        logger.notice("\(identifier): Process activity finished with cancelled: \(Task.isCancelled)")
-    }
-    
-    return try await withTaskExpirationHandler { expirationHandler in
+        let taskSemaphore = DispatchSemaphore(value: 0)
+        defer {
+            taskSemaphore.signal()
+        }
+
         ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
             if expired {
                 logger.notice("\(identifier): Canceling process activity")
@@ -31,6 +34,10 @@ public func withExtendedBackgroundExecution<T>(identifier: String = #function, b
         }
         
         logger.notice("\(identifier): Starting process activity")
+        defer {
+            logger.notice("\(identifier): Process activity finished with cancelled: \(Task.isCancelled)")
+        }
+
         return try await body()
     }
     #else
@@ -40,21 +47,25 @@ public func withExtendedBackgroundExecution<T>(identifier: String = #function, b
     }
     
     logger.notice("\(identifier): Starting process activity")
+    defer {
+        logger.notice("\(identifier): Process activity finished with cancelled: \(Task.isCancelled)")
+    }
+
     return try await body()
     #endif
 }
 
-public func withTaskExpirationHandler<T>(body: (@escaping () -> Void) async throws -> T) async rethrows -> T {
+@inlinable
+public func withTaskExpirationHandler<T>(body: (@escaping @Sendable () -> Void) async throws -> T) async rethrows -> T {
     let cancellationSemaphore = DispatchSemaphore(value: 0)
     defer {
         cancellationSemaphore.signal()
     }
     
-    let expirationHandler: () -> Void = withUnsafeCurrentTask { unsafeCurrentTask in
-        {
-            unsafeCurrentTask?.cancel()
-            cancellationSemaphore.wait()
-        }
+    let cancel = withUnsafeCurrentTask { $0?.cancel }
+    @Sendable func expirationHandler() {
+        cancel?()
+        cancellationSemaphore.wait()
     }
     
     return try await body(expirationHandler)
