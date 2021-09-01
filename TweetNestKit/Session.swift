@@ -34,17 +34,6 @@ public actor Session {
 
     public nonisolated let persistentContainer: PersistentContainer
     
-    @Published
-    public private(set) var persistentContainerCloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
-    private nonisolated lazy var persistentContainerEventDidChanges = NotificationCenter.default
-        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: persistentContainer)
-        .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
-        .sink { [weak self] event in
-            Task.detached { [self] in
-                await self?.updatePersistentContainerCloudKitEvent(PersistentContainer.CloudKitEvent(event))
-            }
-        }
-    
     private nonisolated lazy var managedObjectContextForChanges = persistentContainer.newBackgroundContext()
     private nonisolated lazy var managedObjectContextDidMergeChanges = NotificationCenter.default
         .publisher(for: NSManagedObjectContext.didMergeChangesObjectIDsNotification, object: managedObjectContextForChanges)
@@ -68,27 +57,18 @@ extension Session {
         self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
         
         _ = managedObjectContextDidMergeChanges
-        _ = persistentContainerEventDidChanges
     }
 
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
         self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
         
         _ = managedObjectContextDidMergeChanges
-        _ = persistentContainerEventDidChanges
     }
 
     public convenience init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { twitterAPIConfiguration }, inMemory: inMemory)
         
         _ = managedObjectContextDidMergeChanges
-        _ = persistentContainerEventDidChanges
-    }
-}
-
-extension Session {
-    private func updatePersistentContainerCloudKitEvent(_ event: PersistentContainer.CloudKitEvent) {
-        persistentContainerCloudKitEvents[event.identifier] = event
     }
 }
 

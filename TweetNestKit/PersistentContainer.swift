@@ -7,6 +7,7 @@
 
 import CloudKit
 import CoreData
+import OrderedCollections
 
 public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
@@ -18,6 +19,17 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     #if canImport(CoreSpotlight)
     var usersSpotlightDelegate: UsersSpotlightDelegate?
     #endif
+    
+    @Published
+    public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
+    private nonisolated lazy var persistentContainerEventDidChanges = NotificationCenter.default
+        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: self)
+        .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
+        .sink { [weak self] event in
+            self?.persistentStoreCoordinator.perform {  [weak self] in
+                self?.cloudKitEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
+            }
+        }
 
     init(inMemory: Bool = false) {
         super.init(name: Bundle.module.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.module.url(forResource: Bundle.module.name!, withExtension: "momd")!)!)
@@ -58,6 +70,8 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             self.usersSpotlightDelegate!.startSpotlightIndexing()
         }
         #endif
+        
+        _ = persistentContainerEventDidChanges
     }
 
     public override func newBackgroundContext() -> NSManagedObjectContext {

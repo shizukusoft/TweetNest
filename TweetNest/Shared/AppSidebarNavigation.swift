@@ -114,8 +114,8 @@ struct AppSidebarNavigation: View {
                         .zIndex(-1)
                 }
             }
-            .task {
-                await session.$persistentContainerCloudKitEvents
+            .onAppear {
+                session.persistentContainer.$cloudKitEvents
                     .map { $0.map { $0.value } }
                     .receive(on: DispatchQueue.main)
                     .assign(to: \.persistentContainerCloudKitEvents, on: self)
