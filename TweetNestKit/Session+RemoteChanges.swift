@@ -179,8 +179,10 @@ extension Session {
                         if changes.isEmpty == false {
                             notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
                             notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+                            notificationContent.interruptionLevel = .timeSensitive
                         } else {
                             notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+                            notificationContent.interruptionLevel = .passive
                         }
 
                         return UNNotificationRequest(
