@@ -51,7 +51,7 @@ extension Session {
         context _context: NSManagedObjectContext? = nil
     ) async throws -> (previousUserDetailObjectID: NSManagedObjectID?, latestUserDetailObjectID: NSManagedObjectID) {
         try await withExtendedBackgroundExecution {
-            let context = _context ?? persistentContainer.newBackgroundContext()
+            let context = _context ?? self.persistentContainer.newBackgroundContext()
             context.undoManager = _context?.undoManager
 
             let updateStartDate = Date()

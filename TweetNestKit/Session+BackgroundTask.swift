@@ -60,7 +60,7 @@ extension Session {
         }
         #endif
     }
-    
+
     #if canImport(BackgroundTasks) && !os(macOS)
     public nonisolated func scheduleDataCleansingBackgroundTask() async throws {
         let request = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)

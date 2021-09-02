@@ -15,7 +15,7 @@ import SwiftUI
 extension Session {
     public nonisolated func updateUsers<C>(ids userIDs: C, twitterSession: Twitter.Session, context _context: NSManagedObjectContext? = nil) async throws where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         try await withExtendedBackgroundExecution {
-            let context = _context ?? persistentContainer.newBackgroundContext()
+            let context = _context ?? self.persistentContainer.newBackgroundContext()
             context.undoManager = _context?.undoManager
             
             let userIDs = OrderedSet(userIDs)
