@@ -142,6 +142,10 @@ extension Session {
 
                         let oldUserDetail = oldUserDetailIndex.flatMap { sortedUserDetails?.indices.contains($0) == true ? sortedUserDetails?[$0] : nil }
 
+                        guard (oldUserDetail ~= newUserDetail) == false else {
+                            return nil
+                        }
+
                         let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
                         let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
 

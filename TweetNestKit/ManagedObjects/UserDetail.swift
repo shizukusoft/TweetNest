@@ -104,6 +104,19 @@ extension UserDetail {
     }
 }
 
+extension Optional where Wrapped == UserDetail {
+    static func ~= (lhs: UserDetail?, rhs: UserDetail?) -> Bool {
+        switch (lhs, rhs) {
+        case (.some, .none), (.none, .some):
+            return false
+        case (.none, .none):
+            return true
+        case (.some(let lhs), .some(let rhs)):
+            return lhs ~= rhs
+        }
+    }
+}
+
 extension UserDetail {
     func followingUserChanges(from oldUserDetail: UserDetail?) -> (followingUsersCount: Int, unfollowingUsersCount: Int) {
         let previousFollowingUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followingUserIDs.flatMap { Set($0) }
