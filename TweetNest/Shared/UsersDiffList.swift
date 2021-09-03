@@ -13,6 +13,8 @@ struct UsersDiffList: View {
     @ObservedObject var user: User
     @State var diffKeyPath: KeyPath<UserDetail, [String]?>
 
+    @State private var searchQuery: String = ""
+
     var body: some View {
         let sortedUserDetails = user.sortedUserDetails ?? OrderedSet()
 
@@ -21,9 +23,10 @@ struct UsersDiffList: View {
                 let previousUserDetailIndex = (sortedUserDetails.firstIndex(of: userDetail) ?? 0) - 1
                 let previousUserDetail = (sortedUserDetails.startIndex..<sortedUserDetails.endIndex).contains(previousUserDetailIndex) ? sortedUserDetails[previousUserDetailIndex] : nil
 
-                UsersDiffListSection(previousUserDetail: previousUserDetail, currentUserDetail: userDetail, diffKeyPath: $diffKeyPath)
+                UsersDiffListSection(previousUserDetail: previousUserDetail, currentUserDetail: userDetail, diffKeyPath: $diffKeyPath, searchQuery: $searchQuery)
             }
         }
+        .searchable(text: $searchQuery)
     }
 }
 

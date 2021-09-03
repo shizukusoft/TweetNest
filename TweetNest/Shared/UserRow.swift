@@ -11,10 +11,27 @@ import TweetNestKit
 struct UserRow<Icon>: View where Icon: View {
     let icon: Icon?
 
-    @Environment(\.account) var account: Account?
+    @Environment(\.account) private var account: Account?
     
-    let placeholderName: String
+    private let placeholderName: String
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
+
+    @Binding var searchQuery: String
+
+    private var searchResult: Bool {
+        guard let userDetail = userDetails.first else {
+            return placeholderName.contains(searchQuery)
+        }
+
+        return userDetail.name?.localizedCaseInsensitiveContains(searchQuery) == true ||
+            userDetail.username?.localizedCaseInsensitiveContains(searchQuery) == true ||
+            userDetail.user?.userDetails?.contains(
+                where: {
+                    ($0 as? UserDetail)?.name?.localizedCaseInsensitiveContains(searchQuery) == true ||
+                    ($0 as? UserDetail)?.username?.localizedCaseInsensitiveContains(searchQuery) == true
+                }
+            ) == true
+    }
 
     @ViewBuilder
     var userView: some View {
@@ -48,18 +65,20 @@ struct UserRow<Icon>: View where Icon: View {
     }
 
     var body: some View {
-        if let icon = icon {
-            Label {
+        if searchQuery.isEmpty || searchResult {
+            if let icon = icon {
+                Label {
+                    userView
+                } icon: {
+                    icon
+                }
+            } else {
                 userView
-            } icon: {
-                icon
             }
-        } else {
-            userView
         }
     }
 
-    private init(placeholderName: String, predicate: NSPredicate, @ViewBuilder icon: () -> Icon) {
+    private init(placeholderName: String, predicate: NSPredicate, searchQuery: Binding<String>, @ViewBuilder icon: () -> Icon) {
         self.placeholderName = placeholderName
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
@@ -71,11 +90,13 @@ struct UserRow<Icon>: View where Icon: View {
             fetchRequest: userDetailsFetchRequest,
             animation: .default
         )
+
+        self._searchQuery = searchQuery
 
         self.icon = icon()
     }
 
-    private init(placeholderName: String, predicate: NSPredicate) where Icon == EmptyView {
+    private init(placeholderName: String, predicate: NSPredicate, searchQuery: Binding<String>) where Icon == EmptyView {
         self.placeholderName = placeholderName
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
@@ -87,6 +108,8 @@ struct UserRow<Icon>: View where Icon: View {
             fetchRequest: userDetailsFetchRequest,
             animation: .default
         )
+
+        self._searchQuery = searchQuery
 
         self.icon = nil
     }
@@ -106,35 +129,39 @@ struct UserRow<Icon>: View where Icon: View {
 }
 
 extension UserRow {
-    init(userID: String, @ViewBuilder icon: () -> Icon) {
+    init(userID: String, searchQuery: Binding<String>, @ViewBuilder icon: () -> Icon) {
         self.init(
             placeholderName: "#\(Int64(userID)?.twnk_formatted() ?? userID)",
             predicate: NSPredicate(format: "user.id == %@", userID),
+            searchQuery: searchQuery,
             icon: icon
         )
     }
 
-    init(user: User, @ViewBuilder icon: () -> Icon) {
+    init(user: User, searchQuery: Binding<String>, @ViewBuilder icon: () -> Icon) {
         self.init(
             placeholderName: user.id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" } ?? user.objectID.description,
             predicate: NSPredicate(format: "user == %@", user),
+            searchQuery: searchQuery,
             icon: icon
         )
     }
 }
 
 extension UserRow where Icon == EmptyView {
-    init(userID: String) {
+    init(userID: String, searchQuery: Binding<String>) {
         self.init(
             placeholderName: "#\(Int64(userID)?.twnk_formatted() ?? userID)",
-            predicate: NSPredicate(format: "user.id == %@", userID)
+            predicate: NSPredicate(format: "user.id == %@", userID),
+            searchQuery: searchQuery
         )
     }
 
-    init(user: User) {
+    init(user: User, searchQuery: Binding<String>) {
         self.init(
             placeholderName: user.id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" } ?? user.objectID.description,
-            predicate: NSPredicate(format: "user == %@", user)
+            predicate: NSPredicate(format: "user == %@", user),
+            searchQuery: searchQuery
         )
     }
 }
