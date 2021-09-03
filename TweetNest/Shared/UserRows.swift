@@ -23,25 +23,27 @@ struct UserRows<Icon>: View where Icon: View {
             let displayUserID = "#\(Int64(userID)?.twnk_formatted() ?? userID)"
             let user = users.first(where: { $0.id == userID })
 
-            if
-                let user = user,
-                searchQuery.isEmpty ||
-                user.userDetails?.compactMap({ $0 as? UserDetail })
-                    .contains(where: {
-                        $0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true
-
-                    }) == true
-            {
-                Label {
-                    UserRow(user: user)
-                } icon: {
-                    icon
+            if let user = user {
+                if
+                    searchQuery.isEmpty ||
+                    user.userDetails?.compactMap({ $0 as? UserDetail })
+                        .contains(where: {
+                            $0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true
+                        }) == true
+                {
+                    Label {
+                        UserRow(user: user)
+                    } icon: {
+                        icon
+                    }
                 }
-            } else if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
-                Label {
-                    Text(verbatim: displayUserID)
-                } icon: {
-                    icon
+            } else {
+                if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
+                    Label {
+                        Text(verbatim: displayUserID)
+                    } icon: {
+                        icon
+                    }
                 }
             }
         }
