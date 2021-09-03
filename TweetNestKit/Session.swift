@@ -37,7 +37,7 @@ public actor Session {
     private nonisolated lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
         .sink { [weak self] _ in
-            self?.fetchChanges()
+            self?.handlePersistentStoreRemoteChanges()
         }
     
     private(set) var twitterSessions = [URL: Twitter.Session]()

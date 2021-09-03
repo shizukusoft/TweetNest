@@ -65,7 +65,7 @@ extension Session {
         return (transactions, lastPersistentHistoryToken, context)
     }
 
-    nonisolated func fetchChanges() {
+    nonisolated func handlePersistentStoreRemoteChanges() {
         Task { [self] in
             await withExtendedBackgroundExecution {
                 guard
