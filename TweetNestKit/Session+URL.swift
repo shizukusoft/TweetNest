@@ -8,8 +8,8 @@
 import Foundation
 
 extension Session {
-    nonisolated func download(from url: URL) async throws -> URL {
-        let (url, response) = try await urlSession.download(from: url)
+    nonisolated func data(from url: URL) async throws -> Data {
+        let (data, response) = try await urlSession.data(from: url)
         guard
             let httpResponse = response as? HTTPURLResponse,
             (200..<300).contains(httpResponse.statusCode)
@@ -17,6 +17,6 @@ extension Session {
             throw SessionError.invalidServerResponse(response)
         }
 
-        return url
+        return data
     }
 }

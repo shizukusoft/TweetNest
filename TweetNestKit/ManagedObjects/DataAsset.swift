@@ -50,8 +50,7 @@ extension DataAsset {
 
 extension DataAsset {
     static func dataAsset(for url: URL, session: Session, context: NSManagedObjectContext) async throws -> DataAsset {
-        let dataURL = try await session.download(from: url)
-        let data = try Data(contentsOf: dataURL)
+        let data = try await session.data(from: url)
 
         return try await context.perform(schedule: .enqueued) {
             try Task.checkCancellation()
