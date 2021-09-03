@@ -78,6 +78,7 @@
 		195DD4C326BEF91C008F0309 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C126BEF91C008F0309 /* ProfileImage.swift */; };
 		195DD4C826BFD32E008F0309 /* Array+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */; };
 		195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */; };
+		195E783E26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */; };
 		197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */; };
 		197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */; };
 		197ACF0F26CE2D820040388C /* DeleteBulkTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197ACF0E26CE2D820040388C /* DeleteBulkTweetsView.swift */; };
@@ -421,6 +422,7 @@
 		195DD4C126BEF91C008F0309 /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
 		195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+TweetNestKit.swift"; sourceTree = "<group>"; };
 		195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionConfiguration+TweetNestKit.swift"; sourceTree = "<group>"; };
+		195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
 		197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNumber+TwetNestKit.swift"; sourceTree = "<group>"; };
 		197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+CleansingData.swift"; sourceTree = "<group>"; };
 		197ACF0E26CE2D820040388C /* DeleteBulkTweetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteBulkTweetsView.swift; sourceTree = "<group>"; };
@@ -1040,6 +1042,7 @@
 			children = (
 				19C5A2D326BC219200AB1122 /* Bundle+TweetNestKit.swift */,
 				195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */,
+				195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -1760,6 +1763,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19C5A2BD26BC1F8A00AB1122 /* Session.swift in Sources */,
+				195E783E26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift in Sources */,
 				19C5A2B326BC1F8A00AB1122 /* SecureUnarchiveFromDataTransformer.swift in Sources */,
 				195DD4BB26BEF09D008F0309 /* DataAsset+CoreDataProperties.swift in Sources */,
 				19C6570226DAA89000D1A272 /* Session+BackgroundTask.swift in Sources */,

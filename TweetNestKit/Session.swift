@@ -16,6 +16,10 @@ public actor Session {
     static let cloudKitIdentifier = "iCloud.\(Bundle.module.bundleIdentifier!)"
     static let applicationGroupIdentifier = "group.\(Bundle.module.bundleIdentifier!)"
 
+    static var containerURL: URL? {
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Session.applicationGroupIdentifier)
+    }
+
     private var _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
         get async throws {

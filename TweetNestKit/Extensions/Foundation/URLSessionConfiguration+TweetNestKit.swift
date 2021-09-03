@@ -16,6 +16,8 @@ extension URLSessionConfiguration {
         urlSessionConfiguration.httpCookieAcceptPolicy = .never
         
         urlSessionConfiguration.urlCredentialStorage = nil
+
+        urlSessionConfiguration.urlCache = .twnk_shared
         
         urlSessionConfiguration.sharedContainerIdentifier = Session.applicationGroupIdentifier
         

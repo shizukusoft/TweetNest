@@ -11,8 +11,7 @@ import OrderedCollections
 
 public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
-        return FileManager.default
-            .containerURL(forSecurityApplicationGroupIdentifier: Session.applicationGroupIdentifier)?
+        return Session.containerURL?
             .appendingPathComponent("Application Support/\(Bundle.module.name!)") ?? super.defaultDirectoryURL()
     }
 
