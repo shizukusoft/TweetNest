@@ -164,8 +164,11 @@ extension Session {
                     }
 
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.threadIdentifier = account.objectID.uriRepresentation().absoluteString
                     notificationContent.title = notificationContentTitle
+
+                    if let accountRecordName = self.persistentContainer.record(for: account.objectID)?.recordID.recordName {
+                        notificationContent.threadIdentifier = accountRecordName
+                    }
 
                     var changes: [String] = []
                     if followingUserChanges.followingUsersCount > 0 {
