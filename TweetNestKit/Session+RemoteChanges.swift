@@ -25,72 +25,81 @@ extension Session {
             
             return try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: data)
         }
-        set {
-            guard let newValue = newValue else {
-                try? FileManager.default.removeItem(at: lastPersistentHistoryTokenURL)
-                return
-            }
-            
-            guard let data = try? NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: true) else {
-                return
-            }
-            
-            try? data.write(to: lastPersistentHistoryTokenURL)
-        }
     }
 
     @discardableResult
-    private func updateLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) -> NSPersistentHistoryToken? {
+    private func updateLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) throws -> NSPersistentHistoryToken? {
         let lastPersistentHistoryToken = lastPersistentHistoryToken
-        self.lastPersistentHistoryToken = newValue
 
-        return lastPersistentHistoryToken
+        if let newValue = newValue {
+            let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: true)
+            try data.write(to: lastPersistentHistoryTokenURL)
+
+            return lastPersistentHistoryToken
+        } else {
+            if FileManager.default.fileExists(atPath: lastPersistentHistoryTokenURL.path) {
+                try FileManager.default.removeItem(at: lastPersistentHistoryTokenURL)
+            }
+
+            return lastPersistentHistoryToken
+        }
     }
 
     private var persistentHistoryTransactions: (transactions: [NSPersistentHistoryTransaction], token: NSPersistentHistoryToken?, context: NSManagedObjectContext)? {
-        let lastPersistentHistoryToken = updateLastPersistentHistoryToken(nil)
-        let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: lastPersistentHistoryToken)
+        get throws {
+            let lastPersistentHistoryToken = try updateLastPersistentHistoryToken(nil)
+            let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: lastPersistentHistoryToken)
 
-        let context = persistentContainer.newBackgroundContext()
+            let context = persistentContainer.newBackgroundContext()
 
-        guard
-            let persistentHistoryResult = try? context.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
-            let transactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
-        else {
-            return nil
+            guard
+                let persistentHistoryResult = try context.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
+                let transactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
+            else {
+                return nil
+            }
+
+            try updateLastPersistentHistoryToken(transactions.last?.token ?? lastPersistentHistoryToken)
+
+            return (transactions, lastPersistentHistoryToken, context)
         }
-
-        updateLastPersistentHistoryToken(transactions.last?.token ?? lastPersistentHistoryToken)
-
-        return (transactions, lastPersistentHistoryToken, context)
     }
 
     nonisolated func handlePersistentStoreRemoteChanges() {
-        Task { [self] in
+        Task.detached(priority: .utility) { [self] in
             await withExtendedBackgroundExecution {
-                guard
-                    let transactions = await persistentHistoryTransactions,
-                    let lastToken = transactions.token
-                else {
-                    return
-                }
-
                 do {
-                    try Task.checkCancellation()
+                    guard
+                        let transactions = try await persistentHistoryTransactions,
+                        let lastToken = transactions.token
+                    else {
+                        return
+                    }
 
-                    try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-                        taskGroup.addTask { try await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
-                        taskGroup.addTask { try await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
+                    do {
+                        try Task.checkCancellation()
 
-                        try await taskGroup.waitForAll()
+                        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+                            taskGroup.addTask { try await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
+
+                            try await taskGroup.waitForAll()
+                        }
+                    } catch {
+                        if error is CancellationError {
+                            do {
+                                try await updateLastPersistentHistoryToken(lastToken)
+                            } catch {
+                                Logger(subsystem: Bundle.module.bundleIdentifier!, category: "remote-changes")
+                                    .error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
+                            }
+                        }
+
+                        throw error
                     }
                 } catch {
                     Logger(subsystem: Bundle.module.bundleIdentifier!, category: "remote-changes")
                         .error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
-
-                    if error is CancellationError {
-                        await updateLastPersistentHistoryToken(lastToken)
-                    }
                 }
             }
         }
