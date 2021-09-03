@@ -14,7 +14,7 @@ public func withExtendedBackgroundExecution<T>(function: String = #function, fil
 }
 
 public func withExtendedBackgroundExecution<T>(identifier: String, expirationHandler: (() -> ())? = nil, body: () throws -> T) rethrows -> T {
-    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "process-activity")
+    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
     let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
@@ -30,20 +30,20 @@ public func withExtendedBackgroundExecution<T>(identifier: String, expirationHan
 
     ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
         if expired {
-            logger.notice("\(identifier, privacy: .public): Cancel process activity")
+            logger.notice("\(identifier, privacy: .public): Expiring activity expired")
             expirationHandler?()
-            logger.notice("\(identifier, privacy: .public): Cancelling Process activity finished")
+            logger.notice("\(identifier, privacy: .public): Expiring activity expirationHandler finished")
         } else {
-            logger.notice("\(identifier, privacy: .public): Wait process activity")
+            logger.info("\(identifier, privacy: .public): Start expiring activity")
             dispatchGroup.wait()
-            logger.notice("\(identifier, privacy: .public): Waiting process activity finished")
+            logger.info("\(identifier, privacy: .public): Expiring activity finished")
         }
     }
     #endif
 
-    logger.notice("\(identifier, privacy: .public): Start process activity")
+    logger.notice("\(identifier, privacy: .public): Start")
     defer {
-        logger.notice("\(identifier, privacy: .public): Process activity finished with cancelled: \(Task.isCancelled)")
+        logger.notice("\(identifier, privacy: .public): Finished with cancelled: \(Task.isCancelled)")
     }
 
     return try body()
@@ -72,7 +72,7 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: @escapi
 }
 
 private func handleExtendedBackgroundExecution<T>(identifier: String, expirationHandler: @escaping @Sendable () -> Void, body: @escaping () async throws -> T) async rethrows -> T {
-    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "process-activity")
+    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
     let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
@@ -88,20 +88,20 @@ private func handleExtendedBackgroundExecution<T>(identifier: String, expiration
 
     ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
         if expired {
-            logger.notice("\(identifier, privacy: .public): Cancel process activity")
+            logger.notice("\(identifier, privacy: .public): Expiring activity expired")
             expirationHandler()
-            logger.notice("\(identifier, privacy: .public): Cancelling Process activity finished")
+            logger.notice("\(identifier, privacy: .public): Expiring activity expirationHandler finished")
         } else {
-            logger.notice("\(identifier, privacy: .public): Wait process activity")
+            logger.info("\(identifier, privacy: .public): Start expiring activity")
             dispatchGroup.wait()
-            logger.notice("\(identifier, privacy: .public): Waiting process activity finished")
+            logger.info("\(identifier, privacy: .public): Expiring activity finished")
         }
     }
     #endif
 
-    logger.notice("\(identifier, privacy: .public): Start process activity")
+    logger.notice("\(identifier, privacy: .public): Start")
     defer {
-        logger.notice("\(identifier, privacy: .public): Process activity finished with cancelled: \(Task.isCancelled)")
+        logger.notice("\(identifier, privacy: .public): Finished with cancelled: \(Task.isCancelled)")
     }
 
     return try await body()
