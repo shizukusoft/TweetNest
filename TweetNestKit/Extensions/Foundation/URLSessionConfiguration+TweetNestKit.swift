@@ -22,7 +22,7 @@ extension URLSessionConfiguration {
         urlSessionConfiguration.shouldUseExtendedBackgroundIdleMode = true
         
         #if os(iOS)
-        urlSessionConfiguration.multipathServiceType = .interactive
+        urlSessionConfiguration.multipathServiceType = .handover
         #endif
 
         return urlSessionConfiguration
