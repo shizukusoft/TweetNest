@@ -10,7 +10,10 @@ import Foundation
 extension URLCache {
     public static let twnk_shared: URLCache = URLCache(
         memoryCapacity: URLCache.shared.memoryCapacity,
-        diskCapacity: 1024*1024*1024,
-        directory: Session.containerURL?.appendingPathComponent("Library/Caches/\(Bundle.module.name!)")
+        diskCapacity: 512*1024*1024,
+        directory: Session.containerURL?
+            .appendingPathComponent("Library")
+            .appendingPathComponent("Caches")
+            .appendingPathComponent(Bundle.module.bundleIdentifier!)
     )
 }
