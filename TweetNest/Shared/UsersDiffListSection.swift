@@ -33,20 +33,18 @@ struct UsersDiffListSection: View {
 
     var body: some View {
         if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
-            Section(currentUserDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserDetail.objectID.description) {
-                 ForEach(appendedUserIDs, id: \.self) { userID in
-                    UserRow(userID: userID, searchQuery: $searchQuery) {
-                        Image(systemName: "person.badge.plus")
-                            .foregroundColor(.green)
-                    }
+            Section {
+                UserRows(userIDs: appendedUserIDs, searchQuery: $searchQuery) {
+                    Image(systemName: "person.badge.plus")
+                        .foregroundColor(.green)
                 }
 
-                ForEach(removedUserIDs, id: \.self) { userID in
-                    UserRow(userID: userID, searchQuery: $searchQuery) {
-                        Image(systemName: "person.badge.minus")
-                            .foregroundColor(.red)
-                    }
+                UserRows(userIDs: removedUserIDs, searchQuery: $searchQuery) {
+                    Image(systemName: "person.badge.minus")
+                        .foregroundColor(.red)
                 }
+            } header: {
+                Text(verbatim: currentUserDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserDetail.objectID.description)
             }
             #if os(watchOS)
             .labelStyle(TweetNestWatchLabelStyle())

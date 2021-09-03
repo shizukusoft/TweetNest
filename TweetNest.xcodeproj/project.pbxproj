@@ -140,6 +140,9 @@
 		19C5A2D026BC208700AB1122 /* UnifiedLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 19C5A2CF26BC208700AB1122 /* UnifiedLogging */; };
 		19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2D326BC219200AB1122 /* Bundle+TweetNestKit.swift */; };
 		19C5A2D626BC34A600AB1122 /* UsersSpotlightDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */; };
+		19C5CDA026E27CB700E99516 /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5CD9F26E27CB700E99516 /* UserRows.swift */; };
+		19C5CDA126E27CB700E99516 /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5CD9F26E27CB700E99516 /* UserRows.swift */; };
+		19C5CDA226E27CB700E99516 /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5CD9F26E27CB700E99516 /* UserRows.swift */; };
 		19C6570226DAA89000D1A272 /* Session+BackgroundTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C6570126DAA89000D1A272 /* Session+BackgroundTask.swift */; };
 		19C6570826DAB53100D1A272 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19C6570626DAB53100D1A272 /* Localizable.strings */; };
 		19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
@@ -478,6 +481,7 @@
 		19C5A2C026BC1F9800AB1122 /* TweetNestKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKit.xcdatamodel; sourceTree = "<group>"; };
 		19C5A2D326BC219200AB1122 /* Bundle+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersSpotlightDelegate.swift; sourceTree = "<group>"; };
+		19C5CD9F26E27CB700E99516 /* UserRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRows.swift; sourceTree = "<group>"; };
 		19C6570126DAA89000D1A272 /* Session+BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+BackgroundTask.swift"; sourceTree = "<group>"; };
 		19C6570726DAB53100D1A272 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -849,6 +853,7 @@
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19EE473126C144A2007D2814 /* UsersDiffList.swift */,
 				19EE473426C14554007D2814 /* UsersDiffListSection.swift */,
+				19C5CD9F26E27CB700E99516 /* UserRows.swift */,
 				19EE473726C14BCD007D2814 /* UserRow.swift */,
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
 				195DD4C126BEF91C008F0309 /* ProfileImage.swift */,
@@ -1610,6 +1615,7 @@
 				194EF57E26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
 				195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
+				19C5CDA026E27CB700E99516 /* UserRows.swift in Sources */,
 				192DBDD026D8755E0096AB54 /* SessionEnvironmentKey.swift in Sources */,
 				6657FDE426BF2BC900741FA9 /* NavigationLink.swift in Sources */,
 				19EE473826C14BCD007D2814 /* UserRow.swift in Sources */,
@@ -1671,6 +1677,7 @@
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
 				19EE473626C14554007D2814 /* UsersDiffListSection.swift in Sources */,
 				195DD4C026BEF6B3008F0309 /* DataAsset.swift in Sources */,
+				19C5CDA126E27CB700E99516 /* UserRows.swift in Sources */,
 				193AFB6D26CA3499008BFF67 /* SettingsAccountItems.swift in Sources */,
 				190D12F026B67F5F0090E474 /* UserAllDataSection.swift in Sources */,
 				6657FDE526BF2BC900741FA9 /* NavigationLink.swift in Sources */,
@@ -1711,6 +1718,7 @@
 				19EABBE526D6878700D3B003 /* Section.swift in Sources */,
 				19EABBE326D6878700D3B003 /* Button.swift in Sources */,
 				19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */,
+				19C5CDA226E27CB700E99516 /* UserRows.swift in Sources */,
 				19EABBCE26D6877600D3B003 /* WebAuthenticationView.swift in Sources */,
 				19EABBE626D6878700D3B003 /* Label.swift in Sources */,
 				19EABBC726D6877600D3B003 /* UserView.swift in Sources */,

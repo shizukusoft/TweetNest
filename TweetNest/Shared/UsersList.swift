@@ -17,9 +17,7 @@ struct UsersList: View {
 
     var body: some View {
         List {
-            ForEach(userIDs, id: \.self) { userID in
-                UserRow(userID: userID, searchQuery: $searchQuery)
-            }
+            UserRows(userIDs: userIDs, searchQuery: $searchQuery)
         }
         .searchable(text: $searchQuery)
     }
