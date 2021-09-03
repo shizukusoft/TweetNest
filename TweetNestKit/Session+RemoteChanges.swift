@@ -70,24 +70,33 @@ extension Session {
             await withExtendedBackgroundExecution {
                 guard
                     let transactions = await persistentHistoryTransactions,
-                    transactions.token != nil
+                    let lastToken = transactions.token
                 else {
                     return
                 }
 
-                guard Task.isCancelled == false else { return }
+                do {
+                    try Task.checkCancellation()
 
-                await withTaskGroup(of: Void.self) { taskGroup in
-                    taskGroup.addTask { await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
-                    taskGroup.addTask { await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
+                    try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+                        taskGroup.addTask { try await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
+                        taskGroup.addTask { try await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
 
-                    await taskGroup.waitForAll()
+                        try await taskGroup.waitForAll()
+                    }
+                } catch {
+                    Logger(subsystem: Bundle.module.bundleIdentifier!, category: "remote-changes")
+                        .error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+
+                    if error is CancellationError {
+                        await updateLastPersistentHistoryToken(lastToken)
+                    }
                 }
             }
         }
     }
-    
-    private nonisolated func updateAccountTokens(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async {
+
+    private nonisolated func updateAccountTokens(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
         let changesAccountObjectIDs: OrderedSet<NSManagedObjectID> = OrderedSet(
             transactions
                 .lazy
@@ -98,7 +107,7 @@ extension Session {
         )
         
         for accountObjectID in changesAccountObjectIDs {
-            guard Task.isCancelled == false else { break }
+            try Task.checkCancellation()
 
             let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
                 guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
@@ -116,7 +125,7 @@ extension Session {
         }
     }
     
-    private nonisolated func updateUserNotifications(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async {
+    private nonisolated func updateUserNotifications(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
         let changesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
             Array(
                 transactions
@@ -129,7 +138,7 @@ extension Session {
         )
 
         for (userDetailObjectID, change) in changesByObjectID {
-            guard Task.isCancelled == false else { break }
+            try Task.checkCancellation()
 
             guard let notificationIdentifier = self.persistentContainer.record(for: userDetailObjectID)?.recordID.recordName else {
                 continue
