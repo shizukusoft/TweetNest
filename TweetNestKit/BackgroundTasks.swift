@@ -20,7 +20,7 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: @escapi
         ProcessInfo.processInfo.endActivity(token)
     }
 
-    logger.notice("\(identifier, privacy: .public): Starting process activity")
+    logger.notice("\(identifier, privacy: .public): Start process activity")
     defer {
         logger.notice("\(identifier, privacy: .public): Process activity finished with cancelled: \(Task.isCancelled)")
     }
@@ -38,15 +38,17 @@ private func handleExtendedBackgroundExecution<T>(identifier: String, expiration
 
     ProcessInfo.processInfo.performExpiringActivity(withReason: identifier) { expired in
         if expired {
-            logger.notice("\(identifier, privacy: .public): Canceling process activity")
+            logger.notice("\(identifier, privacy: .public): Cancel process activity")
             expirationHandler()
-            logger.notice("\(identifier, privacy: .public): Process activity cancelled")
+            logger.notice("\(identifier, privacy: .public): Cancelling Process activity finished")
         } else {
+            logger.notice("\(identifier, privacy: .public): Wait process activity")
             taskSemaphore.wait()
+            logger.notice("\(identifier, privacy: .public): Waiting process activity finished")
         }
     }
 
-    logger.notice("\(identifier, privacy: .public): Starting process activity")
+    logger.notice("\(identifier, privacy: .public): Start process activity")
     defer {
         logger.notice("\(identifier, privacy: .public): Process activity finished with cancelled: \(Task.isCancelled)")
     }
