@@ -75,8 +75,12 @@ extension Session {
                     return
                 }
 
-                Task { await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
-                Task { await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
+                await withTaskGroup(of: Void.self) { taskGroup in
+                    taskGroup.addTask { await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
+                    taskGroup.addTask { await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
+
+                    await taskGroup.waitForAll()
+                }
             }
         }
     }
