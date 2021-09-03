@@ -12,7 +12,9 @@ import OrderedCollections
 public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
         return Session.containerURL?
-            .appendingPathComponent("Application Support/\(Bundle.module.name!)") ?? super.defaultDirectoryURL()
+            .appendingPathComponent("Application Support")
+            .appendingPathComponent(Bundle.module.name!)
+        ?? super.defaultDirectoryURL()
     }
 
     #if canImport(CoreSpotlight)
