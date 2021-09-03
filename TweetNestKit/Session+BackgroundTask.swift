@@ -62,7 +62,13 @@ extension Session {
     }
 
     #if canImport(BackgroundTasks) && !os(macOS)
-    public nonisolated func scheduleDataCleansingBackgroundTask() async throws {
+    public nonisolated func scheduleDataCleansingBackgroundTaskIfNeeded() async throws {
+        guard
+            await BGTaskScheduler.shared.pendingTaskRequests().contains(where: { $0.identifier == Self.dataCleansingBackgroundTaskIdentifier }) == false
+        else {
+            return
+        }
+
         let request = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
         request.requiresNetworkConnectivity = true
         request.requiresExternalPower = false
@@ -126,6 +132,12 @@ extension Session {
                 } catch {
                     logger.error("Error occurred while schedule background refresh: \(error as NSError, privacy: .public)")
                 }
+
+                do {
+                    try await scheduleDataCleansingBackgroundTaskIfNeeded()
+                } catch {
+                    logger.error("Error occurred while schedule data cleansing: \(error as NSError, privacy: .public)")
+                }
                 
                 do {
                     try await backgroundRefresh()
@@ -146,13 +158,7 @@ extension Session {
                     logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
                     expirationHandler()
                 }
-                
-                do {
-                    try await scheduleDataCleansingBackgroundTask()
-                } catch {
-                    logger.error("Error occurred while schedule data cleansing: \(error as NSError, privacy: .public)")
-                }
-                
+
                 do {
                     try await cleansingAllData()
                     backgroundTask.setTaskCompleted(success: Task.isCancelled == false)

@@ -42,7 +42,7 @@ struct TweetNestApp: App {
                     do {
                         try await session.scheduleBackgroundRefreshTask()
                         #if canImport(BackgroundTasks) && !os(macOS)
-                        try await session.scheduleDataCleansingBackgroundTask()
+                        try await session.scheduleDataCleansingBackgroundTaskIfNeeded()
                         #endif
                     } catch {
                         Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")

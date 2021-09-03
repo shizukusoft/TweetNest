@@ -97,7 +97,7 @@ extension Session {
         
         for accountObjectID in changesAccountObjectIDs {
             let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
-                guard let account = context.object(with: accountObjectID) as? Account else {
+                guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
                     return nil
                 }
 
@@ -113,102 +113,102 @@ extension Session {
     }
     
     private nonisolated func updateUserNotifications(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async {
-        await withExtendedBackgroundExecution {
-            let changesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
-                Array(
-                    transactions
-                        .lazy
-                        .flatMap { $0.changes ?? [] }
-                        .filter { $0.changedObjectID.entity.name == UserDetail.entity().name }
-                        .map { ($0.changedObjectID, $0) }
-                ),
-                uniquingKeysWith: { $1 }
-            )
+        let changesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
+            Array(
+                transactions
+                    .lazy
+                    .flatMap { $0.changes ?? [] }
+                    .filter { $0.changedObjectID.entity.name == UserDetail.entity().name }
+                    .map { ($0.changedObjectID, $0) }
+            ),
+            uniquingKeysWith: { $1 }
+        )
 
-            for (userDetailObjectID, change) in changesByObjectID {
-                let notificationIdentifier = self.persistentContainer.record(for: userDetailObjectID)?.recordID.recordName ?? userDetailObjectID.uriRepresentation().absoluteString
+        for (userDetailObjectID, change) in changesByObjectID {
+            guard let notificationIdentifier = self.persistentContainer.record(for: userDetailObjectID)?.recordID.recordName else {
+                continue
+            }
 
-                switch change.changeType {
-                case .insert, .update:
-                    let notificationRequest: UNNotificationRequest? = await context.perform(schedule: .enqueued) {
-                        guard
-                            let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
-                            newUserDetail.creationDate ?? .distantPast > Date(timeIntervalSinceNow: -60),
-                            let user = newUserDetail.user,
-                            let account = user.account,
-                            (account.creationDate ?? .distantPast).addingTimeInterval(60) < (newUserDetail.creationDate ?? .distantPast)
-                        else {
-                            return nil
-                        }
-
-                        let sortedUserDetails = newUserDetail.user?.sortedUserDetails
-                        let oldUserDetailIndex = sortedUserDetails?.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
-
-                        let oldUserDetail = oldUserDetailIndex.flatMap { sortedUserDetails?.indices.contains($0) == true ? sortedUserDetails?[$0] : nil }
-
-                        guard (oldUserDetail ~= newUserDetail) == false else {
-                            return nil
-                        }
-
-                        let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
-                        let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
-
-                        let notificationContentTitle: String
-                        if let name = newUserDetail.name, let displayUsername = newUserDetail.displayUsername, name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
-                            notificationContentTitle = "\(name) (\(displayUsername))"
-                        } else if let displayUsername = newUserDetail.displayUsername {
-                            notificationContentTitle = displayUsername
-                        } else {
-                            notificationContentTitle = "#\(account.id.twnk_formatted())"
-                        }
-
-                        let notificationContent = UNMutableNotificationContent()
-                        notificationContent.threadIdentifier = account.objectID.uriRepresentation().absoluteString
-                        notificationContent.title = notificationContentTitle
-
-                        var changes: [String] = []
-                        if followingUserChanges.followingUsersCount > 0 {
-                            changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
-                        }
-                        if followingUserChanges.unfollowingUsersCount > 0 {
-                            changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
-                        }
-                        if followerUserChanges.followerUsersCount > 0 {
-                            changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
-                        }
-                        if followerUserChanges.unfollowerUsersCount > 0 {
-                            changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
-                        }
-
-                        if changes.isEmpty == false {
-                            notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
-                            notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
-                            notificationContent.interruptionLevel = .timeSensitive
-                        } else {
-                            notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
-                            notificationContent.interruptionLevel = .passive
-                        }
-
-                        return UNNotificationRequest(
-                            identifier: notificationIdentifier,
-                            content: notificationContent,
-                            trigger: nil
-                        )
+            switch change.changeType {
+            case .insert, .update:
+                let notificationRequest: UNNotificationRequest? = await context.perform(schedule: .enqueued) {
+                    guard
+                        let newUserDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
+                        (newUserDetail.creationDate ?? .distantPast) > Date(timeIntervalSinceNow: -60),
+                        let user = newUserDetail.user,
+                        let account = user.account,
+                        (account.creationDate ?? .distantPast).addingTimeInterval(60) < (newUserDetail.creationDate ?? .distantPast)
+                    else {
+                        return nil
                     }
 
-                    guard let notificationRequest = notificationRequest else { return }
+                    let sortedUserDetails = newUserDetail.user?.sortedUserDetails
+                    let oldUserDetailIndex = sortedUserDetails?.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
 
-                    do {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } catch {
-                        Logger(subsystem: Bundle.module.bundleIdentifier!, category: "update-account")
-                            .error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                    let oldUserDetail = oldUserDetailIndex.flatMap { sortedUserDetails?.indices.contains($0) == true ? sortedUserDetails?[$0] : nil }
+
+                    guard (oldUserDetail ~= newUserDetail) == false else {
+                        return nil
                     }
-                case .delete:
-                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
-                @unknown default:
-                    break
+
+                    let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
+                    let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
+
+                    let notificationContentTitle: String
+                    if let name = newUserDetail.name, let displayUsername = newUserDetail.displayUsername, name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
+                        notificationContentTitle = "\(name) (\(displayUsername))"
+                    } else if let displayUsername = newUserDetail.displayUsername {
+                        notificationContentTitle = displayUsername
+                    } else {
+                        notificationContentTitle = "#\(account.id.twnk_formatted())"
+                    }
+
+                    let notificationContent = UNMutableNotificationContent()
+                    notificationContent.threadIdentifier = account.objectID.uriRepresentation().absoluteString
+                    notificationContent.title = notificationContentTitle
+
+                    var changes: [String] = []
+                    if followingUserChanges.followingUsersCount > 0 {
+                        changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
+                    }
+                    if followingUserChanges.unfollowingUsersCount > 0 {
+                        changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
+                    }
+                    if followerUserChanges.followerUsersCount > 0 {
+                        changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
+                    }
+                    if followerUserChanges.unfollowerUsersCount > 0 {
+                        changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
+                    }
+
+                    if changes.isEmpty == false {
+                        notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+                        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+                        notificationContent.interruptionLevel = .timeSensitive
+                    } else {
+                        notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+                        notificationContent.interruptionLevel = .passive
+                    }
+
+                    return UNNotificationRequest(
+                        identifier: notificationIdentifier,
+                        content: notificationContent,
+                        trigger: nil
+                    )
                 }
+
+                guard let notificationRequest = notificationRequest else { return }
+
+                do {
+                    try await UNUserNotificationCenter.current().add(notificationRequest)
+                } catch {
+                    Logger(subsystem: Bundle.module.bundleIdentifier!, category: "update-account")
+                        .error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                }
+            case .delete:
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
+            @unknown default:
+                break
             }
         }
     }

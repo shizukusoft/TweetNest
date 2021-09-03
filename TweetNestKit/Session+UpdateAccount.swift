@@ -56,7 +56,7 @@ extension Session {
 
             let updateStartDate = Date()
             let (accountID, accountPreferences) = try await context.perform { () -> (Int64, Account.Preferences) in
-                guard let account = context.object(with: accountObjectID) as? Account else {
+                guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
                     throw SessionError.unknown
                 }
 

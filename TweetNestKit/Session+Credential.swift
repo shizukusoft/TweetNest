@@ -15,7 +15,7 @@ extension Session {
         
         return await context.perform(schedule: .enqueued) {
             guard
-                let account = context.object(with: accountObjectID) as? Account
+                let account = try? context.existingObject(with: accountObjectID) as? Account
             else {
                 return nil
             }

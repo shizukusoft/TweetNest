@@ -39,7 +39,7 @@ extension Session {
         let context = context ?? persistentContainer.newBackgroundContext()
         
         let userObjectID: NSManagedObjectID? = await context.perform(schedule: .enqueued) {
-            guard let account = context.object(with: accountObjectID) as? Account else {
+            guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
                 return nil
             }
             
@@ -66,14 +66,10 @@ extension Session {
             
             return try context.fetch(userFetchRequest)
         }
-        
-        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-            for userObjectID in userObjectIDs {
-                try Task.checkCancellation()
-                try await self.cleansingUser(for: userObjectID, context: context)
-            }
-            
-            try await taskGroup.waitForAll()
+
+        for userObjectID in userObjectIDs {
+            try Task.checkCancellation()
+            try await self.cleansingUser(for: userObjectID, context: context)
         }
     }
     
@@ -81,7 +77,7 @@ extension Session {
         let context = context ?? persistentContainer.newBackgroundContext()
         
         try await context.perform(schedule: .enqueued) {
-            guard let user = context.object(with: userObjectID) as? User else {
+            guard let user = try? context.existingObject(with: userObjectID) as? User else {
                 return
             }
             
