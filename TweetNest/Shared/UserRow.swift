@@ -8,13 +8,16 @@
 import SwiftUI
 import TweetNestKit
 
-struct UserRow: View {
+struct UserRow<Icon>: View where Icon: View {
+    let icon: Icon?
+
     @Environment(\.account) var account: Account?
     
     let placeholderName: String
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
-    var body: some View {
+    @ViewBuilder
+    var userView: some View {
         if let latestUserDetail = userDetails.first, let user = latestUserDetail.user {
             NavigationLink {
                 UserView(user: user)
@@ -44,32 +47,48 @@ struct UserRow: View {
         }
     }
 
-    init(userID: String) {
-        self.placeholderName = "#\(Int64(userID)?.twnk_formatted() ?? userID)"
-
-        let userDetailsFetchRequest = UserDetail.fetchRequest()
-        userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
-        userDetailsFetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
-        userDetailsFetchRequest.fetchLimit = 1
-
-        self._userDetails = FetchRequest(
-            fetchRequest: userDetailsFetchRequest,
-            animation: .default
-        )
+    var body: some View {
+        if let icon = icon {
+            Label {
+                userView
+            } icon: {
+                icon
+            }
+        } else {
+            userView
+        }
     }
-    
-    init(user: User) {
-        self.placeholderName = user.id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" } ?? user.objectID.description
+
+    private init(placeholderName: String, predicate: NSPredicate, @ViewBuilder icon: () -> Icon) {
+        self.placeholderName = placeholderName
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
-        userDetailsFetchRequest.predicate = NSPredicate(format: "user == %@", user)
+        userDetailsFetchRequest.predicate = predicate
         userDetailsFetchRequest.fetchLimit = 1
 
         self._userDetails = FetchRequest(
             fetchRequest: userDetailsFetchRequest,
             animation: .default
         )
+
+        self.icon = icon()
+    }
+
+    private init(placeholderName: String, predicate: NSPredicate) where Icon == EmptyView {
+        self.placeholderName = placeholderName
+
+        let userDetailsFetchRequest = UserDetail.fetchRequest()
+        userDetailsFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)]
+        userDetailsFetchRequest.predicate = predicate
+        userDetailsFetchRequest.fetchLimit = 1
+
+        self._userDetails = FetchRequest(
+            fetchRequest: userDetailsFetchRequest,
+            animation: .default
+        )
+
+        self.icon = nil
     }
     
     @ViewBuilder
@@ -83,6 +102,40 @@ struct UserRow: View {
                 .layoutPriority(1)
                 .foregroundColor(Color.gray)
         }
+    }
+}
+
+extension UserRow {
+    init(userID: String, @ViewBuilder icon: () -> Icon) {
+        self.init(
+            placeholderName: "#\(Int64(userID)?.twnk_formatted() ?? userID)",
+            predicate: NSPredicate(format: "user.id == %@", userID),
+            icon: icon
+        )
+    }
+
+    init(user: User, @ViewBuilder icon: () -> Icon) {
+        self.init(
+            placeholderName: user.id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" } ?? user.objectID.description,
+            predicate: NSPredicate(format: "user == %@", user),
+            icon: icon
+        )
+    }
+}
+
+extension UserRow where Icon == EmptyView {
+    init(userID: String) {
+        self.init(
+            placeholderName: "#\(Int64(userID)?.twnk_formatted() ?? userID)",
+            predicate: NSPredicate(format: "user.id == %@", userID)
+        )
+    }
+
+    init(user: User) {
+        self.init(
+            placeholderName: user.id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" } ?? user.objectID.description,
+            predicate: NSPredicate(format: "user == %@", user)
+        )
     }
 }
 

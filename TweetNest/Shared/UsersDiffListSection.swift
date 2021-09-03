@@ -34,18 +34,14 @@ struct UsersDiffListSection: View {
         if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
             Section(currentUserDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserDetail.objectID.description) {
                 ForEach(appendedUserIDs, id: \.self) { userID in
-                    Label {
-                        UserRow(userID: userID)
-                    } icon: {
+                    UserRow(userID: userID) {
                         Image(systemName: "person.badge.plus")
                             .foregroundColor(.green)
                     }
                 }
 
                 ForEach(removedUserIDs, id: \.self) { userID in
-                    Label {
-                        UserRow(userID: userID)
-                    } icon: {
+                    UserRow(userID: userID) {
                         Image(systemName: "person.badge.minus")
                             .foregroundColor(.red)
                     }
