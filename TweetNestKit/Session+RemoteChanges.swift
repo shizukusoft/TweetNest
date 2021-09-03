@@ -201,7 +201,7 @@ extension Session {
                     )
                 }
 
-                guard let notificationRequest = notificationRequest else { return }
+                guard let notificationRequest = notificationRequest else { continue }
 
                 do {
                     try await UNUserNotificationCenter.current().add(notificationRequest)
