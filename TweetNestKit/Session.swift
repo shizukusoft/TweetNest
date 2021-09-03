@@ -23,14 +23,7 @@ public actor Session {
     private var _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
         get async throws {
-            switch _twitterAPIConfiguration {
-            case .uninitialized(let initializer):
-                let value = try await initializer()
-                _twitterAPIConfiguration = .initialized(value)
-                return value
-            case .initialized(let value):
-                return value
-            }
+            try await _twitterAPIConfiguration.wrappedValue
         }
     }
     
@@ -47,7 +40,7 @@ public actor Session {
     private(set) var twitterSessions = [URL: Twitter.Session]()
     
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
-        _twitterAPIConfiguration = .uninitialized { try await twitterAPIConfiguration() }
+        _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
         persistentContainer = PersistentContainer(inMemory: inMemory)
     }
 }
