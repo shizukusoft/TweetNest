@@ -36,11 +36,11 @@ struct UserRow<Icon>: View where Icon: View {
     @ViewBuilder
     var userView: some View {
         if let latestUserDetail = userDetails.first, let user = latestUserDetail.user {
-            NavigationLink {
-                UserView(user: user)
-                    .environment(\.account, account)
-            } label: {
-                Label {
+            Label {
+                NavigationLink {
+                    UserView(user: user)
+                        .environment(\.account, account)
+                } label: {
                     #if os(watchOS)
                     VStack(alignment: .leading, spacing: nil) {
                         userLabelTitle(latestUserDetail: latestUserDetail, user: user)
@@ -50,15 +50,15 @@ struct UserRow<Icon>: View where Icon: View {
                         userLabelTitle(latestUserDetail: latestUserDetail, user: user)
                     }
                     #endif
-                } icon: {
-                    ProfileImage(userDetail: latestUserDetail)
-                        .frame(width: 24, height: 24)
                 }
-                #if os(watchOS)
-                .labelStyle(.titleOnly)
-                #endif
+                .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description))
+            } icon: {
+                ProfileImage(userDetail: latestUserDetail)
+                    .frame(width: 24, height: 24)
             }
-            .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description))
+            #if os(watchOS)
+            .labelStyle(.titleOnly)
+            #endif
         } else {
             Text(verbatim: placeholderName)
         }
