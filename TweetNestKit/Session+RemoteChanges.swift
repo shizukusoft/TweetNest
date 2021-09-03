@@ -75,6 +75,8 @@ extension Session {
                     return
                 }
 
+                guard Task.isCancelled == false else { return }
+
                 await withTaskGroup(of: Void.self) { taskGroup in
                     taskGroup.addTask { await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
                     taskGroup.addTask { await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
@@ -96,6 +98,8 @@ extension Session {
         )
         
         for accountObjectID in changesAccountObjectIDs {
+            guard Task.isCancelled == false else { break }
+
             let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
                 guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
                     return nil
@@ -125,6 +129,8 @@ extension Session {
         )
 
         for (userDetailObjectID, change) in changesByObjectID {
+            guard Task.isCancelled == false else { break }
+
             guard let notificationIdentifier = self.persistentContainer.record(for: userDetailObjectID)?.recordID.recordName else {
                 continue
             }
