@@ -55,7 +55,6 @@ struct UserRows<Icon>: View where Icon: View {
         let usersFetchRequest = User.fetchRequest()
         usersFetchRequest.predicate = NSPredicate(format: "id IN %@", Array(userIDs))
         usersFetchRequest.propertiesToFetch = ["id"]
-        usersFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
         usersFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \User.id, ascending: true)]
 
         self._users = FetchRequest(
@@ -73,7 +72,6 @@ struct UserRows<Icon>: View where Icon: View {
         let usersFetchRequest = User.fetchRequest()
         usersFetchRequest.predicate = NSPredicate(format: "id IN %@", Array(userIDs))
         usersFetchRequest.propertiesToFetch = ["id"]
-        usersFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
         usersFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \User.id, ascending: true)]
 
         self._users = FetchRequest(
