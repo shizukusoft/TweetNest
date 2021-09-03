@@ -24,7 +24,7 @@ struct DataAsset<Content>: View where Content: View {
         fetchRequest.fetchLimit = 1
 
         self._dataAssets = FetchRequest(
-            fetchRequest:fetchRequest,
+            fetchRequest: fetchRequest,
             animation: .default
         )
         self.contentInitializer = content
