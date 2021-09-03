@@ -18,6 +18,7 @@ struct ProfileImage: View {
             DataAsset(url: userDetail.profileImageURL) { data in
                 if let image = Image(data: data) {
                     image
+                        .interpolation(.high)
                         .resizable()
                 } else {
                     Color.gray
