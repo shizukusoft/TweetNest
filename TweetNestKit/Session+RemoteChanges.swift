@@ -27,6 +27,10 @@ extension Session {
         }
     }
 
+    private nonisolated var logger: Logger {
+        Logger(subsystem: Bundle.module.bundleIdentifier!, category: "remote-changes")
+    }
+
     @discardableResult
     private func updateLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) throws -> NSPersistentHistoryToken? {
         let lastPersistentHistoryToken = lastPersistentHistoryToken
@@ -81,7 +85,8 @@ extension Session {
 
                         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                             taskGroup.addTask { try await updateUserNotifications(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await updateAccountTokens(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await handleAccountChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await handleUserChanges(transactions: transactions.transactions, context: transactions.context) }
 
                             try await taskGroup.waitForAll()
                         }
@@ -90,50 +95,99 @@ extension Session {
                             do {
                                 try await updateLastPersistentHistoryToken(lastToken)
                             } catch {
-                                Logger(subsystem: Bundle.module.bundleIdentifier!, category: "remote-changes")
-                                    .error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
+                                logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
                             }
                         }
 
                         throw error
                     }
                 } catch {
-                    Logger(subsystem: Bundle.module.bundleIdentifier!, category: "remote-changes")
-                        .error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+                    logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
                 }
             }
         }
     }
 
-    private nonisolated func updateAccountTokens(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
-        let changesAccountObjectIDs: OrderedSet<NSManagedObjectID> = OrderedSet(
-            transactions
-                .lazy
-                .compactMap { $0.changes }
-                .flatMap { $0 }
-                .map { $0.changedObjectID }
-                .filter { $0.entity.name == Account.entity().name }
+    private nonisolated func handleAccountChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
+        let accountChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
+            Array(
+                transactions
+                    .lazy
+                    .flatMap { $0.changes ?? [] }
+                    .filter { $0.changedObjectID.entity.name == Account.entity().name }
+                    .map { ($0.changedObjectID, $0) }
+            ),
+            uniquingKeysWith: { $1 }
         )
-        
-        for accountObjectID in changesAccountObjectIDs {
+
+        for (accountObjectID, change) in accountChangesByObjectID {
             try Task.checkCancellation()
 
-            let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
-                guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
-                    return nil
+            func updateCredential() async {
+                let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
+                    guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
+                        return nil
+                    }
+
+                    return account.credential
                 }
 
-                return account.credential
+                guard let twitterSession = await twitterSessions[accountObjectID.uriRepresentation()] else {
+                    return
+                }
+
+                await twitterSession.updateCredential(credential)
             }
 
-            guard let twitterSession = await twitterSessions[accountObjectID.uriRepresentation()] else {
-                continue
+            switch change.changeType {
+            case .insert:
+                break
+            case .update:
+                await updateCredential()
+            case .delete:
+                break
+            @unknown default:
+                break
             }
-            
-            await twitterSession.updateCredential(credential)
         }
     }
-    
+
+    private nonisolated func handleUserChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
+        let userChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
+            Array(
+                transactions
+                    .lazy
+                    .flatMap { $0.changes ?? [] }
+                    .filter { $0.changedObjectID.entity.name == User.entity().name }
+                    .map { ($0.changedObjectID, $0) }
+            ),
+            uniquingKeysWith: { $1 }
+        )
+
+        for (userObjectID, change) in userChangesByObjectID {
+            try Task.checkCancellation()
+
+            func cleansingUser() async {
+                do {
+                    try await self.cleansingUser(for: userObjectID, context: context)
+                } catch {
+                    logger.error("Error occurred while cleansing user: \(String(reflecting: error), privacy: .public)")
+                }
+            }
+
+            switch change.changeType {
+            case .insert:
+                await cleansingUser()
+            case .update:
+                break
+            case .delete:
+                break
+            @unknown default:
+                break
+            }
+        }
+    }
+
     private nonisolated func updateUserNotifications(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
         let changesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
             Array(
@@ -160,16 +214,16 @@ extension Session {
                         let newUserDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
                         (newUserDetail.creationDate ?? .distantPast) > Date(timeIntervalSinceNow: -60),
                         let user = newUserDetail.user,
-                        let account = user.account,
-                        (account.creationDate ?? .distantPast).addingTimeInterval(60) < (newUserDetail.creationDate ?? .distantPast)
+                        let sortedUserDetails = user.sortedUserDetails,
+                        sortedUserDetails.count > 1,
+                        let account = user.account
                     else {
                         return nil
                     }
 
-                    let sortedUserDetails = newUserDetail.user?.sortedUserDetails
-                    let oldUserDetailIndex = sortedUserDetails?.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
+                    let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
 
-                    let oldUserDetail = oldUserDetailIndex.flatMap { sortedUserDetails?.indices.contains($0) == true ? sortedUserDetails?[$0] : nil }
+                    let oldUserDetail = oldUserDetailIndex.flatMap { sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }
 
                     guard (oldUserDetail ~= newUserDetail) == false else {
                         return nil
@@ -230,8 +284,7 @@ extension Session {
                 do {
                     try await UNUserNotificationCenter.current().add(notificationRequest)
                 } catch {
-                    Logger(subsystem: Bundle.module.bundleIdentifier!, category: "update-account")
-                        .error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                    logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                 }
             case .delete:
                 UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
