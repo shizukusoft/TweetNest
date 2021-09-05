@@ -31,12 +31,11 @@ extension Session {
             return context.performAndWait {
                 let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
                 fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
+                fetchReuqest.fetchLimit = 1
 
-                let allPreferences = try! context.fetch(fetchReuqest)
-                allPreferences.dropFirst().forEach { context.delete($0) }
+                let preferences = (try? context.fetch(fetchReuqest).first) ?? ManagedPreferences(context: context)
 
-                let preferences = allPreferences.first ?? ManagedPreferences(context: context)
-
+                preferences.modificationDate = Date()
                 preferences.preferences = newValue
 
                 try! context.save()
