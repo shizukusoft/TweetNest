@@ -15,7 +15,7 @@
         <attribute name="dataSHA512Hash" optional="YES" attributeType="Binary"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
     </entity>
-    <entity name="Preferences" representedClassName=".Preferences" syncable="YES">
+    <entity name="Preferences" representedClassName=".ManagedPreferences" syncable="YES">
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TWNKSessionPreferencesTransformer" customClassName="."/>
     </entity>

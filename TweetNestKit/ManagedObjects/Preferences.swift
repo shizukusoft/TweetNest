@@ -1,6 +1,6 @@
 //
-//  Preferences+CoreDataClass.swift
-//  Preferences
+//  ManagedPreferences+CoreDataClass.swift
+//  ManagedPreferences
 //
 //  Created by Jaehong Kang on 2021/09/05.
 //
@@ -9,11 +9,11 @@
 import Foundation
 import CoreData
 
-class Preferences: NSManagedObject {
+class ManagedPreferences: NSManagedObject {
 
 }
 
-extension Preferences {
+extension ManagedPreferences {
     struct Key {
         static let preferences = "preferences"
     }

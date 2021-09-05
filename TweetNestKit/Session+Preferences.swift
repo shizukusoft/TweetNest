@@ -18,8 +18,8 @@ extension Session {
             let context = persistentContainer.newBackgroundContext()
 
             return context.performAndWait {
-                let fetchReuqest: NSFetchRequest<TweetNestKit.Preferences> = TweetNestKit.Preferences.fetchRequest()
-                fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.Preferences.modificationDate, ascending: false)]
+                let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
+                fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
                 fetchReuqest.fetchLimit = 1
 
                 return (try? context.fetch(fetchReuqest).first?.preferences) ?? Preferences()
@@ -29,13 +29,13 @@ extension Session {
             let context = persistentContainer.newBackgroundContext()
 
             return context.performAndWait {
-                let fetchReuqest: NSFetchRequest<TweetNestKit.Preferences> = TweetNestKit.Preferences.fetchRequest()
-                fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.Preferences.modificationDate, ascending: false)]
+                let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
+                fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
 
                 let allPreferences = try! context.fetch(fetchReuqest)
                 allPreferences.dropFirst().forEach { context.delete($0) }
 
-                let preferences = allPreferences.first ?? TweetNestKit.Preferences(context: context)
+                let preferences = allPreferences.first ?? ManagedPreferences(context: context)
 
                 preferences.preferences = newValue
 
