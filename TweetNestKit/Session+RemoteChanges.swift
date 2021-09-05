@@ -55,6 +55,8 @@ extension Session {
             let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: lastPersistentHistoryToken)
 
             let context = persistentContainer.newBackgroundContext()
+            context.undoManager = nil
+            context.automaticallyMergesChangesFromParent = false
 
             guard
                 let persistentHistoryResult = try context.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
@@ -139,9 +141,17 @@ extension Session {
                 await twitterSession.updateCredential(credential)
             }
 
+            func cleansingAccount() async {
+                do {
+                    try await self.cleansingAccount(for: accountObjectID, context: context)
+                } catch {
+                    logger.error("Error occurred while cleansing account: \(String(reflecting: error), privacy: .public)")
+                }
+            }
+
             switch change.changeType {
             case .insert:
-                break
+                await cleansingAccount()
             case .update:
                 await updateCredential()
             case .delete:
