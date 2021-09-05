@@ -63,11 +63,13 @@ extension Session {
 
     #if canImport(BackgroundTasks) && !os(macOS)
     public nonisolated func scheduleDataCleansingBackgroundTaskIfNeeded() async throws {
-        guard
-            await BGTaskScheduler.shared.pendingTaskRequests().contains(where: { $0.identifier == Self.dataCleansingBackgroundTaskIdentifier }) == false
-        else {
-            return
-        }
+        let lastCleanseDate = await preferences.lastCleansed
+
+        let now = Date()
+        let twoDay = TimeInterval(2 * 24 * 60 * 60)
+
+        // Clean the database at most once per two day.
+        guard now > (lastCleanseDate + twoDay) else { return }
 
         let request = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
         request.requiresNetworkConnectivity = true
