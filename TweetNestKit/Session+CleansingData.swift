@@ -9,9 +9,16 @@ import Foundation
 import CoreData
 
 extension Session {
-    public nonisolated func cleansingAllData() async throws {
+    private nonisolated var persistentContainerNewBackgroundContext: NSManagedObjectContext {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
+        context.automaticallyMergesChangesFromParent = false
+
+        return context
+    }
+
+    public nonisolated func cleansingAllData() async throws {
+        let context = persistentContainerNewBackgroundContext
         
         try await cleansingAllAccounts(context: context)
         try await cleansingAllUsersAndUserDetails(context: context)
@@ -19,7 +26,7 @@ extension Session {
     }
     
     public nonisolated func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
-        let context = context ?? persistentContainer.newBackgroundContext()
+        let context = context ?? persistentContainerNewBackgroundContext
         
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
@@ -38,7 +45,7 @@ extension Session {
     }
 
     public nonisolated func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
-        let context = context ?? persistentContainer.newBackgroundContext()
+        let context = context ?? persistentContainerNewBackgroundContext
         
         try await context.perform(schedule: .enqueued) {
             guard
@@ -98,7 +105,7 @@ extension Session {
     }
     
     public nonisolated func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
-        let context = context ?? persistentContainer.newBackgroundContext()
+        let context = context ?? persistentContainerNewBackgroundContext
         
         try await context.perform(schedule: .enqueued) {
             guard
@@ -140,7 +147,7 @@ extension Session {
     }
 
     nonisolated func cleansingUserDetails(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
-        let context = context ?? persistentContainer.newBackgroundContext()
+        let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
             guard
@@ -187,7 +194,7 @@ extension Session {
     }
 
     public nonisolated func cleansingDataAsset(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
-        let context = context ?? persistentContainer.newBackgroundContext()
+        let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
             guard
