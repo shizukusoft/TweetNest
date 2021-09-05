@@ -17,7 +17,7 @@
     </entity>
     <entity name="Preferences" representedClassName=".ManagedPreferences" syncable="YES">
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TWNKSessionPreferencesTransformer" customClassName="."/>
+        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TWNKManagedPreferencesTransformer" customClassName="."/>
     </entity>
     <entity name="User" representedClassName=".User" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>

@@ -9,26 +9,32 @@ import Foundation
 import CoreData
 
 extension Session {
-    public struct Preferences {
-        public var lastCleansed: Date = .distantPast
-    }
-
-    public var preferences: Preferences {
+    @MainActor
+    public var preferences: ManagedPreferences {
         get {
             let context = persistentContainer.newBackgroundContext()
 
-            return context.performAndWait {
+            let objectID: NSManagedObjectID = context.performAndWait {
                 let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
                 fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
                 fetchReuqest.fetchLimit = 1
 
-                return (try? context.fetch(fetchReuqest).first?.preferences) ?? Preferences()
+                defer {
+                    if context.hasChanges {
+                        try? context.save()
+                    }
+                }
+
+                return ((try? context.fetch(fetchReuqest).first) ?? ManagedPreferences(context: context)).objectID
             }
+
+            return persistentContainer.viewContext.object(with: objectID) as! ManagedPreferences
         }
         set {
             let context = persistentContainer.newBackgroundContext()
+            let newValue = newValue.preferences
 
-            return context.performAndWait {
+            context.perform {
                 let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
                 fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
                 fetchReuqest.fetchLimit = 1
@@ -40,35 +46,6 @@ extension Session {
 
                 try! context.save()
             }
-        }
-    }
-}
-
-extension Session.Preferences: Codable { }
-
-extension Session.Preferences {
-    @objc(TWNKSessionPreferencesTransformer)
-    class Transformer: ValueTransformer {
-        override class func transformedValueClass() -> AnyClass {
-            NSData.self
-        }
-
-        override func transformedValue(_ value: Any?) -> Any? {
-            guard let value = value as? Session.Preferences? else {
-                preconditionFailure()
-            }
-
-            return value.flatMap {
-                try! PropertyListEncoder().encode($0) as NSData
-            }
-        }
-
-        override func reverseTransformedValue(_ value: Any?) -> Any? {
-            guard let value = value as? NSData else {
-                return nil
-            }
-
-            return try? PropertyListDecoder().decode(Session.Preferences.self, from: value as Data)
         }
     }
 }
