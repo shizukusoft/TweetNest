@@ -78,7 +78,7 @@ extension Session {
             async let _myBlockingUserIDs = accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
 
             let twitterUser = try await _twitterUser
-            async let _profileImageDataAsset = UserDefaults.tweetNestKit(Session.downloadUserProfileImagesUserDefaultsKey, type: Bool.self) == true ? DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context) : nil
+            async let _profileImageDataAsset = DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context)
 
             let followingUserIDs = try await _followingUserIDs
             let followerIDs = try await _followerIDs
@@ -117,11 +117,16 @@ extension Session {
                 return (previousUserDetail?.objectID, userDetail.objectID)
             }
             
-            let profileImageDataAsset = try await _profileImageDataAsset
-            if let profileImageDataAsset = profileImageDataAsset, profileImageDataAsset.hasChanges {
-                try await context.perform {
-                    try context.save()
+            do {
+                let profileImageDataAsset = try await _profileImageDataAsset
+                if profileImageDataAsset.hasChanges {
+                    try await context.perform {
+                        try context.save()
+                    }
                 }
+            } catch {
+                Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
+                    .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
             }
 
             try await _updatingUsers

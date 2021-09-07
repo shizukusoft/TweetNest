@@ -38,6 +38,8 @@ extension Session {
     #endif
 
     public nonisolated func scheduleBackgroundRefreshTask() async throws {
+        guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return }
+        
         #if canImport(BackgroundTasks) && !os(macOS)
         let request = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
         request.earliestBeginDate = Self.preferredBackgroundRefreshDate
@@ -63,6 +65,8 @@ extension Session {
 
     #if canImport(BackgroundTasks) && !os(macOS)
     public nonisolated func scheduleDataCleansingBackgroundTaskIfNeeded() async throws {
+        guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return }
+        
         let lastCleanseDate = await preferences.lastCleansed
 
         let now = Date()
@@ -79,7 +83,9 @@ extension Session {
     }
     #endif
 
-    nonisolated func backgroundRefresh() async throws {
+    nonisolated func backgroundRefresh() async -> Bool {
+        guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return true }
+        
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
         
         logger.notice("Start background refresh")
@@ -89,6 +95,8 @@ extension Session {
 
         do {
             try await updateAllAccounts()
+            
+            return true
         } catch {
             logger.error("Error occurred while update accounts: \(String(describing: error))")
 
@@ -111,7 +119,47 @@ extension Session {
                 }
             }
 
-            throw error
+            return false
+        }
+    }
+    
+    nonisolated func backgroundDataCleansing() async -> Bool {
+        guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return true }
+        
+        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-data-cleansing")
+        
+        logger.notice("Start background data cleansing")
+        defer {
+            logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
+        }
+
+        do {
+            try await cleansingAllData()
+            
+            return true
+        } catch {
+            logger.error("Error occurred while data cleansing: \(String(describing: error))")
+
+            switch error {
+            case is CancellationError, URLError.cancelled:
+                break
+            default:
+                let notificationContent = UNMutableNotificationContent()
+                notificationContent.title = String(localized: "Background Refresh", bundle: .module, comment: "background-refresh notification title.")
+                notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "background-refresh notification subtitle.")
+                notificationContent.body = error.localizedDescription
+                notificationContent.sound = .default
+
+                let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+
+                do {
+                    try await UNUserNotificationCenter.current().add(notificationRequest)
+                } catch {
+                    logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                }
+            }
+
+            return false
         }
     }
 }
@@ -141,12 +189,7 @@ extension Session {
                     logger.error("Error occurred while schedule data cleansing: \(error as NSError, privacy: .public)")
                 }
                 
-                do {
-                    try await backgroundRefresh()
-                    backgroundTask.setTaskCompleted(success: Task.isCancelled == false)
-                } catch {
-                    backgroundTask.setTaskCompleted(success: false)
-                }
+                backgroundTask.setTaskCompleted(success: await backgroundRefresh())
             }
         }
     }
@@ -161,12 +204,7 @@ extension Session {
                     expirationHandler()
                 }
 
-                do {
-                    try await cleansingAllData()
-                    backgroundTask.setTaskCompleted(success: Task.isCancelled == false)
-                } catch {
-                    backgroundTask.setTaskCompleted(success: false)
-                }
+                backgroundTask.setTaskCompleted(success: await backgroundDataCleansing())
             }
             
         }
@@ -189,12 +227,7 @@ extension Session {
                     expirationHandler()
                 }
                 
-                do {
-                    try await backgroundRefresh()
-                    backgroundTask.setTaskCompletedWithSnapshot(Task.isCancelled == false)
-                } catch {
-                    backgroundTask.setTaskCompletedWithSnapshot(false)
-                }
+                backgroundTask.setTaskCompletedWithSnapshot(await backgroundRefresh())
             }
         }
 

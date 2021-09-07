@@ -21,12 +21,22 @@ public struct TweetNestUserDefaultsKeyName: RawRepresentable {
 }
 
 extension UserDefaults {
-    func callAsFunction<T>(_ key: TweetNestUserDefaultsKeyName, type: T.Type) -> T? {
-        object(forKey: key.rawValue) as? T
+    subscript<T>(key: TweetNestUserDefaultsKeyName, type: T.Type) -> T? {
+        get {
+            object(forKey: key.rawValue) as? T
+        }
+        set {
+            set(newValue, forKey: key.rawValue)
+        }
     }
     
-    func set<T>(_ newValue: T?, for key: TweetNestUserDefaultsKeyName ) {
-        set(newValue, forKey: key.rawValue)
+    subscript<T>(key: TweetNestUserDefaultsKeyName) -> T? {
+        get {
+            object(forKey: key.rawValue) as? T
+        }
+        set {
+            set(newValue, forKey: key.rawValue)
+        }
     }
 }
 

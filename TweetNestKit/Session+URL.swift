@@ -8,8 +8,8 @@
 import Foundation
 
 extension Session {
-    nonisolated func data(from url: URL) async throws -> Data {
-        let (data, response) = try await urlSession.data(from: url)
+    public func data(for request: URLRequest) async throws -> Data {
+        let (data, response) = try await urlSession.data(for: request)
         guard
             let httpResponse = response as? HTTPURLResponse,
             (200..<300).contains(httpResponse.statusCode)
