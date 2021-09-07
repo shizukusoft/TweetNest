@@ -13,6 +13,8 @@ import Twitter
 import SwiftUI
 
 extension Session {
+    public static let downloadUserProfileImagesUserDefaultsKey = TweetNestUserDefaultsKeyName(rawValue: "TWNKDownloadsUserProfileImages")
+    
     public nonisolated func updateUsers<C>(ids userIDs: C, twitterSession: Twitter.Session, context _context: NSManagedObjectContext? = nil) async throws where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         try await withExtendedBackgroundExecution {
             let context = _context ?? self.persistentContainer.newBackgroundContext()
@@ -55,15 +57,17 @@ extension Session {
                                     }
                                 }
                             }
-
-                            taskGroup.addTask {
-                                try Task.checkCancellation()
-                                
-                                do {
-                                    _ = try await DataAsset.dataAsset(for: user.profileImageOriginalURL, session: self, context: context)
-                                } catch {
-                                    Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
-                                        .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                            
+                            if UserDefaults.tweetNestKit(Session.downloadUserProfileImagesUserDefaultsKey, type: Bool.self) == true {
+                                taskGroup.addTask {
+                                    try Task.checkCancellation()
+                                    
+                                    do {
+                                        _ = try await DataAsset.dataAsset(for: user.profileImageOriginalURL, session: self, context: context)
+                                    } catch {
+                                        Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
+                                            .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                                    }
                                 }
                             }
                         }

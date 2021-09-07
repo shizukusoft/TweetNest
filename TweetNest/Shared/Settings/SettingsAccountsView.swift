@@ -1,14 +1,14 @@
 //
-//  SettingsAccountItems.swift
-//  SettingsAccountItems
+//  SettingsAccountsView.swift
+//  SettingsAccountsView
 //
-//  Created by Jaehong Kang on 2021/08/16.
+//  Created by Jaehong Kang on 2021/09/07.
 //
 
 import SwiftUI
 import TweetNestKit
 
-struct SettingsAccountItems: View {
+struct SettingsAccountsView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
     @FetchRequest(
@@ -18,25 +18,46 @@ struct SettingsAccountItems: View {
         ],
         animation: .default)
     private var accounts: FetchedResults<Account>
-    
+
+    #if os(macOS)
     var body: some View {
-        ForEach(accounts) { account in
-            let displayUsername = account.user?.displayUsername ?? account.objectID.description
-            
-            NavigationLink {
-                SettingsAccountView(account: account)
-            } label: {
-                Label(Text(verbatim: displayUsername)) {
-                    ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
-                        .frame(width: 24, height: 24)
+        NavigationView {
+            List {
+                ForEach(accounts) { account in
+                    NavigationLink {
+                        SettingsAccountView(account: account)
+                    } label: {
+                        AccountLabel(account: account)
+                    }
                 }
-                .accessibilityLabel(Text(verbatim: displayUsername))
+                .onDelete(perform: deleteAccounts)
+                .onMove(perform: moveAccounts)
             }
         }
-        .onDelete(perform: deleteAccounts)
-        .onMove(perform: moveAccounts)
+        .navigationTitle(Text("Accounts"))
     }
-    
+    #else
+    var body: some View {
+        List {
+            ForEach(accounts) { account in
+                NavigationLink {
+                    SettingsAccountView(account: account)
+                } label: {
+                    AccountLabel(account: account)
+                }
+            }
+            .onDelete(perform: deleteAccounts)
+            .onMove(perform: moveAccounts)
+        }
+        #if os(iOS)
+        .toolbar {
+            EditButton()
+        }
+        #endif
+        .navigationTitle(Text("Accounts"))
+    }
+    #endif
+
     private func deleteAccounts(offsets: IndexSet) {
         withAnimation {
             offsets.map { accounts[$0] }.forEach(viewContext.delete)
@@ -72,8 +93,8 @@ struct SettingsAccountItems: View {
     }
 }
 
-struct SettingsAccountsSection_Previews: PreviewProvider {
+struct SettingsAccountsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsAccountItems()
+        SettingsAccountsView()
     }
 }

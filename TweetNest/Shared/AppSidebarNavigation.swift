@@ -82,19 +82,10 @@ struct AppSidebarNavigation: View {
                         Section {
                             AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
                         } header: {
-                            Label {
-                                Text(verbatim: account.user?.displayUsername ?? account.objectID.description)
-                                    #if os(watchOS)
-                                    .padding([.bottom], 2)
-                                    #endif
-                            } icon: {
-                                ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
-                                    #if os(watchOS)
-                                    .frame(width: 16, height: 16)
-                                    #else
-                                    .frame(width: 24, height: 24)
-                                    #endif
-                            }
+                            AccountLabel(account: account)
+                                #if os(watchOS)
+                                .padding([.bottom], 2)
+                                #endif
                         }
                     }
                     

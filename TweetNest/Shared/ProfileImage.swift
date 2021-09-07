@@ -26,18 +26,20 @@ struct ProfileImage: View {
             }
         }
     }
+    
+    @ViewBuilder private var profileImage: some View {
+        if let userDetail = userDetail {
+            Content(userDetail: userDetail)
+        } else {
+            Color.gray
+        }
+    }
 
     var body: some View {
-        Group {
-            if let userDetail = userDetail {
-                Content(userDetail: userDetail)
-            } else {
-                Color.gray
-            }
-        }
-        .clipShape(Circle())
-        .accessibilityElement(children: .ignore)
-        .accessibilityHidden(true)
+        profileImage
+            .clipShape(Circle())
+            .accessibilityElement(children: .ignore)
+            .accessibilityHidden(true)
     }
 }
 

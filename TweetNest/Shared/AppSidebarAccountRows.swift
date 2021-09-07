@@ -40,9 +40,8 @@ struct AppSidebarAccountRows: View {
                     tag: .followings(account),
                     selection: $navigationItemSelection)
                 {
-                    UsersDiffList(user: user, diffKeyPath: \.followingUserIDs)
+                    UsersDiffList(user: user, diffKeyPath: \.followingUserIDs, title: Text("Followings History"))
                         .environment(\.account, account)
-                        .navigationTitle(Text("Followings History"))
                 }
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(Text("\(account.user?.displayUsername ?? account.objectID.description)'s Following History"))
@@ -57,9 +56,8 @@ struct AppSidebarAccountRows: View {
                     tag: .followers(account),
                     selection: $navigationItemSelection)
                 {
-                    UsersDiffList(user: user, diffKeyPath: \.followerUserIDs)
+                    UsersDiffList(user: user, diffKeyPath: \.followerUserIDs, title: Text("Followers History"))
                         .environment(\.account, account)
-                        .navigationTitle(Text("Followers History"))
                 }
                 .accessibilityElement(children: .ignore)
                 .accessibilityLabel(Text("\(account.user?.displayUsername ?? account.objectID.description)'s Followers History"))
@@ -75,9 +73,8 @@ struct AppSidebarAccountRows: View {
                         tag: .blockings(account),
                         selection: $navigationItemSelection)
                     {
-                        UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs)
+                        UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs, title: Text("Blocks History"))
                             .environment(\.account, account)
-                            .navigationTitle(Text("Blocks History"))
                     }
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(Text("\(account.user?.displayUsername ?? account.objectID.description)'s Blocks History"))

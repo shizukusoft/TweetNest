@@ -78,7 +78,7 @@ extension Session {
             async let _myBlockingUserIDs = accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
 
             let twitterUser = try await _twitterUser
-            async let _profileImageDataAsset = DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context)
+            async let _profileImageDataAsset = UserDefaults.tweetNestKit(Session.downloadUserProfileImagesUserDefaultsKey, type: Bool.self) == true ? DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context) : nil
 
             let followingUserIDs = try await _followingUserIDs
             let followerIDs = try await _followerIDs
@@ -118,7 +118,7 @@ extension Session {
             }
             
             let profileImageDataAsset = try await _profileImageDataAsset
-            if profileImageDataAsset.hasChanges {
+            if let profileImageDataAsset = profileImageDataAsset, profileImageDataAsset.hasChanges {
                 try await context.perform {
                     try context.save()
                 }
