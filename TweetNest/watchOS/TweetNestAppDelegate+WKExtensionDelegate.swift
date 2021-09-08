@@ -6,6 +6,7 @@
 //
 
 import WatchKit
+import TweetNestKit
 import UserNotifications
 
 extension TweetNestAppDelegate: WKExtensionDelegate {
@@ -14,7 +15,7 @@ extension TweetNestAppDelegate: WKExtensionDelegate {
     }
     
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
-        let handledBackgroundTasks = session.handleBackgroundRefreshBackgroundTask(backgroundTasks)
+        let handledBackgroundTasks = BackgroundTaskScheduler.shared.handleBackgroundRefreshBackgroundTask(backgroundTasks)
         
         for backgroundTask in backgroundTasks.subtracting(handledBackgroundTasks) {
             switch backgroundTask {

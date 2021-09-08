@@ -32,18 +32,12 @@ struct TweetNestApp: App {
                 .environment(\.session, session)
                 .environment(\.managedObjectContext, session.persistentContainer.viewContext)
         }
-        #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
         .onChange(of: scenePhase) { phase in
             switch phase {
-            case .active, .inactive:
-                break
-            case .background:
+            case .active, .inactive, .background:
                 Task {
                     do {
-                        try await session.scheduleBackgroundRefreshTask()
-                        #if canImport(BackgroundTasks) && !os(macOS)
-                        try await session.scheduleDataCleansingBackgroundTaskIfNeeded()
-                        #endif
+                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
                     } catch {
                         Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
                     }
@@ -52,7 +46,6 @@ struct TweetNestApp: App {
                 break
             }
         }
-        #endif
         
         #if os(macOS)
         Settings {
