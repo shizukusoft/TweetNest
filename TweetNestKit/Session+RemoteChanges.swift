@@ -222,7 +222,7 @@ extension Session {
                 let notificationRequest: UNNotificationRequest? = await context.perform(schedule: .enqueued) {
                     guard
                         let newUserDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
-                        (newUserDetail.creationDate ?? .distantPast) > Date(timeIntervalSinceNow: -(5 * 60)),
+                        (newUserDetail.creationDate ?? .distantPast) > Date(timeIntervalSinceNow: -(10 * 60)),
                         let user = newUserDetail.user,
                         let sortedUserDetails = user.sortedUserDetails,
                         sortedUserDetails.count > 1,
