@@ -16,6 +16,12 @@ import WatchKit
 #endif
 
 public actor BackgroundTaskScheduler {
+    public enum ApplicationPhase: Hashable, Equatable {
+        case background
+        case inactive
+        case active
+    }
+
     public static let shared = BackgroundTaskScheduler()
 
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).background-refresh"
@@ -32,52 +38,63 @@ public actor BackgroundTaskScheduler {
 }
 
 extension BackgroundTaskScheduler {
-    public func scheduleBackgroundTasks() async throws {
+    public func scheduleBackgroundTasks(for applicationPhase: ApplicationPhase) async throws {
         guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return }
 
-        backgroundTimer = Timer(fire: Self.preferredBackgroundRefreshDate, interval: 0, repeats: false) { _ in
-            Task.detached(priority: .utility) {
-                await self.backgroundRefresh(dataCleansing: true)
+        switch applicationPhase {
+        case .active, .inactive:
+            backgroundTimer = Timer(fire: Self.preferredBackgroundRefreshDate, interval: 0, repeats: false) { _ in
+                Task.detached(priority: .utility) {
+                    await self.backgroundRefresh(dataCleansing: true)
+                }
             }
-        }
+        case .background:
+            #if canImport(BackgroundTasks) && !os(macOS)
+            backgroundTimer = nil
 
-        #if canImport(BackgroundTasks) && !os(macOS)
-        let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
-        backgroundRefreshRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate
+            let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
+            backgroundRefreshRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate
 
-        try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
+            try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
 
-        let lastCleanseDate = await Session.shared.preferences.lastCleansed
+            let lastCleanseDate = await Session.shared.preferences.lastCleansed
 
-        let now = Date()
-        let twoDay = TimeInterval(2 * 24 * 60 * 60)
+            let now = Date()
+            let twoDay = TimeInterval(2 * 24 * 60 * 60)
 
-        // Clean the database at most once per two day.
-        guard now > (lastCleanseDate + twoDay) else { return }
+            // Clean the database at most once per two day.
+            guard now > (lastCleanseDate + twoDay) else { return }
 
-        let backgroundDataCleansingRequest = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
-        backgroundDataCleansingRequest.requiresNetworkConnectivity = true
-        backgroundDataCleansingRequest.requiresExternalPower = false
+            let backgroundDataCleansingRequest = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
+            backgroundDataCleansingRequest.requiresNetworkConnectivity = true
+            backgroundDataCleansingRequest.requiresExternalPower = false
 
-        try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
-        #endif
+            try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
+            #elseif canImport(WatchKit)
+            backgroundTimer = nil
 
-        #if canImport(WatchKit)
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            Task {
-                await WKExtension.shared().scheduleBackgroundRefresh(
-                    withPreferredDate: Self.preferredBackgroundRefreshDate,
-                    userInfo: Self.backgroundRefreshBackgroundTaskIdentifier as NSString
-                ) { error in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume()
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                Task {
+                    await WKExtension.shared().scheduleBackgroundRefresh(
+                        withPreferredDate: Self.preferredBackgroundRefreshDate,
+                        userInfo: Self.backgroundRefreshBackgroundTaskIdentifier as NSString
+                    ) { error in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume()
+                        }
                     }
                 }
             }
+            #else
+            backgroundTimer = Timer(fire: Self.preferredBackgroundRefreshDate, interval: 0, repeats: false) { _ in
+                Task.detached(priority: .utility) {
+                    await self.backgroundRefresh(dataCleansing: true)
+                }
+            }
+            #endif
         }
-        #endif
     }
 }
 
@@ -88,7 +105,7 @@ extension BackgroundTaskScheduler {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
 
         do {
-            try await scheduleBackgroundTasks()
+            try await scheduleBackgroundTasks(for: .background)
         } catch {
             logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
         }
@@ -146,7 +163,7 @@ extension BackgroundTaskScheduler {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-data-cleansing")
 
         do {
-            try await scheduleBackgroundTasks()
+            try await scheduleBackgroundTasks(for: .background)
         } catch {
             logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
         }

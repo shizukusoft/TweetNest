@@ -33,17 +33,22 @@ struct TweetNestApp: App {
                 .environment(\.managedObjectContext, session.persistentContainer.viewContext)
         }
         .onChange(of: scenePhase) { phase in
-            switch phase {
-            case .active, .inactive, .background:
-                Task {
-                    do {
-                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
-                    } catch {
-                        Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
+            Task {
+                do {
+                    switch phase {
+                    case .active:
+                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .active)
+                    case .inactive:
+                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .inactive)
+                    case .background:
+                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .background)
+                    @unknown default:
+                        break
                     }
+
+                } catch {
+                    Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
                 }
-            @unknown default:
-                break
             }
         }
         
