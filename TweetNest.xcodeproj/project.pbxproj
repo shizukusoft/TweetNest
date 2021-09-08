@@ -2282,6 +2282,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2313,6 +2314,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
