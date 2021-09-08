@@ -99,6 +99,9 @@ struct AppSidebarNavigation: View {
                     }
                     #endif
                 }
+                #if os(macOS)
+                .frame(minWidth: 182)
+                #endif
                 
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
@@ -149,9 +152,11 @@ struct AppSidebarNavigation: View {
                 #if os(macOS)
                 ToolbarItemGroup(placement: .automatic) {
                     Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
-                        if let refresh = refreshAction {
-                            Task {
-                                refresh
+                        Task {
+                            if let refreshAction = refreshAction {
+                                await refreshAction()
+                            } else {
+                                await refresh()
                             }
                         }
                     }
