@@ -57,22 +57,22 @@ extension UserView {
                 URL(string: "https://twitter.com/intent/user?user_id=\($0)")!
             }
         }
-        
-        #if os(iOS) || os(macOS)
+
         @State var showBulkDeleteRecentTweets: Bool = false
+        #if os(iOS) || os(macOS)
         @State var showBulkDeleteAllTweets: Bool = false
         #endif
-        
-        #if os(iOS) || os(macOS)
+
         @ViewBuilder
         var deleteMenu: some View {
+            #if os(iOS) || os(macOS)
             Menu {
                 Button(role: .destructive) {
                     showBulkDeleteRecentTweets = true
                 } label: {
                     Text("Delete Recent Tweets")
                 }
-                
+
                 Button(role: .destructive) {
                     showBulkDeleteAllTweets = true
                 } label: {
@@ -85,8 +85,14 @@ extension UserView {
                     Image(systemName: "trash")
                 }
             }
+            #else
+            Button(role: .destructive) {
+                showBulkDeleteRecentTweets = true
+            } label: {
+                Text("Delete Recent Tweets")
+            }
+            #endif
         }
-        #endif
         
         @ViewBuilder private var userView: some View {
             #if os(macOS)
@@ -137,9 +143,25 @@ extension UserView {
                         }
                     }
                 }
+                #if os(watchOS)
+                if account != nil, account == user.account {
+                    Section {
+                        deleteMenu
+                    }
+                }
+                #endif
                 UserAllDataView(user: user)
             }
             #endif
+        }
+
+        @ViewBuilder private var refreshButton: some View {
+            Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
+                Task {
+                    refresh
+                }
+            }
+            .disabled(isRefreshing)
         }
 
         var body: some View {
@@ -212,18 +234,19 @@ extension UserView {
                             }
                             
                             #if !os(iOS)
-                            Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
-                                Task {
-                                    refresh
-                                }
-                            }
-                            .disabled(isRefreshing)
+                            refreshButton
                             #endif
                             
                             if account != nil, account == user.account {
                                 deleteMenu
                             }
                         }
+                    }
+                }
+                #else
+                .toolbar {
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        refreshButton
                     }
                 }
                 #endif
@@ -236,7 +259,6 @@ extension UserView {
                 }
                 #endif
                 .alert(isPresented: $showErrorAlert, error: error)
-                #if os(iOS) || os(macOS)
                 .sheet(isPresented: $showBulkDeleteRecentTweets) {
                     if let account = account, account == user.account {
                         #if os(macOS)
@@ -250,6 +272,7 @@ extension UserView {
                         #endif
                     }
                 }
+                #if os(iOS) || os(macOS)
                 .sheet(isPresented: $showBulkDeleteAllTweets) {
                     if let account = account, account == user.account {
                         #if os(macOS)

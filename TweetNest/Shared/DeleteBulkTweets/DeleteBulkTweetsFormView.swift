@@ -5,8 +5,6 @@
 //  Created by Jaehong Kang on 2021/08/15.
 //
 
-#if os(iOS) || os(macOS)
-
 import SwiftUI
 import Twitter
 import TweetNestKit
@@ -54,7 +52,10 @@ struct DeleteBulkTweetsFormView: View {
                                     Text(tweets.count.twnk_formatted())
                                 }
                             }
+
+                            #if !os(watchOS)
                             Section {
+
                                 DatePicker(selection: $sinceDate, in: leastTweetDate...greatestTweetDate, displayedComponents: [.date]) {
                                     Text("Since")
                                 }
@@ -67,7 +68,7 @@ struct DeleteBulkTweetsFormView: View {
                                     
                                     updateTargetTweets()
                                 }
-                                
+
                                 DatePicker(selection: $untilDate, in: leastTweetDate...greatestTweetDate, displayedComponents: [.date]) {
                                     Text("Until")
                                 }
@@ -80,7 +81,10 @@ struct DeleteBulkTweetsFormView: View {
                                     
                                     updateTargetTweets()
                                 }
+
                             }
+                            #endif
+
                             Section {
                                 HStack {
                                     Text("Target Tweets")
@@ -162,5 +166,3 @@ struct DeleteBulkTweetsFormView_Previews: PreviewProvider {
         DeleteBulkTweetsFormView(tweets: [], isPresented: .constant(true))
     }
 }
-
-#endif
