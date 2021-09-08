@@ -88,7 +88,17 @@ struct DeleteBulkTweetsFormView: View {
                                     Text(targetTweets.count.twnk_formatted())
                                 }
                             }
-                            Section {
+                        }
+                        .toolbar {
+                            ToolbarItemGroup(placement: .cancellationAction) {
+                                Button(role: .cancel) {
+                                    isPresented = false
+                                } label: {
+                                    Text("Cancel")
+                                }
+                            }
+
+                            ToolbarItemGroup(placement: .destructiveAction) {
                                 Button(role: .destructive) {
                                     showConfirmAlert = true
                                 } label: {
@@ -97,11 +107,11 @@ struct DeleteBulkTweetsFormView: View {
                                 .disabled(targetTweets.count <= 0)
                                 .alert(Text("Delete Tweets?"), isPresented: $showConfirmAlert) {
                                     Button(role: .cancel) {
-                                        
+
                                     } label: {
                                         Text("Cancel")
                                     }
-                                    
+
                                     Button(role: .destructive) {
                                         isInProgress = true
                                     } label: {
@@ -109,15 +119,6 @@ struct DeleteBulkTweetsFormView: View {
                                     }
                                 } message: {
                                     Text("\(targetTweets.count.twnk_formatted()) tweets will be deleted.")
-                                }
-                            }
-                        }
-                        .toolbar {
-                            ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(role: .cancel) {
-                                    isPresented = false
-                                } label: {
-                                    Text("Cancel")
                                 }
                             }
                         }

@@ -96,8 +96,14 @@ extension UserView {
                         UserDetailProfileView(userDetail: lastUserDetail)
                         VStack(alignment: .leading) {
                             user.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                            if let lastUpdateDate = user.lastUpdateEndDate {
-                                Text("Updated \(lastUpdateDate, style: .relative) ago")
+                            if let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
+                                Group {
+                                    if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                                        Text("Updating...")
+                                    } else {
+                                        Text("Updated \(lastUpdateEndDate, style: .relative) ago")
+                                    }
+                                }
                                 .accessibilityAddTraits(.updatesFrequently)
                             }
                         }
@@ -118,8 +124,14 @@ extension UserView {
                     } footer: {
                         VStack(alignment: .leading) {
                             user.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                            if let lastUpdateDate = user.lastUpdateEndDate {
-                                Text("Updated \(lastUpdateDate, style: .relative) ago")
+                            if let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
+                                Group {
+                                    if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                                        Text("Updating...")
+                                    } else {
+                                        Text("Updated \(lastUpdateEndDate, style: .relative) ago")
+                                    }
+                                }
                                 .accessibilityAddTraits(.updatesFrequently)
                             }
                         }
@@ -226,21 +238,29 @@ extension UserView {
                 .alert(isPresented: $showErrorAlert, error: error)
                 #if os(iOS) || os(macOS)
                 .sheet(isPresented: $showBulkDeleteRecentTweets) {
-                    NavigationView {
-                        if let account = account, account == user.account {
+                    if let account = account, account == user.account {
+                        #if os(macOS)
+                        DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                            .padding()
+                            .frame(minWidth: 200, minHeight: 180)
+                        #else
+                        NavigationView {
                             DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
-                        } else {
-                            EmptyView()
                         }
+                        #endif
                     }
                 }
                 .sheet(isPresented: $showBulkDeleteAllTweets) {
-                    NavigationView {
-                        if let account = account, account == user.account {
-                            DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
-                        } else {
-                            EmptyView()
+                    if let account = account, account == user.account {
+                        #if os(macOS)
+                        DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
+                            .padding()
+                            .frame(minWidth: 200, minHeight: 180)
+                        #else
+                        NavigationView {
+                            DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
                         }
+                        #endif
                     }
                 }
                 #endif
