@@ -27,10 +27,25 @@ struct TweetNestApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
-            MainView()
-                .environment(\.session, session)
-                .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+        Group {
+            WindowGroup {
+                MainView()
+                    .environment(\.session, session)
+                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+            }
+            #if os(iOS) || os(macOS)
+            .commands {
+                SidebarCommands()
+            }
+            #endif
+
+            #if os(macOS)
+            Settings {
+                SettingsMainView()
+                    .environment(\.session, session)
+                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+            }
+            #endif
         }
         .onChange(of: scenePhase) { phase in
             Task {
@@ -51,13 +66,5 @@ struct TweetNestApp: App {
                 }
             }
         }
-        
-        #if os(macOS)
-        Settings {
-            SettingsMainView()
-                .environment(\.session, session)
-                .environment(\.managedObjectContext, session.persistentContainer.viewContext)
-        }
-        #endif
     }
 }

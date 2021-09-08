@@ -27,14 +27,42 @@ public actor BackgroundTaskScheduler {
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).background-refresh"
     public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).data-cleansing"
 
-    static var preferredBackgroundRefreshDate: Date {
-        Date(timeIntervalSinceNow: 10 * 60) // Fetch no earlier than 10 minutes from now
+    static var preferredBackgroundTasksTimeInterval: TimeInterval {
+        (15 / 2) * 60 // Fetch no earlier than 7.5 minutes from now
     }
 
-    private var backgroundTimer: Timer?
+    static var preferredBackgroundRefreshDate: Date {
+        Date(timeIntervalSinceNow: preferredBackgroundTasksTimeInterval)
+    }
+
+    private var backgroundTimer: DispatchSourceTimer? {
+        willSet {
+            guard backgroundTimer !== newValue else { return }
+
+            backgroundTimer?.cancel()
+        }
+        didSet {
+            guard backgroundTimer !== oldValue else { return }
+
+            backgroundTimer?.activate()
+        }
+    }
+
     private var isRunning: Bool = false
 
     private init() { }
+
+    func newBackgroundTimer() -> DispatchSourceTimer {
+        let backgroundTimer = DispatchSource.makeTimerSource()
+        backgroundTimer.setEventHandler {
+            Task.detached(priority: .utility) {
+                await self.backgroundRefresh(dataCleansing: true)
+            }
+        }
+        backgroundTimer.schedule(deadline: .now() + Self.preferredBackgroundTasksTimeInterval)
+
+        return backgroundTimer
+    }
 }
 
 extension BackgroundTaskScheduler {
@@ -43,15 +71,12 @@ extension BackgroundTaskScheduler {
 
         switch applicationPhase {
         case .active, .inactive:
-            backgroundTimer = Timer(fire: Self.preferredBackgroundRefreshDate, interval: 0, repeats: false) { _ in
-                Task.detached(priority: .utility) {
-                    await self.backgroundRefresh(dataCleansing: true)
-                }
-            }
+            self.backgroundTimer = newBackgroundTimer()
         case .background:
-            #if canImport(BackgroundTasks) && !os(macOS)
-            backgroundTimer = nil
+            #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
+            self.backgroundTimer = nil
 
+            #if canImport(BackgroundTasks) && !os(macOS)
             let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
             backgroundRefreshRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate
 
@@ -70,9 +95,9 @@ extension BackgroundTaskScheduler {
             backgroundDataCleansingRequest.requiresExternalPower = false
 
             try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
-            #elseif canImport(WatchKit)
-            backgroundTimer = nil
+            #endif
 
+            #if canImport(WatchKit)
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 Task {
                     await WKExtension.shared().scheduleBackgroundRefresh(
@@ -87,12 +112,10 @@ extension BackgroundTaskScheduler {
                     }
                 }
             }
+            #endif
+
             #else
-            backgroundTimer = Timer(fire: Self.preferredBackgroundRefreshDate, interval: 0, repeats: false) { _ in
-                Task.detached(priority: .utility) {
-                    await self.backgroundRefresh(dataCleansing: true)
-                }
-            }
+            self.backgroundTimer = newBackgroundTimer()
             #endif
         }
     }
