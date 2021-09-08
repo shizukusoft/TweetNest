@@ -35,6 +35,8 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     init(inMemory: Bool = false) {
         super.init(name: Bundle.module.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.module.url(forResource: Bundle.module.name!, withExtension: "momd")!)!)
 
+        _ = persistentContainerEventDidChanges
+
         persistentStoreDescriptions.forEach { description in
             if inMemory == false {
                 description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
@@ -61,9 +63,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 fatalError("Unresolved error \(error), \(error.userInfo)")
             }
         })
-
-        viewContext.automaticallyMergesChangesFromParent = true
-        viewContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
         
         #if canImport(CoreSpotlight)
         if inMemory == false, let storeDescription = self.persistentStoreDescriptions.first(where: { $0.type == NSSQLiteStoreType }) {
@@ -71,8 +70,9 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             self.usersSpotlightDelegate!.startSpotlightIndexing()
         }
         #endif
-        
-        _ = persistentContainerEventDidChanges
+
+        viewContext.automaticallyMergesChangesFromParent = true
+        viewContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
     }
 
     public override func newBackgroundContext() -> NSManagedObjectContext {
