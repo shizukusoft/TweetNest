@@ -45,7 +45,7 @@ extension Session {
             
             let userIDs = OrderedSet(userIDs)
 
-            return try await withThrowingTaskGroup(of: (Date, [Twitter.User]).self) { chunkedUsersTaskGroup in
+            return try await withThrowingTaskGroup(of: (Date, [Result<Twitter.User, TwitterServerError>]).self) { chunkedUsersTaskGroup in
                 for chunkedUserIDs in userIDs.chunked(into: 100) {
                     chunkedUsersTaskGroup.addTask {
                         let updateStartDate = Date()
@@ -81,7 +81,6 @@ extension Session {
                                 }
 
                                 user.lastUpdateStartDate = updateStartDate
-                                user.lastUpdateEndDate = nil
 
                                 return $0
                             }
@@ -95,7 +94,7 @@ extension Session {
                             return (updateStartDate, [])
                         }
 
-                        return try await (updateStartDate, [Twitter.User](ids: userIDs, session: twitterSession))
+                        return try await (updateStartDate, Twitter.User.users(ids: userIDs, session: twitterSession))
                     }
                 }
 
@@ -103,7 +102,16 @@ extension Session {
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
                         
-                        for twitterUser in chunkedUsers.1 {
+                        for twitterUserResult in chunkedUsers.1 {
+                            let twitterUser: Twitter.User
+                            do {
+                                twitterUser = try twitterUserResult.get()
+                            } catch {
+                                Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-user")
+                                    .error("Error occurred while fetch user: \(String(reflecting: error), privacy: .public)")
+                                continue
+                            }
+
                             taskGroup.addTask {
                                 try Task.checkCancellation()
 
