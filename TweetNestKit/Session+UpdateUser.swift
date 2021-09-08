@@ -13,69 +13,168 @@ import Twitter
 import SwiftUI
 
 extension Session {
-    public nonisolated func updateUsers<C>(ids userIDs: C, twitterSession: Twitter.Session, context _context: NSManagedObjectContext? = nil) async throws where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
+    @discardableResult
+    public nonisolated func updateUsers<C>(
+        ids userIDs: C,
+        accountObjectID: NSManagedObjectID,
+        context: NSManagedObjectContext? = nil
+    ) async throws -> [Twitter.User.ID: (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)] where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
+        try await updateUsers(ids: userIDs, accountObjectID: accountObjectID, accountUserID: nil, context: context)
+    }
+
+    @discardableResult
+    nonisolated func updateUsers<C>(
+        ids userIDs: C,
+        accountObjectID: NSManagedObjectID,
+        accountUserID: String? = nil,
+        context _context: NSManagedObjectContext? = nil
+    ) async throws -> [Twitter.User.ID: (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)] where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         try await withExtendedBackgroundExecution {
             let context = _context ?? self.persistentContainer.newBackgroundContext()
             context.undoManager = _context?.undoManager
+
+            let accountPreferences = try await context.perform { () -> Account.Preferences in
+                guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
+                    throw SessionError.unknown
+                }
+                
+                return account.preferences
+            }
+            
+            let twitterSession = try await self.twitterSession(for: accountObjectID)
             
             let userIDs = OrderedSet(userIDs)
 
-            try await withThrowingTaskGroup(of: (Date, [Twitter.User], Date).self) { chunkedUsersTaskGroup in
+            return try await withThrowingTaskGroup(of: (Date, [Twitter.User]).self) { chunkedUsersTaskGroup in
                 for chunkedUserIDs in userIDs.chunked(into: 100) {
                     chunkedUsersTaskGroup.addTask {
-                        let startDate = Date()
-                        let users = try await [Twitter.User](ids: chunkedUserIDs, session: twitterSession)
-                        let endDate = Date()
+                        let updateStartDate = Date()
+                        
+                        let userIDs: [Twitter.User.ID] = try await context.perform(schedule: .enqueued) {
+                            let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                            userFetchRequest.predicate = NSPredicate(format: "id IN %@", chunkedUserIDs)
+                            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                            
+                            let users = Dictionary(
+                                try context.fetch(userFetchRequest).map { ($0.id, $0) },
+                                uniquingKeysWith: {
+                                    if ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast) {
+                                        return $1
+                                    } else {
+                                        return $0
+                                    }
+                                }
+                            )
 
-                        return (startDate, users, endDate)
+                            let userIDs: [Twitter.User.ID] = chunkedUserIDs.compactMap {
+                                guard let user = users[$0], let lastUpdateStartDate = user.lastUpdateStartDate else {
+                                    return $0
+                                }
+
+                                guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
+                                    return nil
+                                }
+
+                                // Don't update user data if user has account. (Might overwrite followings/followers list)
+                                guard $0 == accountUserID || user.account == nil else {
+                                    return nil
+                                }
+
+                                user.lastUpdateStartDate = updateStartDate
+                                user.lastUpdateEndDate = nil
+
+                                return $0
+                            }
+
+                            try context.save()
+
+                            return userIDs
+                        }
+
+                        guard userIDs.isEmpty == false else {
+                            return (updateStartDate, [])
+                        }
+
+                        return try await (updateStartDate, [Twitter.User](ids: userIDs, session: twitterSession))
                     }
                 }
 
-                try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+                return try await withThrowingTaskGroup(of: (Twitter.User.ID, (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)).self) { taskGroup in
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
                         
-                        for user in chunkedUsers.1 {
+                        for twitterUser in chunkedUsers.1 {
                             taskGroup.addTask {
                                 try Task.checkCancellation()
+
+                                async let _followingUserIDs = twitterUser.id == accountUserID ? Twitter.User.followingUserIDs(forUserID: twitterUser.id, session: twitterSession) : nil
+                                async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
+                                async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
                                 
-                                try await context.perform(schedule: .enqueued) {
-                                    try Task.checkCancellation()
-                                    
+                                async let _profileImageDataAsset = DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context)
+
+                                let followingUserIDs = try await _followingUserIDs
+                                let followerIDs = try await _followerIDs
+                                let myBlockingUserIDs = try await _myBlockingUserIDs
+                                let twitterUserFetchDate = Date()
+
+                                try Task.checkCancellation()
+
+                                let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] })
+                                async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
+                                
+                                async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
+                                    let account = context.object(with: accountObjectID) as! Account
+
+                                    let fetchRequest = User.fetchRequest()
+                                    fetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
+                                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                                    fetchRequest.fetchLimit = 1
+                                    fetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
+
+                                    let user = try context.fetch(fetchRequest).first
+                                    let previousUserDetail = user?.sortedUserDetails?.last
+
                                     let userDetail = try UserDetail.createOrUpdate(
-                                        twitterUser: user,
+                                        twitterUser: twitterUser,
+                                        followingUserIDs: followingUserIDs,
+                                        followerUserIDs: followerIDs,
+                                        blockingUserIDs: myBlockingUserIDs,
                                         userUpdateStartDate: chunkedUsers.0,
-                                        userDetailCreationDate: chunkedUsers.2,
+                                        userDetailCreationDate: twitterUserFetchDate,
                                         context: context
                                     )
 
-                                    if userDetail.user?.account != nil {
-                                        // Don't update user data if user data has account. (Might overwrite followings/followers list)
-                                        context.delete(userDetail)
+                                    if twitterUser.id == accountUserID {
+                                        userDetail.user?.account = account
                                     }
+
+                                    return (previousUserDetail?.objectID, userDetail.objectID)
                                 }
-                            }
-                            
-                            taskGroup.addTask {
-                                try Task.checkCancellation()
-                                
+
                                 do {
-                                    _ = try await DataAsset.dataAsset(for: user.profileImageOriginalURL, session: self, context: context)
+                                    _ = try await _profileImageDataAsset
                                 } catch {
                                     Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
                                         .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                                 }
+
+                                try await _ = _updatingUsers
+
+                                return try await (twitterUser.id, userDetailObjectIDs)
                             }
                         }
                     }
 
-                    try await taskGroup.waitForAll()
-                    
+                    let userDetailObjectIDs = try await taskGroup.reduce(into: [:], { $0[$1.0] = $1.1 })
+
                     try await context.perform {
                         if context.hasChanges {
                             try context.save()
                         }
                     }
+
+                    return userDetailObjectIDs
                 }
             }
         }

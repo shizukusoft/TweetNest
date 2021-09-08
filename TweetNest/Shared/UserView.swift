@@ -265,7 +265,7 @@ extension UserView {
                     if let account = user.account {
                         try await Session.shared.updateAccount(account.objectID)
                     } else if let account = account {
-                        try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, twitterSession: .session(for: account))
+                        try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, accountObjectID: account.objectID)
                     }
                 } catch {
                     Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
