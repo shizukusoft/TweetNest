@@ -1645,7 +1645,7 @@
 				19C3AAE326B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				1970663F26E709FE00D7F21D /* AccountLabel.swift in Sources */,
-				195DD4BF26BEF6B2008F0309 /* DataAsset.swift in Sources */,
+				195DD4BF26BEF6B2008F0309 /* DataAssetImage.swift in Sources */,
 				19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				19BBB88526C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift in Sources */,
 				1989B75626BA537900755B1E /* UserDetailView.swift in Sources */,
