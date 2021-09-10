@@ -19,10 +19,6 @@ public actor Session {
     static let cloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!)"
     static let applicationGroupIdentifier = "group.\(Bundle.tweetNestKit.bundleIdentifier!)"
 
-    static var containerURL: URL? {
-        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Session.applicationGroupIdentifier)
-    }
-
     private var _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
         get async throws {
@@ -45,6 +41,22 @@ public actor Session {
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
         _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
         persistentContainer = PersistentContainer(inMemory: inMemory)
+    }
+}
+
+extension Session {
+    static var containerURL: URL {
+        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Session.applicationGroupIdentifier)!
+    }
+
+    static var containerLibraryURL: URL {
+        containerURL.appendingPathComponent("Library")
+    }
+
+    static var containerCacheURL: URL {
+        containerLibraryURL
+            .appendingPathComponent("Caches")
+            .appendingPathComponent(Bundle.tweetNestKit.bundleIdentifier!)
     }
 }
 
