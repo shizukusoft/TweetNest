@@ -15,6 +15,9 @@
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchScreen</key>
-	<dict/>
+	<dict>
+		<key>UINavigationBar</key>
+		<dict/>
+	</dict>
 </dict>
 </plist>

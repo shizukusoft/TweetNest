@@ -40,8 +40,12 @@ public actor Session {
     private(set) var twitterSessions = [URL: Twitter.Session]()
     
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
-        _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
-        persistentContainer = PersistentContainer(inMemory: inMemory)
+        do {
+            _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
+            persistentContainer = try PersistentContainer(inMemory: inMemory)
+        } catch {
+            fatalError(String(reflecting: error))
+        }
     }
 }
 

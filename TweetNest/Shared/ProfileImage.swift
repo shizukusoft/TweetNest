@@ -15,8 +15,8 @@ struct ProfileImage: View {
         @ObservedObject var userDetail: UserDetail
 
         var body: some View {
-            DataAsset(url: userDetail.profileImageURL) { data in
-                if let image = Image(data: data) {
+            DataAssetImage(url: userDetail.profileImageURL) { image in
+                if let image = image {
                     image
                         .interpolation(.high)
                         .resizable()
