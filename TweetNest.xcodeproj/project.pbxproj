@@ -154,7 +154,7 @@
 		19C5A2CB26BC205000AB1122 /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 19C5A2CA26BC205000AB1122 /* OrderedCollections */; };
 		19C5A2D026BC208700AB1122 /* UnifiedLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 19C5A2CF26BC208700AB1122 /* UnifiedLogging */; };
 		19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2D326BC219200AB1122 /* Bundle+TweetNestKit.swift */; };
-		19C5A2D626BC34A600AB1122 /* UsersSpotlightDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */; };
+		19C5A2D626BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */; };
 		19C5CDA026E27CB700E99516 /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5CD9F26E27CB700E99516 /* UserRows.swift */; };
 		19C5CDA126E27CB700E99516 /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5CD9F26E27CB700E99516 /* UserRows.swift */; };
 		19C5CDA226E27CB700E99516 /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5CD9F26E27CB700E99516 /* UserRows.swift */; };
@@ -501,7 +501,7 @@
 		19C5A2B026BC1F8A00AB1122 /* UserDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetail.swift; sourceTree = "<group>"; };
 		19C5A2C026BC1F9800AB1122 /* TweetNestKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKit.xcdatamodel; sourceTree = "<group>"; };
 		19C5A2D326BC219200AB1122 /* Bundle+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersSpotlightDelegate.swift; sourceTree = "<group>"; };
+		19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+UsersSpotlightDelegate.swift"; sourceTree = "<group>"; };
 		19C5CD9F26E27CB700E99516 /* UserRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRows.swift; sourceTree = "<group>"; };
 		19C6570726DAB53100D1A272 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		19C7378926B6DE25005CFCC9 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
@@ -830,6 +830,24 @@
 			path = ManagedObjects;
 			sourceTree = "<group>";
 		};
+		195D1EC726EB171F00999EB7 /* Session */ = {
+			isa = PBXGroup;
+			children = (
+				19C5A2AF26BC1F8A00AB1122 /* Session.swift */,
+				19F1117826DD28A1004D6DE3 /* Session+Credential.swift */,
+				197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */,
+				19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */,
+				1985B42826E497B5000C6126 /* Session+Preferences.swift */,
+				1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */,
+				19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */,
+				190DF4C026BCF1B700E1F062 /* Session+UpdateUser.swift */,
+				193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */,
+				19F1117A26DD28DB004D6DE3 /* Session+URL.swift */,
+				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
+			);
+			path = Session;
+			sourceTree = "<group>";
+		};
 		195DD4C626BFD31E008F0309 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
@@ -1019,32 +1037,22 @@
 		19C5A28726BC1F3500AB1122 /* TweetNestKit */ = {
 			isa = PBXGroup;
 			children = (
-				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
-				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
+				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
 				19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */,
 				19AFA14226E847B800764D79 /* BackgroundTaskScheduler+BackgroundTask.swift */,
 				19C3C82226E84E0D001FA25D /* BackgroundTaskScheduler+WatchKit.swift */,
-				19C5A2AF26BC1F8A00AB1122 /* Session.swift */,
-				19F1117826DD28A1004D6DE3 /* Session+Credential.swift */,
-				197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */,
-				19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */,
-				1985B42826E497B5000C6126 /* Session+Preferences.swift */,
-				1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */,
-				19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */,
-				190DF4C026BCF1B700E1F062 /* Session+UpdateUser.swift */,
-				193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */,
-				19F1117A26DD28DB004D6DE3 /* Session+URL.swift */,
-				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
-				19C5A2D526BC34A600AB1122 /* UsersSpotlightDelegate.swift */,
-				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
-				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
 				19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */,
+				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
+				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
+				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
 				199C8F4E26E0B04D000F218D /* TaskExpirationHandler.swift */,
+				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
 				195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */,
+				19C5A2D126BC217900AB1122 /* Extensions */,
+				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
+				195D1EC726EB171F00999EB7 /* Session */,
 				195DD4B226BEE7EC008F0309 /* Localizable.strings */,
 				19E0040E26DBF41600A55963 /* Localizable.stringsdict */,
-				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
-				19C5A2D126BC217900AB1122 /* Extensions */,
 				19C5A28926BC1F3500AB1122 /* TweetNestKit.docc */,
 				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
 			);
@@ -1842,7 +1850,7 @@
 				19AFA14126E837B800764D79 /* BackgroundTaskScheduler.swift in Sources */,
 				19C5A2B526BC1F8A00AB1122 /* PersistentContainer.swift in Sources */,
 				19861E3B26C8F82400073431 /* Session+TweetNestKit.swift in Sources */,
-				19C5A2D626BC34A600AB1122 /* UsersSpotlightDelegate.swift in Sources */,
+				19C5A2D626BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */,
 				1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */,
 				193AFB5C26CA043A008BFF67 /* Account+Preferences.swift in Sources */,
 			);
