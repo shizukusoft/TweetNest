@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -106,7 +106,7 @@
 		19A6FF5C26D6844F00AB7B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		19ABAD8326DC8D6000103F01 /* UserDetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19ABAD8226DC8D6000103F01 /* UserDetailTests.swift */; };
 		19ABAD8526DC8D7200103F01 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19ABAD8426DC8D7200103F01 /* SessionTests.swift */; };
-		19B4862E26D1E4A900A80D85 /* ZIP in Frameworks */ = {isa = PBXBuildFile; productRef = 19B4862D26D1E4A900A80D85 /* ZIP */; };
+		19B4862E26D1E4A900A80D85 /* ZIP in Frameworks */ = {isa = PBXBuildFile; platformFilters = (driverkit, ios, maccatalyst, macos, tvos, ); productRef = 19B4862D26D1E4A900A80D85 /* ZIP */; };
 		19BBB88226C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */; };
 		19BBB88326C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88126C8E538009D8DC7 /* DeleteBulkTweetsRecentTweetsView.swift */; };
 		19BBB88526C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BBB88426C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift */; };
