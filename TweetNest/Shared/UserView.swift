@@ -264,7 +264,7 @@ extension UserView {
                         #if os(macOS)
                         DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
                             .padding()
-                            .frame(minWidth: 200, minHeight: 180)
+                            .frame(minWidth: 320, minHeight: 240)
                         #else
                         NavigationView {
                             DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
@@ -278,7 +278,7 @@ extension UserView {
                         #if os(macOS)
                         DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
                             .padding()
-                            .frame(minWidth: 200, minHeight: 180)
+                            .frame(minWidth: 320, minHeight: 240)
                         #else
                         NavigationView {
                             DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)

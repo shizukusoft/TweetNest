@@ -8,13 +8,14 @@
 import SwiftUI
 import TweetNestKit
 import Twitter
+import OrderedCollections
 import UnifiedLogging
 
 struct DeleteBulkTweetsView: View {
     @Environment(\.account) private var account: TweetNestKit.Account?
     
     @Binding var isPresented: Bool
-    let targetTweets: [Tweet]
+    let targetTweetIDs: OrderedSet<Tweet.ID>
     
     @State var progress: Progress
     @State var results: [Int: Result<Void, Error>] = [:]
@@ -77,15 +78,15 @@ struct DeleteBulkTweetsView: View {
                 Text("OK")
             }
         } message: {
-            Text("Deleting \(succeedResultsCount.twnk_formatted()) of \(targetTweets.count.twnk_formatted()) tweets succeed. \(failedResults.count.twnk_formatted()) tweets failed.")
+            Text("Deleting \(succeedResultsCount.twnk_formatted()) of \(targetTweetIDs.count.twnk_formatted()) tweets succeed. \(failedResults.count.twnk_formatted()) tweets failed.")
         }
     }
     
-    init(isPresented: Binding<Bool>, targetTweets: [Tweet]) {
+    init(isPresented: Binding<Bool>, targetTweetIDs: OrderedSet<Tweet.ID>) {
         _isPresented = isPresented
-        self.targetTweets = targetTweets
+        self.targetTweetIDs = targetTweetIDs
         
-        _progress = State(initialValue: Progress(totalUnitCount: Int64(targetTweets.count)))
+        _progress = State(initialValue: Progress(totalUnitCount: Int64(targetTweetIDs.count)))
         updateProgressDescription()
     }
     
@@ -97,10 +98,10 @@ struct DeleteBulkTweetsView: View {
                 }
                 
                 await withTaskGroup(of: (Int,  Result<Void, Error>).self) { taskGroup in
-                    for (offset, tweet) in targetTweets.enumerated() {
+                    for (offset, targetTweetID) in targetTweetIDs.enumerated() {
                         taskGroup.addTask {
                             do {
-                                try await tweet.delete(session: .session(for: account))
+                                try await Tweet.delete(targetTweetID, session: .session(for: account))
                                 return (offset, .success(()))
                             } catch {
                                 return (offset, .failure(error))
@@ -140,6 +141,6 @@ struct DeleteBulkTweetsView: View {
 
 struct DeleteBulkTweetsView_Previews: PreviewProvider {
     static var previews: some View {
-        DeleteBulkTweetsView(isPresented: .constant(true), targetTweets: [])
+        DeleteBulkTweetsView(isPresented: .constant(true), targetTweetIDs: [])
     }
 }
