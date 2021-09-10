@@ -17,7 +17,7 @@ public func withExtendedBackgroundExecution<T>(identifier: String, expirationHan
     let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
-    let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
+    let token = ProcessInfo.processInfo.beginActivity(options: [.idleSystemSleepDisabled, .suddenTerminationDisabled, .automaticTerminationDisabled], reason: identifier)
     defer {
         ProcessInfo.processInfo.endActivity(token)
     }
@@ -75,7 +75,7 @@ private func handleExtendedBackgroundExecution<T>(identifier: String, expiration
     let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
-    let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
+    let token = ProcessInfo.processInfo.beginActivity(options: [.idleSystemSleepDisabled, .suddenTerminationDisabled, .automaticTerminationDisabled], reason: identifier)
     defer {
         ProcessInfo.processInfo.endActivity(token)
     }
