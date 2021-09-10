@@ -29,6 +29,9 @@
 "App Version" = "앱 버전";
 
 /* No comment provided by engineer. */
+"Background Update" = "백그라운드 업데이트";
+
+/* No comment provided by engineer. */
 "Blocked Accounts" = "차단한 계정";
 
 /* No comment provided by engineer. */
@@ -36,6 +39,12 @@
 
 /* No comment provided by engineer. */
 "Cancel" = "취소";
+
+/* No comment provided by engineer. */
+"Delete" = "삭제";
+
+/* No comment provided by engineer. */
+"Delete Recent Tweets" = "최근 트윗 삭제";
 
 /* No comment provided by engineer. */
 "Followers" = "팔로워";
@@ -50,6 +59,9 @@
 "Followings History" = "팔로잉 기록";
 
 /* No comment provided by engineer. */
+"General" = "일반";
+
+/* No comment provided by engineer. */
 "Joined" = "가입 날짜";
 
 /* No comment provided by engineer. */
@@ -60,6 +72,9 @@
 
 /* No comment provided by engineer. */
 "Location" = "위치";
+
+/* No comment provided by engineer. */
+"OK" = "확인";
 
 /* No comment provided by engineer. */
 "Preparing..." = "준비 중...";
@@ -80,7 +95,10 @@
 "Tweets" = "트윗";
 
 /* No comment provided by engineer. */
-"Updated %@ ago" = "%@ 전에 갱신됨";
+"Updated %@ ago" = "%@ 전에 업데이트됨";
+
+/* No comment provided by engineer. */
+"Updating..." = "업데이트 중...";
 
 /* No comment provided by engineer. */
 "URL" = "웹사이트";

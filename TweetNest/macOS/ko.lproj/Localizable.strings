@@ -11,9 +11,6 @@
 "%@'s Following History" = "%@의 팔로잉 기록";
 
 /* No comment provided by engineer. */
-"About" = "정보";
-
-/* No comment provided by engineer. */
 "Account" = "계정";
 
 /* No comment provided by engineer. */
@@ -23,13 +20,10 @@
 "Add Account" = "계정 추가";
 
 /* No comment provided by engineer. */
-"Additional Settings" = "기타 설정";
-
-/* No comment provided by engineer. */
 "All Data" = "모든 데이터";
 
 /* No comment provided by engineer. */
-"App Version" = "앱 버전";
+"Background Update" = "백그라운드 업데이트";
 
 /* No comment provided by engineer. */
 "Blocked Accounts" = "차단한 계정";
@@ -63,6 +57,9 @@
 
 /* No comment provided by engineer. */
 "Followings History" = "팔로잉 기록";
+
+/* No comment provided by engineer. */
+"General" = "일반";
 
 /* No comment provided by engineer. */
 "Joined" = "가입 날짜";
@@ -119,7 +116,10 @@
 "Tweets" = "트윗";
 
 /* No comment provided by engineer. */
-"Updated %@ ago" = "%@ 전에 갱신됨";
+"Updated %@ ago" = "%@ 전에 업데이트됨";
+
+/* No comment provided by engineer. */
+"Updating..." = "업데이트 중...";
 
 /* No comment provided by engineer. */
 "URL" = "웹사이트";
