@@ -26,13 +26,13 @@ struct SettingsMainView: View {
         TabView(selection: $selectedNavigationItem) {
             SettingsGeneralView()
                 .tabItem {
-                    Label(String(localized: "General"), systemImage: "gearshape")
+                    Label("General", systemImage: "gearshape")
                 }
                 .tag(SettingsNavigationItem.general)
             
             SettingsAccountsView()
                 .tabItem {
-                    Label(String(localized: "Accounts"), systemImage: "person.3")
+                    Label("Accounts", systemImage: "person.3")
                 }
                 .tag(SettingsNavigationItem.accounts)
         }
@@ -48,7 +48,7 @@ struct SettingsMainView: View {
                 ) {
                     SettingsGeneralView()
                 } label: {
-                    Label(String(localized: "General"), systemImage: "gearshape")
+                    Label("General", systemImage: "gearshape")
                 }
                 
                 NavigationLink(
@@ -57,7 +57,7 @@ struct SettingsMainView: View {
                 ) {
                     SettingsAccountsView()
                 } label: {
-                    Label(String(localized: "Accounts"), systemImage: "person.3")
+                    Label("Accounts", systemImage: "person.3")
                 }
             }
             

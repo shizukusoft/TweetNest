@@ -69,7 +69,7 @@ struct AppSidebarNavigation: View {
     @ViewBuilder
     var addAccountButton: some View {
         Button(action: addAccount) {
-            Label(Text("Add Account"), systemImage: "plus")
+            Label("Add Account", systemImage: "plus")
         }
         .disabled(isAddingAccount)
     }
@@ -151,7 +151,7 @@ struct AppSidebarNavigation: View {
                 
                 #if os(macOS)
                 ToolbarItemGroup(placement: .automatic) {
-                    Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
+                    Button {
                         Task {
                             if let refreshAction = refreshAction {
                                 await refreshAction()
@@ -159,6 +159,8 @@ struct AppSidebarNavigation: View {
                                 await refresh()
                             }
                         }
+                    } label: {
+                        Label("Refresh", systemImage: "arrow.clockwise")
                     }
                     .disabled(isRefreshing)
                 }
@@ -179,7 +181,7 @@ struct AppSidebarNavigation: View {
                     SettingsMainView()
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(Text("Cancel"), role: .cancel) {
+                                Button("Cancel", role: .cancel) {
                                     showSettings.toggle()
                                 }
                             }

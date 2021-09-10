@@ -86,10 +86,10 @@ struct DeleteBulkTweetsFormView: View {
                                 }
                                 #endif
 
-                                Toggle(String(localized: "Tweets"), isOn: $includesTweets)
+                                Toggle("Tweets", isOn: $includesTweets)
                                     .onChange(of: includesTweets) { _ in updateTargetTweetIDs() }
 
-                                Toggle(String(localized: "Retweets"), isOn: $includesRetweets)
+                                Toggle("Retweets", isOn: $includesRetweets)
                                     .onChange(of: includesRetweets) { _ in updateTargetTweetIDs() }
                             }
 

@@ -15,8 +15,8 @@ struct UserDetailView: View {
     @ViewBuilder
     var followingUsersLabel: some View {
         HStack {
-            Label(Text("Followings"), systemImage: "person.2")
-            .accessibilityLabel(Text("Followings"))
+            Label("Followings", systemImage: "person.2")
+            .accessibilityLabel("Followings")
             Spacer()
             Text(userDetail.followingUsersCount.twnk_formatted())
                 .foregroundColor(Color.gray)
@@ -26,8 +26,8 @@ struct UserDetailView: View {
     @ViewBuilder
     var followersLabel: some View {
         HStack {
-            Label(Text("Followers"), systemImage: "person.2")
-            .accessibilityLabel(Text("Followers"))
+            Label("Followers", systemImage: "person.2")
+            .accessibilityLabel("Followers")
             Spacer()
             Text(userDetail.followerUsersCount.twnk_formatted())
                 .foregroundColor(Color.gray)
@@ -36,7 +36,7 @@ struct UserDetailView: View {
 
     var body: some View {
         List {
-            Section(Text("Profile")) {
+            Section("Profile") {
                 UserDetailProfileView(userDetail: userDetail)
             }
 
@@ -44,7 +44,7 @@ struct UserDetailView: View {
                 if let followingUserIDs = userDetail.followingUserIDs {
                     NavigationLink {
                         UsersList(userIDs: followingUserIDs)
-                            .navigationTitle(Text("Followings"))
+                            .navigationTitle("Followings")
                             .environment(\.account, account)
                     } label: {
                         followingUsersLabel
@@ -72,7 +72,7 @@ struct UserDetailView: View {
                             .environment(\.account, account)
                     } label: {
                         HStack {
-                            Label(Text("Blocked Accounts"), systemImage: "nosign")
+                            Label("Blocked Accounts", systemImage: "nosign")
                             Spacer()
                             Text(blockingUserIDs.count.twnk_formatted())
                                 .foregroundColor(Color.gray)
@@ -83,7 +83,7 @@ struct UserDetailView: View {
 
             Section {
                 HStack {
-                    Label(Text("Listed"), systemImage: "list.bullet")
+                    Label("Listed", systemImage: "list.bullet")
                     .accessibilityLabel(Text("Listed"))
                     Spacer()
                     Text(userDetail.listedCount.twnk_formatted())
@@ -93,7 +93,7 @@ struct UserDetailView: View {
 
             Section {
                 HStack {
-                    Label(Text("Tweets"), systemImage: "text.bubble")
+                    Label("Tweets", systemImage: "text.bubble")
                     .accessibilityLabel(Text("Tweets"))
                     Spacer()
                     Text(userDetail.tweetsCount.twnk_formatted())

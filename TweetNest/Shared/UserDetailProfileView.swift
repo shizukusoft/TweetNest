@@ -42,7 +42,7 @@ struct UserDetailProfileView: View {
             if let location = userDetail.location {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 HStack {
-                    Label(Text("Location"), systemImage: "location")
+                    Label("Location", systemImage: "location")
                         .layoutPriority(1)
                         .lineLimit(1)
                     Spacer()
@@ -64,7 +64,7 @@ struct UserDetailProfileView: View {
 
             if let url = userDetail.url {
                 HStack {
-                    Label(Text("URL"), systemImage: "safari")
+                    Label("URL", systemImage: "safari")
                         .layoutPriority(1)
                         .lineLimit(1)
                     Spacer()
@@ -79,7 +79,7 @@ struct UserDetailProfileView: View {
 
             if let userCreationDate = userDetail.userCreationDate {
                 HStack {
-                    Label(Text("Joined"), systemImage: "calendar")
+                    Label("Joined", systemImage: "calendar")
                         .layoutPriority(1)
                         .lineLimit(1)
                     Spacer()
@@ -92,11 +92,11 @@ struct UserDetailProfileView: View {
             }
 
             if userDetail.isProtected {
-                Label(Text("Protected"), systemImage: "lock")
+                Label("Protected", systemImage: "lock")
             }
 
             if userDetail.isVerified {
-                Label(Text("Verified"), systemImage: "checkmark.seal")
+                Label("Verified", systemImage: "checkmark.seal")
             }
         }
     }

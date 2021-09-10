@@ -156,10 +156,12 @@ extension UserView {
         }
 
         @ViewBuilder private var refreshButton: some View {
-            Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
+            Button {
                 Task {
                     refresh
                 }
+            } label: {
+                Label("Refresh", systemImage: "arrow.clockwise")
             }
             .disabled(isRefreshing)
         }
@@ -178,14 +180,14 @@ extension UserView {
                             Menu {
                                 if let userProfileURL = userProfileURL {
                                     Link(destination: userProfileURL) {
-                                        Label(Text("Open Profile"), systemImage: "safari")
+                                        Label("Open Profile", systemImage: "safari")
                                     }
 
                                     #if os(iOS)
                                     Button {
                                         safariSheetURL = userProfileURL
                                     } label: {
-                                        Label(Text("Open Profile in Safari"), systemImage: "safari")
+                                        Label("Open Profile in Safari", systemImage: "safari")
                                     }
                                     #endif
                                 }
@@ -193,8 +195,10 @@ extension UserView {
                                 #if os(iOS)
                                 Divider()
 
-                                Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
+                                Button {
                                     shareSheetURL = userProfileURL
+                                } label: {
+                                    Label("Share", systemImage: "square.and.arrow.up")
                                 }
                                 #endif
                                 
@@ -204,31 +208,33 @@ extension UserView {
                                     deleteMenu
                                 }
                             } label: {
-                                Label(Text("More"), systemImage: "ellipsis.circle")
+                                Label("More", systemImage: "ellipsis.circle")
                                     .labelStyle(.iconOnly)
                             }
                         } else {
                             if let userProfileURL = userProfileURL {
                                 Link(destination: userProfileURL) {
-                                    Label(Text("Open Profile"), systemImage: "safari")
+                                    Label("Open Profile", systemImage: "safari")
                                 }
                                 #if os(iOS)
                                 .contextMenu {
                                     Link(destination: userProfileURL) {
-                                        Label(Text("Open Profile"), systemImage: "safari")
+                                        Label("Open Profile", systemImage: "safari")
                                     }
 
                                     Button {
                                         safariSheetURL = userProfileURL
                                     } label: {
-                                        Label(Text("Open Profile in Safari"), systemImage: "safari")
+                                        Label("Open Profile in Safari", systemImage: "safari")
                                     }
                                 }
                                 #endif
                                 
                                 #if os(iOS)
-                                Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
+                                Button {
                                     shareSheetURL = userProfileURL
+                                } label: {
+                                    Label("Share", systemImage: "square.and.arrow.up")
                                 }
                                 #endif
                             }

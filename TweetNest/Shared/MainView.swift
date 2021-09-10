@@ -29,7 +29,7 @@ struct MainView: View {
                     UserView(user: user)
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(Text("Cancel"), role: .cancel) {
+                                Button("Cancel", role: .cancel) {
                                     self.user = nil
                                 }
                             }

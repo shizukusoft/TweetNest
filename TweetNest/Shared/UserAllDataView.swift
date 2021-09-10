@@ -56,11 +56,12 @@ struct UserAllDataView: View {
             }
         }
         #else
-        Section(Text("All Data")) {
+        Section("All Data") {
             ForEach(userDetails) { userDetail in
                 NavigationLink(
-                    Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description))
-                {
+                    userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ??
+                    userDetail.objectID.description
+                ) {
                     UserDetailView(userDetail: userDetail)
                         .navigationTitle(
                             Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)

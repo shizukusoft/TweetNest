@@ -189,12 +189,7 @@
 		19EABBDE26D6877D00D3B003 /* DeleteBulkTweetsAllTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EBA44F26CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift */; };
 		19EABBDF26D6878400D3B003 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
 		19EABBE026D6878400D3B003 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* Session.swift */; };
-		19EABBE126D6878700D3B003 /* NavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE326BF2BC900741FA9 /* NavigationLink.swift */; };
 		19EABBE226D6878700D3B003 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C7378926B6DE25005CFCC9 /* Image.swift */; };
-		19EABBE326D6878700D3B003 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDDD26BF278B00741FA9 /* Button.swift */; };
-		19EABBE426D6878700D3B003 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE626BF309300741FA9 /* Menu.swift */; };
-		19EABBE526D6878700D3B003 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
-		19EABBE626D6878700D3B003 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDD726BF22C100741FA9 /* Label.swift */; };
 		19EABBE726D6879E00D3B003 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; };
 		19EABBE826D6879E00D3B003 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EABBEC26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift */; };
@@ -217,16 +212,6 @@
 		66002D7726BF897000B52E30 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D7526BF897000B52E30 /* Localizable.strings */; };
 		6601075826BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075626BEC58A0088E240 /* InfoPlist.strings */; };
 		6601075B26BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075926BEC58A0088E240 /* InfoPlist.strings */; };
-		6657FDD826BF22C100741FA9 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDD726BF22C100741FA9 /* Label.swift */; };
-		6657FDD926BF22C100741FA9 /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDD726BF22C100741FA9 /* Label.swift */; };
-		6657FDDE26BF278B00741FA9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDDD26BF278B00741FA9 /* Button.swift */; };
-		6657FDDF26BF278B00741FA9 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDDD26BF278B00741FA9 /* Button.swift */; };
-		6657FDE426BF2BC900741FA9 /* NavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE326BF2BC900741FA9 /* NavigationLink.swift */; };
-		6657FDE526BF2BC900741FA9 /* NavigationLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE326BF2BC900741FA9 /* NavigationLink.swift */; };
-		6657FDE726BF309300741FA9 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE626BF309300741FA9 /* Menu.swift */; };
-		6657FDE826BF309300741FA9 /* Menu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE626BF309300741FA9 /* Menu.swift */; };
-		6657FDEA26BF324D00741FA9 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
-		6657FDEB26BF324D00741FA9 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6657FDE926BF324D00741FA9 /* Section.swift */; };
 		66EE523826BF560200B721AC /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523726BF560200B721AC /* ShareView.swift */; };
 		66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523A26BF5C0E00B721AC /* ShareButton.swift */; };
 /* End PBXBuildFile section */
@@ -534,11 +519,6 @@
 		66002D7D26BF934C00B52E30 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6601075726BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		6601075A26BEC58A0088E240 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		6657FDD726BF22C100741FA9 /* Label.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Label.swift; sourceTree = "<group>"; };
-		6657FDDD26BF278B00741FA9 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
-		6657FDE326BF2BC900741FA9 /* NavigationLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLink.swift; sourceTree = "<group>"; };
-		6657FDE626BF309300741FA9 /* Menu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Menu.swift; sourceTree = "<group>"; };
-		6657FDE926BF324D00741FA9 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		66EE523726BF560200B721AC /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		66EE523A26BF5C0E00B721AC /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -783,12 +763,7 @@
 		193AB25A26B6FD0000B18D45 /* SwiftUI */ = {
 			isa = PBXGroup;
 			children = (
-				6657FDDD26BF278B00741FA9 /* Button.swift */,
 				19C7378926B6DE25005CFCC9 /* Image.swift */,
-				6657FDD726BF22C100741FA9 /* Label.swift */,
-				6657FDE626BF309300741FA9 /* Menu.swift */,
-				6657FDE326BF2BC900741FA9 /* NavigationLink.swift */,
-				6657FDE926BF324D00741FA9 /* Section.swift */,
 			);
 			path = SwiftUI;
 			sourceTree = "<group>";
@@ -1627,18 +1602,15 @@
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
 				193AFB6F26CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
 				193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
-				6657FDE726BF309300741FA9 /* Menu.swift in Sources */,
 				1970664326E713D300D7F21D /* UserAllDataView.swift in Sources */,
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				197ACF0F26CE2D820040388C /* DeleteBulkTweetsView.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
 				199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */,
 				19EE473526C14554007D2814 /* UsersDiffListSection.swift in Sources */,
-				6657FDEA26BF324D00741FA9 /* Section.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				193659B1260978F900865D40 /* WebAuthenticationView.swift in Sources */,
 				19B3130426E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
-				6657FDD826BF22C100741FA9 /* Label.swift in Sources */,
 				19C12F8826D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				19C7378A26B6DE25005CFCC9 /* Image.swift in Sources */,
 				1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */,
@@ -1649,14 +1621,12 @@
 				19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				19BBB88526C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift in Sources */,
 				1989B75626BA537900755B1E /* UserDetailView.swift in Sources */,
-				6657FDDE26BF278B00741FA9 /* Button.swift in Sources */,
 				194EF57E26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
 				1970663B26E7043500D7F21D /* SettingsGeneralView.swift in Sources */,
 				195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
 				19C5CDA026E27CB700E99516 /* UserRows.swift in Sources */,
 				192DBDD026D8755E0096AB54 /* SessionEnvironmentKey.swift in Sources */,
-				6657FDE426BF2BC900741FA9 /* NavigationLink.swift in Sources */,
 				19EE473826C14BCD007D2814 /* UserRow.swift in Sources */,
 				193659AF260978F900865D40 /* Session.swift in Sources */,
 				19EBA45026CD524C000AEFE3 /* DeleteBulkTweetsAllTweetsView.swift in Sources */,
@@ -1685,7 +1655,6 @@
 			files = (
 				19C12F8926D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */,
-				6657FDEB26BF324D00741FA9 /* Section.swift in Sources */,
 				19DA23D226B98767002436DC /* UserDetailProfileView.swift in Sources */,
 				19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
 				199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */,
@@ -1695,7 +1664,6 @@
 				194EF57F26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
 				19861E3E26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */,
 				19BBB88626C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift in Sources */,
-				6657FDD926BF22C100741FA9 /* Label.swift in Sources */,
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
 				193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
@@ -1708,7 +1676,6 @@
 				192DBDD126D8755E0096AB54 /* SessionEnvironmentKey.swift in Sources */,
 				19C3AAE426B567750093D223 /* AppSidebarNavigation.swift in Sources */,
 				19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */,
-				6657FDE826BF309300741FA9 /* Menu.swift in Sources */,
 				1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */,
 				195DD4C326BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				1970663C26E7043500D7F21D /* SettingsGeneralView.swift in Sources */,
@@ -1720,8 +1687,6 @@
 				195DD4C026BEF6B3008F0309 /* DataAssetImage.swift in Sources */,
 				1970664426E713D300D7F21D /* UserAllDataView.swift in Sources */,
 				19C5CDA126E27CB700E99516 /* UserRows.swift in Sources */,
-				6657FDE526BF2BC900741FA9 /* NavigationLink.swift in Sources */,
-				6657FDDF26BF278B00741FA9 /* Button.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1754,12 +1719,9 @@
 				19EABBD626D6877600D3B003 /* DataAssetImage.swift in Sources */,
 				19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */,
 				19EABBE226D6878700D3B003 /* Image.swift in Sources */,
-				19EABBE526D6878700D3B003 /* Section.swift in Sources */,
-				19EABBE326D6878700D3B003 /* Button.swift in Sources */,
 				19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */,
 				19C5CDA226E27CB700E99516 /* UserRows.swift in Sources */,
 				19EABBCE26D6877600D3B003 /* WebAuthenticationView.swift in Sources */,
-				19EABBE626D6878700D3B003 /* Label.swift in Sources */,
 				19EABBC726D6877600D3B003 /* UserView.swift in Sources */,
 				19EABBCB26D6877600D3B003 /* ProfileImage.swift in Sources */,
 				19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */,
@@ -1772,7 +1734,6 @@
 				19EABBDD26D6877D00D3B003 /* DeleteBulkTweetsRecentTweetsView.swift in Sources */,
 				19EABBDF26D6878400D3B003 /* URL.swift in Sources */,
 				19EABBE026D6878400D3B003 /* Session.swift in Sources */,
-				19EABBE126D6878700D3B003 /* NavigationLink.swift in Sources */,
 				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
 				19EABBC926D6877600D3B003 /* UsersList.swift in Sources */,
 				19EABBDB26D6877D00D3B003 /* DeleteBulkTweetsFormView.swift in Sources */,
@@ -1782,7 +1743,6 @@
 				19EABBD826D6877A00D3B003 /* SettingsMainView.swift in Sources */,
 				19EABBD126D6877600D3B003 /* AppSidebarAccountRows.swift in Sources */,
 				19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */,
-				19EABBE426D6878700D3B003 /* Menu.swift in Sources */,
 				19EABBD726D6877600D3B003 /* UserRow.swift in Sources */,
 				19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */,
 				1970664126E709FE00D7F21D /* AccountLabel.swift in Sources */,
@@ -2046,7 +2006,6 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2077,7 +2036,6 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -2111,7 +2069,6 @@
 				PRODUCT_NAME = "TweetNest MirrorBlock Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -2143,7 +2100,6 @@
 				PRODUCT_NAME = "TweetNest MirrorBlock Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -2314,7 +2270,6 @@
 		19365A3D26097A9800865D40 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/macOS/TweetNest.entitlements;
@@ -2347,7 +2302,6 @@
 		19365A3E26097A9800865D40 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/macOS/TweetNest.entitlements;
@@ -2525,12 +2479,14 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
 				MARKETING_VERSION = 0.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				STRIP_STYLE = "non-global";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_OPTIMIZE_OBJECT_LIFETIME = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2586,11 +2542,13 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				LLVM_LTO = YES;
+				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
 				MARKETING_VERSION = 0.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				STRIP_STYLE = "non-global";
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_OPTIMIZE_OBJECT_LIFETIME = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2600,7 +2558,6 @@
 		19A6FF4D26D6836100AB7B7E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -2615,7 +2572,6 @@
 				PRODUCT_NAME = TweetNest;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
@@ -2625,7 +2581,6 @@
 		19A6FF4E26D6836100AB7B7E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -2640,7 +2595,6 @@
 				PRODUCT_NAME = TweetNest;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
@@ -2672,7 +2626,6 @@
 				PRODUCT_NAME = "TweetNest WatchKit Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
@@ -2703,7 +2656,6 @@
 				PRODUCT_NAME = "TweetNest WatchKit Extension";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
@@ -2728,7 +2680,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest WatchKit Extension.appex/TweetNest WatchKit Extension";
@@ -2753,7 +2704,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest WatchKit Extension.appex/TweetNest WatchKit Extension";
@@ -2777,7 +2727,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				TEST_TARGET_NAME = TweetNest;
@@ -2800,7 +2749,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.TweetNestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				TEST_TARGET_NAME = TweetNest;
@@ -2837,7 +2785,6 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TVOS_DEPLOYMENT_TARGET = 15.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
@@ -2872,7 +2819,6 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TVOS_DEPLOYMENT_TARGET = 15.0;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
@@ -2899,7 +2845,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -2924,7 +2869,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;

@@ -18,7 +18,7 @@ struct SettingsGeneralView: View {
     var body: some View {
         Form {
             Section {
-                Toggle(String(localized: "Background Update"), isOn: $backgroundUpdate)
+                Toggle("Background Update", isOn: $backgroundUpdate)
             } footer: {
                 Text("Update accounts in background on this device.")
                     #if os(macOS)
@@ -29,7 +29,7 @@ struct SettingsGeneralView: View {
             
             #if os(iOS) || os(watchOS)
             Section {
-                Toggle(String(localized: "Download Images Using Cellular"), isOn: $downloadsImagesUsingExpensiveNetworkAccess)
+                Toggle("Download Images Using Cellular", isOn: $downloadsImagesUsingExpensiveNetworkAccess)
             } footer: {
                 Text("Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If \"Allow More Data on 5G\" is turned on this device, this option will be ignored.")
             }

@@ -26,7 +26,7 @@ struct DeleteBulkTweetsRecentTweetsView: View {
                     .environment(\.account, account)
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
             } else {
-                ProgressView(String(localized: "Loading Recent Tweets..."))
+                ProgressView("Loading Recent Tweets...")
                     .task {
                         await fetchTweets()
                     }
