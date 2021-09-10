@@ -11,9 +11,16 @@ import OrderedCollections
 
 public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
-        return Session.containerURL
-            .appendingPathComponent("Application Support")
-            .appendingPathComponent(Bundle.tweetNestKit.name!)
+        // Migration START
+        try? FileManager.default.moveItem(
+            at: Session.containerURL
+                    .appendingPathComponent("Application Support")
+                    .appendingPathComponent(Bundle.tweetNestKit.name!),
+            to: Session.containerApplicationSupportURL)
+        try? FileManager.default.removeItem(at: Session.containerURL.appendingPathComponent("Application Support"))
+        // Migration END
+
+        return Session.containerApplicationSupportURL
     }
 
     #if canImport(CoreSpotlight)

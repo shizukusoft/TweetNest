@@ -58,6 +58,12 @@ extension Session {
             .appendingPathComponent("Caches")
             .appendingPathComponent(Bundle.tweetNestKit.bundleIdentifier!)
     }
+
+    static var containerApplicationSupportURL: URL {
+        containerLibraryURL
+            .appendingPathComponent("Application Support")
+            .appendingPathComponent(Bundle.tweetNestKit.bundleIdentifier!)
+    }
 }
 
 extension Session {
