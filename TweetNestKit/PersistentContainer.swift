@@ -9,6 +9,10 @@ import CloudKit
 import CoreData
 import OrderedCollections
 
+public enum PersistentContainerError: Error {
+    case persistentStoresLoadingFailure([NSPersistentStoreDescription: Error])
+}
+
 public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
         return Session.containerURL?
@@ -32,12 +36,15 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             }
         }
 
-    init(inMemory: Bool = false) {
+    init(inMemory: Bool = false) throws {
         super.init(name: Bundle.module.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.module.url(forResource: Bundle.module.name!, withExtension: "momd")!)!)
 
         _ = persistentContainerEventDidChanges
 
+        let persistentStoreGroup = DispatchGroup()
         persistentStoreDescriptions.forEach { description in
+            persistentStoreGroup.enter()
+
             if inMemory == false {
                 description.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
                 description.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
@@ -47,22 +54,17 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             }
         }
 
-        loadPersistentStores(completionHandler: { (storeDescription, error) in
-            if let error = error as NSError? {
-                // Replace this implementation with code to handle the error appropriately.
-                // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        var loadPersistentStoreErrors = [NSPersistentStoreDescription: Error]()
+        loadPersistentStores { (storeDescription, error) in
+            loadPersistentStoreErrors[storeDescription] = error
+            persistentStoreGroup.leave()
+        }
 
-                /*
-                Typical reasons for an error here include:
-                * The parent directory does not exist, cannot be created, or disallows writing.
-                * The persistent store is not accessible, due to permissions or data protection when the device is locked.
-                * The device is out of space.
-                * The store could not be migrated to the current model version.
-                Check the error message to determine what the actual problem was.
-                */
-                fatalError("Unresolved error \(error), \(error.userInfo)")
-            }
-        })
+        persistentStoreGroup.wait()
+
+        guard loadPersistentStoreErrors.isEmpty else {
+            throw PersistentContainerError.persistentStoresLoadingFailure(loadPersistentStoreErrors)
+        }
         
         #if canImport(CoreSpotlight)
         if inMemory == false, let storeDescription = self.persistentStoreDescriptions.first(where: { $0.type == NSSQLiteStoreType }) {
