@@ -14,6 +14,6 @@ extension URLCache {
         directory: Session.containerURL?
             .appendingPathComponent("Library")
             .appendingPathComponent("Caches")
-            .appendingPathComponent(Bundle.module.bundleIdentifier!)
+            .appendingPathComponent(Bundle.tweetNestKit.bundleIdentifier!)
     )
 }

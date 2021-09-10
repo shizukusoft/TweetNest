@@ -12,7 +12,7 @@ import CoreSpotlight
 
 class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
     override func domainIdentifier() -> String {
-        "\(Bundle.module.bundleIdentifier!).users"
+        "\(Bundle.tweetNestKit.bundleIdentifier!).users"
     }
 
     override func indexName() -> String? {

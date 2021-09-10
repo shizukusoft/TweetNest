@@ -22,7 +22,7 @@ extension BackgroundTaskScheduler {
     nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
         Task.detached { [self] in
             await withTaskExpirationHandler { expirationHandler in
-                let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
+                let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
                 backgroundTask.expirationHandler = {
                     logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
@@ -37,7 +37,7 @@ extension BackgroundTaskScheduler {
     nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
         Task.detached { [self] in
             await withTaskExpirationHandler { expirationHandler in
-                let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "data-cleansing")
+                let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "data-cleansing")
 
                 backgroundTask.expirationHandler = {
                     logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")

@@ -14,7 +14,7 @@ public func withExtendedBackgroundExecution<T>(function: String = #function, fil
 }
 
 public func withExtendedBackgroundExecution<T>(identifier: String, expirationHandler: (() -> ())? = nil, body: () throws -> T) rethrows -> T {
-    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "extended-background-execution")
+    let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
     let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
@@ -72,7 +72,7 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: @escapi
 }
 
 private func handleExtendedBackgroundExecution<T>(identifier: String, expirationHandler: @escaping @Sendable () -> Void, body: @escaping () async throws -> T) async rethrows -> T {
-    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "extended-background-execution")
+    let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
     let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)

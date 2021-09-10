@@ -107,7 +107,7 @@ extension Session {
                             do {
                                 twitterUser = try twitterUserResult.get()
                             } catch {
-                                Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-user")
+                                Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-user")
                                     .error("Error occurred while fetch user: \(String(reflecting: error), privacy: .public)")
                                 continue
                             }
@@ -163,7 +163,7 @@ extension Session {
                                 do {
                                     _ = try await _profileImageDataAsset
                                 } catch {
-                                    Logger(subsystem: Bundle.module.bundleIdentifier!, category: "fetch-profile-image")
+                                    Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
                                         .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                                 }
 

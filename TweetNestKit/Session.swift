@@ -16,8 +16,8 @@ public actor Session {
     public static let backgroundUpdateUserDefaultsKey = TweetNestUserDefaultsKeyName(rawValue: "TWNKBackgroundUpdate")
     public static let downloadsDataAssetsUsingExpensiveNetworkAccessUserDefaultsKey = TweetNestUserDefaultsKeyName(rawValue: "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess")
 
-    static let cloudKitIdentifier = "iCloud.\(Bundle.module.bundleIdentifier!)"
-    static let applicationGroupIdentifier = "group.\(Bundle.module.bundleIdentifier!)"
+    static let cloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!)"
+    static let applicationGroupIdentifier = "group.\(Bundle.tweetNestKit.bundleIdentifier!)"
 
     static var containerURL: URL? {
         return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Session.applicationGroupIdentifier)

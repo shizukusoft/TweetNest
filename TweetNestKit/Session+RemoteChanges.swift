@@ -28,7 +28,7 @@ extension Session {
     }
 
     private nonisolated var logger: Logger {
-        Logger(subsystem: Bundle.module.bundleIdentifier!, category: "remote-changes")
+        Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
 
     @discardableResult
@@ -260,25 +260,25 @@ extension Session {
 
                     var changes: [String] = []
                     if followingUserChanges.followingUsersCount > 0 {
-                        changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .module, comment: "background-refresh notification body."))
+                        changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
                     }
                     if followingUserChanges.unfollowingUsersCount > 0 {
-                        changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .module, comment: "background-refresh notification body."))
+                        changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
                     }
                     if followerUserChanges.followerUsersCount > 0 {
-                        changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .module, comment: "background-refresh notification body."))
+                        changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
                     }
                     if followerUserChanges.unfollowerUsersCount > 0 {
-                        changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .module, comment: "background-refresh notification body."))
+                        changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
                     }
 
                     if changes.isEmpty == false {
-                        notificationContent.subtitle = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+                        notificationContent.subtitle = String(localized: "New Data Available", bundle: .tweetNestKit, comment: "background-refresh notification.")
                         notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
                         notificationContent.sound = .default
                         notificationContent.interruptionLevel = .timeSensitive
                     } else {
-                        notificationContent.body = String(localized: "New Data Available", bundle: .module, comment: "background-refresh notification.")
+                        notificationContent.body = String(localized: "New Data Available", bundle: .tweetNestKit, comment: "background-refresh notification.")
                         notificationContent.interruptionLevel = .passive
                     }
 

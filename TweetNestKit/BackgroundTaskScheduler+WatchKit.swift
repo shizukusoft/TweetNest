@@ -19,7 +19,7 @@ extension BackgroundTaskScheduler {
 
         Task.detached { [self] in
             await withTaskExpirationHandler { expirationHandler in
-                let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
+                let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
                 backgroundTask.expirationHandler = {
                     logger.notice("Background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")

@@ -24,8 +24,8 @@ public actor BackgroundTaskScheduler {
 
     public static let shared = BackgroundTaskScheduler()
 
-    public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).background-refresh"
-    public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).data-cleansing"
+    public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).background-refresh"
+    public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).data-cleansing"
 
     static var preferredBackgroundTasksTimeInterval: TimeInterval {
         (15 / 2) * 60 // Fetch no earlier than 7.5 minutes from now
@@ -125,7 +125,7 @@ extension BackgroundTaskScheduler {
     @discardableResult
     func backgroundRefresh(dataCleansing: Bool = false) async -> Bool {
         guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return true }
-        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
+        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
         do {
             try await scheduleBackgroundTasks(for: .background)
@@ -161,8 +161,8 @@ extension BackgroundTaskScheduler {
                     break
                 default:
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = String(localized: "Background Refresh", bundle: .module, comment: "background-refresh notification title.")
-                    notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "background-refresh notification subtitle.")
+                    notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
+                    notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
                     notificationContent.body = error.localizedDescription
                     notificationContent.sound = .default
 
@@ -183,7 +183,7 @@ extension BackgroundTaskScheduler {
     @discardableResult
     func backgroundDataCleansing() async -> Bool {
         guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return true }
-        let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-data-cleansing")
+        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-data-cleansing")
 
         do {
             try await scheduleBackgroundTasks(for: .background)
@@ -216,8 +216,8 @@ extension BackgroundTaskScheduler {
                     break
                 default:
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = String(localized: "Background Refresh", bundle: .module, comment: "background-refresh notification title.")
-                    notificationContent.subtitle = String(localized: "Error", bundle: .module, comment: "background-refresh notification subtitle.")
+                    notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
+                    notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
                     notificationContent.body = error.localizedDescription
                     notificationContent.sound = .default
 

@@ -13,7 +13,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
         return Session.containerURL?
             .appendingPathComponent("Application Support")
-            .appendingPathComponent(Bundle.module.name!)
+            .appendingPathComponent(Bundle.tweetNestKit.name!)
         ?? super.defaultDirectoryURL()
     }
 
@@ -33,7 +33,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         }
 
     init(inMemory: Bool = false) {
-        super.init(name: Bundle.module.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.module.url(forResource: Bundle.module.name!, withExtension: "momd")!)!)
+        super.init(name: Bundle.tweetNestKit.name!, managedObjectModel: NSManagedObjectModel(contentsOf: Bundle.tweetNestKit.url(forResource: Bundle.tweetNestKit.name!, withExtension: "momd")!)!)
 
         _ = persistentContainerEventDidChanges
 

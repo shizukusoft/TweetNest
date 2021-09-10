@@ -10,10 +10,12 @@ import Foundation
 extension Bundle {
     private class `_` {}
 
-    class var module: Self {
+    class var tweetNestKit: Self {
         self.init(for: `_`.self)
     }
+}
 
+extension Bundle {
     public var name: String? {
         infoDictionary?["CFBundleName"] as? String
     }
