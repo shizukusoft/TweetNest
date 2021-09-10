@@ -7,6 +7,7 @@
 
 import CloudKit
 import CoreData
+import UnifiedLogging
 import OrderedCollections
 
 public enum PersistentContainerError: Error {
@@ -16,12 +17,25 @@ public enum PersistentContainerError: Error {
 public class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
         // Migration START
-        try? FileManager.default.moveItem(
-            at: Session.containerURL
-                    .appendingPathComponent("Application Support")
-                    .appendingPathComponent(Bundle.tweetNestKit.name!),
-            to: Session.containerApplicationSupportURL)
-        try? FileManager.default.removeItem(at: Session.containerURL.appendingPathComponent("Application Support"))
+        let oldURL = Session.containerURL
+            .appendingPathComponent("Application Support")
+            .appendingPathComponent(Bundle.tweetNestKit.name!)
+        let newURL = Session.containerApplicationSupportURL
+
+        if FileManager.default.fileExists(atPath: oldURL.path) {
+            do {
+                try FileManager.default.createDirectory(
+                    at: newURL.deletingLastPathComponent(),
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+                try FileManager.default.moveItem(at: oldURL, to: newURL)
+                try FileManager.default.removeItem(at: oldURL.deletingLastPathComponent())
+            } catch {
+                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                    .error("\(error as NSError, privacy: .public)")
+            }
+        }
         // Migration END
 
         return Session.containerApplicationSupportURL
