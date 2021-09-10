@@ -48,9 +48,29 @@ public actor BackgroundTaskScheduler {
         }
     }
 
-    private var isRunning: Bool = false
+    private var lastUpdate: Date {
+        get {
+            TweetNestKitUserDefaults.standard.lastBackgroundUpdate
+        } set {
+            TweetNestKitUserDefaults.standard.lastBackgroundUpdate = newValue
+        }
+    }
 
-    private init() { }
+    private lazy var isBackgroundUpdateEnabledObserver = TweetNestKitUserDefaults.standard
+        .observe(\.isBackgroundUpdateEnabled, options: [.initial]) { [weak self] _, change in
+            Task { [weak self] in
+                await self?.isBackgroundUpdateEnabledDidChanges()
+            }
+        }
+
+    private init(v: Void) {}
+
+    private convenience init() {
+        self.init(v: ())
+        Task {
+            _ = await isBackgroundUpdateEnabledObserver
+        }
+    }
 
     func newBackgroundTimer() -> DispatchSourceTimer {
         let backgroundTimer = DispatchSource.makeTimerSource()
@@ -66,11 +86,21 @@ public actor BackgroundTaskScheduler {
 }
 
 extension BackgroundTaskScheduler {
-    public func scheduleBackgroundTasks(for applicationPhase: ApplicationPhase) async throws {
-        guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return }
+    private func isBackgroundUpdateEnabledDidChanges() async {
+        if TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled {
+            try? await scheduleBackgroundTasks(for: nil)
+        } else {
+            backgroundTimer = nil
+        }
+    }
+}
+
+extension BackgroundTaskScheduler {
+    public func scheduleBackgroundTasks(for applicationPhase: ApplicationPhase?) async throws {
+        guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return }
 
         switch applicationPhase {
-        case .active, .inactive:
+        case .active, .inactive, .none:
             self.backgroundTimer = newBackgroundTimer()
         case .background:
             #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
@@ -124,7 +154,7 @@ extension BackgroundTaskScheduler {
 extension BackgroundTaskScheduler {
     @discardableResult
     func backgroundRefresh(dataCleansing: Bool = false) async -> Bool {
-        guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return true }
+        guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return true }
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
         do {
@@ -133,12 +163,8 @@ extension BackgroundTaskScheduler {
             logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
         }
 
-        guard isRunning == false else { return true }
-
-        isRunning = true
-        defer {
-            isRunning = false
-        }
+        guard lastUpdate.addingTimeInterval(60) < Date() else { return true }
+        lastUpdate = Date()
 
         return await withExtendedBackgroundExecution {
             logger.notice("Start background refresh")
@@ -182,7 +208,7 @@ extension BackgroundTaskScheduler {
 
     @discardableResult
     func backgroundDataCleansing() async -> Bool {
-        guard UserDefaults.tweetNestKit[Session.backgroundUpdateUserDefaultsKey] != false else { return true }
+        guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return true }
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-data-cleansing")
 
         do {
@@ -191,12 +217,8 @@ extension BackgroundTaskScheduler {
             logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
         }
 
-        guard isRunning == false else { return true }
-
-        isRunning = true
-        defer {
-            isRunning = false
-        }
+        guard lastUpdate.addingTimeInterval(60) < Date() else { return true }
+        lastUpdate = Date()
 
         return await withExtendedBackgroundExecution {
             logger.notice("Start background data cleansing")

@@ -51,7 +51,7 @@ extension DataAsset {
 extension DataAsset {
     static func dataAsset(for url: URL, session: Session, context: NSManagedObjectContext) async throws -> DataAsset {
         var urlRequest = URLRequest(url: url)
-        urlRequest.allowsExpensiveNetworkAccess = UserDefaults.tweetNestKit[Session.downloadsDataAssetsUsingExpensiveNetworkAccessUserDefaultsKey] != false
+        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
         
         let data = try await session.data(for: urlRequest)
 

@@ -9,10 +9,10 @@ import SwiftUI
 import TweetNestKit
 
 struct SettingsGeneralView: View {
-    @AppStorage(Session.backgroundUpdateUserDefaultsKey)
+    @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.isBackgroundUpdateEnabled)
     var backgroundUpdate: Bool = true
     
-    @AppStorage(Session.downloadsDataAssetsUsingExpensiveNetworkAccessUserDefaultsKey)
+    @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess)
     var downloadsImagesUsingExpensiveNetworkAccess: Bool = true
     
     var body: some View {

@@ -12,9 +12,6 @@ import Twitter
 
 public actor Session {
     public static let shared = Session()
-    
-    public static let backgroundUpdateUserDefaultsKey = TweetNestUserDefaultsKeyName(rawValue: "TWNKBackgroundUpdate")
-    public static let downloadsDataAssetsUsingExpensiveNetworkAccessUserDefaultsKey = TweetNestUserDefaultsKeyName(rawValue: "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess")
 
     static let cloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!)"
     static let applicationGroupIdentifier = "group.\(Bundle.tweetNestKit.bundleIdentifier!)"
