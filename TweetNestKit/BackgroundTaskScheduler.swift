@@ -73,13 +73,13 @@ public actor BackgroundTaskScheduler {
     }
 
     func newBackgroundTimer() -> DispatchSourceTimer {
-        let backgroundTimer = DispatchSource.makeTimerSource()
+        let backgroundTimer = DispatchSource.makeTimerSource(queue: .global(qos: .utility))
         backgroundTimer.setEventHandler {
-            Task.detached(priority: .utility) {
+            Task {
                 await self.backgroundRefresh(dataCleansing: true)
             }
         }
-        backgroundTimer.schedule(deadline: .now() + Self.preferredBackgroundTasksTimeInterval)
+        backgroundTimer.schedule(deadline: .now() + Self.preferredBackgroundTasksTimeInterval, repeating: Self.preferredBackgroundTasksTimeInterval, leeway: .seconds(30))
 
         return backgroundTimer
     }
@@ -101,7 +101,9 @@ extension BackgroundTaskScheduler {
 
         switch applicationPhase {
         case .active, .inactive, .none:
-            self.backgroundTimer = newBackgroundTimer()
+            if self.backgroundTimer == nil {
+                self.backgroundTimer = newBackgroundTimer()
+            }
         case .background:
             #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
             self.backgroundTimer = nil
@@ -145,7 +147,9 @@ extension BackgroundTaskScheduler {
             #endif
 
             #else
-            self.backgroundTimer = newBackgroundTimer()
+            if self.backgroundTimer == nil {
+                self.backgroundTimer = newBackgroundTimer()
+            }
             #endif
         }
     }
