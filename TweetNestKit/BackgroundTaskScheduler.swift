@@ -57,7 +57,7 @@ public actor BackgroundTaskScheduler {
     }
 
     private lazy var isBackgroundUpdateEnabledObserver = TweetNestKitUserDefaults.standard
-        .observe(\.isBackgroundUpdateEnabled, options: [.initial]) { [weak self] _, _ in
+        .observe(\.isBackgroundUpdateEnabled) { [weak self] _, _ in
             Task { [weak self] in
                 await self?.isBackgroundUpdateEnabledDidChanges()
             }
@@ -91,6 +91,9 @@ extension BackgroundTaskScheduler {
             try? await scheduleBackgroundTasks(for: nil)
         } else {
             backgroundTimer = nil
+            #if canImport(BackgroundTasks) && !os(macOS)
+            BGTaskScheduler.shared.cancelAllTaskRequests()
+            #endif
         }
     }
 }
@@ -99,14 +102,16 @@ extension BackgroundTaskScheduler {
     public func scheduleBackgroundTasks(for applicationPhase: ApplicationPhase?) async throws {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return }
 
+        #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
         switch applicationPhase {
-        case .active, .inactive, .none:
-            if self.backgroundTimer == nil {
-                self.backgroundTimer = newBackgroundTimer()
+        case .active, .inactive:
+            if backgroundTimer == nil {
+                backgroundTimer = newBackgroundTimer()
             }
-        case .background:
-            #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
-            self.backgroundTimer = nil
+        case .background, .none:
+            if applicationPhase == .background {
+                backgroundTimer = nil
+            }
 
             #if canImport(BackgroundTasks) && !os(macOS)
             let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
@@ -127,9 +132,7 @@ extension BackgroundTaskScheduler {
             backgroundDataCleansingRequest.requiresExternalPower = false
 
             try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
-            #endif
-
-            #if canImport(WatchKit)
+            #elseif canImport(WatchKit)
             try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                 Task {
                     await WKExtension.shared().scheduleBackgroundRefresh(
@@ -145,13 +148,12 @@ extension BackgroundTaskScheduler {
                 }
             }
             #endif
-
-            #else
-            if self.backgroundTimer == nil {
-                self.backgroundTimer = newBackgroundTimer()
-            }
-            #endif
         }
+        #else
+        if backgroundTimer == nil {
+            backgroundTimer = newBackgroundTimer()
+        }
+        #endif
     }
 }
 
@@ -162,7 +164,7 @@ extension BackgroundTaskScheduler {
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
         do {
-            try await scheduleBackgroundTasks(for: .background)
+            try await scheduleBackgroundTasks(for: nil)
         } catch {
             logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
         }
@@ -216,7 +218,7 @@ extension BackgroundTaskScheduler {
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-data-cleansing")
 
         do {
-            try await scheduleBackgroundTasks(for: .background)
+            try await scheduleBackgroundTasks(for: nil)
         } catch {
             logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
         }
