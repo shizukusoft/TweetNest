@@ -9,28 +9,12 @@ on:
 
 jobs:
   SwiftLint:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: |
-          sudo apt-get install -y \
-            libatomic1 \
-            libcurl4 \
-            libxml2 \
-            libedit2 \
-            libsqlite3-0 \
-            libc6-dev \
-            binutils \
-            libgcc-5-dev \
-            libstdc++-5-dev \
-            zlib1g-dev \
-            libpython3.6 \
-            tzdata \
-            git \
-            pkg-config \
       - uses: sinoru/actions-setup-swift@v2
         with:
-          swift-version: '5.5-DEVELOPMENT-SNAPSHOT-2021-09-09-a'
+          swift-version: '5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a'
       - run: git clone https://github.com/realm/SwiftLint.git -b 0.44.0 ~/.swiftlint
       - run: swift build --package-path ~/.swiftlint -c release -Xswiftc -static-stdlib
       - run: |
