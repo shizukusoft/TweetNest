@@ -11,10 +11,10 @@ import TweetNestKit
 struct SettingsAccountView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @ObservedObject var account: Account
-    
+
     @State var showError: Bool = false
     @State var error: TweetNestError? = nil
-    
+
     var body: some View {
         Form {
             Toggle(isOn: $account.preferences.fetchBlockingUsers) {
@@ -32,7 +32,7 @@ struct SettingsAccountView: View {
         #endif
         .alert(isPresented: $showError, error: error)
     }
-    
+
     func save() {
         do {
             try viewContext.save()

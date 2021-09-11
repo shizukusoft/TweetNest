@@ -15,16 +15,16 @@ import Twitter
 
 struct DeleteBulkTweetsAllTweetsView: View {
     let account: TweetNestKit.Account
-    
+
     @Binding var isPresented: Bool
     
     @State var tweets: [Tweet]? = nil
     
     @State var isFileImporterPresented: Bool = false
     @State var allowedFileImporterContentTypes: [UTType] = []
-    
+
     @State var isImporting: Bool = false
-    
+
     @State var showError: Bool = false
     @State var error: TweetNestError? = nil
     
@@ -68,7 +68,7 @@ struct DeleteBulkTweetsAllTweetsView: View {
                             } label: {
                                 Text("Open ZIP File")
                             }
-                            
+
                             Button {
                                 allowedFileImporterContentTypes = [.folder]
                                 isFileImporterPresented = true
@@ -101,25 +101,25 @@ struct DeleteBulkTweetsAllTweetsView: View {
         #endif
         .navigationTitle(Text("Delete Tweets"))
     }
-    
+
     func onFileImporterCompletion(result: Result<URL, Error>) {
         withAnimation {
             isImporting = true
         }
-        
+
         Task {
             do {
                 let url = try result.get()
-                
+
                 _ = url.startAccessingSecurityScopedResource()
                 defer {
                     url.stopAccessingSecurityScopedResource()
                 }
-                
+
                 let twitterArchive = TwitterArchive(url: url)
-                
+
                 let tweets = try await twitterArchive.tweets
-                
+
                 withAnimation {
                     self.tweets = tweets
                 }

@@ -1,0 +1,15 @@
+line_length:
+  warning: 180
+  error: 200
+
+identifier_name:
+  min_length:
+    warning: 3
+    error: 2
+  excluded:
+    - id
+  allowed_symbols:
+    - '_'
+
+trailing_comma:
+  mandatory_comma: true

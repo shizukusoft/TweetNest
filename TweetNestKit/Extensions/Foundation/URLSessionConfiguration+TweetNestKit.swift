@@ -14,15 +14,15 @@ extension URLSessionConfiguration {
         urlSessionConfiguration.httpCookieStorage = nil
         urlSessionConfiguration.httpShouldSetCookies = false
         urlSessionConfiguration.httpCookieAcceptPolicy = .never
-        
+
         urlSessionConfiguration.urlCredentialStorage = nil
 
         urlSessionConfiguration.urlCache = .twnk_shared
-        
+
         urlSessionConfiguration.sharedContainerIdentifier = Session.applicationGroupIdentifier
-        
+
         urlSessionConfiguration.shouldUseExtendedBackgroundIdleMode = true
-        
+
         #if os(iOS)
         urlSessionConfiguration.multipathServiceType = .handover
         #endif

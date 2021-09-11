@@ -12,7 +12,7 @@ import Twitter
 struct TweetNestError {
     var error: Error?
     var kind: Kind
-    
+
     init(_ error: Error? = nil, kind: Kind = .unknown) {
         self.error = error
         self.kind = kind
@@ -34,7 +34,7 @@ extension TweetNestError: LocalizedError {
             return error?.localizedDescription
         }
     }
-    
+
     var failureReason: String? {
         switch (kind, error) {
         case (_, .some(TwitterError.serverError(.error(let error), urlResponse: _))):
@@ -51,7 +51,7 @@ extension TweetNestError: RecoverableError {
     var recoveryOptions: [String] {
         return []
     }
-    
+
     func attemptRecovery(optionIndex recoveryOptionIndex: Int) -> Bool {
         return false
     }

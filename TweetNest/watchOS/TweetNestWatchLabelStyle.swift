@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TweetNestWatchLabelStyle: LabelStyle {
     let iconSize: CGFloat?
-    
+
     func makeBody(configuration: Configuration) -> some View {
         HStack(alignment: .center, spacing: nil) {
             Group {
@@ -21,13 +21,13 @@ struct TweetNestWatchLabelStyle: LabelStyle {
                 }
             }
             .tint(.accentColor)
-            
+
             configuration.title
                 .multilineTextAlignment(.leading)
                 .tint(.primary)
         }
     }
-    
+
     init(iconSize: CGFloat? = nil) {
         self.iconSize = iconSize
     }

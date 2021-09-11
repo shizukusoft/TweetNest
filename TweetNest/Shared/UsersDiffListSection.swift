@@ -19,7 +19,7 @@ struct UsersDiffListSection: View {
         OrderedSet(previousUserDetail?[keyPath: diffKeyPath] ?? [])
     }
 
-    var currentUserIDs: OrderedSet<String>  {
+    var currentUserIDs: OrderedSet<String> {
         OrderedSet(currentUserDetail[keyPath: diffKeyPath] ?? [])
     }
 

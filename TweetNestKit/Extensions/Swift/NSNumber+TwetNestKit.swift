@@ -10,7 +10,7 @@ import Foundation
 private var numberFormatter: NumberFormatter {
     let numberFormatter = NumberFormatter()
     numberFormatter.numberStyle = .decimal
-    
+
     return numberFormatter
 }
 

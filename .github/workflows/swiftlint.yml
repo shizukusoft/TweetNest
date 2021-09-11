@@ -1,7 +1,7 @@
 name: SwiftLint
 
 on:
-  pull_request:
+  push:
     paths:
       - '.github/workflows/swiftlint.yml'
       - '.swiftlint.yml'
@@ -9,17 +9,17 @@ on:
 
 jobs:
   SwiftLint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
+      - run: git clone https://github.com/realm/SwiftLint.git -b 0.44.0 ~/.swiftlint
       - uses: sinoru/actions-setup-swift@v2
         with:
-          swift-version: '5.5'
+          swift-version: '5.4.3'
+      - run: swift build --package-path ~/.swiftlint -c release
+      - run: swiftenv install 5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a
       - run: |
-          /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-          brew install mint
-      - run: mint install realm/SwiftLint@0.44.0
-      - run: |
+          swift run --package-path ~/.swiftlint -c release --skip-build -- swiftlint | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
           # MIT License
           # 
           # Copyright (c) 2018 Norio Nomura
@@ -43,4 +43,5 @@ jobs:
           # SOFTWARE.
           #
           # https://github.com/norio-nomura/action-swiftlint/blob/9f4dcd7fd46b4e75d7935cf2f4df406d5cae3684/entrypoint.sh
-          mint run realm/SwiftLint | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
+        env:
+          SWIFT_VERSION: 5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a

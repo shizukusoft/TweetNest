@@ -10,7 +10,7 @@ import SwiftUI
 struct TweetNestStack<Content>: View where Content: View {
     let spacing: CGFloat?
     let content: Content
-    
+
     var body: some View {
         #if os(watchOS)
         VStack(alignment: .leading, spacing: spacing, content: { content })
@@ -18,7 +18,7 @@ struct TweetNestStack<Content>: View where Content: View {
         HStack(alignment: .center, spacing: spacing, content: { content })
         #endif
     }
-    
+
     init(spacing: CGFloat? = nil, @ViewBuilder content: () -> Content) {
         self.spacing = spacing
         self.content = content()
@@ -28,7 +28,7 @@ struct TweetNestStack<Content>: View where Content: View {
 struct TweetNestStack_Previews: PreviewProvider {
     static var previews: some View {
         TweetNestStack {
-            
+
         }
     }
 }

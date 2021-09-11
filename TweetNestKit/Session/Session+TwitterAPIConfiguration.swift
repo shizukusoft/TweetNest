@@ -28,7 +28,7 @@ extension Session.TwitterAPIConfiguration {
 
             let query = CKQuery(recordType: "TwitterAPIConfiguration", predicate: NSPredicate(value: true))
             query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
-            
+
             let record = try await database.records(matching: query, resultsLimit: 1).matchResults.first?.1.get()
 
             guard let apiKey: String = record?["apiKey"] else {

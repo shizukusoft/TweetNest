@@ -37,19 +37,19 @@ extension User {
         if let displayUsername = sortedUserDetails?.last?.displayUsername {
             return displayUsername
         }
-        
+
         if let id = id {
             return "#\(Int64(id)?.twnk_formatted() ?? id)"
         }
-        
+
         return nil
     }
-    
+
     public var displayName: String? {
         if let name = sortedUserDetails?.last?.name {
             return name
         }
-        
+
         return nil
     }
 }
