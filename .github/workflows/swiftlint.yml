@@ -16,10 +16,12 @@ jobs:
         with:
           swift-version: '5.5-DEVELOPMENT-SNAPSHOT-2021-09-09-a'
       - run: |
-          sudo apt-get install build-essential gcc
           /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
           echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >> ~/.bash_profile
-      - run: brew install --build-from-source mint
+      - run: |
+          echo $PATH
+          which swift
+          brew install --build-from-source mint
       - run: mint install realm/SwiftLint@0.44.0
       - run: |
           # MIT License
