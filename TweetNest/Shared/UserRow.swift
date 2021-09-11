@@ -20,15 +20,9 @@ struct UserRow: View {
                     UserView(user: user)
                         .environment(\.account, account)
                 } label: {
-                    #if os(watchOS)
-                    VStack(alignment: .leading, spacing: nil) {
+                    TweetNestStack {
                         userLabelTitle(latestUserDetail: latestUserDetail, user: user)
                     }
-                    #else
-                    HStack(spacing: nil) {
-                        userLabelTitle(latestUserDetail: latestUserDetail, user: user)
-                    }
-                    #endif
                 }
                 .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? user.id.flatMap { "#\($0)" } ?? user.objectID.description))
             } icon: {
