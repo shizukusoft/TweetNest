@@ -56,6 +56,12 @@
 "Delete Tweets" = "";
 
 /* No comment provided by engineer. */
+"Done" = "완료";
+
+/* No comment provided by engineer. */
+"Fetch Blocking Users" = "블락한 유저 가져오기";
+
+/* No comment provided by engineer. */
 "Followers" = "팔로워";
 
 /* No comment provided by engineer. */
@@ -80,6 +86,15 @@
 "Listed" = "리스트";
 
 /* No comment provided by engineer. */
+"Loaded Tweets" = "로드된 트윗";
+
+/* No comment provided by engineer. */
+"Loading Archive..." = "아카이브 로드 중...";
+
+/* No comment provided by engineer. */
+"Loading Recent Tweets..." = "최근 트윗 로드 중...";
+
+/* No comment provided by engineer. */
 "Location" = "위치";
 
 /* No comment provided by engineer. */
@@ -89,10 +104,19 @@
 "OK" = "확인";
 
 /* No comment provided by engineer. */
+"Open Folder" = "폴더 열기";
+
+/* No comment provided by engineer. */
 "Open Profile" = "프로필 열기";
 
 /* No comment provided by engineer. */
 "Open Profile in Safari" = "Safari에서 프로필 열기";
+
+/* No comment provided by engineer. */
+"Open Twitter Archive" = "Twitter 아카이브 열기";
+
+/* No comment provided by engineer. */
+"Open ZIP File" = "ZIP 파일 열기";
 
 /* No comment provided by engineer. */
 "Preparing..." = "준비 중...";
@@ -110,6 +134,9 @@
 "Results" = "결과";
 
 /* No comment provided by engineer. */
+"Retweets" = "리트윗";
+
+/* No comment provided by engineer. */
 "Settings" = "설정";
 
 /* No comment provided by engineer. */
@@ -119,7 +146,7 @@
 "Syncing..." = "동기화 중...";
 
 /* No comment provided by engineer. */
-"Target Tweets" = "";
+"Target Tweets" = "대상 트윗";
 
 /* No comment provided by engineer. */
 "Tweets" = "트윗";
