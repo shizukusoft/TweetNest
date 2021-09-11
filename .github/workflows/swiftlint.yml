@@ -13,12 +13,15 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: git clone https://github.com/realm/SwiftLint.git -b 0.44.0 ~/.swiftlint
-      - run: swift build --package-path ~/.swiftlint -c release -Xswiftc -static-stdlib
+      - uses: sinoru/actions-setup-swift@v2
+        with:
+          swift-version: '5.4.3'
+      - run: swift build --package-path ~/.swiftlint -c release
       - uses: sinoru/actions-setup-swift@v2
         with:
           swift-version: '5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a'
       - run: |
-          swift run --package-path ~/.swiftlint -c release -Xswiftc -static-stdlib -- swiftlint | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
+          swift run --package-path ~/.swiftlint -c release -- swiftlint | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
           # MIT License
           # 
           # Copyright (c) 2018 Norio Nomura
