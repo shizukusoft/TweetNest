@@ -180,8 +180,8 @@ struct AppSidebarNavigation: View {
                 NavigationView {
                     SettingsMainView()
                         .toolbar {
-                            ToolbarItemGroup(placement: .cancellationAction) {
-                                Button("Cancel", role: .cancel) {
+                            ToolbarItemGroup(placement: .primaryAction) {
+                                Button("Done") {
                                     showSettings.toggle()
                                 }
                             }
