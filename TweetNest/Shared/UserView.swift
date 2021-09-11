@@ -287,7 +287,7 @@ extension UserView {
                             .frame(minWidth: 320, minHeight: 240)
                         #else
                         NavigationView {
-                            DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                            DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
                         }
                         #endif
                     }
