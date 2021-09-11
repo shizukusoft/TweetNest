@@ -9,11 +9,11 @@ import Foundation
 import UnifiedLogging
 
 @inlinable
-public func withExtendedBackgroundExecution<T>(function: String = #function, fileID: String = #fileID, line: Int = #line, expirationHandler: (() -> ())? = nil, body: () throws -> T) rethrows -> T {
+public func withExtendedBackgroundExecution<T>(function: String = #function, fileID: String = #fileID, line: Int = #line, expirationHandler: (() -> Void)? = nil, body: () throws -> T) rethrows -> T {
     try withExtendedBackgroundExecution(identifier: "\(function) (\(fileID):\(line))", expirationHandler: expirationHandler, body: body)
 }
 
-public func withExtendedBackgroundExecution<T>(identifier: String, expirationHandler: (() -> ())? = nil, body: () throws -> T) rethrows -> T {
+public func withExtendedBackgroundExecution<T>(identifier: String, expirationHandler: (() -> Void)? = nil, body: () throws -> T) rethrows -> T {
     let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
