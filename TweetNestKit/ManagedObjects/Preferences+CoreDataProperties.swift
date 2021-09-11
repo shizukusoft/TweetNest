@@ -17,6 +17,6 @@ extension ManagedPreferences {
     @NSManaged public var modificationDate: Date?
 }
 
-extension ManagedPreferences : Identifiable {
+extension ManagedPreferences: Identifiable {
 
 }

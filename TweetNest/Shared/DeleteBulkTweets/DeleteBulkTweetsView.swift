@@ -96,8 +96,8 @@ struct DeleteBulkTweetsView: View {
                 guard let account = account else {
                     return
                 }
-                
-                await withTaskGroup(of: (Int,  Result<Void, Error>).self) { taskGroup in
+
+                await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
                     for (offset, targetTweetID) in targetTweetIDs.enumerated() {
                         taskGroup.addTask {
                             do {
