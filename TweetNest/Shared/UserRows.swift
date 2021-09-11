@@ -23,7 +23,7 @@ struct UserRows<Icon>: View where Icon: View {
             let displayUserID = "#\(Int64(userID)?.twnk_formatted() ?? userID)"
             let user = users.first(where: { $0.id == userID })
 
-            if let user = user {
+            if let user = user, (user.userDetails?.count ?? 0) > 0 {
                 if
                     searchQuery.isEmpty ||
                     user.userDetails?.compactMap({ $0 as? UserDetail })
