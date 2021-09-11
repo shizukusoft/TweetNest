@@ -8,6 +8,7 @@
 import CoreData
 import CloudKit
 import OrderedCollections
+import UnifiedLogging
 import Twitter
 
 public actor Session {
@@ -61,9 +62,32 @@ extension Session {
     }
 
     static var containerApplicationSupportURL: URL {
-        containerLibraryURL
+        let containerApplicationSupportURL = containerLibraryURL
             .appendingPathComponent("Application Support")
             .appendingPathComponent(Bundle.tweetNestKit.bundleIdentifier!)
+
+        // Migration START
+        let oldURL = Session.containerURL
+            .appendingPathComponent("Application Support")
+            .appendingPathComponent(Bundle.tweetNestKit.name!)
+        let newURL = containerApplicationSupportURL
+        if FileManager.default.fileExists(atPath: oldURL.path) {
+            do {
+                try FileManager.default.createDirectory(
+                    at: newURL.deletingLastPathComponent(),
+                    withIntermediateDirectories: true,
+                    attributes: nil
+                )
+                try FileManager.default.moveItem(at: oldURL, to: newURL)
+                try FileManager.default.removeItem(at: oldURL.deletingLastPathComponent())
+            } catch {
+                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                    .error("\(error as NSError, privacy: .public)")
+            }
+        }
+        // Migration END
+
+        return containerApplicationSupportURL
     }
 }
 
