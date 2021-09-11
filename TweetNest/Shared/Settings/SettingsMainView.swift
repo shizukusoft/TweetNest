@@ -32,7 +32,7 @@ struct SettingsMainView: View {
 
             SettingsAccountsView()
                 .tabItem {
-                    Label("Accounts", systemImage: "person.3")
+                    Label("Accounts", systemImage: "person.2")
                 }
                 .tag(SettingsNavigationItem.accounts)
         }
@@ -57,7 +57,7 @@ struct SettingsMainView: View {
                 ) {
                     SettingsAccountsView()
                 } label: {
-                    Label("Accounts", systemImage: "person.3")
+                    Label("Accounts", systemImage: "person.2")
                 }
             }
 
