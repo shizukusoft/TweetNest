@@ -138,7 +138,7 @@ struct AppSidebarNavigation: View {
             .listStyle(.sidebar)
             #endif
             .refreshable(action: refresh)
-            .navigationTitle(Text("TweetNest"))
+            .navigationTitle(Text(verbatim: "TweetNest"))
             .toolbar {
                 #if os(iOS)
                 ToolbarItemGroup(placement: .navigationBarLeading) {
