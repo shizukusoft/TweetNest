@@ -61,9 +61,6 @@ struct AppSidebarNavigation: View {
         } icon: {
             Image(systemName: "gearshape")
         }
-        #if os(watchOS)
-        .labelStyle(TweetNestWatchLabelStyle(iconSize: 32))
-        #endif
     }
 
     @ViewBuilder
@@ -73,6 +70,24 @@ struct AppSidebarNavigation: View {
         }
         .disabled(isAddingAccount)
     }
+
+    #if os(macOS) || os(watchOS)
+    @ViewBuilder
+    var refreshButton: some View {
+        Button {
+            Task {
+                if let refreshAction = refreshAction {
+                    await refreshAction()
+                } else {
+                    await refresh()
+                }
+            }
+        } label: {
+            Label("Refresh", systemImage: "arrow.clockwise")
+        }
+        .disabled(isRefreshing)
+    }
+    #endif
 
     var body: some View {
         NavigationView {
@@ -90,6 +105,10 @@ struct AppSidebarNavigation: View {
                     }
 
                     #if os(watchOS)
+                    Section {
+                        addAccountButton
+                    }
+
                     Section {
                         NavigationLink {
                             SettingsMainView()
@@ -131,38 +150,29 @@ struct AppSidebarNavigation: View {
                 }
                 #endif
 
+                #if os(macOS) || os(watchOS)
                 ToolbarItemGroup(placement: .primaryAction) {
                     #if os(watchOS)
                     Group {
                         if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
                             VStack {
                                 persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
-                                addAccountButton
+                                refreshButton
                             }
                         } else {
-                            addAccountButton
+                            refreshButton
                         }
                     }
                     .padding(.bottom)
                     #else
-                    addAccountButton
+                    refreshButton
                     #endif
                 }
+                #endif
 
                 #if os(macOS)
                 ToolbarItemGroup(placement: .automatic) {
-                    Button {
-                        Task {
-                            if let refreshAction = refreshAction {
-                                await refreshAction()
-                            } else {
-                                await refresh()
-                            }
-                        }
-                    } label: {
-                        Label("Refresh", systemImage: "arrow.clockwise")
-                    }
-                    .disabled(isRefreshing)
+                    addAccountButton
                 }
                 #endif
 

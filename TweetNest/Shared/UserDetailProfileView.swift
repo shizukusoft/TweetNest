@@ -28,7 +28,7 @@ struct UserDetailProfileView: View {
                         Text(verbatim: userDetail.name ?? userDetail.user?.id.flatMap({"#\($0)"}) ?? "")
                         if let username = userDetail.username {
                             Text(verbatim: "@\(username)")
-                                .foregroundColor(.gray)
+                                .foregroundColor(.secondary)
                         }
                     }
                 }
@@ -41,19 +41,27 @@ struct UserDetailProfileView: View {
 
             if let location = userDetail.location {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
-                HStack {
-                    Label("Location", systemImage: "location")
-                        .layoutPriority(1)
-                        .lineLimit(1)
-                    Spacer()
-                    Group {
-                        if let locationQueryURL = locationQueryURL {
-                            Link(location, destination: locationQueryURL)
-                        } else {
-                            Text(location)
+                Label {
+                    TweetNestStack {
+                        Text("Location")
+                            .layoutPriority(1)
+                            .lineLimit(1)
+                        #if !os(watchOS)
+                        Spacer()
+                        #endif
+                        Group {
+                            if let locationQueryURL = locationQueryURL {
+                                Link(location, destination: locationQueryURL)
+                            } else {
+                                Text(location)
+                                    .foregroundColor(.secondary)
+                            }
                         }
+                        .lineLimit(1)
+                        .allowsTightening(true)
                     }
-                    .multilineTextAlignment(.trailing)
+                } icon: {
+                    Image(systemName: "location")
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Location"))
@@ -62,13 +70,20 @@ struct UserDetailProfileView: View {
             }
 
             if let url = userDetail.url {
-                HStack {
-                    Label("URL", systemImage: "safari")
-                        .layoutPriority(1)
-                        .lineLimit(1)
-                    Spacer()
-                    Link(url.absoluteString, destination: url)
-                        .multilineTextAlignment(.trailing)
+                Label {
+                    TweetNestStack {
+                        Text("URL")
+                            .layoutPriority(1)
+                            .lineLimit(1)
+                        #if !os(watchOS)
+                        Spacer()
+                        #endif
+                        Link(url.absoluteString, destination: url)
+                            .lineLimit(1)
+                            .allowsTightening(true)
+                    }
+                } icon: {
+                    Image(systemName: "safari")
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("URL"))
@@ -77,13 +92,27 @@ struct UserDetailProfileView: View {
             }
 
             if let userCreationDate = userDetail.userCreationDate {
-                HStack {
-                    Label("Joined", systemImage: "calendar")
-                        .layoutPriority(1)
+                Label {
+                    TweetNestStack {
+                        Text("Joined")
+                            .layoutPriority(1)
+                            .lineLimit(1)
+                        #if !os(watchOS)
+                        Spacer()
+                        #endif
+                        Group {
+                            #if os(watchOS)
+                            Text(userCreationDate.formatted(date: .numeric, time: .shortened))
+                            #else
+                            Text(userCreationDate.formatted(date: .numeric, time: .standard))
+                            #endif
+                        }
+                        .foregroundColor(.secondary)
                         .lineLimit(1)
-                    Spacer()
-                    Text(userCreationDate.formatted(date: .numeric, time: .standard))
-                        .multilineTextAlignment(.trailing)
+                        .allowsTightening(true)
+                    }
+                } icon: {
+                    Image(systemName: "calendar")
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))

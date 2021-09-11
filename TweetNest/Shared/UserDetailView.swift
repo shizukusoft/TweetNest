@@ -14,24 +14,36 @@ struct UserDetailView: View {
 
     @ViewBuilder
     var followingUsersLabel: some View {
-        HStack {
-            Label("Followings", systemImage: "person.2")
-            .accessibilityLabel("Followings")
-            Spacer()
-            Text(userDetail.followingUsersCount.twnk_formatted())
-                .foregroundColor(Color.gray)
+        Label {
+            HStack {
+                Text("Followings")
+                Spacer()
+                Text(userDetail.followingUsersCount.twnk_formatted())
+                    .foregroundColor(Color.secondary)
+                    .lineLimit(1)
+                    .allowsTightening(true)
+            }
+        } icon: {
+            Image(systemName: "person.2")
         }
+        .accessibilityLabel("Followings")
     }
 
     @ViewBuilder
     var followersLabel: some View {
-        HStack {
-            Label("Followers", systemImage: "person.2")
-            .accessibilityLabel("Followers")
-            Spacer()
-            Text(userDetail.followerUsersCount.twnk_formatted())
-                .foregroundColor(Color.gray)
+        Label {
+            HStack {
+                Text("Followers")
+                Spacer()
+                Text(userDetail.followerUsersCount.twnk_formatted())
+                    .foregroundColor(Color.secondary)
+                    .lineLimit(1)
+                    .allowsTightening(true)
+            }
+        } icon: {
+            Image(systemName: "person.2")
         }
+        .accessibilityLabel("Followers")
     }
 
     var body: some View {
@@ -71,34 +83,52 @@ struct UserDetailView: View {
                             .navigationTitle(Text("Blocked Accounts"))
                             .environment(\.account, account)
                     } label: {
-                        HStack {
-                            Label("Blocked Accounts", systemImage: "nosign")
-                            Spacer()
-                            Text(blockingUserIDs.count.twnk_formatted())
-                                .foregroundColor(Color.gray)
+                        Label {
+                            HStack {
+                                Text("Blocked Accounts")
+                                Spacer()
+                                Text(blockingUserIDs.count.twnk_formatted())
+                                    .foregroundColor(Color.secondary)
+                                    .lineLimit(1)
+                                    .allowsTightening(true)
+                            }
+                        } icon: {
+                            Image(systemName: "nosign")
                         }
                     }
                 }
             }
 
             Section {
-                HStack {
-                    Label("Listed", systemImage: "list.bullet")
-                    .accessibilityLabel(Text("Listed"))
-                    Spacer()
-                    Text(userDetail.listedCount.twnk_formatted())
-                        .foregroundColor(Color.gray)
+                Label {
+                    HStack {
+                        Text("Listed")
+                        Spacer()
+                        Text(userDetail.listedCount.twnk_formatted())
+                            .foregroundColor(Color.secondary)
+                            .lineLimit(1)
+                            .allowsTightening(true)
+                    }
+                } icon: {
+                    Image(systemName: "list.bullet")
                 }
+                .accessibilityLabel(Text("Listed"))
             }
 
             Section {
-                HStack {
-                    Label("Tweets", systemImage: "text.bubble")
-                    .accessibilityLabel(Text("Tweets"))
-                    Spacer()
-                    Text(userDetail.tweetsCount.twnk_formatted())
-                        .foregroundColor(Color.gray)
+                Label {
+                    HStack {
+                        Text("Tweets")
+                        Spacer()
+                        Text(userDetail.tweetsCount.twnk_formatted())
+                            .foregroundColor(Color.secondary)
+                            .lineLimit(1)
+                            .allowsTightening(true)
+                    }
+                } icon: {
+                    Image(systemName: "text.bubble")
                 }
+                .accessibilityLabel(Text("Tweets"))
             }
         }
         #if os(iOS)

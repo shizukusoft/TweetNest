@@ -12,7 +12,7 @@ struct AccountLabel: View {
     @ObservedObject var account: Account
 
     var body: some View {
-        HStack(alignment: .center, spacing: 4) {
+        HStack(alignment: .center, spacing: 6) {
             ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
                 #if os(watchOS)
                 .frame(width: 16, height: 16)

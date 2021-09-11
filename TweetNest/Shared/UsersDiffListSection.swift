@@ -46,9 +46,6 @@ struct UsersDiffListSection: View {
             } header: {
                 Text(verbatim: currentUserDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserDetail.objectID.description)
             }
-            #if os(watchOS)
-            .labelStyle(TweetNestWatchLabelStyle())
-            #endif
         }
     }
 }
