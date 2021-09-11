@@ -11,7 +11,7 @@ import UnifiedLogging
 
 struct UserView: View {
     let user: User?
-    
+
     var body: some View {
         if let user = user {
             ContentView(user: user)
@@ -31,7 +31,7 @@ extension UserView {
         }
 
         @State var isRefreshing: Bool = false
-        
+
         @State var showErrorAlert: Bool = false
         @State var error: TweetNestError? = nil
 
@@ -46,7 +46,7 @@ extension UserView {
             return false
             #endif
         }
-        
+
         #if os(iOS)
         @State var safariSheetURL: URL? = nil
         @State var shareSheetURL: URL? = nil
@@ -57,12 +57,12 @@ extension UserView {
                 URL(string: "https://twitter.com/intent/user?user_id=\($0)")!
             }
         }
-        
+
         #if os(iOS) || os(macOS)
         @State var showBulkDeleteRecentTweets: Bool = false
         @State var showBulkDeleteAllTweets: Bool = false
         #endif
-        
+
         #if os(iOS) || os(macOS)
         @ViewBuilder
         var deleteMenu: some View {
@@ -72,7 +72,7 @@ extension UserView {
                 } label: {
                     Text("Delete Recent Tweets")
                 }
-                
+
                 Button(role: .destructive) {
                     showBulkDeleteAllTweets = true
                 } label: {
@@ -130,7 +130,7 @@ extension UserView {
                                 }
                                 #endif
                             }
-                            
+
                             #if os(iOS)
                             Divider()
 
@@ -138,10 +138,10 @@ extension UserView {
                                 shareSheetURL = userProfileURL
                             }
                             #endif
-                            
+
                             if account != nil, account == user.account {
                                 Divider()
-                                
+
                                 deleteMenu
                             }
                         } label: {
@@ -166,14 +166,14 @@ extension UserView {
                                 }
                             }
                             #endif
-                            
+
                             #if os(iOS)
                             Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
                                 shareSheetURL = userProfileURL
                             }
                             #endif
                         }
-                        
+
                         #if !os(iOS)
                         Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
                             Task {
@@ -182,7 +182,7 @@ extension UserView {
                         }
                         .disabled(isRefreshing)
                         #endif
-                        
+
                         if account != nil, account == user.account {
                             deleteMenu
                         }
@@ -220,7 +220,7 @@ extension UserView {
             }
             #endif
         }
-        
+
         @Sendable
         private func refresh() async {
             await withExtendedBackgroundExecution {

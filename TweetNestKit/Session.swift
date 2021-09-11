@@ -26,19 +26,19 @@ public actor Session {
             try await _twitterAPIConfiguration.wrappedValue
         }
     }
-    
+
     private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
 
     public nonisolated let persistentContainer: PersistentContainer
-    
+
     private nonisolated lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
         .sink { [weak self] _ in
             self?.handlePersistentStoreRemoteChanges()
         }
-    
+
     private(set) var twitterSessions = [URL: Twitter.Session]()
-    
+
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
         do {
             _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
@@ -52,19 +52,19 @@ public actor Session {
 extension Session {
     public convenience init(inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
-        
+
         _ = persistentStoreRemoteChangeNotification
     }
 
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
         self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
-        
+
         _ = persistentStoreRemoteChangeNotification
     }
 
     public convenience init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { twitterAPIConfiguration }, inMemory: inMemory)
-        
+
         _ = persistentStoreRemoteChangeNotification
     }
 }
@@ -72,28 +72,28 @@ extension Session {
 extension Session {
     public func twitterSession(for accountObjectID: NSManagedObjectID? = nil) async throws -> Twitter.Session {
         let twitterAPIConfiguration = try await twitterAPIConfiguration
-        
+
         guard let accountObjectID = accountObjectID, accountObjectID.isTemporaryID == false else {
             return Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
         }
-        
+
         guard let twitterSession: Twitter.Session = twitterSessions[accountObjectID.uriRepresentation()] else {
             let twitterSession = Twitter.Session(twitterAPIConfiguration: twitterAPIConfiguration)
             updateTwitterSession(twitterSession, for: accountObjectID)
-            
+
             try await twitterSession.updateCredential(credential(for: accountObjectID))
-            
+
             return twitterSession
         }
-        
+
         return twitterSession
     }
-    
+
     func updateTwitterSession(_ twitterSession: Twitter.Session?, for accountObjectID: NSManagedObjectID) {
         guard accountObjectID.isTemporaryID == false else {
             return
         }
-        
+
         twitterSessions[accountObjectID.uriRepresentation()] = twitterSession
     }
 }

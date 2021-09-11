@@ -13,7 +13,7 @@ import Twitter
 
 struct DeleteBulkTweetsRecentTweetsView: View {
     let account: TweetNestKit.Account
-    
+
     @Binding var isPresented: Bool
     
     @State var tweets: [Tweet]? = nil
@@ -49,12 +49,12 @@ struct DeleteBulkTweetsRecentTweetsView: View {
         #endif
         .navigationTitle(Text("Delete Tweets"))
     }
-    
+
     func fetchTweets() async {
         guard let userID = account.user?.id else {
             return
         }
-        
+
         do {
             let tweets = try await User.tweets(forUserID: userID, session: .session(for: account))
                 .map { try $0.get() }

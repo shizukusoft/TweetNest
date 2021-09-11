@@ -21,22 +21,22 @@ extension Account.Preferences {
         override class func transformedValueClass() -> AnyClass {
             NSData.self
         }
-        
+
         override func transformedValue(_ value: Any?) -> Any? {
             guard let value = value as? Account.Preferences? else {
                 preconditionFailure()
             }
-            
+
             return value.flatMap {
                 try! PropertyListEncoder().encode($0) as NSData
             }
         }
-        
+
         override func reverseTransformedValue(_ value: Any?) -> Any? {
             guard let value = value as? NSData else {
                 return nil
             }
-            
+
             return try? PropertyListDecoder().decode(Account.Preferences.self, from: value as Data)
         }
     }

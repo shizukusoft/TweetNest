@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension DataAsset {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<DataAsset> {
@@ -23,6 +22,6 @@ extension DataAsset {
 
 }
 
-extension DataAsset : Identifiable {
+extension DataAsset: Identifiable {
 
 }

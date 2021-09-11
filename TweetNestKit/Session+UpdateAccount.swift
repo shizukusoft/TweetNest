@@ -44,7 +44,7 @@ extension Session {
             return await taskGroup.reduce(into: [], { $0.append($1) })
         }
     }
-    
+
     @discardableResult
     public nonisolated func updateAccount(
         _ accountObjectID: NSManagedObjectID,
@@ -84,13 +84,13 @@ extension Session {
             let followerIDs = try await _followerIDs
             let myBlockingUserIDs = try await _myBlockingUserIDs
             let twitterUserFetchDate = Date()
-            
+
             let userIDs = OrderedSet<Twitter.User.ID>(followingUserIDs + followerIDs + (myBlockingUserIDs ?? []))
             async let _updatingUsers: Void = self.updateUsers(ids: userIDs, twitterSession: twitterSession, context: context)
 
             async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
                 try Task.checkCancellation()
-                
+
                 let account = context.object(with: accountObjectID) as! Account
 
                 let fetchRequest = User.fetchRequest()
@@ -116,7 +116,7 @@ extension Session {
 
                 return (previousUserDetail?.objectID, userDetail.objectID)
             }
-            
+
             let profileImageDataAsset = try await _profileImageDataAsset
             if profileImageDataAsset.hasChanges {
                 try await context.perform {

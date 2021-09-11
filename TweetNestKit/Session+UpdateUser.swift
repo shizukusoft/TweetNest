@@ -17,7 +17,7 @@ extension Session {
         try await withExtendedBackgroundExecution {
             let context = _context ?? self.persistentContainer.newBackgroundContext()
             context.undoManager = _context?.undoManager
-            
+
             let userIDs = OrderedSet(userIDs)
 
             try await withThrowingTaskGroup(of: (Date, [Twitter.User], Date).self) { chunkedUsersTaskGroup in
@@ -34,14 +34,14 @@ extension Session {
                 try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
-                        
+
                         for user in chunkedUsers.1 {
                             taskGroup.addTask {
                                 try Task.checkCancellation()
-                                
+
                                 try await context.perform(schedule: .enqueued) {
                                     try Task.checkCancellation()
-                                    
+
                                     let userDetail = try UserDetail.createOrUpdate(
                                         twitterUser: user,
                                         userUpdateStartDate: chunkedUsers.0,
@@ -58,7 +58,7 @@ extension Session {
 
                             taskGroup.addTask {
                                 try Task.checkCancellation()
-                                
+
                                 do {
                                     _ = try await DataAsset.dataAsset(for: user.profileImageOriginalURL, session: self, context: context)
                                 } catch {
@@ -70,7 +70,7 @@ extension Session {
                     }
 
                     try await taskGroup.waitForAll()
-                    
+
                     try await context.perform {
                         if context.hasChanges {
                             try context.save()

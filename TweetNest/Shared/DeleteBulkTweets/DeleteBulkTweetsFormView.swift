@@ -15,23 +15,23 @@ import OrderedCollections
 
 struct DeleteBulkTweetsFormView: View {
     @Environment(\.account) private var account: TweetNestKit.Account?
-    
+
     let tweets: OrderedSet<Tweet>
-    
+
     private let leastTweetDate: Date
     private let greatestTweetDate: Date
-    
+
     @Binding var isPresented: Bool
-    
+
     @State var targetTweets: [Tweet]
-    
+
     @State var sinceDate: Date
     @State var untilDate: Date
-    
+
     @State var showConfirmAlert: Bool = false
-    
+
     @State var isInProgress: Bool = false
-    
+
     var body: some View {
         ZStack {
             if isInProgress {
@@ -64,10 +64,10 @@ struct DeleteBulkTweetsFormView: View {
                                             untilDate = greatestTweetDate
                                         }
                                     }
-                                    
+
                                     updateTargetTweets()
                                 }
-                                
+
                                 DatePicker(selection: $untilDate, in: leastTweetDate...greatestTweetDate, displayedComponents: [.date]) {
                                     Text("Until")
                                 }
@@ -77,7 +77,7 @@ struct DeleteBulkTweetsFormView: View {
                                             sinceDate = leastTweetDate
                                         }
                                     }
-                                    
+
                                     updateTargetTweets()
                                 }
                             }
@@ -97,11 +97,11 @@ struct DeleteBulkTweetsFormView: View {
                                 .disabled(targetTweets.count <= 0)
                                 .alert(Text("Delete Tweets?"), isPresented: $showConfirmAlert) {
                                     Button(role: .cancel) {
-                                        
+
                                     } label: {
                                         Text("Cancel")
                                     }
-                                    
+
                                     Button(role: .destructive) {
                                         isInProgress = true
                                     } label: {
@@ -131,23 +131,23 @@ struct DeleteBulkTweetsFormView: View {
         #endif
         .navigationTitle(Text("Delete Tweets"))
     }
-    
+
     init(tweets: [Tweet], isPresented: Binding<Bool>) {
         let tweets = OrderedSet(tweets)
-        
+
         self.tweets = tweets
         _targetTweets = State(initialValue: Array(tweets))
         _isPresented = isPresented
-        
+
         let sortedTweets = tweets.sorted { $0.createdAt < $1.createdAt }
-        
+
         leastTweetDate = sortedTweets.first?.createdAt ?? Date()
         greatestTweetDate = sortedTweets.last?.createdAt ?? Date()
-        
+
         _sinceDate = State(initialValue: leastTweetDate)
         _untilDate = State(initialValue: greatestTweetDate)
     }
-    
+
     private func updateTargetTweets() {
         self.targetTweets = tweets
             .lazy

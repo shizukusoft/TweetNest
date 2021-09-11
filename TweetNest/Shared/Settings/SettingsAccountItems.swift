@@ -18,11 +18,11 @@ struct SettingsAccountItems: View {
         ],
         animation: .default)
     private var accounts: FetchedResults<Account>
-    
+
     var body: some View {
         ForEach(accounts) { account in
             let displayUsername = account.user?.displayUsername ?? account.objectID.description
-            
+
             NavigationLink {
                 SettingsAccountView(account: account)
             } label: {
@@ -36,7 +36,7 @@ struct SettingsAccountItems: View {
         .onDelete(perform: deleteAccounts)
         .onMove(perform: moveAccounts)
     }
-    
+
     private func deleteAccounts(offsets: IndexSet) {
         withAnimation {
             offsets.map { accounts[$0] }.forEach(viewContext.delete)

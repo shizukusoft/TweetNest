@@ -11,11 +11,11 @@ struct SettingsMainView: View {
     private enum Tabs: Hashable {
         case accounts
     }
-    
+
     #if os(iOS)
     @State var editMode: EditMode = .inactive
     #endif
-    
+
     var body: some View {
         #if os(macOS)
         TabView {
@@ -34,11 +34,11 @@ struct SettingsMainView: View {
             } header: {
                 Text("Accounts")
             }
-            
+
             Section {
                 let marketingVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 let versionString = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String).flatMap { String("(\($0))") }
-                
+
                 TweetNestStack {
                     Text("App Version")
                     #if !os(watchOS)
@@ -50,7 +50,7 @@ struct SettingsMainView: View {
             } header: {
                 Text("About")
             }
-            
+
             #if os(iOS)
             Section {
                 Link(destination: URL(string: UIApplication.openSettingsURLString)!) {

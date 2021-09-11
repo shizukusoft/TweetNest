@@ -16,13 +16,13 @@ extension Session {
     private nonisolated var lastPersistentHistoryTokenURL: URL {
         PersistentContainer.defaultDirectoryURL().appendingPathComponent("TweetNestKit-Session.token")
     }
-    
+
     private var lastPersistentHistoryToken: NSPersistentHistoryToken? {
         get {
             guard let data = try? Data(contentsOf: lastPersistentHistoryTokenURL) else {
                 return nil
             }
-            
+
             return try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: data)
         }
     }

@@ -24,7 +24,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     #if canImport(CoreSpotlight)
     var usersSpotlightDelegate: UsersSpotlightDelegate?
     #endif
-    
+
     @Published
     public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
     private nonisolated lazy var persistentContainerEventDidChanges = NotificationCenter.default
@@ -65,7 +65,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         guard loadPersistentStoreErrors.isEmpty else {
             throw PersistentContainerError.persistentStoresLoadingFailure(loadPersistentStoreErrors)
         }
-        
+
         #if canImport(CoreSpotlight)
         if inMemory == false, let storeDescription = self.persistentStoreDescriptions.first(where: { $0.type == NSSQLiteStoreType }) {
             self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
@@ -93,7 +93,7 @@ extension PersistentContainer {
             case export
             case unknown(Int)
         }
-        
+
         public var identifier: UUID
         public var storeIdentifier: String
         public var type: EventType
@@ -127,7 +127,7 @@ extension PersistentContainer.CloudKitEvent {
         self.type = EventType(event.type)
         self.startDate = event.startDate
         self.endDate = event.endDate
-        
+
         if let error = event.error {
             result = .failure(error)
         } else if event.succeeded {

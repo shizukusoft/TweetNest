@@ -22,12 +22,12 @@ extension Session {
     static var preferredBackgroundRefreshDate: Date {
         Date(timeIntervalSinceNow: 5 * 60) // Fetch no earlier than 5 minutes from now
     }
-    
+
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).background-refresh"
-    
+
     #if canImport(BackgroundTasks) && !os(macOS)
     public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.module.bundleIdentifier!).data-cleansing"
-    
+
     @available(iOSApplicationExtension, unavailable)
     @available(tvOSApplicationExtension, unavailable)
     @discardableResult
@@ -79,7 +79,7 @@ extension Session {
 
     nonisolated func backgroundRefresh() async throws {
         let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
-        
+
         logger.notice("Start background refresh")
         defer {
             logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
@@ -121,12 +121,12 @@ extension Session {
         Task.detached { [self] in
             await withTaskExpirationHandler { expirationHandler in
                 let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
-                
+
                 backgroundTask.expirationHandler = {
                     logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
                     expirationHandler()
                 }
-                
+
                 do {
                     try await scheduleBackgroundRefreshTask()
                 } catch {
@@ -138,7 +138,7 @@ extension Session {
                 } catch {
                     logger.error("Error occurred while schedule data cleansing: \(error as NSError, privacy: .public)")
                 }
-                
+
                 do {
                     try await backgroundRefresh()
                     backgroundTask.setTaskCompleted(success: Task.isCancelled == false)
@@ -148,12 +148,12 @@ extension Session {
             }
         }
     }
-    
+
     nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
         Task.detached { [self] in
             await withTaskExpirationHandler { expirationHandler in
                 let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "data-cleansing")
-                
+
                 backgroundTask.expirationHandler = {
                     logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
                     expirationHandler()
@@ -166,7 +166,7 @@ extension Session {
                     backgroundTask.setTaskCompleted(success: false)
                 }
             }
-            
+
         }
     }
 }
@@ -177,16 +177,16 @@ extension Session {
         guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString }) else {
             return []
         }
-        
+
         Task.detached { [self] in
             await withTaskExpirationHandler { expirationHandler in
                 let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "background-refresh")
-                
+
                 backgroundTask.expirationHandler = {
                     logger.notice("Background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
                     expirationHandler()
                 }
-                
+
                 do {
                     try await backgroundRefresh()
                     backgroundTask.setTaskCompletedWithSnapshot(Task.isCancelled == false)

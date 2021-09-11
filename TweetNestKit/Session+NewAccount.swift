@@ -40,11 +40,11 @@ extension Session {
         await twitterSession.updateCredential(.init(accessToken))
 
         let twitterAccount = try await Twitter.Account.me(session: twitterSession)
-        
+
         let accountObjectID = try await self.createNewAccount(tokenResponse: accessToken, twitterAccount: twitterAccount)
-        
+
         await updateTwitterSession(twitterSession, for: accountObjectID)
-        
+
         try await updateAccount(accountObjectID)
     }
 

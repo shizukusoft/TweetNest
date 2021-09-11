@@ -11,7 +11,7 @@ import TweetNestKit
 struct AppSidebarAccountRows: View {
     @ObservedObject var account: Account
     @Binding var navigationItemSelection: AppSidebarNavigation.NavigationItem?
-    
+
     var body: some View {
         Group {
             NavigationLink(

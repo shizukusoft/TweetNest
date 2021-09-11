@@ -23,7 +23,7 @@ extension DataAsset {
         context: NSManagedObjectContext
     ) throws -> DataAsset {
         let dataSHA512Hash = Data(SHA512.hash(data: data))
-        
+
         let dataAssetFetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
         dataAssetFetchRequest.predicate = NSPredicate(format: "url == %@", url as NSURL)
         dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -54,7 +54,7 @@ extension DataAsset {
 
         return try await context.perform(schedule: .enqueued) {
             try Task.checkCancellation()
-            
+
             return try .dataAsset(data: data, url: url, context: context)
         }
     }
