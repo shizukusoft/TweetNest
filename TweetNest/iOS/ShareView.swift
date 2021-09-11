@@ -29,8 +29,7 @@ struct ShareView: UIViewControllerRepresentable {
 
     func makeUIViewController(context: Context) -> UIActivityViewController {
         let viewController = UIActivityViewController(activityItems: items, applicationActivities: nil)
-        viewController.completionWithItemsHandler = {
-            (_, _, _, _) in
+        viewController.completionWithItemsHandler = { (_, _, _, _) in
             dismiss()
         }
         return viewController
