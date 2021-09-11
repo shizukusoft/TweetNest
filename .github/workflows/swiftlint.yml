@@ -15,7 +15,7 @@ jobs:
       - uses: sinoru/actions-setup-swift@v2
         with:
           swift-version: '5.5-DEVELOPMENT-SNAPSHOT-2021-09-09-a'
-      - run: apt-get install binutils git gnupg2 libc6-dev libcurl4 libedit2 libgcc-9-dev libpython3.8 libsqlite3-0 libstdc++-9-dev libxml2 libz3-dev pkg-config tzdata zlib1g-dev
+      - run: sudo apt-get install binutils git gnupg2 libc6-dev libcurl4 libedit2 libgcc-9-dev libpython3.8 libsqlite3-0 libstdc++-9-dev libxml2 libz3-dev pkg-config tzdata zlib1g-dev
       - run: git clone https://github.com/realm/SwiftLint.git ~/.swiftlint
       - run: swift build --package-path ~/.swiftlint -c release
       - run: |
