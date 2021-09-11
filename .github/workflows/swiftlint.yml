@@ -17,8 +17,9 @@ jobs:
           swift-version: '5.5-DEVELOPMENT-SNAPSHOT-2021-09-09-a'
       - run: |
           git clone https://github.com/realm/SwiftLint.git ~/.swiftlint
+      - run: swift build --package-path ~/.swiftlint -c Release
       - run: |
-          swift run --package-path ~/.swiftlint -- swiftlint | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
+          swift run --package-path ~/.swiftlint -c Release -- swiftlint | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
           # MIT License
           # 
           # Copyright (c) 2018 Norio Nomura
