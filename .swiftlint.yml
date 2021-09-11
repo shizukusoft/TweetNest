@@ -1,3 +1,10 @@
+disabled_rules:
+  - weak_delegate
+opt_in_rules:
+  - array_init
+  - capture_variable
+  - collection_alignment
+
 line_length:
   warning: 180
   error: 200
