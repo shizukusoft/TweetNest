@@ -28,7 +28,7 @@ extension Image {
                 kCGImageSourceCreateThumbnailFromImageAlways: true,
                 kCGImageSourceShouldCache as String: true,
                 kCGImageSourceShouldCacheImmediately as String: true,
-                kCGImageSourceCreateThumbnailWithTransform as String: true
+                kCGImageSourceCreateThumbnailWithTransform as String: true,
             ] as CFDictionary
         ) else {
             return nil

@@ -22,7 +22,7 @@ extension Session {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
-                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
+                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false),
             ]
             fetchRequest.resultType = .managedObjectIDResultType
 

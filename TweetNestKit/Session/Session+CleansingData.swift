@@ -33,7 +33,7 @@ extension Session {
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false)
+                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false),
             ]
             fetchRequest.resultType = .managedObjectIDResultType
 
