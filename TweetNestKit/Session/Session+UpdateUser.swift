@@ -37,24 +37,24 @@ extension Session {
                 guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
                     throw SessionError.unknown
                 }
-                
+
                 return account.preferences
             }
-            
+
             let twitterSession = try await self.twitterSession(for: accountObjectID)
-            
+
             let userIDs = OrderedSet(userIDs)
 
             return try await withThrowingTaskGroup(of: (Date, [Result<Twitter.User, TwitterServerError>]).self) { chunkedUsersTaskGroup in
                 for chunkedUserIDs in userIDs.chunked(into: 100) {
                     chunkedUsersTaskGroup.addTask {
                         let updateStartDate = Date()
-                        
+
                         let userIDs: [Twitter.User.ID] = try await context.perform(schedule: .enqueued) {
                             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                             userFetchRequest.predicate = NSPredicate(format: "id IN %@", chunkedUserIDs)
                             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-                            
+
                             let users = Dictionary(
                                 try context.fetch(userFetchRequest).map { ($0.id, $0) },
                                 uniquingKeysWith: {
@@ -101,7 +101,7 @@ extension Session {
                 return try await withThrowingTaskGroup(of: (Twitter.User.ID, (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)).self) { taskGroup in
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
-                        
+
                         for twitterUserResult in chunkedUsers.1 {
                             let twitterUser: Twitter.User
                             do {
@@ -118,7 +118,7 @@ extension Session {
                                 async let _followingUserIDs = twitterUser.id == accountUserID ? Twitter.User.followingUserIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
-                                
+
                                 async let _profileImageDataAsset = DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context)
 
                                 let followingUserIDs = try await _followingUserIDs
@@ -130,7 +130,7 @@ extension Session {
 
                                 let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] })
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
-                                
+
                                 async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
                                     let account = context.object(with: accountObjectID) as! Account
 

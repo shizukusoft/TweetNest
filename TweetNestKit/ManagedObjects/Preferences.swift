@@ -69,7 +69,6 @@ extension ManagedPreferences {
 
             let preferences = primitiveValue(forKey: Key.preferences) as? Preferences
 
-
             guard let preferences = preferences else {
                 self.preferences = Preferences()
                 return self.preferences

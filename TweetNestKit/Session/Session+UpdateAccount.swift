@@ -44,7 +44,7 @@ extension Session {
             return await taskGroup.reduce(into: [], { $0.append($1) })
         }
     }
-    
+
     @discardableResult
     public nonisolated func updateAccount(
         _ accountObjectID: NSManagedObjectID,

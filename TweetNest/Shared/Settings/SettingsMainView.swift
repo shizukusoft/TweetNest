@@ -20,7 +20,7 @@ struct SettingsMainView: View {
     #else
     @State var selectedNavigationItem: SettingsNavigationItem? = nil
     #endif
-    
+
     #if os(macOS)
     var body: some View {
         TabView(selection: $selectedNavigationItem) {
@@ -29,7 +29,7 @@ struct SettingsMainView: View {
                     Label("General", systemImage: "gearshape")
                 }
                 .tag(SettingsNavigationItem.general)
-            
+
             SettingsAccountsView()
                 .tabItem {
                     Label("Accounts", systemImage: "person.3")
@@ -50,7 +50,7 @@ struct SettingsMainView: View {
                 } label: {
                     Label("General", systemImage: "gearshape")
                 }
-                
+
                 NavigationLink(
                     tag: SettingsNavigationItem.accounts,
                     selection: $selectedNavigationItem
@@ -60,11 +60,11 @@ struct SettingsMainView: View {
                     Label("Accounts", systemImage: "person.3")
                 }
             }
-            
+
             Section {
                 let marketingVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
                 let versionString = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String).flatMap { String("(\($0))") }
-                
+
                 TweetNestStack {
                     Text("App Version")
                     #if !os(watchOS)

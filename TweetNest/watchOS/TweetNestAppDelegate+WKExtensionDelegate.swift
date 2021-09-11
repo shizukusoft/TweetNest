@@ -13,10 +13,10 @@ extension TweetNestAppDelegate: WKExtensionDelegate {
     func applicationDidFinishLaunching() {
         UNUserNotificationCenter.current().delegate = self
     }
-    
+
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
         let handledBackgroundTasks = BackgroundTaskScheduler.shared.handleBackgroundRefreshBackgroundTask(backgroundTasks)
-        
+
         for backgroundTask in backgroundTasks.subtracting(handledBackgroundTasks) {
             switch backgroundTask {
             case let backgroundTask as WKSnapshotRefreshBackgroundTask:

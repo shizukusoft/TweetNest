@@ -26,7 +26,7 @@ struct ProfileImage: View {
             }
         }
     }
-    
+
     @ViewBuilder private var profileImage: some View {
         if let userDetail = userDetail {
             Content(userDetail: userDetail)

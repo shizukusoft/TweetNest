@@ -24,7 +24,7 @@ struct AppSidebarNavigation: View {
     @Environment(\.session) private var session: Session
 
     @State private var disposables = Set<AnyCancellable>()
-    
+
     @State private var persistentContainerCloudKitEvents: [PersistentContainer.CloudKitEvent] = []
     private var inProgressPersistentContainerCloudKitEvent: PersistentContainer.CloudKitEvent? {
         persistentContainerCloudKitEvents.first { $0.endDate == nil }
@@ -53,7 +53,7 @@ struct AppSidebarNavigation: View {
     private var accounts: FetchedResults<Account>
 
     @Environment(\.refresh) private var refreshAction
-    
+
     @ViewBuilder
     var showSettingsLabel: some View {
         Label {
@@ -65,7 +65,7 @@ struct AppSidebarNavigation: View {
         .labelStyle(TweetNestWatchLabelStyle(iconSize: 32))
         #endif
     }
-    
+
     @ViewBuilder
     var addAccountButton: some View {
         Button(action: addAccount) {
@@ -88,7 +88,7 @@ struct AppSidebarNavigation: View {
                                 #endif
                         }
                     }
-                    
+
                     #if os(watchOS)
                     Section {
                         NavigationLink {
@@ -102,7 +102,7 @@ struct AppSidebarNavigation: View {
                 #if os(macOS)
                 .frame(minWidth: 182)
                 #endif
-                
+
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
                         .zIndex(-1)
@@ -130,7 +130,7 @@ struct AppSidebarNavigation: View {
                     }
                 }
                 #endif
-                
+
                 ToolbarItemGroup(placement: .primaryAction) {
                     #if os(watchOS)
                     Group {
@@ -148,7 +148,7 @@ struct AppSidebarNavigation: View {
                     addAccountButton
                     #endif
                 }
-                
+
                 #if os(macOS)
                 ToolbarItemGroup(placement: .automatic) {
                     Button {
@@ -165,7 +165,7 @@ struct AppSidebarNavigation: View {
                     .disabled(isRefreshing)
                 }
                 #endif
-                
+
                 #if os(macOS) || os(iOS)
                 ToolbarItemGroup(placement: .status) {
                     if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
@@ -199,7 +199,7 @@ struct AppSidebarNavigation: View {
                 #if os(watchOS)
                 .frame(width: 29.5, height: 29.5, alignment: .center)
                 #endif
-            
+
             Group {
                 switch event.type {
                 case .setup:
@@ -229,10 +229,10 @@ struct AppSidebarNavigation: View {
                         isAddingAccount = false
                     }
                 }
-                
+
                 try await session.authorizeNewAccount { webAuthenticationSession in
                     webAuthenticationSession.prefersEphemeralWebBrowserSession = true
-                    
+
                     self.webAuthenticationSession = webAuthenticationSession
                 }
             } catch ASWebAuthenticationSessionError.canceledLogin {
@@ -262,7 +262,7 @@ struct AppSidebarNavigation: View {
             do {
                 let hasChanges = try await session.updateAllAccounts()
                 try await session.cleansingAllData()
-                
+
                 for hasChanges in hasChanges {
                     _ = try hasChanges.1.get()
                 }

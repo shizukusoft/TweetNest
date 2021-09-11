@@ -13,26 +13,26 @@ import OrderedCollections
 
 struct DeleteBulkTweetsFormView: View {
     @Environment(\.account) private var account: TweetNestKit.Account?
-    
+
     let tweets: OrderedDictionary<Tweet.ID, Tweet>
-    
+
     private let leastTweetDate: Date
     private let greatestTweetDate: Date
-    
+
     @Binding var isPresented: Bool
 
     @State var targetTweetIDs: [Tweet.ID]
 
     @State var includesTweets: Bool = true
     @State var includesRetweets: Bool = true
-    
+
     @State var sinceDate: Date
     @State var untilDate: Date
-    
+
     @State var showConfirmAlert: Bool = false
-    
+
     @State var isInProgress: Bool = false
-    
+
     var body: some View {
         ZStack {
             if isInProgress {
@@ -56,7 +56,6 @@ struct DeleteBulkTweetsFormView: View {
                                 }
                             }
 
-
                             Section {
                                 #if !os(watchOS)
                                 DatePicker(selection: $sinceDate, in: leastTweetDate...greatestTweetDate, displayedComponents: [.date]) {
@@ -68,7 +67,7 @@ struct DeleteBulkTweetsFormView: View {
                                             untilDate = greatestTweetDate
                                         }
                                     }
-                                    
+
                                     updateTargetTweetIDs()
                                 }
 
@@ -81,7 +80,7 @@ struct DeleteBulkTweetsFormView: View {
                                             sinceDate = leastTweetDate
                                         }
                                     }
-                                    
+
                                     updateTargetTweetIDs()
                                 }
                                 #endif
@@ -144,7 +143,7 @@ struct DeleteBulkTweetsFormView: View {
         #endif
         .navigationTitle(Text("Delete Tweets"))
     }
-    
+
     init(tweets: [Tweet], isPresented: Binding<Bool>) {
         let tweets: OrderedDictionary<Tweet.ID, Tweet> = OrderedDictionary<Tweet.ID, [Tweet]>(grouping: tweets, by: \.id)
             .compactMapValues { $0.last }
@@ -152,16 +151,16 @@ struct DeleteBulkTweetsFormView: View {
         self.tweets = tweets
         _targetTweetIDs = State(initialValue: Array(tweets.keys))
         _isPresented = isPresented
-        
+
         let sortedTweets = tweets.values.sorted { $0.createdAt < $1.createdAt }
-        
+
         leastTweetDate = sortedTweets.first?.createdAt ?? Date()
         greatestTweetDate = sortedTweets.last?.createdAt ?? Date()
-        
+
         _sinceDate = State(initialValue: leastTweetDate)
         _untilDate = State(initialValue: greatestTweetDate)
     }
-    
+
     private func updateTargetTweetIDs() {
         self.targetTweetIDs = tweets
             .lazy

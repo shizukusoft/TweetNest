@@ -21,7 +21,7 @@ typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
-    
+
     var session: Session {
         delegate.session
     }

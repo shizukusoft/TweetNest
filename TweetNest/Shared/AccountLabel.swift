@@ -10,7 +10,7 @@ import TweetNestKit
 
 struct AccountLabel: View {
     @ObservedObject var account: Account
-    
+
     var body: some View {
         HStack(alignment: .center, spacing: 4) {
             ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
@@ -19,7 +19,7 @@ struct AccountLabel: View {
                 #else
                 .frame(width: 24, height: 24)
                 #endif
-            
+
             Text(verbatim: account.user?.displayUsername ?? account.objectID.description)
         }
     }

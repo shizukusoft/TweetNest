@@ -11,7 +11,7 @@ import UnifiedLogging
 
 struct UserView: View {
     let user: User?
-    
+
     var body: some View {
         if let user = user {
             ContentView(user: user)
@@ -31,7 +31,7 @@ extension UserView {
         }
 
         @State var isRefreshing: Bool = false
-        
+
         @State var showErrorAlert: Bool = false
         @State var error: TweetNestError? = nil
 
@@ -46,7 +46,7 @@ extension UserView {
             return false
             #endif
         }
-        
+
         #if os(iOS)
         @State var safariSheetURL: URL? = nil
         @State var shareSheetURL: URL? = nil
@@ -93,7 +93,7 @@ extension UserView {
             }
             #endif
         }
-        
+
         @ViewBuilder private var userView: some View {
             #if os(macOS)
             VStack(alignment: .leading, spacing: 8) {
@@ -191,7 +191,7 @@ extension UserView {
                                     }
                                     #endif
                                 }
-                                
+
                                 #if os(iOS)
                                 Divider()
 
@@ -201,10 +201,10 @@ extension UserView {
                                     Label("Share", systemImage: "square.and.arrow.up")
                                 }
                                 #endif
-                                
+
                                 if account != nil, account == user.account {
                                     Divider()
-                                    
+
                                     deleteMenu
                                 }
                             } label: {
@@ -229,7 +229,7 @@ extension UserView {
                                     }
                                 }
                                 #endif
-                                
+
                                 #if os(iOS)
                                 Button {
                                     shareSheetURL = userProfileURL
@@ -238,11 +238,11 @@ extension UserView {
                                 }
                                 #endif
                             }
-                            
+
                             #if !os(iOS)
                             refreshButton
                             #endif
-                            
+
                             if account != nil, account == user.account {
                                 deleteMenu
                             }
@@ -294,7 +294,7 @@ extension UserView {
                 }
                 #endif
         }
-        
+
         @Sendable
         private func refresh() async {
             await withExtendedBackgroundExecution {
