@@ -19,8 +19,8 @@ struct AppSidebarNavigation: View {
         case blockings(Account)
     }
 
-    @State private var navigationItemSelection: NavigationItem? = nil
-    
+    @State private var navigationItemSelection: NavigationItem?
+
     @Environment(\.session) private var session: Session
 
     @State private var disposables = Set<AnyCancellable>()
@@ -29,20 +29,20 @@ struct AppSidebarNavigation: View {
     private var inProgressPersistentContainerCloudKitEvent: PersistentContainer.CloudKitEvent? {
         persistentContainerCloudKitEvents.first { $0.endDate == nil }
     }
-    
-    @State private var something: String? = nil
+
+    @State private var something: String?
 
     #if os(iOS)
     @State private var showSettings: Bool = false
     #endif
 
-    @State private var webAuthenticationSession: ASWebAuthenticationSession? = nil
+    @State private var webAuthenticationSession: ASWebAuthenticationSession?
     @State private var isAddingAccount: Bool = false
 
     @State private var isRefreshing: Bool = false
 
     @State private var showErrorAlert: Bool = false
-    @State private var error: TweetNestError? = nil
+    @State private var error: TweetNestError?
 
     @FetchRequest(
         sortDescriptors: [

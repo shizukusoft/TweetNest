@@ -49,8 +49,7 @@ struct UserDetailProfileView: View {
                     Group {
                         if let locationQueryURL = locationQueryURL {
                             Link(location, destination: locationQueryURL)
-                        }
-                        else {
+                        } else {
                             Text(location)
                         }
                     }

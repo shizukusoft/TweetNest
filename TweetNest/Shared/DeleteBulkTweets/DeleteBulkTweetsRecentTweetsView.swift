@@ -13,12 +13,12 @@ struct DeleteBulkTweetsRecentTweetsView: View {
     let account: TweetNestKit.Account
 
     @Binding var isPresented: Bool
-    
-    @State var tweets: [Tweet]? = nil
-    
+
+    @State var tweets: [Tweet]?
+
     @State var showError: Bool = false
-    @State var error: TweetNestError? = nil
-    
+    @State var error: TweetNestError?
+
     var body: some View {
         ZStack {
             if let tweets = tweets {

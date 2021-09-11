@@ -13,14 +13,14 @@ struct SettingsAccountView: View {
     @ObservedObject var account: Account
 
     @State var showError: Bool = false
-    @State var error: TweetNestError? = nil
+    @State var error: TweetNestError?
 
     var body: some View {
         Form {
             Toggle(isOn: $account.preferences.fetchBlockingUsers) {
                 Text("Fetch Blocking Users")
             }
-            .onChange(of: account.preferences.fetchBlockingUsers) { newValue in
+            .onChange(of: account.preferences.fetchBlockingUsers) { _ in
                 save()
             }
         }

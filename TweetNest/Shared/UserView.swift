@@ -33,7 +33,7 @@ extension UserView {
         @State var isRefreshing: Bool = false
 
         @State var showErrorAlert: Bool = false
-        @State var error: TweetNestError? = nil
+        @State var error: TweetNestError?
 
         #if os(iOS)
         @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -48,8 +48,8 @@ extension UserView {
         }
 
         #if os(iOS)
-        @State var safariSheetURL: URL? = nil
-        @State var shareSheetURL: URL? = nil
+        @State var safariSheetURL: URL?
+        @State var shareSheetURL: URL?
         #endif
 
         var userProfileURL: URL? {

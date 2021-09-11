@@ -19,7 +19,7 @@ struct MainView: View {
     @State var error: TweetNestError?
     @State var showErrorAlert: Bool = false
 
-    @State var user: User? = nil
+    @State var user: User?
 
     var body: some View {
         AppSidebarNavigation()

@@ -57,7 +57,7 @@ public actor BackgroundTaskScheduler {
     }
 
     private lazy var isBackgroundUpdateEnabledObserver = TweetNestKitUserDefaults.standard
-        .observe(\.isBackgroundUpdateEnabled, options: [.initial]) { [weak self] _, change in
+        .observe(\.isBackgroundUpdateEnabled, options: [.initial]) { [weak self] _, _ in
             Task { [weak self] in
                 await self?.isBackgroundUpdateEnabledDidChanges()
             }

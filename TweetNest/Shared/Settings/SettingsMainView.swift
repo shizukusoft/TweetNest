@@ -18,7 +18,7 @@ struct SettingsMainView: View {
     #if os(macOS)
     @State var selectedNavigationItem: SettingsNavigationItem = .general
     #else
-    @State var selectedNavigationItem: SettingsNavigationItem? = nil
+    @State var selectedNavigationItem: SettingsNavigationItem?
     #endif
 
     #if os(macOS)

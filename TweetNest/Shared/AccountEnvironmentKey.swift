@@ -9,7 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 public struct AccountEnvironmentKey: EnvironmentKey {
-    public static var defaultValue: Account? = nil
+    public static var defaultValue: Account?
 }
 
 public extension EnvironmentValues {
