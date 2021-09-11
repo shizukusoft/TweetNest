@@ -1,18 +1,22 @@
 disabled_rules:
   - weak_delegate
+  - opening_brace
 opt_in_rules:
   - array_init
   - capture_variable
   - collection_alignment
 
 line_length:
-  warning: 180
-  error: 200
+  warning: 220
+  error: 240
 
 identifier_name:
   min_length:
     warning: 3
     error: 2
+  max_length:
+    warning: 80
+    error: 100
   excluded:
     - id
   allowed_symbols:
