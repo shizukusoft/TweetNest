@@ -43,6 +43,5 @@ jobs:
           # SOFTWARE.
           #
           # https://github.com/norio-nomura/action-swiftlint/blob/9f4dcd7fd46b4e75d7935cf2f4df406d5cae3684/entrypoint.sh
-        with:
-          env:
-            SWIFT_VERSION: 5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a
+        env:
+          SWIFT_VERSION: 5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a
