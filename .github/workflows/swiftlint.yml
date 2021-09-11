@@ -17,7 +17,7 @@ jobs:
         with:
           swift-version: '5.4.3'
       - run: swift build --package-path ~/.swiftlint -c release
-      - run: swiftlint install 5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a
+      - run: swiftenv install 5.5-DEVELOPMENT-SNAPSHOT-2021-09-06-a
       - run: |
           swift run --package-path ~/.swiftlint -c release -- swiftlint | sed -E "s/$(pwd|sed 's/\//\\\//g')\///" | sed -E 's/^(.*):([0-9]+):([0-9]+): (warning|error|[^:]+): (.*)/::\4 file=\1,line=\2,col=\3::\5/'
           # MIT License
