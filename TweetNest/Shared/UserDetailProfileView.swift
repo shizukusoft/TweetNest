@@ -17,7 +17,7 @@ struct UserDetailProfileView: View {
         Group {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
-                    ProfileImage(userDetail: userDetail)
+                    ProfileImage(profileImageURL: userDetail.profileImageURL)
                         #if !os(watchOS)
                         .frame(width: 48, height: 48)
                         #else

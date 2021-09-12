@@ -20,42 +20,19 @@ struct UserRows<Icon>: View where Icon: View {
 
     var body: some View {
         ForEach(userIDs, id: \.self) { userID in
-            let displayUserID = "#\(Int64(userID)?.twnk_formatted() ?? userID)"
-            let user = users.first(where: { $0.id == userID })
-
-            if let user = user, (user.userDetails?.count ?? 0) > 0 {
-                if
-                    searchQuery.isEmpty ||
-                    user.userDetails?.compactMap({ $0 as? UserDetail })
-                        .contains(where: {
-                            $0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true
-                        }) == true
-                {
-                    Label {
-                        UserRow(user: user)
-                    } icon: {
-                        icon
-                    }
-                }
-            } else {
-                if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
-                    Label {
-                        Text(verbatim: displayUserID)
-                    } icon: {
-                        icon
-                    }
-                }
+            UserRow(userID: userID, user: users.first(where: { $0.id == userID }), searchQuery: $searchQuery) {
+                icon
             }
         }
     }
 
-    init(userIDs: OrderedSet<String>, searchQuery: Binding<String>, @ViewBuilder icon: () -> Icon) {
-        self.userIDs = userIDs
+    init<C>(userIDs: C, searchQuery: Binding<String>, @ViewBuilder icon: () -> Icon) where C: Sequence, C.Element == String {
+        self.userIDs = OrderedSet(userIDs)
 
         let usersFetchRequest = User.fetchRequest()
         usersFetchRequest.predicate = NSPredicate(format: "id IN %@", Array(userIDs))
-        usersFetchRequest.propertiesToFetch = ["id"]
         usersFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \User.id, ascending: true)]
+        usersFetchRequest.propertiesToFetch = ["id"]
 
         self._users = FetchRequest(
             fetchRequest: usersFetchRequest,
@@ -66,13 +43,13 @@ struct UserRows<Icon>: View where Icon: View {
         self.icon = icon()
     }
 
-    init(userIDs: OrderedSet<String>, searchQuery: Binding<String>) where Icon == EmptyView {
-        self.userIDs = userIDs
+    init<C>(userIDs: C, searchQuery: Binding<String>) where Icon == EmptyView, C: Sequence, C.Element == String {
+        self.userIDs = OrderedSet(userIDs)
 
         let usersFetchRequest = User.fetchRequest()
         usersFetchRequest.predicate = NSPredicate(format: "id IN %@", Array(userIDs))
-        usersFetchRequest.propertiesToFetch = ["id"]
         usersFetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \User.id, ascending: true)]
+        usersFetchRequest.propertiesToFetch = ["id"]
 
         self._users = FetchRequest(
             fetchRequest: usersFetchRequest,
@@ -81,14 +58,6 @@ struct UserRows<Icon>: View where Icon: View {
 
         self._searchQuery = searchQuery
         self.icon = nil
-    }
-
-    init(userIDs: [String], searchQuery: Binding<String>, @ViewBuilder icon: () -> Icon) {
-        self.init(userIDs: OrderedSet(userIDs), searchQuery: searchQuery, icon: icon)
-    }
-
-    init(userIDs: [String], searchQuery: Binding<String>) where Icon == EmptyView {
-        self.init(userIDs: OrderedSet(userIDs), searchQuery: searchQuery)
     }
 }
 

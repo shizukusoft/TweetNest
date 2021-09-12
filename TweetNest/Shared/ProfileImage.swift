@@ -9,13 +9,11 @@ import SwiftUI
 import TweetNestKit
 
 struct ProfileImage: View {
-    var userDetail: UserDetail?
+    let profileImageURL: URL?
 
-    struct Content: View {
-        @ObservedObject var userDetail: UserDetail
-
-        var body: some View {
-            DataAssetImage(url: userDetail.profileImageURL) { image in
+    @ViewBuilder private var profileImage: some View {
+        if let profileImageURL = profileImageURL {
+            DataAssetImage(url: profileImageURL) { image in
                 if let image = image {
                     image
                         .interpolation(.high)
@@ -24,12 +22,6 @@ struct ProfileImage: View {
                     Color.gray
                 }
             }
-        }
-    }
-
-    @ViewBuilder private var profileImage: some View {
-        if let userDetail = userDetail {
-            Content(userDetail: userDetail)
         } else {
             Color.gray
         }
@@ -46,7 +38,7 @@ struct ProfileImage: View {
 #if DEBUG
 struct ProfileImage_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileImage(userDetail: nil)
+        ProfileImage(profileImageURL: nil)
     }
 }
 #endif
