@@ -22,7 +22,7 @@ struct UserAllDataView: View {
                 Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? "")
             }
             TableColumn("Profile Image") { userDetail in
-                ProfileImage(userDetail: userDetail)
+                ProfileImage(profileImageURL: userDetail.profileImageURL)
                     .frame(width: 24, height: 24)
             }
             TableColumn("Name") { userDetail in
