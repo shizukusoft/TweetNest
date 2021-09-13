@@ -11,18 +11,28 @@ import TweetNestKit
 struct DataAssetImage<Content>: View where Content: View {
     @FetchRequest private var dataAssets: FetchedResults<TweetNestKit.DataAsset>
 
-    private let queue = DispatchQueue(label: String(describing: Self.self), qos: .userInteractive)
+    private let operaionQueue: OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.qualityOfService = .userInteractive
+        operationQueue.maxConcurrentOperationCount = 1
+        operationQueue.name = String(describing: Self.self)
+
+        return operationQueue
+    }()
     @State private var image: Image?
 
     var contentInitializer: (Image?) -> Content
 
     var body: some View {
         contentInitializer(image)
-            .onChange(of: dataAssets.first?.data) { _ in
-                updateImage()
+            .onChange(of: dataAssets.first?.data) { newValue in
+                updateImage(data: newValue)
             }
             .onAppear {
-                updateImage()
+                updateImage(data: dataAssets.first?.data)
+            }
+            .onDisappear {
+                operaionQueue.cancelAllOperations()
             }
     }
 
@@ -30,6 +40,7 @@ struct DataAssetImage<Content>: View where Content: View {
         let fetchRequest = TweetNestKit.DataAsset.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]
         fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(value: false)
+        fetchRequest.propertiesToFetch = ["data"]
         fetchRequest.fetchLimit = 1
 
         self._dataAssets = FetchRequest(
@@ -39,9 +50,11 @@ struct DataAssetImage<Content>: View where Content: View {
         self.contentInitializer = content
     }
 
-    private func updateImage() {
-        queue.async {
-            let image = Image(data: dataAssets.first?.data)
+    private func updateImage(data: Data?) {
+        let data = dataAssets.first?.data
+
+        operaionQueue.addOperation {
+            let image = Image(data: data)
 
             DispatchQueue.main.async {
                 self.image = image

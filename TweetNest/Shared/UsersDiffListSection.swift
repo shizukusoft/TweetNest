@@ -10,9 +10,10 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffListSection: View {
-    var previousUserDetail: UserDetail?
+    let previousUserDetail: UserDetail?
     @ObservedObject var currentUserDetail: UserDetail
-    @Binding var diffKeyPath: KeyPath<UserDetail, [String]?>
+
+    let diffKeyPath: KeyPath<UserDetail, [String]?>
     @Binding var searchQuery: String
 
     var previousUserIDs: OrderedSet<String> {
@@ -38,11 +39,13 @@ struct UsersDiffListSection: View {
                     Image(systemName: "person.badge.plus")
                         .foregroundColor(.green)
                 }
+                .id(appendedUserIDs)
 
                 UserRows(userIDs: removedUserIDs, searchQuery: $searchQuery) {
                     Image(systemName: "person.badge.minus")
                         .foregroundColor(.red)
                 }
+                .id(removedUserIDs)
             } header: {
                 Text(verbatim: currentUserDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserDetail.objectID.description)
             }
