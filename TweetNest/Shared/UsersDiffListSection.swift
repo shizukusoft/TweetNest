@@ -10,44 +10,117 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffListSection: View {
-    let previousUserDetail: UserDetail?
-    @ObservedObject var currentUserDetail: UserDetail
+    let header: Text
 
-    let diffKeyPath: KeyPath<UserDetail, [String]?>
+    let userIDs: OrderedSet<String>
+    let previousUserIDs: OrderedSet<String>
+
     @Binding var searchQuery: String
 
-    var previousUserIDs: OrderedSet<String> {
-        OrderedSet(previousUserDetail?[keyPath: diffKeyPath] ?? [])
-    }
-
-    var currentUserIDs: OrderedSet<String> {
-        OrderedSet(currentUserDetail[keyPath: diffKeyPath] ?? [])
-    }
+    @SectionedFetchRequest private var symmetricDifferenceUserDetailsByUser: SectionedFetchResults<String?, UserDetail>
 
     var appendedUserIDs: OrderedSet<String> {
-        currentUserIDs.subtracting(previousUserIDs)
+        userIDs.subtracting(previousUserIDs)
     }
 
     var removedUserIDs: OrderedSet<String> {
-        previousUserIDs.subtracting(currentUserIDs)
+        previousUserIDs.subtracting(userIDs)
+    }
+
+    var symmetricDifferenceUserIDs: OrderedSet<String> {
+        userIDs.symmetricDifference(previousUserIDs)
     }
 
     var body: some View {
         if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
             Section {
-                UserRows(userIDs: appendedUserIDs, searchQuery: $searchQuery) {
-                    Image(systemName: "person.badge.plus")
-                        .foregroundColor(.green)
+                ForEach(appendedUserIDs, id: \.self) { userID in
+                    userLabel(userID: userID) {
+                        Image(systemName: "person.badge.plus")
+                            .foregroundColor(.green)
+                    }
+                    .id(userID)
                 }
                 .id(appendedUserIDs)
 
-                UserRows(userIDs: removedUserIDs, searchQuery: $searchQuery) {
-                    Image(systemName: "person.badge.minus")
-                        .foregroundColor(.red)
+                ForEach(removedUserIDs, id: \.self) { userID in
+                    userLabel(userID: userID) {
+                        Image(systemName: "person.badge.minus")
+                            .foregroundColor(.red)
+                    }
+                    .id(userID)
                 }
                 .id(removedUserIDs)
             } header: {
-                Text(verbatim: currentUserDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? currentUserDetail.objectID.description)
+                header
+            }
+            .onChange(of: symmetricDifferenceUserIDs) { newValue in
+                symmetricDifferenceUserDetailsByUser.nsPredicate = NSPredicate(format: "user.id in %@", newValue.sorted())
+            }
+        }
+    }
+
+    init(
+        header: Text,
+        userIDs: OrderedSet<String>,
+        previousUserIDs: OrderedSet<String>,
+        searchQuery: Binding<String>
+    ) {
+        self.header = header
+        self.userIDs = userIDs
+        self.previousUserIDs = previousUserIDs
+        self._searchQuery = searchQuery
+
+        let userIDs = userIDs.symmetricDifference(previousUserIDs).sorted()
+
+        self._symmetricDifferenceUserDetailsByUser = SectionedFetchRequest(
+            fetchRequest: {
+                let fetchRequest = UserDetail.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "user.id in %@", userIDs)
+                fetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \UserDetail.user?.id, ascending: true),
+                    NSSortDescriptor(keyPath: \UserDetail.user?.creationDate, ascending: false),
+                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                ]
+                fetchRequest.propertiesToFetch = ["name", "username", "profileImageURL", "user"]
+
+                return fetchRequest
+            }(),
+            sectionIdentifier: \.user?.id
+        )
+    }
+
+    @ViewBuilder
+    private func userLabel<Icon>(userID: String, @ViewBuilder icon: () -> Icon) -> some View where Icon: View {
+        let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+        let userDetailsSection = symmetricDifferenceUserDetailsByUser.first(where: { $0.id == userID })
+
+        if let latestUserDetail = userDetailsSection?.first {
+            if
+                searchQuery.isEmpty ||
+                userDetailsSection?.contains(where: {
+                    ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true)
+                }) == true
+            {
+                Label(
+                    title: {
+                        UserLabel(userDetail: latestUserDetail, displayUserID: displayUserID)
+                            #if os(watchOS)
+                            .labelStyle(.titleOnly)
+                            #endif
+                    },
+                    icon: icon
+                )
+                .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? displayUserID))
+            }
+        } else {
+            if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
+                Label(
+                    title: {
+                        UserLabel(displayUserID: displayUserID)
+                    },
+                    icon: icon
+                )
             }
         }
     }

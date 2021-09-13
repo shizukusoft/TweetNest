@@ -18,12 +18,17 @@ struct UsersDiffList: View {
     @State private var searchQuery: String = ""
 
     @ViewBuilder private var usersDiffList: some View {
-        List(userDetails.indices, id: \.self) { userDetailIndex in
-            let userDetail = userDetails[userDetailIndex]
-            let previousUserDetailIndex = userDetailIndex + 1
-            let previousUserDetail = userDetails.indices.contains(previousUserDetailIndex) ? userDetails[previousUserDetailIndex] : nil
+        List(userDetails) { userDetail in
+            let userDetailIndex = userDetails.firstIndex(of: userDetail)
+            let previousUserDetailIndex = userDetailIndex.flatMap { $0 + 1 }
+            let previousUserDetail = previousUserDetailIndex.flatMap { userDetails.indices.contains($0) ? userDetails[$0] : nil }
 
-            UsersDiffListSection(previousUserDetail: previousUserDetail, currentUserDetail: userDetail, diffKeyPath: diffKeyPath, searchQuery: $searchQuery)
+            UsersDiffListSection(
+                header: Text(verbatim: userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description),
+                userIDs: OrderedSet(userDetail[keyPath: diffKeyPath] ?? []),
+                previousUserIDs: OrderedSet(previousUserDetail?[keyPath: diffKeyPath] ?? []),
+                searchQuery: $searchQuery
+            )
         }
         .searchable(text: $searchQuery)
     }
@@ -57,8 +62,7 @@ struct UsersDiffList: View {
                 }
 
                 return fetchRequest
-            }(),
-            animation: .default
+            }()
         )
 
         self.title = title
