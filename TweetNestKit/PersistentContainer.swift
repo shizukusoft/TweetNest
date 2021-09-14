@@ -159,6 +159,8 @@ extension PersistentContainer {
             return
         }
 
+        var isMigrated: Bool = false
+
         if FileManager.default.fileExists(atPath: accountsPersistentStoreURL.path) == false {
             // Step 1. Migrate default store with nil configuration
 
@@ -182,7 +184,11 @@ extension PersistentContainer {
                 _ = try accountsStoreMigrationPersistentContainer.persistentStoreCoordinator.migratePersistentStore(store, to: accountsPersistentStoreURL, options: nil, type: .sqlite)
             }
 
-            // Step 3. Migrate default store to temp store, and migrate back to default store
+            isMigrated = true
+        }
+
+        if isMigrated { // Clean up default store
+            // Step 1. Migrate default store to temp store, and migrate back to default store
 
             let defaultStoreMigrationPersistentContainer = NSPersistentContainer(name: "TweetNestKit", managedObjectModel: Self.managedObjectModel)
             defaultStoreMigrationPersistentContainer.persistentStoreDescriptions[0].configuration = Self.defaultPersistentStoreConfiguration
@@ -195,7 +201,7 @@ extension PersistentContainer {
             if let store = defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.persistentStores.first {
                 let tempStore = try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.migratePersistentStore(store, to: defaultPersistentStoreURL.appendingPathExtension("temp"), options: nil, type: .sqlite)
                 try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: defaultPersistentStoreURL, type: .sqlite, options: nil)
-                
+
                 _ = try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.migratePersistentStore(tempStore, to: defaultPersistentStoreURL, options: nil, type: .sqlite)
                 try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: defaultPersistentStoreURL.appendingPathExtension("temp"), type: .sqlite, options: nil)
             }
