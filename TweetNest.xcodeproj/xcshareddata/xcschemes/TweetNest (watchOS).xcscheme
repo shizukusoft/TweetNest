@@ -75,8 +75,10 @@
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
       notificationPayloadFile = "TweetNest/watchOS/PushNotificationPayload.apns">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.Carousel"
+         RemotePath = "/TweetNest">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "19A6FF1426D6835F00AB7B7E"
@@ -84,7 +86,7 @@
             BlueprintName = "TweetNest (watchOS)"
             ReferencedContainer = "container:TweetNest.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </RemoteRunnable>
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-com.apple.CoreData.SQLDebug 1"
@@ -98,8 +100,10 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <RemoteRunnable
+         runnableDebuggingMode = "2"
+         BundleIdentifier = "com.apple.Carousel"
+         RemotePath = "/TweetNest">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "19A6FF1426D6835F00AB7B7E"
@@ -107,7 +111,16 @@
             BlueprintName = "TweetNest (watchOS)"
             ReferencedContainer = "container:TweetNest.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </RemoteRunnable>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "19A6FF1426D6835F00AB7B7E"
+            BuildableName = "TweetNest.app"
+            BlueprintName = "TweetNest (watchOS)"
+            ReferencedContainer = "container:TweetNest.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
