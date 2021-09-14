@@ -49,6 +49,13 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
 
     static let accountsPersistentStoreConfiguration = "Accounts"
 
+    public override var viewContext: NSManagedObjectContext {
+        let viewContext = super.viewContext
+        viewContext.automaticallyMergesChangesFromParent = true
+        viewContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
+        return viewContext
+    }
+
     #if canImport(CoreSpotlight)
     var usersSpotlightDelegate: UsersSpotlightDelegate?
     #endif
@@ -64,9 +71,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             }
         }
 
-    init(inMemory: Bool = false) throws {
-        try Self.migrationIfNeeded()
-
+    init(inMemory: Bool = false) {
         super.init(name: Bundle.tweetNestKit.name!, managedObjectModel: Self.managedObjectModel)
 
         _ = persistentContainerEventDidChanges
@@ -76,6 +81,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         tweetNestKitPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
         tweetNestKitPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
         tweetNestKitPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+        tweetNestKitPersistentStoreDescription.shouldAddStoreAsynchronously = true
 
         let accountsPersistentStoreDescription = NSPersistentStoreDescription(url: Self.accountsPersistentStoreURL)
         accountsPersistentStoreDescription.configuration = Self.accountsPersistentStoreConfiguration
@@ -88,36 +94,41 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             tweetNestKitPersistentStoreDescription,
         ]
 
-        let persistentStoreGroup = DispatchGroup()
-        persistentStoreDescriptions.forEach { description in
-            persistentStoreGroup.enter()
+        DispatchQueue.global().async {
+            do {
+                try Self.migrationIfNeeded()
+            } catch {
+                fatalError(String(reflecting: error))
+            }
 
-            if inMemory {
-                description.url = URL(fileURLWithPath: "/dev/null")
+            self.persistentStoreDescriptions.forEach { description in
+                if inMemory {
+                    description.url = URL(fileURLWithPath: "/dev/null")
+                }
+            }
+
+            var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
+            self.loadPersistentStores { (storeDescription, error) in
+                loadedPersistentStores[storeDescription] = error
+
+                if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
+                    let errors = loadedPersistentStores.compactMapValues { $0 }
+
+                    guard errors.isEmpty else {
+                        fatalError(String(reflecting: PersistentContainerError.persistentStoresLoadingFailure(errors)))
+                    }
+
+                    #if canImport(CoreSpotlight)
+                    if inMemory == false {
+                        self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: tweetNestKitPersistentStoreDescription, coordinator: self.persistentStoreCoordinator)
+                        self.usersSpotlightDelegate!.startSpotlightIndexing()
+                    }
+                    #endif
+                }
             }
         }
 
-        var loadPersistentStoreErrors = [NSPersistentStoreDescription: Error]()
-        loadPersistentStores { (storeDescription, error) in
-            loadPersistentStoreErrors[storeDescription] = error
-            persistentStoreGroup.leave()
-        }
 
-        persistentStoreGroup.wait()
-
-        guard loadPersistentStoreErrors.isEmpty else {
-            throw PersistentContainerError.persistentStoresLoadingFailure(loadPersistentStoreErrors)
-        }
-
-        #if canImport(CoreSpotlight)
-        if inMemory == false {
-            self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: tweetNestKitPersistentStoreDescription, coordinator: self.persistentStoreCoordinator)
-            self.usersSpotlightDelegate!.startSpotlightIndexing()
-        }
-        #endif
-
-        viewContext.automaticallyMergesChangesFromParent = true
-        viewContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
     }
 
     public override func newBackgroundContext() -> NSManagedObjectContext {
