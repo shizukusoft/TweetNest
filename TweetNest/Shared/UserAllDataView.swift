@@ -86,6 +86,6 @@ struct UserAllDataView: View {
 
 struct UserAllDataView_Previews: PreviewProvider {
     static var previews: some View {
-        UserAllDataView(user: Account.preview.user!)
+        UserAllDataView(user: Account.preview.users!.last!)
     }
 }

@@ -15,8 +15,11 @@ extension TweetNestKit.Session {
         for _ in 0..<3 {
             let newAccount = Account(context: viewContext)
             newAccount.creationDate = Date()
-            newAccount.user = User(context: viewContext)
-            newAccount.user!.id = String(Int64.random(in: Int64.min...Int64.max))
+
+            let newUser = User(context: viewContext)
+            newUser.id = String(Int64.random(in: Int64.min...Int64.max))
+
+            newAccount.userID = newUser.id
         }
         do {
             try viewContext.save()
@@ -32,11 +35,8 @@ extension TweetNestKit.Session {
 
 extension TweetNestKit.Account {
     public static var preview: Account {
-        let account = Account()
-        account.creationDate = Date()
-        account.user = User()
-        account.user!.id = String(Int64.random(in: Int64.min...Int64.max))
+        let fetchRequest = Account.fetchRequest()
 
-        return account
+        return try! Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
     }
 }

@@ -14,6 +14,10 @@ public class Account: NSManagedObject {
 }
 
 extension Account {
+    @NSManaged public var users: [User]?
+}
+
+extension Account {
     var credential: Twitter.Session.Credential? {
         guard
             let token = token,
@@ -51,5 +55,11 @@ extension Account {
 
             setPrimitiveValue(newValue, forKey: Key.preferences)
         }
+    }
+}
+
+extension Account {
+    public var displayUserID: String? {
+        return userID.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" }
     }
 }

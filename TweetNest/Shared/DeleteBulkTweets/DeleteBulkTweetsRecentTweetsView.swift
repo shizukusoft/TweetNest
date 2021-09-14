@@ -49,7 +49,7 @@ struct DeleteBulkTweetsRecentTweetsView: View {
     }
 
     func fetchTweets() async {
-        guard let userID = account.user?.id else {
+        guard let userID = account.userID else {
             return
         }
 

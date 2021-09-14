@@ -59,6 +59,18 @@ extension Session {
 
             let userID = String(twitterAccount.id)
 
+            try await context.perform(schedule: .enqueued) {
+                guard let account = context.object(with: accountObjectID) as? Account else {
+                    return
+                }
+
+                account.userID = userID
+
+                if account.hasChanges {
+                    try context.save()
+                }
+            }
+
             return try await self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)[userID]
         }
     }

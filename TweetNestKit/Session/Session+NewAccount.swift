@@ -39,22 +39,19 @@ extension Session {
 
         await twitterSession.updateCredential(.init(accessToken))
 
-        let twitterAccount = try await Twitter.Account.me(session: twitterSession)
-
-        let accountObjectID = try await self.createNewAccount(tokenResponse: accessToken, twitterAccount: twitterAccount)
+        let accountObjectID = try await self.createNewAccount(tokenResponse: accessToken)
 
         await updateTwitterSession(twitterSession, for: accountObjectID)
 
         try await updateAccount(accountObjectID)
     }
 
-    private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse, twitterAccount: Twitter.Account) async throws -> NSManagedObjectID {
+    private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse) async throws -> NSManagedObjectID {
         let context = persistentContainer.newBackgroundContext()
 
         return try await context.perform(schedule: .enqueued) {
             let account = Account(context: context)
             account.creationDate = Date()
-            account.id = twitterAccount.id
             account.token = tokenResponse.token
             account.tokenSecret = tokenResponse.tokenSecret
 

@@ -144,7 +144,7 @@ extension UserView {
                     }
                 }
                 #if os(watchOS)
-                if account != nil, account == user.account {
+                if let account = account, user.accounts?.contains(account) == true {
                     Section {
                         deleteMenu
                     }
@@ -171,7 +171,7 @@ extension UserView {
                 #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
                 #endif
-                .navigationTitle(Text(verbatim: user.displayUsername ?? user.objectID.description))
+                .navigationTitle(Text(verbatim: user.sortedUserDetails?.last?.displayUsername ?? user.displayID ?? user.objectID.description))
                 .refreshable(action: refresh)
                 #if os(iOS) || os(macOS)
                 .toolbar {
@@ -202,7 +202,7 @@ extension UserView {
                                 }
                                 #endif
 
-                                if account != nil, account == user.account {
+                                if let account = account, user.accounts?.contains(account) != false {
                                     Divider()
 
                                     deleteMenu
@@ -243,7 +243,7 @@ extension UserView {
                             refreshButton
                             #endif
 
-                            if account != nil, account == user.account {
+                            if let account = account, user.accounts?.contains(account) == false {
                                 deleteMenu
                             }
                         }
@@ -266,7 +266,7 @@ extension UserView {
                 #endif
                 .alert(isPresented: $showErrorAlert, error: error)
                 .sheet(isPresented: $showBulkDeleteRecentTweets) {
-                    if let account = account, account == user.account {
+                    if let account = account, user.accounts?.contains(account) == true {
                         #if os(macOS)
                         DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
                             .padding()
@@ -280,7 +280,7 @@ extension UserView {
                 }
                 #if os(iOS) || os(macOS)
                 .sheet(isPresented: $showBulkDeleteAllTweets) {
-                    if let account = account, account == user.account {
+                    if let account = account,user.accounts?.contains(account) == true {
                         #if os(macOS)
                         DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
                             .padding()
@@ -311,7 +311,7 @@ extension UserView {
                 }
 
                 do {
-                    if let account = user.account {
+                    if let account = user.accounts?.last, account == self.account {
                         try await Session.shared.updateAccount(account.objectID)
                     } else if let account = account {
                         try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, accountObjectID: account.objectID)
@@ -328,6 +328,6 @@ extension UserView {
 
 struct UserView_Previews: PreviewProvider {
     static var previews: some View {
-        UserView(user: Account.preview.user!)
+        UserView(user: Account.preview.users!.last!)
     }
 }

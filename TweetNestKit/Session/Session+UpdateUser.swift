@@ -76,7 +76,7 @@ extension Session {
                                 }
 
                                 // Don't update user data if user has account. (Might overwrite followings/followers list)
-                                guard $0 == accountUserID || user.account == nil else {
+                                guard $0 == accountUserID || user.accounts?.isEmpty != false else {
                                     return nil
                                 }
 
@@ -132,8 +132,6 @@ extension Session {
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
 
                                 async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
-                                    let account = context.object(with: accountObjectID) as! Account
-
                                     let fetchRequest = User.fetchRequest()
                                     fetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
                                     fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -152,10 +150,6 @@ extension Session {
                                         userDetailCreationDate: twitterUserFetchDate,
                                         context: context
                                     )
-
-                                    if twitterUser.id == accountUserID {
-                                        userDetail.user?.account = account
-                                    }
 
                                     return (previousUserDetail?.objectID, userDetail.objectID)
                                 }

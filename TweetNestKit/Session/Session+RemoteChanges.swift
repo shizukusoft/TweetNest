@@ -226,7 +226,7 @@ extension Session {
                         let user = newUserDetail.user,
                         let sortedUserDetails = user.sortedUserDetails,
                         sortedUserDetails.count > 1,
-                        let account = user.account
+                        let account = user.accounts?.max(by: { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast })
                     else {
                         return nil
                     }
@@ -248,7 +248,7 @@ extension Session {
                     } else if let displayUsername = newUserDetail.displayUsername {
                         notificationContentTitle = displayUsername
                     } else {
-                        notificationContentTitle = "#\(account.id.twnk_formatted())"
+                        notificationContentTitle = account.userID.flatMap { Int64($0).flatMap { "#\($0.twnk_formatted())" } } ?? account.userID.flatMap { "#\($0)" } ?? account.objectID.uriRepresentation().absoluteString
                     }
 
                     let notificationContent = UNMutableNotificationContent()

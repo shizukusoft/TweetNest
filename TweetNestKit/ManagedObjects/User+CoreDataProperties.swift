@@ -2,12 +2,13 @@
 //  User+CoreDataProperties.swift
 //  User
 //
-//  Created by Jaehong Kang on 2021/08/20.
+//  Created by Jaehong Kang on 2021/09/14.
 //
 //
 
 import Foundation
 import CoreData
+
 
 extension User {
 
@@ -20,7 +21,6 @@ extension User {
     @NSManaged public var lastUpdateEndDate: Date?
     @NSManaged public var lastUpdateStartDate: Date?
     @NSManaged public var modificationDate: Date?
-    @NSManaged public var account: Account?
     @NSManaged public var userDetails: NSSet?
 
 }
@@ -42,6 +42,6 @@ extension User {
 
 }
 
-extension User: Identifiable {
+extension User : Identifiable {
 
 }

@@ -75,11 +75,6 @@ extension Session {
                 )
                 account.token = duplicatedAccount.token
                 account.tokenSecret = duplicatedAccount.tokenSecret
-                account.user = [account.user, duplicatedAccount.user].lazy
-                    .compactMap({$0})
-                    .sorted(by: { ($0.creationDate ?? .distantFuture) < ($1.creationDate ?? .distantFuture) })
-                    .first
-
                 account.preferringSortOrder = duplicatedAccount.preferringSortOrder
 
                 context.delete(duplicatedAccount)
@@ -92,7 +87,6 @@ extension Session {
     nonisolated func cleansingAllUsersAndUserDetails(context: NSManagedObjectContext) async throws {
         let userObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let userFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: User.entity().name!)
-            userFetchRequest.predicate = NSPredicate(format: "account == NULL")
             userFetchRequest.resultType = .managedObjectIDResultType
             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
 
@@ -129,11 +123,6 @@ extension Session {
             let duplicatedUsers = try context.fetch(userFetchRequest)
 
             for duplicatedUser in duplicatedUsers {
-                user.account = [user.account, duplicatedUser.account].lazy
-                    .compactMap({$0})
-                    .sorted(by: { ($0.creationDate ?? .distantFuture) < ($1.creationDate ?? .distantFuture) })
-                    .first
-
                 user.creationDate = [user.creationDate, duplicatedUser.creationDate].lazy.compactMap({$0}).min()
                 user.lastUpdateEndDate = [user.lastUpdateEndDate, duplicatedUser.lastUpdateEndDate].lazy.compactMap({$0}).max()
                 user.lastUpdateStartDate = [user.lastUpdateStartDate, duplicatedUser.lastUpdateStartDate].lazy.compactMap({$0}).max()
