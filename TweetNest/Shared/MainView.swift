@@ -18,7 +18,7 @@ struct MainView: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.session) private var session: Session
 
-    @State private var isPersistentContainerLoading: Bool = true
+    @State private var isPersistentContainerLoaded: Bool = false
 
     @State var error: TweetNestError?
     @State var showErrorAlert: Bool = false
@@ -26,7 +26,7 @@ struct MainView: View {
     @State var user: User?
 
     var body: some View {
-        AppSidebarNavigation(isPersistentContainerLoading: $isPersistentContainerLoading)
+        AppSidebarNavigation(isPersistentContainerLoaded: $isPersistentContainerLoaded)
             .alert(isPresented: $showErrorAlert, error: error)
             .sheet(item: $user) { user in
                 NavigationView {
@@ -44,7 +44,7 @@ struct MainView: View {
                 do {
                     try await session.persistentContainer.loadPersistentStores()
 
-                    isPersistentContainerLoading = false
+                    isPersistentContainerLoaded = true
                 } catch {
                     Logger().error("Error occurred: \(error as NSError, privacy: .public)")
                     self.error = TweetNestError(error)

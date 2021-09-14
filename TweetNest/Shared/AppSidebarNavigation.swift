@@ -28,7 +28,7 @@ struct AppSidebarNavigation: View {
         persistentContainerCloudKitEvents.first { $0.endDate == nil }
     }
 
-    @Binding var isPersistentContainerLoading: Bool
+    @Binding var isPersistentContainerLoaded: Bool
 
     #if os(iOS)
     @State private var showSettings: Bool = false
@@ -58,7 +58,7 @@ struct AppSidebarNavigation: View {
         Button(action: addAccount) {
             Label("Add Account", systemImage: "plus")
         }
-        .disabled(isPersistentContainerLoading || isAddingAccount)
+        .disabled(isPersistentContainerLoaded == false || isAddingAccount)
     }
 
     #if os(macOS) || os(watchOS)
@@ -75,7 +75,7 @@ struct AppSidebarNavigation: View {
         } label: {
             Label("Refresh", systemImage: "arrow.clockwise")
         }
-        .disabled(isPersistentContainerLoading || isRefreshing)
+        .disabled(isPersistentContainerLoaded == false || isRefreshing)
     }
     #endif
 
@@ -83,7 +83,7 @@ struct AppSidebarNavigation: View {
         NavigationView {
             ZStack {
                 List {
-                    if isPersistentContainerLoading == false {
+                    if isPersistentContainerLoaded {
                         AppSidebarNavigationAccountsRowContent()
                     }
 
@@ -179,7 +179,7 @@ struct AppSidebarNavigation: View {
 
     @ViewBuilder
     var statusView: some View {
-        if isPersistentContainerLoading {
+        if isPersistentContainerLoaded == false {
             HStack(spacing: 4) {
                 #if !os(watchOS)
                 ProgressView()
@@ -285,7 +285,7 @@ struct AppSidebarNavigation: View {
 #if DEBUG
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
-        AppSidebarNavigation(isPersistentContainerLoading: .constant(false))
+        AppSidebarNavigation(isPersistentContainerLoaded: .constant(true))
             .environment(\.session, Session.preview)
             .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }
