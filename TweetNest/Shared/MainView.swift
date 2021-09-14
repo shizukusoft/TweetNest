@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TweetNestKit
+import UnifiedLogging
 import UserNotifications
 
 #if canImport(CoreSpotlight)
@@ -15,6 +16,9 @@ import CoreSpotlight
 
 struct MainView: View {
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.session) private var session: Session
+
+    @State private var isPersistentContainerLoading: Bool = true
 
     @State var error: TweetNestError?
     @State var showErrorAlert: Bool = false
@@ -22,7 +26,7 @@ struct MainView: View {
     @State var user: User?
 
     var body: some View {
-        AppSidebarNavigation()
+        AppSidebarNavigation(isPersistentContainerLoading: $isPersistentContainerLoading)
             .alert(isPresented: $showErrorAlert, error: error)
             .sheet(item: $user) { user in
                 NavigationView {
@@ -38,8 +42,19 @@ struct MainView: View {
             }
             .task {
                 do {
+                    try await session.persistentContainer.loadPersistentStores()
+
+                    isPersistentContainerLoading = false
+                } catch {
+                    Logger().error("Error occurred: \(error as NSError, privacy: .public)")
+                    self.error = TweetNestError(error)
+                    showErrorAlert = true
+                }
+
+                do {
                     try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
                 } catch {
+                    Logger().error("Error occurred: \(error as NSError, privacy: .public)")
                     self.error = TweetNestError(error)
                     self.showErrorAlert = true
                 }

@@ -10,7 +10,7 @@ import TweetNestKit
 
 struct AppSidebarAccountsSection: View {
     @ObservedObject var account: Account
-    @Binding var navigationItemSelection: AppSidebarNavigation.NavigationItem?
+    @Binding var navigationItemSelection: AppSidebarNavigationItem?
 
     @FetchRequest
     private var users: FetchedResults<User>
@@ -72,7 +72,7 @@ struct AppSidebarAccountsSection: View {
         }
     }
 
-    init(account: Account, navigationItemSelection: Binding<AppSidebarNavigation.NavigationItem?>) {
+    init(account: Account, navigationItemSelection: Binding<AppSidebarNavigationItem?>) {
         self.account = account
         self._navigationItemSelection = navigationItemSelection
 

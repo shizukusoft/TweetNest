@@ -69,18 +69,20 @@ extension Session {
 
             let accounts = try context.fetch(accountFetchRequest)
 
-            account.creationDate = accounts.first?.creationDate ?? account.creationDate
-            account.preferringSortOrder = accounts.first?.preferringSortOrder ?? account.preferringSortOrder
-            account.userID = accounts.last?.userID ?? account.userID
+            guard accounts.count > 1 else { return }
 
-            for duplicatedAccount in accounts {
-                account.preferences = .init(
-                    fetchBlockingUsers: account.preferences.fetchBlockingUsers || duplicatedAccount.preferences.fetchBlockingUsers
+            let targetAccount = accounts.first ?? account
+
+            targetAccount.creationDate = accounts.first?.creationDate ?? account.creationDate
+            targetAccount.preferringSortOrder = accounts.first?.preferringSortOrder ?? account.preferringSortOrder
+            targetAccount.userID = accounts.last?.userID ?? account.userID
+
+            for account in accounts {
+                guard account != targetAccount else { continue }
+
+                targetAccount.preferences = .init(
+                    fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers
                 )
-
-                if account != duplicatedAccount {
-                    context.delete(duplicatedAccount)
-                }
             }
 
             try context.save()
@@ -117,23 +119,31 @@ extension Session {
             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
             userFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
-                    NSPredicate(format: "SELF != %@", user),
                     NSPredicate(format: "id == %@", userID),
                 ]
             )
-            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            userFetchRequest.sortDescriptors = [
+                NSSortDescriptor(key: "creationDate", ascending: true),
+                NSSortDescriptor(key: "lastUpdateEndDate", ascending: true),
+            ]
 
-            let duplicatedUsers = try context.fetch(userFetchRequest)
+            let users = try context.fetch(userFetchRequest)
 
-            for duplicatedUser in duplicatedUsers {
-                user.creationDate = [user.creationDate, duplicatedUser.creationDate].lazy.compactMap({$0}).min()
-                user.lastUpdateEndDate = [user.lastUpdateEndDate, duplicatedUser.lastUpdateEndDate].lazy.compactMap({$0}).max()
-                user.lastUpdateStartDate = [user.lastUpdateStartDate, duplicatedUser.lastUpdateStartDate].lazy.compactMap({$0}).max()
-                user.modificationDate = [user.modificationDate, duplicatedUser.modificationDate].lazy.compactMap({$0}).max()
+            guard users.count > 1 else { return }
 
-                user.addToUserDetails(duplicatedUser.userDetails ?? [])
+            let targetUser = users.first ?? user
 
-                context.delete(duplicatedUser)
+            for user in users {
+                guard user != targetUser else { continue }
+
+                targetUser.creationDate = [targetUser.creationDate, user.creationDate].lazy.compactMap({$0}).min()
+                targetUser.lastUpdateEndDate = [targetUser.lastUpdateEndDate, user.lastUpdateEndDate].lazy.compactMap({$0}).max()
+                targetUser.lastUpdateStartDate = [targetUser.lastUpdateStartDate, user.lastUpdateStartDate].lazy.compactMap({$0}).max()
+                targetUser.modificationDate = [targetUser.modificationDate, user.modificationDate].lazy.compactMap({$0}).max()
+
+                targetUser.addToUserDetails(user.userDetails ?? [])
+
+                context.delete(user)
             }
 
             try context.save()
@@ -199,19 +209,22 @@ extension Session {
             let dataAssetsFetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
             dataAssetsFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
-                    NSPredicate(format: "SELF != %@", dataAsset),
                     NSPredicate(format: "url == %@", dataAssetURL as NSURL),
                     NSPredicate(format: "dataSHA512Hash == %@", dataAssetDataSHA512Hash as NSData),
                 ]
             )
             dataAssetsFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
 
-            let duplicatedDataAssets = try context.fetch(dataAssetsFetchRequest)
+            let dataAssets = try context.fetch(dataAssetsFetchRequest)
 
-            for duplicatedDataAsset in duplicatedDataAssets {
-                dataAsset.creationDate = [dataAsset.creationDate, duplicatedDataAsset.creationDate].lazy.compactMap({$0}).min()
+            guard dataAssets.count > 1 else { return }
 
-                context.delete(duplicatedDataAsset)
+            let targetDataAsset = dataAssets.first ?? dataAsset
+
+            for dataAsset in dataAssets {
+                guard dataAsset != targetDataAsset else { continue }
+
+                context.delete(dataAsset)
             }
 
             try context.save()

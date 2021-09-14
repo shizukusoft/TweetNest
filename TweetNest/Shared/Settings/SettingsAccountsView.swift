@@ -16,7 +16,8 @@ struct SettingsAccountsView: View {
             SortDescriptor(\.preferringSortOrder, order: .forward),
             SortDescriptor(\.creationDate, order: .reverse),
         ],
-        animation: .default)
+        animation: .default
+    )
     private var accounts: FetchedResults<Account>
 
     #if os(macOS)

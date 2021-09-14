@@ -11,16 +11,14 @@ import AuthenticationServices
 import TweetNestKit
 import UnifiedLogging
 
+enum AppSidebarNavigationItem: Hashable {
+    case profile(Account)
+    case followings(Account)
+    case followers(Account)
+    case blockings(Account)
+}
+
 struct AppSidebarNavigation: View {
-    enum NavigationItem: Hashable {
-        case profile(Account)
-        case followings(Account)
-        case followers(Account)
-        case blockings(Account)
-    }
-
-    @State private var navigationItemSelection: NavigationItem?
-
     @Environment(\.session) private var session: Session
 
     @State private var disposables = Set<AnyCancellable>()
@@ -30,7 +28,7 @@ struct AppSidebarNavigation: View {
         persistentContainerCloudKitEvents.first { $0.endDate == nil }
     }
 
-    @State private var isPersistentContainerLoading: Bool = true
+    @Binding var isPersistentContainerLoading: Bool
 
     #if os(iOS)
     @State private var showSettings: Bool = false
@@ -43,14 +41,6 @@ struct AppSidebarNavigation: View {
 
     @State private var showErrorAlert: Bool = false
     @State private var error: TweetNestError?
-
-    @FetchRequest(
-        sortDescriptors: [
-            SortDescriptor(\.preferringSortOrder, order: .forward),
-            SortDescriptor(\.creationDate, order: .reverse),
-        ],
-        animation: .default)
-    private var accounts: FetchedResults<Account>
 
     @Environment(\.refresh) private var refreshAction
 
@@ -68,7 +58,7 @@ struct AppSidebarNavigation: View {
         Button(action: addAccount) {
             Label("Add Account", systemImage: "plus")
         }
-        .disabled(isAddingAccount)
+        .disabled(isPersistentContainerLoading || isAddingAccount)
     }
 
     #if os(macOS) || os(watchOS)
@@ -85,7 +75,7 @@ struct AppSidebarNavigation: View {
         } label: {
             Label("Refresh", systemImage: "arrow.clockwise")
         }
-        .disabled(isRefreshing)
+        .disabled(isPersistentContainerLoading || isRefreshing)
     }
     #endif
 
@@ -93,8 +83,8 @@ struct AppSidebarNavigation: View {
         NavigationView {
             ZStack {
                 List {
-                    ForEach(accounts) { account in
-                        AppSidebarAccountsSection(account: account, navigationItemSelection: $navigationItemSelection)
+                    if isPersistentContainerLoading == false {
+                        AppSidebarNavigationAccountsRowContent()
                     }
 
                     #if os(watchOS)
@@ -118,17 +108,6 @@ struct AppSidebarNavigation: View {
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
                         .zIndex(-1)
-                }
-            }
-            .task {
-                do {
-                    try await session.persistentContainer.loadPersistentStores()
-
-                    isPersistentContainerLoading = false
-                } catch {
-                    Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                    self.error = TweetNestError(error)
-                    showErrorAlert = true
                 }
             }
             .onAppear {
@@ -202,13 +181,16 @@ struct AppSidebarNavigation: View {
     var statusView: some View {
         if isPersistentContainerLoading {
             HStack(spacing: 4) {
+                #if !os(watchOS)
                 ProgressView()
-                    #if os(watchOS)
-                    .frame(width: 29.5, height: 29.5, alignment: .center)
-                    #endif
+                #endif
 
                 Text("Loading...")
+                    #if os(watchOS)
+                    .font(.system(.footnote))
+                    #else
                     .font(.system(.callout))
+                    #endif
                     #if os(iOS)
                     .fixedSize()
                     #endif
@@ -216,10 +198,9 @@ struct AppSidebarNavigation: View {
             }
         } else if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
             HStack(spacing: 4) {
+                #if !os(watchOS)
                 ProgressView()
-                    #if os(watchOS)
-                    .frame(width: 29.5, height: 29.5, alignment: .center)
-                    #endif
+                #endif
 
                 Group {
                     switch inProgressPersistentContainerCloudKitEvent.type {
@@ -229,7 +210,11 @@ struct AppSidebarNavigation: View {
                         Text("Syncing...")
                     }
                 }
+                #if os(watchOS)
+                .font(.system(.footnote))
+                #else
                 .font(.system(.callout))
+                #endif
                 #if os(iOS)
                 .fixedSize()
                 #endif
@@ -300,7 +285,7 @@ struct AppSidebarNavigation: View {
 #if DEBUG
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
-        AppSidebarNavigation()
+        AppSidebarNavigation(isPersistentContainerLoading: .constant(false))
             .environment(\.session, Session.preview)
             .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }
