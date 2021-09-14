@@ -170,13 +170,11 @@ struct AppSidebarNavigation: View {
                 }
                 #endif
 
-                #if os(macOS)
+                #if os(macOS) || os(iOS)
                 ToolbarItemGroup(placement: .automatic) {
                     addAccountButton
                 }
-                #endif
 
-                #if os(macOS) || os(iOS)
                 ToolbarItemGroup(placement: .status) {
                     if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
                         persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
