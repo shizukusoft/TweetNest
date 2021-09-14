@@ -98,7 +98,7 @@ extension Session {
                     }
                 }
 
-                return try await withThrowingTaskGroup(of: (Twitter.User.ID, (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)).self) { taskGroup in
+                return try await withThrowingTaskGroup(of: (Twitter.User.ID, (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)?).self) { taskGroup in
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
 
@@ -131,7 +131,7 @@ extension Session {
                                 let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] })
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
 
-                                async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID) = context.perform(schedule: .enqueued) {
+                                async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID)? = context.perform(schedule: .enqueued) {
                                     let fetchRequest = User.fetchRequest()
                                     fetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
                                     fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -139,7 +139,13 @@ extension Session {
                                     fetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
 
                                     let user = try context.fetch(fetchRequest).first
+
                                     let previousUserDetail = user?.sortedUserDetails?.last
+
+                                    // Don't update user data if user has account. (Might overwrite followings/followers list)
+                                    guard twitterUser.id == accountUserID || user?.accounts?.isEmpty != false else {
+                                        return nil
+                                    }
 
                                     let userDetail = try UserDetail.createOrUpdate(
                                         twitterUser: twitterUser,

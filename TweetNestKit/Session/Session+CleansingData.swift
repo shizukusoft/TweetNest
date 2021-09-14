@@ -52,7 +52,8 @@ extension Session {
         try await context.perform(schedule: .enqueued) {
             guard
                 let account = try? context.existingObject(with: accountObjectID) as? Account,
-                let accountToken = account.token
+                let accountToken = account.token,
+                let accountTokenSecret = account.tokenSecret
             else {
                 return
             }
@@ -60,24 +61,26 @@ extension Session {
             let accountFetchRequest: NSFetchRequest<Account> = Account.fetchRequest()
             accountFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
-                    NSPredicate(format: "SELF != %@", account),
                     NSPredicate(format: "token == %@", accountToken),
+                    NSPredicate(format: "tokenSecret == %@", accountTokenSecret),
                 ]
             )
             accountFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
 
-            let duplicatedAccounts = try context.fetch(accountFetchRequest)
+            let accounts = try context.fetch(accountFetchRequest)
 
-            for duplicatedAccount in duplicatedAccounts {
-                account.creationDate = [account.creationDate, duplicatedAccount.creationDate].lazy.compactMap({$0}).min()
+            account.creationDate = accounts.first?.creationDate ?? account.creationDate
+            account.preferringSortOrder = accounts.first?.preferringSortOrder ?? account.preferringSortOrder
+            account.userID = accounts.last?.userID ?? account.userID
+
+            for duplicatedAccount in accounts {
                 account.preferences = .init(
                     fetchBlockingUsers: account.preferences.fetchBlockingUsers || duplicatedAccount.preferences.fetchBlockingUsers
                 )
-                account.token = duplicatedAccount.token
-                account.tokenSecret = duplicatedAccount.tokenSecret
-                account.preferringSortOrder = duplicatedAccount.preferringSortOrder
 
-                context.delete(duplicatedAccount)
+                if account != duplicatedAccount {
+                    context.delete(duplicatedAccount)
+                }
             }
 
             try context.save()
@@ -149,17 +152,14 @@ extension Session {
 
             var userDetails = user.sortedUserDetails ?? []
 
-            for userDetail in userDetails {
-                guard
-                    let previousUserIndex = userDetails.firstIndex(of: userDetail).flatMap({ $0 - 1 }),
-                    userDetails.indices ~= previousUserIndex
-                else {
-                    continue
-                }
+            for (index, userDetail) in userDetails.enumerated() {
+                let previousUserIndex = index - 1
+                let previousUserDetail = userDetails.indices.contains(previousUserIndex) ? userDetails[previousUserIndex] : nil
 
-                let previousUserDetail = userDetails[previousUserIndex]
-
-                if previousUserDetail ~= userDetail {
+                if
+                    previousUserDetail ~= userDetail ||
+                    (user.accounts?.isEmpty == false && (userDetail.followingUserIDs == nil || userDetail.followerUserIDs == nil))
+                {
                     userDetails.remove(userDetail)
                     context.delete(userDetail)
                 }
