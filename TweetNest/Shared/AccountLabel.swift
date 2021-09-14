@@ -25,6 +25,9 @@ struct AccountLabel: View {
 
             Text(verbatim: userDetails.first?.displayUsername ?? account.displayUserID ?? account.objectID.uriRepresentation().absoluteString)
         }
+        .onChange(of: account.userID) { newValue in
+            userDetails.nsPredicate = NSPredicate(format: "user.id == %@", newValue ?? "")
+        }
     }
 
     init(account: Account) {
