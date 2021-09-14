@@ -1,6 +1,6 @@
 //
-//  AppSidebarAccountRows.swift
-//  AppSidebarAccountRows
+//  AppSidebarAccountsSection.swift
+//  AppSidebarAccountsSection
 //
 //  Created by Jaehong Kang on 2021/08/05.
 //
@@ -8,7 +8,7 @@
 import SwiftUI
 import TweetNestKit
 
-struct AppSidebarAccountRows: View {
+struct AppSidebarAccountsSection: View {
     @ObservedObject var account: Account
     @Binding var navigationItemSelection: AppSidebarNavigation.NavigationItem?
 
@@ -29,39 +29,46 @@ struct AppSidebarAccountRows: View {
     }
 
     var body: some View {
-        Group {
-            let displayAccountName = users.first?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description
+        Section {
+            Group {
+                let displayAccountName = users.first?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description
 
-            accountNavigationLink
-                .accessibilityElement(children: .ignore)
-                .accessibilityLabel("\(displayAccountName)'s Account")
-                .accessibilityAddTraits(.isButton)
-
-            if let user = users.first {
-                followingsNavigationLink(user: user)
+                accountNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Following History")
+                    .accessibilityLabel("\(displayAccountName)'s Account")
                     .accessibilityAddTraits(.isButton)
 
-                followersNavigationLink(user: user)
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Followers History")
-                    .accessibilityAddTraits(.isButton)
-
-                if account.preferences.fetchBlockingUsers {
-                    blockingsNavigationLink(user: user)
+                if let user = users.first {
+                    followingsNavigationLink(user: user)
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("\(displayAccountName)'s Blocks History")
+                        .accessibilityLabel("\(displayAccountName)'s Following History")
                         .accessibilityAddTraits(.isButton)
+
+                    followersNavigationLink(user: user)
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("\(displayAccountName)'s Followers History")
+                        .accessibilityAddTraits(.isButton)
+
+                    if account.preferences.fetchBlockingUsers {
+                        blockingsNavigationLink(user: user)
+                            .accessibilityElement(children: .ignore)
+                            .accessibilityLabel("\(displayAccountName)'s Blocks History")
+                            .accessibilityAddTraits(.isButton)
+                    }
                 }
             }
-        }
-        .onChange(of: account.userID) { newValue in
-            if let newValue = newValue {
-                users.nsPredicate = NSPredicate(format: "id == %@", newValue)
-            } else {
-                users.nsPredicate = NSPredicate(value: false)
+            .onChange(of: account.userID) { newValue in
+                if let newValue = newValue {
+                    users.nsPredicate = NSPredicate(format: "id == %@", newValue)
+                } else {
+                    users.nsPredicate = NSPredicate(value: false)
+                }
             }
+        } header: {
+            AccountLabel(account: account)
+                #if os(watchOS)
+                .padding([.bottom], 2)
+                #endif
         }
     }
 

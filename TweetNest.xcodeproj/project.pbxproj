@@ -66,8 +66,8 @@
 		193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */; };
 		1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1946203C26D68F0E003DB010 /* CloudKit.framework */; };
-		194EF57E26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */; };
-		194EF57F26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */; };
+		194EF57E26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
+		194EF57F26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
 		195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */; };
 		195DD4B026BEE7EC008F0309 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 195DD4B226BEE7EC008F0309 /* Localizable.strings */; };
 		195DD4BA26BEF09D008F0309 /* DataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4B826BEF09D008F0309 /* DataAsset.swift */; };
@@ -174,7 +174,7 @@
 		19EABBCE26D6877600D3B003 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */; };
 		19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
-		19EABBD126D6877600D3B003 /* AppSidebarAccountRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */; };
+		19EABBD126D6877600D3B003 /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
 		19EABBD226D6877600D3B003 /* UsersDiffListSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473426C14554007D2814 /* UsersDiffListSection.swift */; };
 		19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
 		19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */; };
@@ -410,7 +410,7 @@
 		193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountView.swift; sourceTree = "<group>"; };
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1946203C26D68F0E003DB010 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
-		194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountRows.swift; sourceTree = "<group>"; };
+		194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSection.swift; sourceTree = "<group>"; };
 		195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKitUserDefaults.swift; sourceTree = "<group>"; };
 		195DD4B326BEE7ED008F0309 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		195DD4B826BEF09D008F0309 /* DataAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAsset.swift; sourceTree = "<group>"; };
@@ -856,7 +856,7 @@
 				1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */,
 				19933EB925E90ECD006AB4C0 /* MainView.swift */,
 				19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */,
-				194EF57D26BBFD190020939F /* AppSidebarAccountRows.swift */,
+				194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */,
 				1970663E26E709FE00D7F21D /* AccountLabel.swift */,
 				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
 				1970664226E713D300D7F21D /* UserAllDataView.swift */,
@@ -1615,7 +1615,7 @@
 				19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				19BBB88526C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift in Sources */,
 				1989B75626BA537900755B1E /* UserDetailView.swift in Sources */,
-				194EF57E26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
+				194EF57E26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */,
 				1970663B26E7043500D7F21D /* SettingsGeneralView.swift in Sources */,
 				195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */,
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
@@ -1654,7 +1654,7 @@
 				197ACF1026CE2D820040388C /* DeleteBulkTweetsView.swift in Sources */,
 				1989B75726BA537900755B1E /* UserDetailView.swift in Sources */,
 				193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */,
-				194EF57F26BBFD190020939F /* AppSidebarAccountRows.swift in Sources */,
+				194EF57F26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */,
 				19861E3E26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */,
 				19BBB88626C8E637009D8DC7 /* DeleteBulkTweetsFormView.swift in Sources */,
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
@@ -1731,7 +1731,7 @@
 				19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				1970663D26E7043500D7F21D /* SettingsGeneralView.swift in Sources */,
 				19EABBD826D6877A00D3B003 /* SettingsMainView.swift in Sources */,
-				19EABBD126D6877600D3B003 /* AppSidebarAccountRows.swift in Sources */,
+				19EABBD126D6877600D3B003 /* AppSidebarAccountsSection.swift in Sources */,
 				19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */,
 				19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */,
 				1970664126E709FE00D7F21D /* AccountLabel.swift in Sources */,

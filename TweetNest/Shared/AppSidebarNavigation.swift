@@ -94,14 +94,7 @@ struct AppSidebarNavigation: View {
             ZStack {
                 List {
                     ForEach(accounts) { account in
-                        Section {
-                            AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
-                        } header: {
-                            AccountLabel(account: account)
-                                #if os(watchOS)
-                                .padding([.bottom], 2)
-                                #endif
-                        }
+                        AppSidebarAccountsSection(account: account, navigationItemSelection: $navigationItemSelection)
                     }
 
                     #if os(watchOS)
