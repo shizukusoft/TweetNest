@@ -94,41 +94,55 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             tweetNestKitPersistentStoreDescription,
         ]
 
-        DispatchQueue.global().async {
-            do {
-                try Self.migrationIfNeeded()
-            } catch {
-                fatalError(String(reflecting: error))
-            }
-
-            self.persistentStoreDescriptions.forEach { description in
-                if inMemory {
-                    description.url = URL(fileURLWithPath: "/dev/null")
-                }
-            }
-
-            var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
-            self.loadPersistentStores { (storeDescription, error) in
-                loadedPersistentStores[storeDescription] = error
-
-                if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
-                    let errors = loadedPersistentStores.compactMapValues { $0 }
-
-                    guard errors.isEmpty else {
-                        fatalError(String(reflecting: PersistentContainerError.persistentStoresLoadingFailure(errors)))
-                    }
-
-                    #if canImport(CoreSpotlight)
-                    if inMemory == false {
-                        self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: tweetNestKitPersistentStoreDescription, coordinator: self.persistentStoreCoordinator)
-                        self.usersSpotlightDelegate!.startSpotlightIndexing()
-                    }
-                    #endif
-                }
+        self.persistentStoreDescriptions.forEach { description in
+            if inMemory {
+                description.url = URL(fileURLWithPath: "/dev/null")
             }
         }
 
+        #if canImport(CoreSpotlight)
+        self.usersSpotlightDelegate = inMemory == false ? UsersSpotlightDelegate(forStoreWith: tweetNestKitPersistentStoreDescription, coordinator: self.persistentStoreCoordinator) : nil
+        #endif
+    }
 
+    @available(*, unavailable)
+    public override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> Void) {
+        fatalError()
+    }
+
+    public func loadPersistentStores() async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            persistentStoreCoordinator.perform {
+                do {
+                    try Self.migrationIfNeeded()
+
+                    var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
+
+                    super.loadPersistentStores { (storeDescription, error) in
+                        loadedPersistentStores[storeDescription] = error
+
+                        if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
+                            let errors = loadedPersistentStores.compactMapValues { $0 }
+
+                            guard errors.isEmpty else {
+                                continuation.resume(throwing: PersistentContainerError.persistentStoresLoadingFailure(errors))
+                                return
+                            }
+
+                            #if canImport(CoreSpotlight)
+                            if let usersSpotlightDelegate = self.usersSpotlightDelegate {
+                                usersSpotlightDelegate.startSpotlightIndexing()
+                            }
+                            #endif
+
+                            continuation.resume()
+                        }
+                    }
+                } catch {
+                    continuation.resume(throwing: error)
+                }
+            }
+        }
     }
 
     public override func newBackgroundContext() -> NSManagedObjectContext {

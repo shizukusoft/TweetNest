@@ -30,7 +30,7 @@ struct AppSidebarNavigation: View {
         persistentContainerCloudKitEvents.first { $0.endDate == nil }
     }
 
-    @State private var something: String?
+    @State private var isPersistentContainerLoading: Bool = true
 
     #if os(iOS)
     @State private var showSettings: Bool = false
@@ -120,6 +120,17 @@ struct AppSidebarNavigation: View {
                         .zIndex(-1)
                 }
             }
+            .task {
+                do {
+                    try await session.persistentContainer.loadPersistentStores()
+
+                    isPersistentContainerLoading = false
+                } catch {
+                    Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+                    self.error = TweetNestError(error)
+                    showErrorAlert = true
+                }
+            }
             .onAppear {
                 session.persistentContainer.$cloudKitEvents
                     .map { $0.map { $0.value } }
@@ -147,12 +158,8 @@ struct AppSidebarNavigation: View {
                 ToolbarItemGroup(placement: .primaryAction) {
                     #if os(watchOS)
                     Group {
-                        if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
-                            VStack {
-                                persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
-                                refreshButton
-                            }
-                        } else {
+                        VStack {
+                            statusView
                             refreshButton
                         }
                     }
@@ -169,9 +176,7 @@ struct AppSidebarNavigation: View {
                 }
 
                 ToolbarItemGroup(placement: .status) {
-                    if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
-                        persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
-                    }
+                    statusView
                 }
                 #endif
             }
@@ -194,26 +199,42 @@ struct AppSidebarNavigation: View {
     }
 
     @ViewBuilder
-    func persistentContainerCloudKitEventView(for event: PersistentContainer.CloudKitEvent) -> some View {
-        HStack(spacing: 4) {
-            ProgressView()
-                #if os(watchOS)
-                .frame(width: 29.5, height: 29.5, alignment: .center)
-                #endif
+    var statusView: some View {
+        if isPersistentContainerLoading {
+            HStack(spacing: 4) {
+                ProgressView()
+                    #if os(watchOS)
+                    .frame(width: 29.5, height: 29.5, alignment: .center)
+                    #endif
 
-            Group {
-                switch event.type {
-                case .setup:
-                    Text("Preparing...")
-                case .import, .export, .unknown:
-                    Text("Syncing...")
-                }
+                Text("Loading...")
+                    .font(.system(.callout))
+                    #if os(iOS)
+                    .fixedSize()
+                    #endif
+                    .foregroundColor(.secondary)
             }
-            .font(.system(.callout))
-            #if os(iOS)
-            .fixedSize()
-            #endif
-            .foregroundColor(.gray)
+        } else if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
+            HStack(spacing: 4) {
+                ProgressView()
+                    #if os(watchOS)
+                    .frame(width: 29.5, height: 29.5, alignment: .center)
+                    #endif
+
+                Group {
+                    switch inProgressPersistentContainerCloudKitEvent.type {
+                    case .setup:
+                        Text("Preparing to Sync...")
+                    case .import, .export, .unknown:
+                        Text("Syncing...")
+                    }
+                }
+                .font(.system(.callout))
+                #if os(iOS)
+                .fixedSize()
+                #endif
+                .foregroundColor(.secondary)
+            }
         }
     }
 
