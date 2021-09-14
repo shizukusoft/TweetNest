@@ -83,6 +83,7 @@ struct UsersDiffListSection: View {
                     NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
                 ]
                 fetchRequest.propertiesToFetch = ["name", "username", "profileImageURL", "user"]
+                fetchRequest.returnsDistinctResults = true
 
                 return fetchRequest
             }(),
