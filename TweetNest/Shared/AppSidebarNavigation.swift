@@ -98,6 +98,10 @@ struct AppSidebarNavigation: View {
                         } label: {
                             showSettingsLabel
                         }
+                    } footer: {
+                        #if os(watchOS)
+                        statusView
+                        #endif
                     }
                     #endif
                 }
@@ -135,17 +139,10 @@ struct AppSidebarNavigation: View {
 
                 #if os(macOS) || os(watchOS)
                 ToolbarItemGroup(placement: .primaryAction) {
-                    #if os(watchOS)
-                    Group {
-                        VStack {
-                            statusView
-                            refreshButton
-                        }
-                    }
-                    .padding(.bottom)
-                    #else
                     refreshButton
-                    #endif
+                        #if os(watchOS)
+                        .padding(.bottom)
+                        #endif
                 }
                 #endif
 
@@ -186,15 +183,13 @@ struct AppSidebarNavigation: View {
                 #endif
 
                 Text("Loading...")
-                    #if os(watchOS)
-                    .font(.system(.footnote))
-                    #else
+                    #if !os(watchOS)
                     .font(.system(.callout))
+                    .foregroundColor(.secondary)
                     #endif
                     #if os(iOS)
                     .fixedSize()
                     #endif
-                    .foregroundColor(.secondary)
             }
         } else if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
             HStack(spacing: 4) {
@@ -210,15 +205,13 @@ struct AppSidebarNavigation: View {
                         Text("Syncing...")
                     }
                 }
-                #if os(watchOS)
-                .font(.system(.footnote))
-                #else
+                #if !os(watchOS)
                 .font(.system(.callout))
+                .foregroundColor(.secondary)
                 #endif
                 #if os(iOS)
                 .fixedSize()
                 #endif
-                .foregroundColor(.secondary)
             }
         }
     }
