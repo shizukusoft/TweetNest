@@ -83,6 +83,8 @@ extension Session {
                 targetAccount.preferences = .init(
                     fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers
                 )
+
+                context.delete(account)
             }
 
             try context.save()
