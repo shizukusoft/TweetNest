@@ -41,10 +41,10 @@
 "Cancel" = "취소";
 
 /* No comment provided by engineer. */
-"Delete" = "삭제";
+"Delete Recent Tweets" = "최근 트윗 삭제";
 
 /* No comment provided by engineer. */
-"Delete Recent Tweets" = "최근 트윗 삭제";
+"Fetch Blocking Users" = "블락한 유저 가져오기";
 
 /* No comment provided by engineer. */
 "Followers" = "팔로워";
@@ -71,19 +71,25 @@
 "Listed" = "리스트";
 
 /* No comment provided by engineer. */
+"Loading..." = "로드 중...";
+
+/* No comment provided by engineer. */
 "Location" = "위치";
 
 /* No comment provided by engineer. */
 "OK" = "확인";
 
 /* No comment provided by engineer. */
-"Preparing..." = "준비 중...";
+"Preparing to Sync..." = "동기화 준비 중...";
 
 /* No comment provided by engineer. */
 "Profile" = "프로필";
 
 /* No comment provided by engineer. */
 "Protected" = "비공개 계정";
+
+/* No comment provided by engineer. */
+"Refresh" = "새로 고침";
 
 /* No comment provided by engineer. */
 "Settings" = "설정";
