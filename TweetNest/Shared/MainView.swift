@@ -41,14 +41,16 @@ struct MainView: View {
                 }
             }
             .task {
-                do {
-                    try await session.persistentContainer.loadPersistentStores()
+                if isPersistentContainerLoaded == false {
+                    do {
+                        try await session.persistentContainer.loadPersistentStores()
 
-                    isPersistentContainerLoaded = true
-                } catch {
-                    Logger().error("Error occurred: \(error as NSError, privacy: .public)")
-                    self.error = TweetNestError(error)
-                    showErrorAlert = true
+                        isPersistentContainerLoaded = true
+                    } catch {
+                        Logger().error("Error occurred: \(error as NSError, privacy: .public)")
+                        self.error = TweetNestError(error)
+                        showErrorAlert = true
+                    }
                 }
 
                 do {
