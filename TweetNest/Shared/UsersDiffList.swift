@@ -51,7 +51,10 @@ struct UsersDiffList: View {
         self._userDetails = FetchRequest(
             fetchRequest: {
                 let fetchRequest = UserDetail.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "user == %@", user.objectID)
+                fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    NSPredicate(format: "user == %@", user.objectID),
+                    diffKeyPath._kvcKeyPathString.flatMap { NSPredicate(format: "%K != NULL", $0) },
+                ].compactMap({ $0 }))
                 fetchRequest.sortDescriptors = [
                     NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
                 ]

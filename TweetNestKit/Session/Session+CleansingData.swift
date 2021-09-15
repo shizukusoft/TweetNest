@@ -166,10 +166,7 @@ extension Session {
                 let previousUserIndex = index - 1
                 let previousUserDetail = userDetails.indices.contains(previousUserIndex) ? userDetails[previousUserIndex] : nil
 
-                if
-                    previousUserDetail ~= userDetail ||
-                    (user.accounts?.isEmpty == false && (userDetail.followingUserIDs == nil || userDetail.followerUserIDs == nil))
-                {
+                if previousUserDetail ~= userDetail {
                     userDetails.remove(userDetail)
                     context.delete(userDetail)
                 }
