@@ -15,6 +15,8 @@ import CoreSpotlight
 #endif
 
 struct MainView: View {
+    @EnvironmentObject private var appDelegate: TweetNestAppDelegate
+
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.session) private var session: Session
 
@@ -41,24 +43,27 @@ struct MainView: View {
                 }
             }
             .task {
-                if isPersistentContainerLoaded == false {
-                    do {
-                        try await session.persistentContainer.loadPersistentStores()
-
-                        isPersistentContainerLoaded = true
-                    } catch {
-                        Logger().error("Error occurred: \(error as NSError, privacy: .public)")
-                        self.error = TweetNestError(error)
-                        showErrorAlert = true
-                    }
-                }
-
                 do {
                     try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
                 } catch {
                     Logger().error("Error occurred: \(error as NSError, privacy: .public)")
                     self.error = TweetNestError(error)
                     self.showErrorAlert = true
+                }
+            }
+            .onReceive(appDelegate.$sessionPersistentContainerStoresLoadingResult) { result in
+                guard let result = result else {
+                    isPersistentContainerLoaded = false
+                    return
+                }
+
+                do {
+                    try result.get()
+
+                    isPersistentContainerLoaded = true
+                } catch {
+                    self.error = TweetNestError(error)
+                    showErrorAlert = true
                 }
             }
             #if canImport(CoreSpotlight)

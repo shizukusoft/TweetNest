@@ -30,6 +30,7 @@ struct TweetNestApp: App {
         Group {
             WindowGroup {
                 MainView()
+                    .environmentObject(delegate)
                     .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
             }

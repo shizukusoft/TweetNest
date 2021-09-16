@@ -14,16 +14,31 @@ import UnifiedLogging
 class TweetNestAppDelegate: NSObject, ObservableObject {
     let session = Session.shared
 
+    @Published private(set) var sessionPersistentContainerStoresLoadingResult: Result<Void, Swift.Error>?
+
     override init() {
         super.init()
 
-        Task.detached(priority: .utility) {
+        Task(priority: .utility) { [self] in
+            await loadSessionPersistentContainerStores()
+
             do {
                 try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .active)
 
             } catch {
-                Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
+                Logger().error("Error occurred while schedule refresh: \(error as NSError, privacy: .public)")
             }
+        }
+    }
+
+    func loadSessionPersistentContainerStores() async {
+        do {
+            try await session.persistentContainer.loadPersistentStores()
+
+            sessionPersistentContainerStoresLoadingResult = .success(Void())
+        } catch {
+            Logger().error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
+            sessionPersistentContainerStoresLoadingResult = .failure(error)
         }
     }
 }
