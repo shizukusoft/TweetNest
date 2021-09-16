@@ -13,18 +13,16 @@ struct UsersList: View {
     let userIDs: OrderedSet<String>
 
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
-    @State private var userDetailsByUser: OrderedDictionary<String?, [UserDetail]>
 
     @State private var searchQuery: String = ""
 
     var body: some View {
+        let userDetailsByUser = Dictionary<String?, [UserDetail]>(grouping: userDetails, by: { $0.user?.id })
+
         List(userIDs, id: \.self) { userID in
-            userLabel(userID: userID)
+            userLabel(userID: userID, userDetails: userDetailsByUser[userID] ?? [])
         }
         .searchable(text: $searchQuery)
-        .onChange(of: Array(userDetails)) { newValue in
-            userDetailsByUser = OrderedDictionary(grouping: newValue, by: { $0.user?.id })
-        }
     }
 
     init<C>(userIDs: C) where C: Sequence, C.Element == String {
@@ -33,24 +31,19 @@ struct UsersList: View {
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", Array(userIDs))
         userDetailsFetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \UserDetail.user?.id, ascending: true),
-            NSSortDescriptor(keyPath: \UserDetail.user?.creationDate, ascending: false),
             NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
         ]
+        userDetailsFetchRequest.propertiesToFetch = ["name", "username", "profileImageURL", "user"]
         userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
 
         self._userDetails = FetchRequest(
             fetchRequest: userDetailsFetchRequest
         )
-
-        let userDetails = (try? Session.shared.persistentContainer.viewContext.fetch(userDetailsFetchRequest)) ?? []
-        self._userDetailsByUser = State(initialValue: OrderedDictionary(grouping: userDetails, by: { $0.user?.id }))
     }
 
     @ViewBuilder
-    private func userLabel(userID: String) -> some View {
+    private func userLabel(userID: String, userDetails: [UserDetail]) -> some View {
         let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
-        let userDetails = userDetailsByUser[userID] ?? []
 
         if let latestUserDetail = userDetails.first {
             if

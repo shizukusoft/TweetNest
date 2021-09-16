@@ -18,7 +18,6 @@ struct UsersDiffListSection: View {
     @Binding var searchQuery: String
 
     @FetchRequest private var symmetricDifferenceUserDetails: FetchedResults<UserDetail>
-    @State private var symmetricDifferenceUserDetailsByUser: OrderedDictionary<String?, [UserDetail]>
 
     var appendedUserIDs: OrderedSet<String> {
         userIDs.subtracting(previousUserIDs)
@@ -34,9 +33,11 @@ struct UsersDiffListSection: View {
 
     var body: some View {
         if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
+            let symmetricDifferenceUserDetailsByUser = Dictionary<String?, [UserDetail]>(grouping: symmetricDifferenceUserDetails, by: { $0.user?.id })
+
             Section {
                 ForEach(appendedUserIDs, id: \.self) { userID in
-                    userLabel(userID: userID) {
+                    userLabel(userID: userID, userDetails: symmetricDifferenceUserDetailsByUser[userID] ?? []) {
                         Image(systemName: "person.badge.plus")
                             .foregroundColor(.green)
                     }
@@ -45,7 +46,7 @@ struct UsersDiffListSection: View {
                 .id(appendedUserIDs)
 
                 ForEach(removedUserIDs, id: \.self) { userID in
-                    userLabel(userID: userID) {
+                    userLabel(userID: userID, userDetails: symmetricDifferenceUserDetailsByUser[userID] ?? []) {
                         Image(systemName: "person.badge.minus")
                             .foregroundColor(.red)
                     }
@@ -54,12 +55,6 @@ struct UsersDiffListSection: View {
                 .id(removedUserIDs)
             } header: {
                 header
-            }
-            .onChange(of: symmetricDifferenceUserIDs) { newValue in
-                symmetricDifferenceUserDetails.nsPredicate = NSPredicate(format: "user.id in %@", newValue.sorted())
-            }
-            .onChange(of: Array(symmetricDifferenceUserDetails)) { newValue in
-                symmetricDifferenceUserDetailsByUser = OrderedDictionary(grouping: newValue, by: { $0.user?.id })
             }
         }
     }
@@ -80,25 +75,19 @@ struct UsersDiffListSection: View {
         let symmetricDifferenceUserDetailsFetchRequest = UserDetail.fetchRequest()
         symmetricDifferenceUserDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", userIDs)
         symmetricDifferenceUserDetailsFetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \UserDetail.user?.id, ascending: true),
-            NSSortDescriptor(keyPath: \UserDetail.user?.creationDate, ascending: false),
             NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
         ]
+        symmetricDifferenceUserDetailsFetchRequest.propertiesToFetch = ["name", "username", "profileImageURL", "user"]
         symmetricDifferenceUserDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
 
         self._symmetricDifferenceUserDetails = FetchRequest(
             fetchRequest: symmetricDifferenceUserDetailsFetchRequest
         )
-
-        let symmetricDifferenceUserDetails = (try? Session.shared.persistentContainer.viewContext.fetch(symmetricDifferenceUserDetailsFetchRequest)) ?? []
-        self._symmetricDifferenceUserDetailsByUser = State(initialValue: OrderedDictionary(grouping: symmetricDifferenceUserDetails, by: { $0.user?.id }))
     }
 
     @ViewBuilder
-    private func userLabel<Icon>(userID: String, @ViewBuilder icon: () -> Icon) -> some View where Icon: View {
+    private func userLabel<Icon>(userID: String, userDetails: [UserDetail], @ViewBuilder icon: () -> Icon) -> some View where Icon: View {
         let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
-
-        let userDetails = symmetricDifferenceUserDetailsByUser[userID] ?? []
 
         if let latestUserDetail = userDetails.first {
             if

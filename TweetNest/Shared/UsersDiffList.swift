@@ -63,7 +63,6 @@ struct UsersDiffList: View {
                 } else {
                     fetchRequest.returnsObjectsAsFaults = false
                 }
-                fetchRequest.returnsDistinctResults = true
 
                 return fetchRequest
             }()
