@@ -1,4 +1,10 @@
 /* No comment provided by engineer. */
+"%@ tweets failed." = "%@ 트윗 실패.";
+
+/* No comment provided by engineer. */
+"%@ tweets will be deleted." = "%@ 트윗이 삭제될 예정입니다.";
+
+/* No comment provided by engineer. */
 "%@'s Account" = "%@의 계정";
 
 /* No comment provided by engineer. */
@@ -41,7 +47,28 @@
 "Cancel" = "취소";
 
 /* No comment provided by engineer. */
+"Delete" = "삭제";
+
+/* No comment provided by engineer. */
 "Delete Recent Tweets" = "최근 트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets" = "트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets?" = "트윗을 삭제하시겠습니까?";
+
+/* No comment provided by engineer. */
+"Deleting %@ tweets..." = "%@ 트윗 삭제 중...";
+
+/* No comment provided by engineer. */
+"Done" = "완료";
+
+/* No comment provided by engineer. */
+"Download Images Using Cellular" = "셀룰러를 사용하여 이미지 다운로드";
+
+/* No comment provided by engineer. */
+"Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If \"Allow More Data on 5G\" is turned on this device, this option will be ignored." = "이 기기에서 다른 네트워크가 사용 불가능할 때, 셀룰러나 개인용 핫스팟을 이용하여 이미지를 다운로드합니다. 이 기기에서 \"5G에서 데이터 더 사용\"이 활성화되어 있으면, 이 옵션은 무시됩니다.";
 
 /* No comment provided by engineer. */
 "Fetch Blocking Users" = "블락한 유저 가져오기";
@@ -71,13 +98,13 @@
 "Listed" = "리스트";
 
 /* No comment provided by engineer. */
+"Loaded Tweets" = "로드된 트윗";
+
+/* No comment provided by engineer. */
 "Loading..." = "로드 중...";
 
 /* No comment provided by engineer. */
 "Location" = "위치";
-
-/* No comment provided by engineer. */
-"OK" = "확인";
 
 /* No comment provided by engineer. */
 "Preparing to Sync..." = "동기화 준비 중...";
@@ -92,13 +119,22 @@
 "Refresh" = "새로 고침";
 
 /* No comment provided by engineer. */
+"Retweets" = "리트윗";
+
+/* No comment provided by engineer. */
 "Settings" = "설정";
 
 /* No comment provided by engineer. */
 "Syncing..." = "동기화 중...";
 
 /* No comment provided by engineer. */
+"Target Tweets" = "대상 트윗";
+
+/* No comment provided by engineer. */
 "Tweets" = "트윗";
+
+/* No comment provided by engineer. */
+"Update accounts in background on this device." = "이 기기에서 백그라운드로 계정 정보를 업데이트합니다.";
 
 /* No comment provided by engineer. */
 "Updated %@ ago" = "%@ 전에 업데이트됨";
