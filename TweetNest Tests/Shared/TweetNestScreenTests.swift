@@ -70,8 +70,7 @@ class TweetNestScreenTests: XCTestCase {
             app.navigationBars.buttons["BackButton"].tap()
         }
 
-        let tablesQuery = app.tables
-        tablesQuery.buttons["@TweetNest_App's Account"].tap()
+        app.buttons["@TweetNest_App's Account"].tap()
 
         _ = app.navigationBars["@TweetNest_App"].staticTexts["@TweetNest_App"].waitForExistence(timeout: 5)
 
@@ -102,8 +101,7 @@ class TweetNestScreenTests: XCTestCase {
             app.navigationBars.buttons["BackButton"].tap()
         }
 
-        let tablesQuery = app.tables
-        tablesQuery.buttons["@TweetNest_App's Followings History"].tap()
+        app.buttons["@TweetNest_App's Followings History"].tap()
 
         _ = app.staticTexts["@Apple"].waitForExistence(timeout: 5)
 
@@ -134,8 +132,7 @@ class TweetNestScreenTests: XCTestCase {
             app.navigationBars.buttons["BackButton"].tap()
         }
 
-        let tablesQuery = app.tables
-        tablesQuery.buttons["@TweetNest_App's Followers History"].tap()
+        app.buttons["@TweetNest_App's Followers History"].tap()
 
         _ = app.staticTexts["@Apple"].waitForExistence(timeout: 5)
 

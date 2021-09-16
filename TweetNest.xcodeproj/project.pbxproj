@@ -108,6 +108,7 @@
 		199C8F4F26E0B04D000F218D /* TaskExpirationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199C8F4E26E0B04D000F218D /* TaskExpirationHandler.swift */; };
 		199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
+		19A1F1B926F38D4300A28A49 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
 		19A24E3126F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A24E3026F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift */; };
 		19A24E3226F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A24E3026F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift */; };
 		19A24E3326F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A24E3026F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift */; };
@@ -422,6 +423,7 @@
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		199C8F4E26E0B04D000F218D /* TaskExpirationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExpirationHandler.swift; sourceTree = "<group>"; };
 		199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestError.swift; sourceTree = "<group>"; };
+		19A1F20F26F390B400A28A49 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		19A24E3026F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigationAccountsRowContent.swift; sourceTree = "<group>"; };
 		19A6FF1526D6835F00AB7B7E /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1363,6 +1365,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19A6FF5C26D6844F00AB7B7E /* Assets.xcassets in Resources */,
+				19A1F1B926F38D4300A28A49 /* Preview Assets.xcassets in Resources */,
 				19C6570826DAB53100D1A272 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
