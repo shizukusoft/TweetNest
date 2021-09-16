@@ -35,6 +35,7 @@ extension TweetNestKit.Session {
                     let tweetnestAccount = Account(context: viewContext)
                     tweetnestAccount.creationDate = Date(timeIntervalSince1970: 1628780400)
                     tweetnestAccount.userID = "1352231658661920770"
+                    tweetnestAccount.preferences.fetchBlockingUsers = true
 
                     let tweetnestUser = User(context: viewContext)
                     tweetnestUser.creationDate = Date(timeIntervalSince1970: 1628780400)
