@@ -259,13 +259,6 @@
 			remoteGlobalIDString = 19C5A28526BC1F3500AB1122;
 			remoteInfo = TweetNestKit;
 		};
-		19C5A29326BC1F3500AB1122 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19365A1326097A9500865D40;
-			remoteInfo = "TweetNest (macOS)";
-		};
 		19C5A29926BC1F3500AB1122 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 19933D2425E901F3006AB4C0 /* Project object */;
@@ -1191,7 +1184,6 @@
 			);
 			dependencies = (
 				19C5A29226BC1F3500AB1122 /* PBXTargetDependency */,
-				19C5A29426BC1F3500AB1122 /* PBXTargetDependency */,
 			);
 			name = TweetNestKitTests;
 			productName = TweetNestKitTests;
@@ -1656,11 +1648,6 @@
 			isa = PBXTargetDependency;
 			target = 19C5A28526BC1F3500AB1122 /* TweetNestKit */;
 			targetProxy = 19C5A29126BC1F3500AB1122 /* PBXContainerItemProxy */;
-		};
-		19C5A29426BC1F3500AB1122 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19365A1326097A9500865D40 /* TweetNest (macOS) */;
-			targetProxy = 19C5A29326BC1F3500AB1122 /* PBXContainerItemProxy */;
 		};
 		19C5A29A26BC1F3500AB1122 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
