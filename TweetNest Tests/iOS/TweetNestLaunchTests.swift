@@ -1,13 +1,13 @@
 //
-//  TweetNestUITestsLaunchTests.swift
-//  TweetNestUITests
+//  TweetNestLaunchTests.swift
+//  TweetNest
 //
-//  Created by Jaehong Kang on 2021/08/25.
+//  Created by Jaehong Kang on 2021/09/16.
 //
 
 import XCTest
 
-class TweetNestUITestsLaunchTests: XCTestCase {
+class TweetNestLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

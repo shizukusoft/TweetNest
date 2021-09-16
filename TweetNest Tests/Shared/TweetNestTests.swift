@@ -1,13 +1,13 @@
 //
-//  TweetNestUITests.swift
-//  TweetNestUITests
+//  TweetNestTests.swift
+//  TweetNest
 //
-//  Created by Jaehong Kang on 2021/03/23.
+//  Created by Jaehong Kang on 2021/09/16.
 //
 
 import XCTest
 
-class TweetNestUITests: XCTestCase {
+class TweetNestTests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -32,7 +32,7 @@ class TweetNestUITests: XCTestCase {
     }
 
     func testLaunchPerformance() throws {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
+        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 7.0, *) {
             // This measures how long it takes to launch your application.
             measure(metrics: [XCTApplicationLaunchMetric()]) {
                 XCUIApplication().launch()

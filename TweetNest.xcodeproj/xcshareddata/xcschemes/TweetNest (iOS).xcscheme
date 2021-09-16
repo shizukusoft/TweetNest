@@ -44,7 +44,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "19365994260978EB00865D40"
                BuildableName = "TweetNestUITests.xctest"
-               BlueprintName = "TweetNestUITests (iOS)"
+               BlueprintName = "TweetNest Tests (iOS)"
                ReferencedContainer = "container:TweetNest.xcodeproj">
             </BuildableReference>
          </TestableReference>
