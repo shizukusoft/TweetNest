@@ -1690,6 +1690,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				19C6570726DAB53100D1A272 /* ko */,
+				19A1F20F26F390B400A28A49 /* en */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
