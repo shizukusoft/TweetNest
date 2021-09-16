@@ -50,8 +50,6 @@ struct DeleteBulkTweetsView: View {
             }
     }
 
-    @State var showResults: Bool = false
-
     var body: some View {
         Group {
             ProgressView(progress)
@@ -60,25 +58,28 @@ struct DeleteBulkTweetsView: View {
                 .interactiveDismissDisabled(progress.isFinished == false)
                 .toolbar {
                     ToolbarItemGroup(placement: .cancellationAction) {
-                        Button(role: .cancel) {
-                            isPresented = false
-                        } label: {
-                            Text("Cancel")
+                        if progress.isFinished == false {
+                            Button(role: .cancel) {
+                                isPresented = false
+                            } label: {
+                                Text("Cancel")
+                            }
+                        }
+                    }
+
+                    ToolbarItemGroup(placement: .confirmationAction) {
+                        if progress.isFinished {
+                            Button {
+                                isPresented = false
+                            } label: {
+                                Text("Done")
+                            }
                         }
                     }
                 }
         }
         .task {
             await delete()
-        }
-        .alert(Text("Results"), isPresented: $showResults) {
-            Button {
-                isPresented = false
-            } label: {
-                Text("OK")
-            }
-        } message: {
-            Text("Deleting \(succeedResultsCount.twnk_formatted()) of \(targetTweetIDs.count.twnk_formatted()) tweets succeed. \(failedResults.count.twnk_formatted()) tweets failed.")
         }
     }
 
