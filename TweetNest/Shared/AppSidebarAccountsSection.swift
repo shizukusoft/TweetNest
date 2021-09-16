@@ -75,22 +75,26 @@ struct AppSidebarAccountsSection: View {
                 accountNavigationLink
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel("\(displayAccountName)'s Account")
+                    .accessibilityIdentifier("\(displayAccountName)'s Account")
                     .accessibilityAddTraits(.isButton)
 
                 followingsNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Following History")
+                    .accessibilityLabel("\(displayAccountName)'s Followings History")
+                    .accessibilityIdentifier("\(displayAccountName)'s Followings History")
                     .accessibilityAddTraits(.isButton)
 
                 followersNavigationLink
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel("\(displayAccountName)'s Followers History")
+                    .accessibilityIdentifier("\(displayAccountName)'s Followers History")
                     .accessibilityAddTraits(.isButton)
 
                 if account.preferences.fetchBlockingUsers {
                     blockingsNavigationLink
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel("\(displayAccountName)'s Blocks History")
+                        .accessibilityIdentifier("\(displayAccountName)'s Blocks History")
                         .accessibilityAddTraits(.isButton)
                 }
             }
