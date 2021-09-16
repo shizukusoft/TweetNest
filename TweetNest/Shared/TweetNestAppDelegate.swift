@@ -12,7 +12,17 @@ import UnifiedLogging
 
 @MainActor
 class TweetNestAppDelegate: NSObject, ObservableObject {
+    #if DEBUG
+    let session: Session = {
+        if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") {
+            return Session.preview
+        } else {
+            return Session.shared
+        }
+    }()
+    #else
     let session = Session.shared
+    #endif
 
     @Published private(set) var sessionPersistentContainerStoresLoadingResult: Result<Void, Swift.Error>?
 

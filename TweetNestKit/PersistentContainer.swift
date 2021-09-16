@@ -97,6 +97,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         self.persistentStoreDescriptions.forEach { description in
             if inMemory {
                 description.url = URL(fileURLWithPath: "/dev/null")
+                description.cloudKitContainerOptions = nil
             }
         }
 

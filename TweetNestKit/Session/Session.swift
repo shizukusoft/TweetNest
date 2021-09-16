@@ -92,19 +92,25 @@ extension Session {
     public convenience init(inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
 
-        _ = persistentStoreRemoteChangeNotification
+        if inMemory == false {
+            _ = persistentStoreRemoteChangeNotification
+        }
     }
 
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
         self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
 
-        _ = persistentStoreRemoteChangeNotification
+        if inMemory == false {
+            _ = persistentStoreRemoteChangeNotification
+        }
     }
 
     public convenience init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { twitterAPIConfiguration }, inMemory: inMemory)
 
-        _ = persistentStoreRemoteChangeNotification
+        if inMemory == false {
+            _ = persistentStoreRemoteChangeNotification
+        }
     }
 }
 
