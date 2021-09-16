@@ -32,16 +32,6 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19365A2926097A9700865D40"
-               BuildableName = "TweetNestTests.xctest"
-               BlueprintName = "TweetNestTests (macOS)"
-               ReferencedContainer = "container:TweetNest.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
                BlueprintIdentifier = "19365A3426097A9700865D40"
                BuildableName = "TweetNestUITests.xctest"
                BlueprintName = "TweetNest Tests (macOS)"

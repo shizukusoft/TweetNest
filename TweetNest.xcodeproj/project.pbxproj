@@ -1970,7 +1970,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = TweetNest;
+				TEST_TARGET_NAME = "TweetNest (iOS)";
 			};
 			name = Debug;
 		};
@@ -1992,7 +1992,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = TweetNest;
+				TEST_TARGET_NAME = "TweetNest (iOS)";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -2079,7 +2079,7 @@
 				PRODUCT_NAME = TweetNestUITests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = TweetNest;
+				TEST_TARGET_NAME = "TweetNest (macOS)";
 			};
 			name = Debug;
 		};
@@ -2101,7 +2101,7 @@
 				PRODUCT_NAME = TweetNestUITests;
 				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
-				TEST_TARGET_NAME = TweetNest;
+				TEST_TARGET_NAME = "TweetNest (macOS)";
 			};
 			name = Release;
 		};
@@ -2360,7 +2360,7 @@
 				SDKROOT = watchos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = TweetNest;
+				TEST_TARGET_NAME = "TweetNest (watchOS)";
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Debug;
@@ -2382,7 +2382,7 @@
 				SDKROOT = watchos;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				TEST_TARGET_NAME = TweetNest;
+				TEST_TARGET_NAME = "TweetNest (watchOS)";
 				VALIDATE_PRODUCT = YES;
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};

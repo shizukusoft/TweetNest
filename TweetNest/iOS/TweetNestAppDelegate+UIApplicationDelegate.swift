@@ -10,18 +10,11 @@ import BackgroundTasks
 import UnifiedLogging
 import TweetNestKit
 
-extension UISplitViewController {
-    open override func viewDidLoad() {
-        super.viewDidLoad()
-        preferredDisplayMode = .twoBesideSecondary
-    }
-}
-
 extension TweetNestAppDelegate: UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
         UNUserNotificationCenter.current().delegate = self
 
-        if BackgroundTaskScheduler.shared.registerBackgroundTasks() == false {
+        if session.backgroundTaskScheduler.registerBackgroundTasks() == false {
             Logger().error("Failed to register background tasks")
         }
 

@@ -10,6 +10,8 @@ import TweetNestKit
 import Twitter
 
 struct DeleteBulkTweetsRecentTweetsView: View {
+    @Environment(\.session) private var session: TweetNestKit.Session
+
     let account: TweetNestKit.Account
 
     @Binding var isPresented: Bool
@@ -54,7 +56,7 @@ struct DeleteBulkTweetsRecentTweetsView: View {
         }
 
         do {
-            let tweets = try await User.tweets(forUserID: userID, session: .session(for: account))
+            let tweets = try await User.tweets(forUserID: userID, session: .session(for: account, session: session))
                 .map { try $0.get() }
 
             withAnimation {

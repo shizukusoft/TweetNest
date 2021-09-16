@@ -53,11 +53,11 @@ struct TweetNestApp: App {
                 do {
                     switch phase {
                     case .active:
-                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .active)
+                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .active)
                     case .inactive:
-                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .inactive)
+                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .inactive)
                     case .background:
-                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .background)
+                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .background)
                     @unknown default:
                         break
                     }

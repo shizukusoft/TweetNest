@@ -33,7 +33,7 @@ class TweetNestAppDelegate: NSObject, ObservableObject {
             await loadSessionPersistentContainerStores()
 
             do {
-                try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks(for: .active)
+                try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .active)
 
             } catch {
                 Logger().error("Error occurred while schedule refresh: \(error as NSError, privacy: .public)")
@@ -43,7 +43,13 @@ class TweetNestAppDelegate: NSObject, ObservableObject {
 
     func loadSessionPersistentContainerStores() async {
         do {
+            #if DEBUG
+            if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") == false {
+                try await session.persistentContainer.loadPersistentStores()
+            }
+            #else
             try await session.persistentContainer.loadPersistentStores()
+            #endif
 
             sessionPersistentContainerStoresLoadingResult = .success(Void())
         } catch {

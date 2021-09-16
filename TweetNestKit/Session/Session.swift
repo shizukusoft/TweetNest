@@ -27,7 +27,10 @@ public actor Session {
 
     private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
 
-    public nonisolated let persistentContainer: PersistentContainer
+    private let inMemory: Bool
+
+    public private(set) nonisolated lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
+    public private(set) nonisolated lazy var backgroundTaskScheduler = BackgroundTaskScheduler(session: self)
 
     private nonisolated lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
@@ -39,7 +42,15 @@ public actor Session {
 
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
         _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
-        persistentContainer = PersistentContainer(inMemory: inMemory)
+        self.inMemory = inMemory
+    }
+
+    deinit {
+        Task {
+            await backgroundTaskScheduler.invalidate()
+        }
+
+        urlSession.invalidateAndCancel()
     }
 }
 

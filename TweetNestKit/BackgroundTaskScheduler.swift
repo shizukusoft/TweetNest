@@ -22,7 +22,7 @@ public actor BackgroundTaskScheduler {
         case active
     }
 
-    public static let shared = BackgroundTaskScheduler()
+    private unowned let session: Session
 
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).background-refresh"
     public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).data-cleansing"
@@ -63,10 +63,12 @@ public actor BackgroundTaskScheduler {
             }
         }
 
-    private init(v: Void) {}
+    private init(session: Session, v: Void) {
+        self.session = session
+    }
 
-    private convenience init() {
-        self.init(v: ())
+    convenience init(session: Session) {
+        self.init(session: session, v: ())
         Task {
             _ = await isBackgroundUpdateEnabledObserver
         }
@@ -82,6 +84,11 @@ public actor BackgroundTaskScheduler {
         backgroundTimer.schedule(deadline: .now() + Self.preferredBackgroundTasksTimeInterval, repeating: Self.preferredBackgroundTasksTimeInterval, leeway: .seconds(30))
 
         return backgroundTimer
+    }
+
+    func invalidate() {
+        isBackgroundUpdateEnabledObserver.invalidate()
+        backgroundTimer = nil
     }
 }
 
@@ -119,7 +126,7 @@ extension BackgroundTaskScheduler {
 
             try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
 
-            let lastCleanseDate = await Session.shared.preferences.lastCleansed
+            let lastCleanseDate = await session.preferences.lastCleansed
 
             let now = Date()
             let twoDay = TimeInterval(2 * 24 * 60 * 60)
@@ -172,16 +179,16 @@ extension BackgroundTaskScheduler {
         guard lastUpdate.addingTimeInterval(60) < Date() else { return true }
         lastUpdate = Date()
 
-        return await withExtendedBackgroundExecution {
+        return await withExtendedBackgroundExecution { [self] in
             logger.notice("Start background refresh")
             defer {
                 logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
             }
 
             do {
-                try await Session.shared.updateAllAccounts()
+                try await session.updateAllAccounts()
                 if dataCleansing {
-                    try await Session.shared.cleansingAllData()
+                    try await session.cleansingAllData()
                 }
 
                 return true
@@ -226,14 +233,14 @@ extension BackgroundTaskScheduler {
         guard lastUpdate.addingTimeInterval(60) < Date() else { return true }
         lastUpdate = Date()
 
-        return await withExtendedBackgroundExecution {
+        return await withExtendedBackgroundExecution { [self] in
             logger.notice("Start background data cleansing")
             defer {
                 logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
             }
 
             do {
-                try await Session.shared.cleansingAllData()
+                try await session.cleansingAllData()
 
                 return true
             } catch {
