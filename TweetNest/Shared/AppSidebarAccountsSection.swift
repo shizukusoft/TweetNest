@@ -28,6 +28,45 @@ struct AppSidebarAccountsSection: View {
         }
     }
 
+    @ViewBuilder
+    var followingsNavigationLink: some View {
+        NavigationLink(
+            tag: .followings(account),
+            selection: $navigationItemSelection
+        ) {
+            UsersDiffList(user: users.first, diffKeyPath: \.followingUserIDs, title: Text("Followings History"))
+                .environment(\.account, account)
+        } label: {
+            Label("Followings History", systemImage: "person.2")
+        }
+    }
+
+    @ViewBuilder
+    var followersNavigationLink: some View {
+        NavigationLink(
+            tag: .followers(account),
+            selection: $navigationItemSelection
+        ) {
+            UsersDiffList(user: users.first, diffKeyPath: \.followerUserIDs, title: Text("Followers History"))
+                .environment(\.account, account)
+        } label: {
+            Label("Followers History", systemImage: "person.2")
+        }
+    }
+
+    @ViewBuilder
+    var blockingsNavigationLink: some View {
+        NavigationLink(
+            tag: .blockings(account),
+            selection: $navigationItemSelection
+        ) {
+            UsersDiffList(user: users.first, diffKeyPath: \.blockingUserIDs, title: Text("Blocks History"))
+                .environment(\.account, account)
+        } label: {
+            Label("Blocks History", systemImage: "nosign")
+        }
+    }
+
     var body: some View {
         Section {
             Group {
@@ -38,23 +77,21 @@ struct AppSidebarAccountsSection: View {
                     .accessibilityLabel("\(displayAccountName)'s Account")
                     .accessibilityAddTraits(.isButton)
 
-                if let user = users.first {
-                    followingsNavigationLink(user: user)
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("\(displayAccountName)'s Following History")
-                        .accessibilityAddTraits(.isButton)
+                followingsNavigationLink
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("\(displayAccountName)'s Following History")
+                    .accessibilityAddTraits(.isButton)
 
-                    followersNavigationLink(user: user)
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("\(displayAccountName)'s Followers History")
-                        .accessibilityAddTraits(.isButton)
+                followersNavigationLink
+                    .accessibilityElement(children: .ignore)
+                    .accessibilityLabel("\(displayAccountName)'s Followers History")
+                    .accessibilityAddTraits(.isButton)
 
-                    if account.preferences.fetchBlockingUsers {
-                        blockingsNavigationLink(user: user)
-                            .accessibilityElement(children: .ignore)
-                            .accessibilityLabel("\(displayAccountName)'s Blocks History")
-                            .accessibilityAddTraits(.isButton)
-                    }
+                if account.preferences.fetchBlockingUsers {
+                    blockingsNavigationLink
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel("\(displayAccountName)'s Blocks History")
+                        .accessibilityAddTraits(.isButton)
                 }
             }
             .onChange(of: account.userID) { newValue in
@@ -94,45 +131,6 @@ struct AppSidebarAccountsSection: View {
                 return fetchRequest
             }()
         )
-    }
-
-    @ViewBuilder
-    func followingsNavigationLink(user: User) -> some View {
-        NavigationLink(
-            tag: .followings(account),
-            selection: $navigationItemSelection
-        ) {
-            UsersDiffList(user: user, diffKeyPath: \.followingUserIDs, title: Text("Followings History"))
-                .environment(\.account, account)
-        } label: {
-            Label("Followings History", systemImage: "person.2")
-        }
-    }
-
-    @ViewBuilder
-    func followersNavigationLink(user: User) -> some View {
-        NavigationLink(
-            tag: .followers(account),
-            selection: $navigationItemSelection
-        ) {
-            UsersDiffList(user: user, diffKeyPath: \.followerUserIDs, title: Text("Followers History"))
-                .environment(\.account, account)
-        } label: {
-            Label("Followers History", systemImage: "person.2")
-        }
-    }
-
-    @ViewBuilder
-    func blockingsNavigationLink(user: User) -> some View {
-        NavigationLink(
-            tag: .blockings(account),
-            selection: $navigationItemSelection
-        ) {
-            UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs, title: Text("Blocks History"))
-                .environment(\.account, account)
-        } label: {
-            Label("Blocks History", systemImage: "nosign")
-        }
     }
 }
 
