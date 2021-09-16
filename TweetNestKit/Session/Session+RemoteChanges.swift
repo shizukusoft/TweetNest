@@ -212,6 +212,20 @@ extension Session {
         for (userDetailObjectID, change) in changesByObjectID {
             try Task.checkCancellation()
 
+            let (threadIdentifier, notificationIdentifier): (String?, String) = await context.perform(schedule: .enqueued) {
+                guard
+                    let userDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
+                    let user = userDetail.user
+                else {
+                    return (nil, userDetailObjectID.uriRepresentation().absoluteString)
+                }
+
+                let threadIdentifier = user.id ?? user.objectID.uriRepresentation().absoluteString
+                let notificationIdentifier = [threadIdentifier, userDetail.creationDate.flatMap { String($0.timeIntervalSince1970) }].compactMap { $0 }.joined(separator: "\t")
+
+                return (threadIdentifier, notificationIdentifier.isEmpty ? userDetailObjectID.uriRepresentation().absoluteString : notificationIdentifier)
+            }
+
             switch change.changeType {
             case .insert, .update:
                 let notificationContent: UNNotificationContent? = await context.perform(schedule: .enqueued) {
@@ -249,8 +263,8 @@ extension Session {
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = notificationContentTitle
 
-                    if let accountRecordName = self.persistentContainer.record(for: account.objectID)?.recordID.recordName {
-                        notificationContent.threadIdentifier = accountRecordName
+                    if let threadIdentifier = threadIdentifier {
+                        notificationContent.threadIdentifier = threadIdentifier
                     }
 
                     var changes: [String] = []
@@ -283,30 +297,19 @@ extension Session {
                 guard let notificationContent = notificationContent else { continue }
 
                 do {
-                    if let cloudKitRecordName = self.persistentContainer.recordID(for: userDetailObjectID)?.recordName {
-                        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [userDetailObjectID.uriRepresentation().absoluteString])
-
-                        try await UNUserNotificationCenter.current().add(
-                            UNNotificationRequest(
-                                identifier: cloudKitRecordName,
-                                content: notificationContent,
-                                trigger: nil
-                            )
+                    try await UNUserNotificationCenter.current().add(
+                        UNNotificationRequest(
+                            identifier: notificationIdentifier,
+                            content: notificationContent,
+                            trigger: nil
                         )
-                    } else {
-                        try await UNUserNotificationCenter.current().add(
-                            UNNotificationRequest(
-                                identifier: userDetailObjectID.uriRepresentation().absoluteString,
-                                content: notificationContent,
-                                trigger: nil
-                            )
-                        )
-                    }
+                    )
                 } catch {
                     logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                 }
             case .delete:
-                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [self.persistentContainer.recordID(for: userDetailObjectID)?.recordName, userDetailObjectID.uriRepresentation().absoluteString].compactMap { $0 })
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
             @unknown default:
                 break
             }
