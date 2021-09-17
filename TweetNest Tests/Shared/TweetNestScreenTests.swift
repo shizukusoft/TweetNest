@@ -55,6 +55,10 @@ class TweetNestScreenTests: XCTestCase {
 
         _ = app.staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5)
 
+        wait(for: [
+            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
+        ], timeout: 5.0)
+
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Launch Screen"
         attachment.lifetime = .keepAlways
@@ -68,6 +72,10 @@ class TweetNestScreenTests: XCTestCase {
         app.buttons["\(Self.dispalyUserName)'s Account"].tap()
 
         _ = app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5)
+
+        wait(for: [
+            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
+        ], timeout: 5.0)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Account Screen"
@@ -83,6 +91,10 @@ class TweetNestScreenTests: XCTestCase {
 
         _ = app.staticTexts["@Apple"].waitForExistence(timeout: 5)
 
+        wait(for: [
+            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
+        ], timeout: 5.0)
+
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Followings History Screen"
         attachment.lifetime = .keepAlways
@@ -96,6 +108,10 @@ class TweetNestScreenTests: XCTestCase {
         app.buttons["\(Self.dispalyUserName)'s Followers History"].tap()
 
         _ = app.staticTexts["@Apple"].waitForExistence(timeout: 5)
+
+        wait(for: [
+            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
+        ], timeout: 5.0)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Followers History Screen"
