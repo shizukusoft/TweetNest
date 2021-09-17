@@ -12,6 +12,7 @@ import OrderedCollections
 import UnifiedLogging
 
 struct DeleteBulkTweetsView: View {
+    @Environment(\.session) private var session: TweetNestKit.Session
     @Environment(\.account) private var account: TweetNestKit.Account?
 
     @Binding var isPresented: Bool
@@ -102,7 +103,7 @@ struct DeleteBulkTweetsView: View {
                     for (offset, targetTweetID) in targetTweetIDs.enumerated() {
                         taskGroup.addTask {
                             do {
-                                try await Tweet.delete(targetTweetID, session: .session(for: account))
+                                try await Tweet.delete(targetTweetID, session: .session(for: account, session: session))
                                 return (offset, .success(()))
                             } catch {
                                 return (offset, .failure(error))

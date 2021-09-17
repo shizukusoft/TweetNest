@@ -23,6 +23,7 @@ struct UserView: View {
 
 extension UserView {
     struct ContentView: View {
+        @Environment(\.session) private var session: Session
         @Environment(\.account) var account: Account?
         @ObservedObject var user: User
 
@@ -312,9 +313,9 @@ extension UserView {
 
                 do {
                     if let account = user.accounts?.last, account == self.account {
-                        try await Session.shared.updateAccount(account.objectID)
+                        try await session.updateAccount(account.objectID)
                     } else if let account = account {
-                        try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, accountObjectID: account.objectID)
+                        try await session.updateUsers(ids: [user.id].compactMap { $0 }, accountObjectID: account.objectID)
                     }
                 } catch {
                     Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")

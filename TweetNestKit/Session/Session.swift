@@ -27,7 +27,10 @@ public actor Session {
 
     private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
 
-    public nonisolated let persistentContainer: PersistentContainer
+    private let inMemory: Bool
+
+    public private(set) nonisolated lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
+    public private(set) nonisolated lazy var backgroundTaskScheduler = BackgroundTaskScheduler(session: self)
 
     private nonisolated lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
@@ -39,7 +42,15 @@ public actor Session {
 
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
         _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
-        persistentContainer = PersistentContainer(inMemory: inMemory)
+        self.inMemory = inMemory
+    }
+
+    deinit {
+        Task {
+            await backgroundTaskScheduler.invalidate()
+        }
+
+        urlSession.invalidateAndCancel()
     }
 }
 
@@ -92,19 +103,25 @@ extension Session {
     public convenience init(inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
 
-        _ = persistentStoreRemoteChangeNotification
+        if inMemory == false {
+            _ = persistentStoreRemoteChangeNotification
+        }
     }
 
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
         self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
 
-        _ = persistentStoreRemoteChangeNotification
+        if inMemory == false {
+            _ = persistentStoreRemoteChangeNotification
+        }
     }
 
     public convenience init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
         self.init(twitterAPIConfiguration: { twitterAPIConfiguration }, inMemory: inMemory)
 
-        _ = persistentStoreRemoteChangeNotification
+        if inMemory == false {
+            _ = persistentStoreRemoteChangeNotification
+        }
     }
 }
 

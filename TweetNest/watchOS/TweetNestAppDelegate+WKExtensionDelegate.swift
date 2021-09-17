@@ -15,7 +15,7 @@ extension TweetNestAppDelegate: WKExtensionDelegate {
     }
 
     func handle(_ backgroundTasks: Set<WKRefreshBackgroundTask>) {
-        let handledBackgroundTasks = BackgroundTaskScheduler.shared.handleBackgroundRefreshBackgroundTask(backgroundTasks)
+        let handledBackgroundTasks = session.backgroundTaskScheduler.handleBackgroundRefreshBackgroundTask(backgroundTasks)
 
         for backgroundTask in backgroundTasks.subtracting(handledBackgroundTasks) {
             switch backgroundTask {

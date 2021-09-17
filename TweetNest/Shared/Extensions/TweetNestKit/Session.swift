@@ -9,28 +9,7 @@ import Foundation
 import TweetNestKit
 
 extension TweetNestKit.Session {
-    public static var preview: Session = {
-        let result = Session(inMemory: true)
-        let viewContext = result.persistentContainer.viewContext
-        for _ in 0..<3 {
-            let newAccount = Account(context: viewContext)
-            newAccount.creationDate = Date()
-
-            let newUser = User(context: viewContext)
-            newUser.id = String(Int64.random(in: Int64.min...Int64.max))
-
-            newAccount.userID = newUser.id
-        }
-        do {
-            try viewContext.save()
-        } catch {
-            // Replace this implementation with code to handle the error appropriately.
-            // fatalError() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-        return result
-    }()
+    public static let preview: Session = Session(inMemory: true)
 }
 
 extension TweetNestKit.Account {

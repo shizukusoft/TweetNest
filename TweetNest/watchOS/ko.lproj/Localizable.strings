@@ -1,8 +1,8 @@
 /* No comment provided by engineer. */
-"%@ tweets failed." = "%@ 트윗 실패.";
+"%@ tweets failed." = "%@개의 트윗 삭제 실패.";
 
 /* No comment provided by engineer. */
-"%@ tweets will be deleted." = "%@ 트윗이 삭제될 예정입니다.";
+"%@ tweets will be deleted." = "%@개의 트윗이 삭제될 예정입니다.";
 
 /* No comment provided by engineer. */
 "%@'s Account" = "%@의 계정";
@@ -14,7 +14,7 @@
 "%@'s Followers History" = "%@의 팔로워 기록";
 
 /* No comment provided by engineer. */
-"%@'s Following History" = "%@의 팔로잉 기록";
+"%@'s Followings History" = "%@의 팔로잉 기록";
 
 /* No comment provided by engineer. */
 "About" = "정보";
@@ -99,6 +99,9 @@
 
 /* No comment provided by engineer. */
 "Loaded Tweets" = "로드된 트윗";
+
+/* No comment provided by engineer. */
+"Loading Recent Tweets..." = "최근 트윗 로드 중...";
 
 /* No comment provided by engineer. */
 "Loading..." = "로드 중...";

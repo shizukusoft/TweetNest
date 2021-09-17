@@ -56,7 +56,6 @@ extension Session {
 
             let context = persistentContainer.newBackgroundContext()
             context.undoManager = nil
-            context.automaticallyMergesChangesFromParent = false
 
             guard
                 let persistentHistoryResult = try context.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
@@ -116,7 +115,7 @@ extension Session {
                 transactions
                     .lazy
                     .flatMap { $0.changes ?? [] }
-                    .filter { $0.changedObjectID.entity.name == Account.entity().name }
+                    .filter { $0.changedObjectID.entity == Account.entity() }
                     .map { ($0.changedObjectID, $0) }
             ),
             uniquingKeysWith: { $1 }
@@ -168,7 +167,7 @@ extension Session {
                 transactions
                     .lazy
                     .flatMap { $0.changes ?? [] }
-                    .filter { $0.changedObjectID.entity.name == User.entity().name }
+                    .filter { $0.changedObjectID.entity == User.entity() }
                     .map { ($0.changedObjectID, $0) }
             ),
             uniquingKeysWith: { $1 }
@@ -204,7 +203,7 @@ extension Session {
                 transactions
                     .lazy
                     .flatMap { $0.changes ?? [] }
-                    .filter { $0.changedObjectID.entity.name == UserDetail.entity().name }
+                    .filter { $0.changedObjectID.entity == UserDetail.entity() }
                     .map { ($0.changedObjectID, $0) }
             ),
             uniquingKeysWith: { $1 }
@@ -213,16 +212,26 @@ extension Session {
         for (userDetailObjectID, change) in changesByObjectID {
             try Task.checkCancellation()
 
-            guard let notificationIdentifier = self.persistentContainer.record(for: userDetailObjectID)?.recordID.recordName else {
-                continue
+            let (threadIdentifier, notificationIdentifier): (String?, String) = await context.perform(schedule: .enqueued) {
+                guard
+                    let userDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
+                    let user = userDetail.user
+                else {
+                    return (nil, userDetailObjectID.uriRepresentation().absoluteString)
+                }
+
+                let threadIdentifier = user.id ?? user.objectID.uriRepresentation().absoluteString
+                let notificationIdentifier = [threadIdentifier, userDetail.creationDate.flatMap { String($0.timeIntervalSince1970) }].compactMap { $0 }.joined(separator: "\t")
+
+                return (threadIdentifier, notificationIdentifier.isEmpty ? userDetailObjectID.uriRepresentation().absoluteString : notificationIdentifier)
             }
 
             switch change.changeType {
             case .insert, .update:
-                let notificationRequest: UNNotificationRequest? = await context.perform(schedule: .enqueued) {
+                let notificationContent: UNNotificationContent? = await context.perform(schedule: .enqueued) {
                     guard
                         let newUserDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
-                        (newUserDetail.creationDate ?? .distantPast) > Date(timeIntervalSinceNow: -(10 * 60)),
+                        Date(timeIntervalSinceNow: -(10 * 60)) <= (newUserDetail.creationDate ?? .distantPast),
                         let user = newUserDetail.user,
                         let sortedUserDetails = user.sortedUserDetails,
                         sortedUserDetails.count > 1,
@@ -254,8 +263,8 @@ extension Session {
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = notificationContentTitle
 
-                    if let accountRecordName = self.persistentContainer.record(for: account.objectID)?.recordID.recordName {
-                        notificationContent.threadIdentifier = accountRecordName
+                    if let threadIdentifier = threadIdentifier {
+                        notificationContent.threadIdentifier = threadIdentifier
                     }
 
                     var changes: [String] = []
@@ -282,21 +291,24 @@ extension Session {
                         notificationContent.interruptionLevel = .passive
                     }
 
-                    return UNNotificationRequest(
-                        identifier: notificationIdentifier,
-                        content: notificationContent,
-                        trigger: nil
-                    )
+                    return notificationContent
                 }
 
-                guard let notificationRequest = notificationRequest else { continue }
+                guard let notificationContent = notificationContent else { continue }
 
                 do {
-                    try await UNUserNotificationCenter.current().add(notificationRequest)
+                    try await UNUserNotificationCenter.current().add(
+                        UNNotificationRequest(
+                            identifier: notificationIdentifier,
+                            content: notificationContent,
+                            trigger: nil
+                        )
+                    )
                 } catch {
                     logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
                 }
             case .delete:
+                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
                 UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
             @unknown default:
                 break

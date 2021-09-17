@@ -47,12 +47,12 @@ struct UsersDiffList: View {
         #endif
     }
 
-    init(user: User, diffKeyPath: KeyPath<UserDetail, [String]?>, title: Text) {
+    init(user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>, title: Text) {
         self._userDetails = FetchRequest(
             fetchRequest: {
                 let fetchRequest = UserDetail.fetchRequest()
                 fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-                    NSPredicate(format: "user == %@", user.objectID),
+                    user.flatMap { NSPredicate(format: "user == %@", $0.objectID) } ?? NSPredicate(value: false),
                     diffKeyPath._kvcKeyPathString.flatMap { NSPredicate(format: "%K != NULL", $0) },
                 ].compactMap({ $0 }))
                 fetchRequest.sortDescriptors = [
