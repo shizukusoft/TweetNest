@@ -1,27 +1,21 @@
 #!/bin/bash
 
 IOS_DEVICES=(
-    'iPhone 13 Pro Max'
-    'iPhone 13'
-    'iPhone 13 mini'
-    'iPhone 8'
-    'iPhone 8 Plus'
-    'iPhone 11'
+    'iPhone 13 Pro Max' # 6.5 Inch
+    'iPhone 13' # 5.8 Inch
+    'iPhone 8 Plus' # 5.5 Inch
+    'iPhone 8' # 4.7 Inch
 )
 
 IPADOS_DEVICES=(
-    'iPad Pro (12.9-inch) (5th generation)'
-    'iPad Pro (11-inch) (3rd generation)'
-    'iPad Air (4th generation)'
-    'iPad (9th generation)'
-    'iPad mini (6th generation)'
+    'iPad Pro (12.9-inch) (5th generation)' # 12.9 Inch, iPad Pro (3rd generation)
+    'iPad Pro (11-inch) (3rd generation)' # 11 Inch
+    'iPad Pro (12.9-inch) (2nd generation)' # 12.9 Inch, iPad Pro (2nd generation)
+    'iPad Air (3rd generation)' # 10.5 Inch
 )
 
 WATCHOS_DEVICES=(
-    'Apple Watch Series 6 - 40mm'
-    'Apple Watch Series 6 - 44mm'
-    'Apple Watch Series 7 - 41mm'
-    'Apple Watch Series 7 - 45mm'
+    'Apple Watch Series 6 - 44mm' # 44mm
 )
 
 #######################################################################################################################
