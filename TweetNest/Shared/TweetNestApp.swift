@@ -19,6 +19,10 @@ typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 
 @main
 struct TweetNestApp: App {
+    static var isPreview: Bool {
+        CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview")
+    }
+
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
 
