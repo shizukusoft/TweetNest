@@ -26,31 +26,36 @@ struct BatchDeleteTweetsLoadingTwitterArchiveView: View {
     @State private var error: TweetNestError?
 
     var body: some View {
-        if isImporting == false {
-            Menu {
-                Button {
+        ZStack {
+            if isImporting == false {
+                Menu {
+                    Button {
+                        allowedFileImporterContentTypes = [.zip]
+                        isFileImporterPresented = true
+                    } label: {
+                        Text("Open ZIP File")
+                    }
+
+                    Button {
+                        allowedFileImporterContentTypes = [.folder]
+                        isFileImporterPresented = true
+                    } label: {
+                        Text("Open Folder")
+                    }
+                } label: {
+                    Text("Open Twitter Archive")
+                } primaryAction: {
                     allowedFileImporterContentTypes = [.zip]
                     isFileImporterPresented = true
-                } label: {
-                    Text("Open ZIP File")
                 }
-
-                Button {
-                    allowedFileImporterContentTypes = [.folder]
-                    isFileImporterPresented = true
-                } label: {
-                    Text("Open Folder")
-                }
-            } label: {
-                Text("Open Twitter Archive")
-            } primaryAction: {
-                allowedFileImporterContentTypes = [.zip]
-                isFileImporterPresented = true
+                .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: allowedFileImporterContentTypes, onCompletion: onFileImporterCompletion(result:))
+                .transition(.opacity)
+            } else {
+                ProgressView("Loading Archive...")
+                    .alert(isPresented: $showError, error: error)
+                    .zIndex(-1)
+                    .transition(.opacity)
             }
-            .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: allowedFileImporterContentTypes, onCompletion: onFileImporterCompletion(result:))
-        } else {
-            ProgressView("Loading Archive...")
-                .alert(isPresented: $showError, error: error)
         }
     }
 
