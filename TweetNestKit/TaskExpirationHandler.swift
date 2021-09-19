@@ -17,7 +17,7 @@ public func withTaskExpirationHandler<T>(body: @escaping (@escaping @Sendable ()
 
 private actor TaskExpirationHandler {
     private let dispatchGroup = DispatchGroup()
-    private var cancellationHandler: (() -> ())?
+    private var cancellationHandler: (() -> Void)?
 }
 
 extension TaskExpirationHandler {

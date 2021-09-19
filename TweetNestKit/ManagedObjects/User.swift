@@ -33,23 +33,11 @@ public class User: NSManagedObject {
 }
 
 extension User {
-    public var displayUsername: String? {
-        if let displayUsername = sortedUserDetails?.last?.displayUsername {
-            return displayUsername
-        }
+    @NSManaged public var accounts: [Account]? // The accessor of the accounts property.
+}
 
-        if let id = id {
-            return "#\(Int64(id)?.twnk_formatted() ?? id)"
-        }
-
-        return nil
-    }
-
-    public var displayName: String? {
-        if let name = sortedUserDetails?.last?.name {
-            return name
-        }
-
-        return nil
+extension User {
+    public var displayID: String? {
+        return id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" }
     }
 }

@@ -9,7 +9,17 @@ import SwiftUI
 import TweetNestKit
 
 public struct SessionEnvironmentKey: EnvironmentKey {
-    public static var defaultValue: Session = .shared
+    #if DEBUG
+    public static var defaultValue: Session = {
+        if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") {
+            return Session.preview
+        } else {
+            return Session.shared
+        }
+    }()
+    #else
+    public static var defaultValue = Session.shared
+    #endif
 }
 
 public extension EnvironmentValues {

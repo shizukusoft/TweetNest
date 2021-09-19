@@ -50,7 +50,10 @@ extension DataAsset {
 
 extension DataAsset {
     static func dataAsset(for url: URL, session: Session, context: NSManagedObjectContext) async throws -> DataAsset {
-        let data = try await session.data(from: url)
+        var urlRequest = URLRequest(url: url)
+        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+
+        let data = try await session.data(for: urlRequest)
 
         return try await context.perform(schedule: .enqueued) {
             try Task.checkCancellation()

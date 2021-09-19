@@ -23,6 +23,7 @@ struct UserView: View {
 
 extension UserView {
     struct ContentView: View {
+        @Environment(\.session) private var session: Session
         @Environment(\.account) var account: Account?
         @ObservedObject var user: User
 
@@ -33,7 +34,7 @@ extension UserView {
         @State var isRefreshing: Bool = false
 
         @State var showErrorAlert: Bool = false
-        @State var error: TweetNestError? = nil
+        @State var error: TweetNestError?
 
         #if os(iOS)
         @Environment(\.horizontalSizeClass) var horizontalSizeClass
@@ -48,8 +49,8 @@ extension UserView {
         }
 
         #if os(iOS)
-        @State var safariSheetURL: URL? = nil
-        @State var shareSheetURL: URL? = nil
+        @State var safariSheetURL: URL?
+        @State var shareSheetURL: URL?
         #endif
 
         var userProfileURL: URL? {
@@ -58,14 +59,14 @@ extension UserView {
             }
         }
 
-        #if os(iOS) || os(macOS)
         @State var showBulkDeleteRecentTweets: Bool = false
+        #if os(iOS) || os(macOS)
         @State var showBulkDeleteAllTweets: Bool = false
         #endif
 
-        #if os(iOS) || os(macOS)
         @ViewBuilder
         var deleteMenu: some View {
+            #if os(iOS) || os(macOS)
             Menu {
                 Button(role: .destructive) {
                     showBulkDeleteRecentTweets = true
@@ -85,10 +86,42 @@ extension UserView {
                     Image(systemName: "trash")
                 }
             }
+            #else
+            Button(role: .destructive) {
+                showBulkDeleteRecentTweets = true
+            } label: {
+                Text("Delete Recent Tweets")
+            }
+            #endif
         }
-        #endif
 
-        var body: some View {
+        @ViewBuilder private var userView: some View {
+            #if os(macOS)
+            VStack(alignment: .leading, spacing: 8) {
+                if let lastUserDetail = lastUserDetail {
+                    VStack(alignment: .leading, spacing: 8) {
+                        UserDetailProfileView(userDetail: lastUserDetail)
+                        VStack(alignment: .leading) {
+                            user.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
+                            if let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
+                                Group {
+                                    if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                                        Text("Updating...")
+                                    } else {
+                                        Text("Updated \(lastUpdateEndDate, style: .relative) ago")
+                                    }
+                                }
+                                .accessibilityAddTraits(.updatesFrequently)
+                            }
+                        }
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
+                    }
+                    .padding()
+                }
+                UserAllDataView(user: user)
+            }
+            #else
             List {
                 if let lastUserDetail = lastUserDetail {
                     Section {
@@ -98,127 +131,169 @@ extension UserView {
                     } footer: {
                         VStack(alignment: .leading) {
                             user.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                            if let lastUpdateDate = user.lastUpdateEndDate {
-                                Text("Updated \(lastUpdateDate, style: .relative) ago")
+                            if let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
+                                Group {
+                                    if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                                        Text("Updating...")
+                                    } else {
+                                        Text("Updated \(lastUpdateEndDate, style: .relative) ago")
+                                    }
+                                }
                                 .accessibilityAddTraits(.updatesFrequently)
                             }
                         }
                     }
                 }
-                UserAllDataSection(user: user)
+                #if os(watchOS)
+                if let account = account, user.accounts?.contains(account) == true {
+                    Section {
+                        deleteMenu
+                    }
+                }
+                #endif
+                UserAllDataView(user: user)
             }
-            #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationTitle(Text(verbatim: user.displayUsername ?? user.objectID.description))
-            .refreshable(action: refresh)
-            #if os(iOS) || os(macOS)
-            .toolbar {
-                ToolbarItemGroup(placement: .automatic) {
-                    if shouldCompactToolbar {
-                        Menu {
-                            if let userProfileURL = userProfileURL {
-                                Link(destination: userProfileURL) {
-                                    Label(Text("Open Profile"), systemImage: "safari")
+        }
+
+        @ViewBuilder private var refreshButton: some View {
+            Button {
+                Task {
+                    refresh
+                }
+            } label: {
+                Label("Refresh", systemImage: "arrow.clockwise")
+            }
+            .disabled(isRefreshing)
+        }
+
+        var body: some View {
+            userView
+                #if os(iOS)
+                .navigationBarTitleDisplayMode(.inline)
+                #endif
+                .navigationTitle(Text(verbatim: user.sortedUserDetails?.last?.displayUsername ?? user.displayID ?? user.objectID.description))
+                .refreshable(action: refresh)
+                #if os(iOS) || os(macOS)
+                .toolbar {
+                    ToolbarItemGroup(placement: .automatic) {
+                        if shouldCompactToolbar {
+                            Menu {
+                                if let userProfileURL = userProfileURL {
+                                    Link(destination: userProfileURL) {
+                                        Label("Open Profile", systemImage: "safari")
+                                    }
+
+                                    #if os(iOS)
+                                    Button {
+                                        safariSheetURL = userProfileURL
+                                    } label: {
+                                        Label("Open Profile in Safari", systemImage: "safari")
+                                    }
+                                    #endif
                                 }
 
                                 #if os(iOS)
+                                Divider()
+
                                 Button {
-                                    safariSheetURL = userProfileURL
+                                    shareSheetURL = userProfileURL
                                 } label: {
-                                    Label(Text("Open Profile in Safari"), systemImage: "safari")
+                                    Label("Share", systemImage: "square.and.arrow.up")
+                                }
+                                #endif
+
+                                if let account = account, user.accounts?.contains(account) != false {
+                                    Divider()
+
+                                    deleteMenu
+                                }
+                            } label: {
+                                Label("More", systemImage: "ellipsis.circle")
+                                    .labelStyle(.iconOnly)
+                            }
+                        } else {
+                            if let userProfileURL = userProfileURL {
+                                Link(destination: userProfileURL) {
+                                    Label("Open Profile", systemImage: "safari")
+                                }
+                                #if os(iOS)
+                                .contextMenu {
+                                    Link(destination: userProfileURL) {
+                                        Label("Open Profile", systemImage: "safari")
+                                    }
+
+                                    Button {
+                                        safariSheetURL = userProfileURL
+                                    } label: {
+                                        Label("Open Profile in Safari", systemImage: "safari")
+                                    }
+                                }
+                                #endif
+
+                                #if os(iOS)
+                                Button {
+                                    shareSheetURL = userProfileURL
+                                } label: {
+                                    Label("Share", systemImage: "square.and.arrow.up")
                                 }
                                 #endif
                             }
 
-                            #if os(iOS)
-                            Divider()
-
-                            Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
-                                shareSheetURL = userProfileURL
-                            }
+                            #if !os(iOS)
+                            refreshButton
                             #endif
 
-                            if account != nil, account == user.account {
-                                Divider()
-
+                            if let account = account, user.accounts?.contains(account) == false {
                                 deleteMenu
                             }
-                        } label: {
-                            Label(Text("More"), systemImage: "ellipsis.circle")
-                                .labelStyle(.iconOnly)
-                        }
-                    } else {
-                        if let userProfileURL = userProfileURL {
-                            Link(destination: userProfileURL) {
-                                Label(Text("Open Profile"), systemImage: "safari")
-                            }
-                            #if os(iOS)
-                            .contextMenu {
-                                Link(destination: userProfileURL) {
-                                    Label(Text("Open Profile"), systemImage: "safari")
-                                }
-
-                                Button {
-                                    safariSheetURL = userProfileURL
-                                } label: {
-                                    Label(Text("Open Profile in Safari"), systemImage: "safari")
-                                }
-                            }
-                            #endif
-
-                            #if os(iOS)
-                            Button(Label(Text("Share"), systemImage: "square.and.arrow.up")) {
-                                shareSheetURL = userProfileURL
-                            }
-                            #endif
-                        }
-
-                        #if !os(iOS)
-                        Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
-                            Task {
-                                refresh
-                            }
-                        }
-                        .disabled(isRefreshing)
-                        #endif
-
-                        if account != nil, account == user.account {
-                            deleteMenu
                         }
                     }
                 }
-            }
-            #endif
-            #if os(iOS)
-            .sheet(item: $safariSheetURL) {
-                SafariView(url: $0)
-            }
-            .sheet(item: $shareSheetURL) {
-                ShareView(item: $0)
-            }
-            #endif
-            .alert(isPresented: $showErrorAlert, error: error)
-            #if os(iOS) || os(macOS)
-            .sheet(isPresented: $showBulkDeleteRecentTweets) {
-                NavigationView {
-                    if let account = account, account == user.account {
+                #else
+                .toolbar {
+                    ToolbarItemGroup(placement: .primaryAction) {
+                        refreshButton
+                    }
+                }
+                #endif
+                #if os(iOS)
+                .sheet(item: $safariSheetURL) {
+                    SafariView(url: $0)
+                }
+                .sheet(item: $shareSheetURL) {
+                    ShareView(item: $0)
+                }
+                #endif
+                .alert(isPresented: $showErrorAlert, error: error)
+                .sheet(isPresented: $showBulkDeleteRecentTweets) {
+                    if let account = account, user.accounts?.contains(account) == true {
+                        #if os(macOS)
                         DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
-                    } else {
-                        EmptyView()
+                            .padding()
+                            .frame(minWidth: 320, minHeight: 240)
+                        #else
+                        NavigationView {
+                            DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                        }
+                        #endif
                     }
                 }
-            }
-            .sheet(isPresented: $showBulkDeleteAllTweets) {
-                NavigationView {
-                    if let account = account, account == user.account {
+                #if os(iOS) || os(macOS)
+                .sheet(isPresented: $showBulkDeleteAllTweets) {
+                    if let account = account,user.accounts?.contains(account) == true {
+                        #if os(macOS)
                         DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
-                    } else {
-                        EmptyView()
+                            .padding()
+                            .frame(minWidth: 320, minHeight: 240)
+                        #else
+                        NavigationView {
+                            DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
+                        }
+                        #endif
                     }
                 }
-            }
-            #endif
+                #endif
         }
 
         @Sendable
@@ -237,10 +312,10 @@ extension UserView {
                 }
 
                 do {
-                    if let account = user.account {
-                        try await Session.shared.updateAccount(account.objectID)
+                    if let account = user.accounts?.last, account == self.account {
+                        try await session.updateAccount(account.objectID)
                     } else if let account = account {
-                        try await Session.shared.updateUsers(ids: [user.id].compactMap { $0 }, twitterSession: .session(for: account))
+                        try await session.updateUsers(ids: [user.id].compactMap { $0 }, accountObjectID: account.objectID)
                     }
                 } catch {
                     Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
@@ -254,6 +329,6 @@ extension UserView {
 
 struct UserView_Previews: PreviewProvider {
     static var previews: some View {
-        UserView(user: Account.preview.user!)
+        UserView(user: Account.preview.users!.last!)
     }
 }

@@ -2,34 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>%ld new following(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@followings@</string>
-		<key>followings</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>other</key>
-			<string>새로운 팔로우 %ld명</string>
-		</dict>
-	</dict>
-	<key>%ld new unfollowing(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@unfollowings@</string>
-		<key>unfollowings</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>other</key>
-			<string>새로운 언팔로우 %ld명</string>
-		</dict>
-	</dict>
 	<key>%ld new follower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -42,6 +14,24 @@
 			<string>ld</string>
 			<key>other</key>
 			<string>새로운 팔로워 %ld명</string>
+			<key>zero</key>
+			<string>0 new followers</string>
+		</dict>
+	</dict>
+	<key>%ld new following(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@followings@</string>
+		<key>followings</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 팔로우 %ld명</string>
+			<key>zero</key>
+			<string>0 new followings</string>
 		</dict>
 	</dict>
 	<key>%ld new unfollower(s)</key>
@@ -56,6 +46,24 @@
 			<string>ld</string>
 			<key>other</key>
 			<string>새로운 언팔로워 %ld명</string>
+			<key>zero</key>
+			<string>0 new unfollowers</string>
+		</dict>
+	</dict>
+	<key>%ld new unfollowing(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unfollowings@</string>
+		<key>unfollowings</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 언팔로우 %ld명</string>
+			<key>zero</key>
+			<string>0 new unfollowings</string>
 		</dict>
 	</dict>
 </dict>

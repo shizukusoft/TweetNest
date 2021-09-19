@@ -6,33 +6,59 @@
 //
 
 import SwiftUI
+import CoreData
+import TweetNestKit
+
+enum SettingsNavigationItem: Hashable {
+    case general
+    case accounts
+}
 
 struct SettingsMainView: View {
-    private enum Tabs: Hashable {
-        case accounts
-    }
-
-    #if os(iOS)
-    @State var editMode: EditMode = .inactive
+    #if os(macOS)
+    @State var selectedNavigationItem: SettingsNavigationItem = .general
+    #else
+    @State var selectedNavigationItem: SettingsNavigationItem?
     #endif
 
+    #if os(macOS)
     var body: some View {
-        #if os(macOS)
-        TabView {
-            List {
-                SettingsAccountItems()
-            }
-            .tabItem {
-                Label("Accounts", systemImage: "person.3")
-            }
-            .tag(Tabs.accounts)
+        TabView(selection: $selectedNavigationItem) {
+            SettingsGeneralView()
+                .tabItem {
+                    Label("General", systemImage: "gearshape")
+                }
+                .tag(SettingsNavigationItem.general)
+
+            SettingsAccountsView()
+                .tabItem {
+                    Label("Accounts", systemImage: "person.2")
+                }
+                .tag(SettingsNavigationItem.accounts)
         }
-        #else
+        .frame(minWidth: 600, minHeight: 300)
+    }
+    #else
+    var body: some View {
         Form {
             Section {
-                SettingsAccountItems()
-            } header: {
-                Text("Accounts")
+                NavigationLink(
+                    tag: SettingsNavigationItem.general,
+                    selection: $selectedNavigationItem
+                ) {
+                    SettingsGeneralView()
+                } label: {
+                    Label("General", systemImage: "gearshape")
+                }
+
+                NavigationLink(
+                    tag: SettingsNavigationItem.accounts,
+                    selection: $selectedNavigationItem
+                ) {
+                    SettingsAccountsView()
+                } label: {
+                    Label("Accounts", systemImage: "person.2")
+                }
             }
 
             Section {
@@ -50,25 +76,13 @@ struct SettingsMainView: View {
             } header: {
                 Text("About")
             }
-
-            #if os(iOS)
-            Section {
-                Link(destination: URL(string: UIApplication.openSettingsURLString)!) {
-                    Text("Additional Settings")
-                }
-            }
-            #endif
         }
         .navigationTitle(Text("Settings"))
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-            EditButton()
-        }
-        .environment(\.editMode, $editMode)
-        #endif
         #endif
     }
+    #endif
 }
 
 struct SettingsMainView_Previews: PreviewProvider {

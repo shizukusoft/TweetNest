@@ -30,7 +30,7 @@ extension TwitterArchive {
     func data(atPath path: String) async throws -> Data {
         if try url.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true {
             return try await withCheckedThrowingContinuation { continuation in
-                var error: NSError? = nil
+                var error: NSError?
                 defer {
                     if let error = error {
                         continuation.resume(throwing: error)

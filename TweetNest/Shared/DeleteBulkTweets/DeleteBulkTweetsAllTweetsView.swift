@@ -17,17 +17,17 @@ struct DeleteBulkTweetsAllTweetsView: View {
     let account: TweetNestKit.Account
 
     @Binding var isPresented: Bool
-    
-    @State var tweets: [Tweet]? = nil
-    
+
+    @State var tweets: [Tweet]?
+
     @State var isFileImporterPresented: Bool = false
     @State var allowedFileImporterContentTypes: [UTType] = []
 
     @State var isImporting: Bool = false
 
     @State var showError: Bool = false
-    @State var error: TweetNestError? = nil
-    
+    @State var error: TweetNestError?
+
     var body: some View {
         ZStack {
             if let tweets = tweets {
@@ -43,7 +43,7 @@ struct DeleteBulkTweetsAllTweetsView: View {
                 Rectangle()
                     .foregroundColor(.clear)
                     .overlay {
-                        ProgressView(String(localized: "Loading Archive..."))
+                        ProgressView("Loading Archive...")
                             .alert(isPresented: $showError, error: error)
                             .toolbar {
                                 ToolbarItemGroup(placement: .cancellationAction) {

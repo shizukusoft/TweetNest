@@ -2,12 +2,13 @@
 //  Account+CoreDataProperties.swift
 //  Account
 //
-//  Created by Jaehong Kang on 2021/08/16.
+//  Created by Jaehong Kang on 2021/09/14.
 //
 //
 
 import Foundation
 import CoreData
+
 
 extension Account {
 
@@ -16,14 +17,13 @@ extension Account {
     }
 
     @NSManaged public var creationDate: Date?
-    @NSManaged public var id: Int64
+    @NSManaged public var userID: String?
+    @NSManaged public var preferringSortOrder: Int64
     @NSManaged public var token: String?
     @NSManaged public var tokenSecret: String?
-    @NSManaged public var preferringSortOrder: Int64
-    @NSManaged public var user: User?
 
 }
 
-extension Account: Identifiable {
+extension Account : Identifiable {
 
 }

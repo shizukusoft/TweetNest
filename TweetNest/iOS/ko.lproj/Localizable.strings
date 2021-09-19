@@ -1,4 +1,10 @@
 /* No comment provided by engineer. */
+"%@ tweets failed." = "%@개의 트윗 삭제 실패.";
+
+/* No comment provided by engineer. */
+"%@ tweets will be deleted." = "%@개의 트윗이 삭제될 예정입니다.";
+
+/* No comment provided by engineer. */
 "%@'s Account" = "%@의 계정";
 
 /* No comment provided by engineer. */
@@ -8,7 +14,7 @@
 "%@'s Followers History" = "%@의 팔로워 기록";
 
 /* No comment provided by engineer. */
-"%@'s Following History" = "%@의 팔로잉 기록";
+"%@'s Followings History" = "%@의 팔로잉 기록";
 
 /* No comment provided by engineer. */
 "About" = "정보";
@@ -32,6 +38,9 @@
 "App Version" = "앱 버전";
 
 /* No comment provided by engineer. */
+"Background Update" = "백그라운드 업데이트";
+
+/* No comment provided by engineer. */
 "Blocked Accounts" = "차단한 계정";
 
 /* No comment provided by engineer. */
@@ -50,7 +59,25 @@
 "Delete Recent Tweets" = "최근 트윗 삭제";
 
 /* No comment provided by engineer. */
-"Delete Tweets" = "";
+"Delete Tweets" = "트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets?" = "트윗을 삭제하시겠습니까?";
+
+/* No comment provided by engineer. */
+"Deleting %@ tweets..." = "%@ 트윗 삭제 중...";
+
+/* No comment provided by engineer. */
+"Done" = "완료";
+
+/* No comment provided by engineer. */
+"Download Images Using Cellular" = "셀룰러를 사용하여 이미지 다운로드";
+
+/* No comment provided by engineer. */
+"Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If \"Allow More Data on 5G\" is turned on this device, this option will be ignored." = "이 기기에서 다른 네트워크가 사용 불가능할 때, 셀룰러나 개인용 핫스팟을 이용하여 이미지를 다운로드합니다. 이 기기에서 \"5G에서 데이터 더 사용\"이 활성화되어 있으면, 이 옵션은 무시됩니다.";
+
+/* No comment provided by engineer. */
+"Fetch Blocking Users" = "블락한 유저 가져오기";
 
 /* No comment provided by engineer. */
 "Followers" = "팔로워";
@@ -65,6 +92,9 @@
 "Followings History" = "팔로잉 기록";
 
 /* No comment provided by engineer. */
+"General" = "일반";
+
+/* No comment provided by engineer. */
 "Joined" = "가입 날짜";
 
 /* No comment provided by engineer. */
@@ -74,13 +104,25 @@
 "Listed" = "리스트";
 
 /* No comment provided by engineer. */
+"Loaded Tweets" = "로드된 트윗";
+
+/* No comment provided by engineer. */
+"Loading Archive..." = "아카이브 로드 중...";
+
+/* No comment provided by engineer. */
+"Loading Recent Tweets..." = "최근 트윗 로드 중...";
+
+/* No comment provided by engineer. */
+"Loading..." = "로드 중...";
+
+/* No comment provided by engineer. */
 "Location" = "위치";
 
 /* No comment provided by engineer. */
 "More" = "더 보기";
 
 /* No comment provided by engineer. */
-"OK" = "확인";
+"Open Folder" = "폴더 열기";
 
 /* No comment provided by engineer. */
 "Open Profile" = "프로필 열기";
@@ -89,7 +131,13 @@
 "Open Profile in Safari" = "Safari에서 프로필 열기";
 
 /* No comment provided by engineer. */
-"Preparing..." = "준비 중...";
+"Open Twitter Archive" = "Twitter 아카이브 열기";
+
+/* No comment provided by engineer. */
+"Open ZIP File" = "ZIP 파일 열기";
+
+/* No comment provided by engineer. */
+"Preparing to Sync..." = "동기화 준비 중...";
 
 /* No comment provided by engineer. */
 "Profile" = "프로필";
@@ -101,7 +149,7 @@
 "Refresh" = "새로 고침";
 
 /* No comment provided by engineer. */
-"Results" = "결과";
+"Retweets" = "리트윗";
 
 /* No comment provided by engineer. */
 "Settings" = "설정";
@@ -110,19 +158,28 @@
 "Share" = "공유";
 
 /* No comment provided by engineer. */
+"Since" = "시작";
+
+/* No comment provided by engineer. */
 "Syncing..." = "동기화 중...";
 
 /* No comment provided by engineer. */
-"Target Tweets" = "";
-
-/* No comment provided by engineer. */
-"TweetNest" = "TweetNest";
+"Target Tweets" = "대상 트윗";
 
 /* No comment provided by engineer. */
 "Tweets" = "트윗";
 
 /* No comment provided by engineer. */
-"Updated %@ ago" = "%@ 전에 갱신됨";
+"Until" = "종료";
+
+/* No comment provided by engineer. */
+"Update accounts in background on this device." = "이 기기에서 백그라운드로 계정 정보를 업데이트합니다.";
+
+/* No comment provided by engineer. */
+"Updated %@ ago" = "%@ 전에 업데이트됨";
+
+/* No comment provided by engineer. */
+"Updating..." = "업데이트 중...";
 
 /* No comment provided by engineer. */
 "URL" = "웹사이트";

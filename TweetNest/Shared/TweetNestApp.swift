@@ -27,37 +27,45 @@ struct TweetNestApp: App {
     }
 
     var body: some Scene {
-        WindowGroup {
-            MainView()
-                .environment(\.session, session)
-                .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+        Group {
+            WindowGroup {
+                MainView()
+                    .environmentObject(delegate)
+                    .environment(\.session, session)
+                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+            }
+            #if os(iOS) || os(macOS)
+            .commands {
+                SidebarCommands()
+            }
+            #endif
+
+            #if os(macOS)
+            Settings {
+                SettingsMainView()
+                    .environment(\.session, session)
+                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+            }
+            #endif
         }
-        #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
         .onChange(of: scenePhase) { phase in
-            switch phase {
-            case .active, .inactive:
-                break
-            case .background:
-                Task {
-                    do {
-                        try await session.scheduleBackgroundRefreshTask()
-                        #if canImport(BackgroundTasks) && !os(macOS)
-                        try await session.scheduleDataCleansingBackgroundTaskIfNeeded()
-                        #endif
-                    } catch {
-                        Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
+            Task {
+                do {
+                    switch phase {
+                    case .active:
+                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .active)
+                    case .inactive:
+                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .inactive)
+                    case .background:
+                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .background)
+                    @unknown default:
+                        break
                     }
+
+                } catch {
+                    Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
                 }
-            @unknown default:
-                break
             }
         }
-        #endif
-
-        #if os(macOS)
-        Settings {
-            SettingsMainView()
-        }
-        #endif
     }
 }

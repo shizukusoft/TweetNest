@@ -11,16 +11,14 @@ import AuthenticationServices
 import TweetNestKit
 import UnifiedLogging
 
-struct AppSidebarNavigation: View {
-    enum NavigationItem: Hashable {
-        case profile(Account)
-        case followings(Account)
-        case followers(Account)
-        case blockings(Account)
-    }
+enum AppSidebarNavigationItem: Hashable {
+    case profile(Account)
+    case followings(Account)
+    case followers(Account)
+    case blockings(Account)
+}
 
-    @State private var navigationItemSelection: NavigationItem? = nil
-    
+struct AppSidebarNavigation: View {
     @Environment(\.session) private var session: Session
 
     @State private var disposables = Set<AnyCancellable>()
@@ -29,28 +27,20 @@ struct AppSidebarNavigation: View {
     private var inProgressPersistentContainerCloudKitEvent: PersistentContainer.CloudKitEvent? {
         persistentContainerCloudKitEvents.first { $0.endDate == nil }
     }
-    
-    @State private var something: String? = nil
+
+    @Binding var isPersistentContainerLoaded: Bool
 
     #if os(iOS)
     @State private var showSettings: Bool = false
     #endif
 
-    @State private var webAuthenticationSession: ASWebAuthenticationSession? = nil
+    @State private var webAuthenticationSession: ASWebAuthenticationSession?
     @State private var isAddingAccount: Bool = false
 
     @State private var isRefreshing: Bool = false
 
     @State private var showErrorAlert: Bool = false
-    @State private var error: TweetNestError? = nil
-
-    @FetchRequest(
-        sortDescriptors: [
-            SortDescriptor(\.preferringSortOrder, order: .forward),
-            SortDescriptor(\.creationDate, order: .reverse),
-        ],
-        animation: .default)
-    private var accounts: FetchedResults<Account>
+    @State private var error: TweetNestError?
 
     @Environment(\.refresh) private var refreshAction
 
@@ -61,53 +51,63 @@ struct AppSidebarNavigation: View {
         } icon: {
             Image(systemName: "gearshape")
         }
-        #if os(watchOS)
-        .labelStyle(TweetNestWatchLabelStyle(iconSize: 32))
-        #endif
     }
 
     @ViewBuilder
     var addAccountButton: some View {
         Button(action: addAccount) {
-            Label(Text("Add Account"), systemImage: "plus")
+            Label("Add Account", systemImage: "plus")
         }
-        .disabled(isAddingAccount)
+        .disabled(isPersistentContainerLoaded == false || isAddingAccount)
     }
+
+    #if os(macOS) || os(watchOS)
+    @ViewBuilder
+    var refreshButton: some View {
+        Button {
+            Task {
+                if let refreshAction = refreshAction {
+                    await refreshAction()
+                } else {
+                    await refresh()
+                }
+            }
+        } label: {
+            Label("Refresh", systemImage: "arrow.clockwise")
+        }
+        .disabled(isPersistentContainerLoaded == false || isRefreshing)
+    }
+    #endif
 
     var body: some View {
         NavigationView {
             ZStack {
                 List {
-                    ForEach(accounts) { account in
-                        Section {
-                            AppSidebarAccountRows(account: account, navigationItemSelection: $navigationItemSelection)
-                        } header: {
-                            Label {
-                                Text(verbatim: account.user?.displayUsername ?? account.objectID.description)
-                                    #if os(watchOS)
-                                    .padding([.bottom], 2)
-                                    #endif
-                            } icon: {
-                                ProfileImage(userDetail: account.user?.sortedUserDetails?.last)
-                                    #if os(watchOS)
-                                    .frame(width: 16, height: 16)
-                                    #else
-                                    .frame(width: 24, height: 24)
-                                    #endif
-                            }
-                        }
+                    if isPersistentContainerLoaded {
+                        AppSidebarNavigationAccountsRowContent()
                     }
 
                     #if os(watchOS)
+                    Section {
+                        addAccountButton
+                    }
+
                     Section {
                         NavigationLink {
                             SettingsMainView()
                         } label: {
                             showSettingsLabel
                         }
+                    } footer: {
+                        #if os(watchOS)
+                        statusView
+                        #endif
                     }
                     #endif
                 }
+                #if os(macOS)
+                .frame(minWidth: 182)
+                #endif
 
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
@@ -125,7 +125,7 @@ struct AppSidebarNavigation: View {
             .listStyle(.sidebar)
             #endif
             .refreshable(action: refresh)
-            .navigationTitle(Text("TweetNest"))
+            .navigationTitle(Text(verbatim: "TweetNest"))
             .toolbar {
                 #if os(iOS)
                 ToolbarItemGroup(placement: .navigationBarLeading) {
@@ -137,42 +137,22 @@ struct AppSidebarNavigation: View {
                 }
                 #endif
 
+                #if os(macOS) || os(watchOS)
                 ToolbarItemGroup(placement: .primaryAction) {
-                    #if os(watchOS)
-                    Group {
-                        if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
-                            VStack {
-                                persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
-                                addAccountButton
-                            }
-                        } else {
-                            addAccountButton
-                        }
-                    }
-                    .padding(.bottom)
-                    #else
-                    addAccountButton
-                    #endif
-                }
-
-                #if os(macOS)
-                ToolbarItemGroup(placement: .automatic) {
-                    Button(Label(Text("Refresh"), systemImage: "arrow.clockwise")) {
-                        if let refresh = refreshAction {
-                            Task {
-                                refresh
-                            }
-                        }
-                    }
-                    .disabled(isRefreshing)
+                    refreshButton
+                        #if os(watchOS)
+                        .padding(.bottom)
+                        #endif
                 }
                 #endif
 
                 #if os(macOS) || os(iOS)
+                ToolbarItemGroup(placement: .automatic) {
+                    addAccountButton
+                }
+
                 ToolbarItemGroup(placement: .status) {
-                    if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
-                        persistentContainerCloudKitEventView(for: inProgressPersistentContainerCloudKitEvent)
-                    }
+                    statusView
                 }
                 #endif
             }
@@ -182,8 +162,8 @@ struct AppSidebarNavigation: View {
                 NavigationView {
                     SettingsMainView()
                         .toolbar {
-                            ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(Text("Cancel"), role: .cancel) {
+                            ToolbarItemGroup(placement: .primaryAction) {
+                                Button("Done") {
                                     showSettings.toggle()
                                 }
                             }
@@ -195,26 +175,44 @@ struct AppSidebarNavigation: View {
     }
 
     @ViewBuilder
-    func persistentContainerCloudKitEventView(for event: PersistentContainer.CloudKitEvent) -> some View {
-        HStack(spacing: 4) {
-            ProgressView()
-                #if os(watchOS)
-                .frame(width: 29.5, height: 29.5, alignment: .center)
+    var statusView: some View {
+        if isPersistentContainerLoaded == false {
+            HStack(spacing: 4) {
+                #if !os(watchOS)
+                ProgressView()
                 #endif
 
-            Group {
-                switch event.type {
-                case .setup:
-                    Text("Preparing...")
-                case .import, .export, .unknown:
-                    Text("Syncing...")
-                }
+                Text("Loading...")
+                    #if !os(watchOS)
+                    .font(.system(.callout))
+                    .foregroundColor(.secondary)
+                    #endif
+                    #if os(iOS)
+                    .fixedSize()
+                    #endif
             }
-            .font(.system(.callout))
-            #if os(iOS)
-            .fixedSize()
-            #endif
-            .foregroundColor(.gray)
+        } else if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
+            HStack(spacing: 4) {
+                #if !os(watchOS)
+                ProgressView()
+                #endif
+
+                Group {
+                    switch inProgressPersistentContainerCloudKitEvent.type {
+                    case .setup:
+                        Text("Preparing to Sync...")
+                    case .import, .export, .unknown:
+                        Text("Syncing...")
+                    }
+                }
+                #if !os(watchOS)
+                .font(.system(.callout))
+                .foregroundColor(.secondary)
+                #endif
+                #if os(iOS)
+                .fixedSize()
+                #endif
+            }
         }
     }
 
@@ -280,7 +278,7 @@ struct AppSidebarNavigation: View {
 #if DEBUG
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
-        AppSidebarNavigation()
+        AppSidebarNavigation(isPersistentContainerLoaded: .constant(true))
             .environment(\.session, Session.preview)
             .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }

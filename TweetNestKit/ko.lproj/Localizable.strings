@@ -1,16 +1,9 @@
-/* 
-  Localizable.strings
-  TweetNest
+/* background-refresh notification title. */
+"Background Refresh" = "백그라운드 새로 고침";
 
-  Created by Jaehong Kang on 2021/08/08.
-  
-*/
+/* update-accounts notification subtitle. */
+"Error" = "오류";
 
 /* background-refresh notification. */
 "New Data Available" = "새로운 데이터 있음";
 
-/* background-refresh notification title. */
-"Background Refresh" = "백그라운드 새로 고침";
-
-/* background-refresh notification subtitle. */
-"Error" = "오류";

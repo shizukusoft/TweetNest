@@ -15,6 +15,10 @@
         <attribute name="dataSHA512Hash" optional="YES" attributeType="Binary"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
     </entity>
+    <entity name="Preferences" representedClassName=".ManagedPreferences" syncable="YES">
+        <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TWNKManagedPreferencesTransformer" customClassName="."/>
+    </entity>
     <entity name="User" representedClassName=".User" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
@@ -49,5 +53,6 @@
         <element name="DataAsset" positionX="-54" positionY="144" width="128" height="89"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="134"/>
         <element name="UserDetail" positionX="-45" positionY="27" width="128" height="299"/>
+        <element name="Preferences" positionX="-54" positionY="144" width="128" height="59"/>
     </elements>
 </model>

@@ -9,15 +9,15 @@ import Foundation
 import UnifiedLogging
 
 @inlinable
-public func withExtendedBackgroundExecution<T>(function: String = #function, fileID: String = #fileID, line: Int = #line, expirationHandler: (() -> ())? = nil, body: () throws -> T) rethrows -> T {
+public func withExtendedBackgroundExecution<T>(function: String = #function, fileID: String = #fileID, line: Int = #line, expirationHandler: (() -> Void)? = nil, body: () throws -> T) rethrows -> T {
     try withExtendedBackgroundExecution(identifier: "\(function) (\(fileID):\(line))", expirationHandler: expirationHandler, body: body)
 }
 
-public func withExtendedBackgroundExecution<T>(identifier: String, expirationHandler: (() -> ())? = nil, body: () throws -> T) rethrows -> T {
-    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "extended-background-execution")
+public func withExtendedBackgroundExecution<T>(identifier: String, expirationHandler: (() -> Void)? = nil, body: () throws -> T) rethrows -> T {
+    let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
-    let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
+    let token = ProcessInfo.processInfo.beginActivity(options: [.idleSystemSleepDisabled, .suddenTerminationDisabled, .automaticTerminationDisabled], reason: identifier)
     defer {
         ProcessInfo.processInfo.endActivity(token)
     }
@@ -72,10 +72,10 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: @escapi
 }
 
 private func handleExtendedBackgroundExecution<T>(identifier: String, expirationHandler: @escaping @Sendable () -> Void, body: @escaping () async throws -> T) async rethrows -> T {
-    let logger = Logger(subsystem: Bundle.module.bundleIdentifier!, category: "extended-background-execution")
+    let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
 
     #if os(macOS)
-    let token = ProcessInfo.processInfo.beginActivity(options: .idleSystemSleepDisabled, reason: identifier)
+    let token = ProcessInfo.processInfo.beginActivity(options: [.idleSystemSleepDisabled, .suddenTerminationDisabled, .automaticTerminationDisabled], reason: identifier)
     defer {
         ProcessInfo.processInfo.endActivity(token)
     }

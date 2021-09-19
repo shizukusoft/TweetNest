@@ -13,19 +13,19 @@ struct SettingsAccountView: View {
     @ObservedObject var account: Account
 
     @State var showError: Bool = false
-    @State var error: TweetNestError? = nil
+    @State var error: TweetNestError?
 
     var body: some View {
         Form {
             Toggle(isOn: $account.preferences.fetchBlockingUsers) {
                 Text("Fetch Blocking Users")
             }
-            .onChange(of: account.preferences.fetchBlockingUsers) { newValue in
+            .onChange(of: account.preferences.fetchBlockingUsers) { _ in
                 save()
             }
         }
         .navigationTitle(
-            Text(verbatim: account.user?.displayUsername ?? account.objectID.description)
+            Text(verbatim: account.users?.last?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description)
         )
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

@@ -5,8 +5,6 @@
 //  Created by Jaehong Kang on 2021/08/15.
 //
 
-#if os(iOS) || os(macOS)
-
 import SwiftUI
 import Twitter
 import TweetNestKit
@@ -16,14 +14,17 @@ import OrderedCollections
 struct DeleteBulkTweetsFormView: View {
     @Environment(\.account) private var account: TweetNestKit.Account?
 
-    let tweets: OrderedSet<Tweet>
+    let tweets: OrderedDictionary<Tweet.ID, Tweet>
 
     private let leastTweetDate: Date
     private let greatestTweetDate: Date
 
     @Binding var isPresented: Bool
 
-    @State var targetTweets: [Tweet]
+    @State var targetTweetIDs: [Tweet.ID]
+
+    @State var includesTweets: Bool = true
+    @State var includesRetweets: Bool = true
 
     @State var sinceDate: Date
     @State var untilDate: Date
@@ -38,7 +39,7 @@ struct DeleteBulkTweetsFormView: View {
                 Rectangle()
                     .foregroundColor(.clear)
                     .overlay {
-                        DeleteBulkTweetsView(isPresented: $isPresented, targetTweets: targetTweets)
+                        DeleteBulkTweetsView(isPresented: $isPresented, targetTweetIDs: OrderedSet(targetTweetIDs))
                     }
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                     .zIndex(2)
@@ -54,7 +55,9 @@ struct DeleteBulkTweetsFormView: View {
                                     Text(tweets.count.twnk_formatted())
                                 }
                             }
+
                             Section {
+                                #if !os(watchOS)
                                 DatePicker(selection: $sinceDate, in: leastTweetDate...greatestTweetDate, displayedComponents: [.date]) {
                                     Text("Since")
                                 }
@@ -65,7 +68,7 @@ struct DeleteBulkTweetsFormView: View {
                                         }
                                     }
 
-                                    updateTargetTweets()
+                                    updateTargetTweetIDs()
                                 }
 
                                 DatePicker(selection: $untilDate, in: leastTweetDate...greatestTweetDate, displayedComponents: [.date]) {
@@ -78,23 +81,41 @@ struct DeleteBulkTweetsFormView: View {
                                         }
                                     }
 
-                                    updateTargetTweets()
+                                    updateTargetTweetIDs()
                                 }
+                                #endif
+
+                                Toggle("Tweets", isOn: $includesTweets)
+                                    .onChange(of: includesTweets) { _ in updateTargetTweetIDs() }
+
+                                Toggle("Retweets", isOn: $includesRetweets)
+                                    .onChange(of: includesRetweets) { _ in updateTargetTweetIDs() }
                             }
+
                             Section {
                                 HStack {
                                     Text("Target Tweets")
                                     Spacer()
-                                    Text(targetTweets.count.twnk_formatted())
+                                    Text(targetTweetIDs.count.twnk_formatted())
                                 }
                             }
-                            Section {
+                        }
+                        .toolbar {
+                            ToolbarItemGroup(placement: .cancellationAction) {
+                                Button(role: .cancel) {
+                                    isPresented = false
+                                } label: {
+                                    Text("Cancel")
+                                }
+                            }
+
+                            ToolbarItemGroup(placement: .destructiveAction) {
                                 Button(role: .destructive) {
                                     showConfirmAlert = true
                                 } label: {
                                     Text("Delete")
                                 }
-                                .disabled(targetTweets.count <= 0)
+                                .disabled(targetTweetIDs.count <= 0)
                                 .alert(Text("Delete Tweets?"), isPresented: $showConfirmAlert) {
                                     Button(role: .cancel) {
 
@@ -108,16 +129,7 @@ struct DeleteBulkTweetsFormView: View {
                                         Text("Delete")
                                     }
                                 } message: {
-                                    Text("\(targetTweets.count.twnk_formatted()) tweets will be deleted.")
-                                }
-                            }
-                        }
-                        .toolbar {
-                            ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(role: .cancel) {
-                                    isPresented = false
-                                } label: {
-                                    Text("Cancel")
+                                    Text("\(targetTweetIDs.count.twnk_formatted()) tweets will be deleted.")
                                 }
                             }
                         }
@@ -133,13 +145,14 @@ struct DeleteBulkTweetsFormView: View {
     }
 
     init(tweets: [Tweet], isPresented: Binding<Bool>) {
-        let tweets = OrderedSet(tweets)
+        let tweets: OrderedDictionary<Tweet.ID, Tweet> = OrderedDictionary<Tweet.ID, [Tweet]>(grouping: tweets, by: \.id)
+            .compactMapValues { $0.last }
 
         self.tweets = tweets
-        _targetTweets = State(initialValue: Array(tweets))
+        _targetTweetIDs = State(initialValue: Array(tweets.keys))
         _isPresented = isPresented
 
-        let sortedTweets = tweets.sorted { $0.createdAt < $1.createdAt }
+        let sortedTweets = tweets.values.sorted { $0.createdAt < $1.createdAt }
 
         leastTweetDate = sortedTweets.first?.createdAt ?? Date()
         greatestTweetDate = sortedTweets.last?.createdAt ?? Date()
@@ -148,11 +161,19 @@ struct DeleteBulkTweetsFormView: View {
         _untilDate = State(initialValue: greatestTweetDate)
     }
 
-    private func updateTargetTweets() {
-        self.targetTweets = tweets
+    private func updateTargetTweetIDs() {
+        self.targetTweetIDs = tweets
             .lazy
-            .filter { $0.createdAt >= sinceDate }
-            .filter { $0.createdAt <= untilDate }
+            .filter { $0.value.createdAt >= sinceDate }
+            .filter { $0.value.createdAt <= untilDate.addingTimeInterval(60 * 60 * 24 - 1) }
+            .filter {
+                if $0.value.text.starts(with: "RT @") { // Twitter Archive Does (assets/js/ondemand.App.{hash}.js)
+                    return includesRetweets
+                } else {
+                    return includesTweets
+                }
+            }
+            .map { $0.key }
     }
 }
 
@@ -161,5 +182,3 @@ struct DeleteBulkTweetsFormView_Previews: PreviewProvider {
         DeleteBulkTweetsFormView(tweets: [], isPresented: .constant(true))
     }
 }
-
-#endif

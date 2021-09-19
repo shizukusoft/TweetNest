@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TweetNestKit
+import UnifiedLogging
 import UserNotifications
 
 #if canImport(CoreSpotlight)
@@ -14,22 +15,27 @@ import CoreSpotlight
 #endif
 
 struct MainView: View {
+    @EnvironmentObject private var appDelegate: TweetNestAppDelegate
+
     @Environment(\.managedObjectContext) private var viewContext
+    @Environment(\.session) private var session: Session
+
+    @State private var isPersistentContainerLoaded: Bool = false
 
     @State var error: TweetNestError?
     @State var showErrorAlert: Bool = false
 
-    @State var user: User? = nil
+    @State var user: User?
 
     var body: some View {
-        AppSidebarNavigation()
+        AppSidebarNavigation(isPersistentContainerLoaded: $isPersistentContainerLoaded)
             .alert(isPresented: $showErrorAlert, error: error)
             .sheet(item: $user) { user in
                 NavigationView {
                     UserView(user: user)
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
-                                Button(Text("Cancel"), role: .cancel) {
+                                Button("Cancel", role: .cancel) {
                                     self.user = nil
                                 }
                             }
@@ -40,8 +46,24 @@ struct MainView: View {
                 do {
                     try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .badge, .sound])
                 } catch {
+                    Logger().error("Error occurred: \(error as NSError, privacy: .public)")
                     self.error = TweetNestError(error)
                     self.showErrorAlert = true
+                }
+            }
+            .onReceive(appDelegate.$sessionPersistentContainerStoresLoadingResult) { result in
+                guard let result = result else {
+                    isPersistentContainerLoaded = false
+                    return
+                }
+
+                do {
+                    try result.get()
+
+                    isPersistentContainerLoaded = true
+                } catch {
+                    self.error = TweetNestError(error)
+                    showErrorAlert = true
                 }
             }
             #if canImport(CoreSpotlight)

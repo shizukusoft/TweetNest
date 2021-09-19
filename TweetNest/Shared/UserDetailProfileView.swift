@@ -17,7 +17,7 @@ struct UserDetailProfileView: View {
         Group {
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
-                    ProfileImage(userDetail: userDetail)
+                    ProfileImage(profileImageURL: userDetail.profileImageURL)
                         #if !os(watchOS)
                         .frame(width: 48, height: 48)
                         #else
@@ -28,34 +28,40 @@ struct UserDetailProfileView: View {
                         Text(verbatim: userDetail.name ?? userDetail.user?.id.flatMap({"#\($0)"}) ?? "")
                         if let username = userDetail.username {
                             Text(verbatim: "@\(username)")
-                                .foregroundColor(.gray)
+                                .foregroundColor(.secondary)
                         }
                     }
                 }
 
                 if let userAttributedDescription = userDetail.userAttributedDescription.flatMap({AttributedString($0)}), userAttributedDescription.startIndex != userAttributedDescription.endIndex {
                     Text(userAttributedDescription)
-                        .frame(maxHeight: .infinity)
                 }
             }
             .padding([.top, .bottom], 8)
 
             if let location = userDetail.location {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
-                HStack {
-                    Label(Text("Location"), systemImage: "location")
-                        .layoutPriority(1)
+                Label {
+                    TweetNestStack {
+                        Text("Location")
+                            .layoutPriority(1)
+                            .lineLimit(1)
+                        #if !os(watchOS)
+                        Spacer()
+                        #endif
+                        Group {
+                            if let locationQueryURL = locationQueryURL {
+                                Link(location, destination: locationQueryURL)
+                            } else {
+                                Text(location)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                         .lineLimit(1)
-                    Spacer()
-                    Group {
-                        if let locationQueryURL = locationQueryURL {
-                            Link(location, destination: locationQueryURL)
-                        }
-                        else {
-                            Text(location)
-                        }
+                        .allowsTightening(true)
                     }
-                    .multilineTextAlignment(.trailing)
+                } icon: {
+                    Image(systemName: "location")
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Location"))
@@ -64,13 +70,20 @@ struct UserDetailProfileView: View {
             }
 
             if let url = userDetail.url {
-                HStack {
-                    Label(Text("URL"), systemImage: "safari")
-                        .layoutPriority(1)
-                        .lineLimit(1)
-                    Spacer()
-                    Link(url.absoluteString, destination: url)
-                        .multilineTextAlignment(.trailing)
+                Label {
+                    TweetNestStack {
+                        Text("URL")
+                            .layoutPriority(1)
+                            .lineLimit(1)
+                        #if !os(watchOS)
+                        Spacer()
+                        #endif
+                        Link(url.absoluteString, destination: url)
+                            .lineLimit(1)
+                            .allowsTightening(true)
+                    }
+                } icon: {
+                    Image(systemName: "safari")
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("URL"))
@@ -79,13 +92,27 @@ struct UserDetailProfileView: View {
             }
 
             if let userCreationDate = userDetail.userCreationDate {
-                HStack {
-                    Label(Text("Joined"), systemImage: "calendar")
-                        .layoutPriority(1)
+                Label {
+                    TweetNestStack {
+                        Text("Joined")
+                            .layoutPriority(1)
+                            .lineLimit(1)
+                        #if !os(watchOS)
+                        Spacer()
+                        #endif
+                        Group {
+                            #if os(watchOS)
+                            Text(userCreationDate.formatted(date: .numeric, time: .shortened))
+                            #else
+                            Text(userCreationDate.formatted(date: .numeric, time: .standard))
+                            #endif
+                        }
+                        .foregroundColor(.secondary)
                         .lineLimit(1)
-                    Spacer()
-                    Text(userCreationDate.formatted(date: .numeric, time: .standard))
-                        .multilineTextAlignment(.trailing)
+                        .allowsTightening(true)
+                    }
+                } icon: {
+                    Image(systemName: "calendar")
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
@@ -93,11 +120,11 @@ struct UserDetailProfileView: View {
             }
 
             if userDetail.isProtected {
-                Label(Text("Protected"), systemImage: "lock")
+                Label("Protected", systemImage: "lock")
             }
 
             if userDetail.isVerified {
-                Label(Text("Verified"), systemImage: "checkmark.seal")
+                Label("Verified", systemImage: "checkmark.seal")
             }
         }
     }

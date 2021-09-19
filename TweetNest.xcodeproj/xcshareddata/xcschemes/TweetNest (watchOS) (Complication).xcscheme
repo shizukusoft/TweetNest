@@ -54,11 +54,10 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
-      launchAutomaticallySubstyle = "32">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.Carousel"
-         RemotePath = "/TweetNest">
+      launchAutomaticallySubstyle = "32"
+      notificationPayloadFile = "TweetNest/watchOS/PushNotificationPayload.apns">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "19A6FF1426D6835F00AB7B7E"
@@ -66,7 +65,17 @@
             BlueprintName = "TweetNest (watchOS)"
             ReferencedContainer = "container:TweetNest.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
+      </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.SQLDebug 1"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-com.tweetnest.TweetNest.Preview"
+            isEnabled = "NO">
+         </CommandLineArgument>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -74,11 +83,10 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES"
-      launchAutomaticallySubstyle = "32">
-      <RemoteRunnable
-         runnableDebuggingMode = "2"
-         BundleIdentifier = "com.apple.Carousel"
-         RemotePath = "/TweetNest">
+      launchAutomaticallySubstyle = "32"
+      notificationPayloadFile = "TweetNest/watchOS/PushNotificationPayload.apns">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "19A6FF1426D6835F00AB7B7E"
@@ -86,16 +94,7 @@
             BlueprintName = "TweetNest (watchOS)"
             ReferencedContainer = "container:TweetNest.xcodeproj">
          </BuildableReference>
-      </RemoteRunnable>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "19A6FF1426D6835F00AB7B7E"
-            BuildableName = "TweetNest.app"
-            BlueprintName = "TweetNest (watchOS)"
-            ReferencedContainer = "container:TweetNest.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

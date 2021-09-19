@@ -10,23 +10,66 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffList: View {
-    @ObservedObject var user: User
-    @State var diffKeyPath: KeyPath<UserDetail, [String]?>
+    @FetchRequest private var userDetails: FetchedResults<UserDetail>
+
+    let title: Text
+    let diffKeyPath: KeyPath<UserDetail, [String]?>
 
     @State private var searchQuery: String = ""
 
-    var body: some View {
-        let sortedUserDetails = user.sortedUserDetails ?? OrderedSet()
+    @ViewBuilder private var usersDiffList: some View {
+        List(userDetails) { userDetail in
+            let userDetailIndex = userDetails.firstIndex(of: userDetail)
+            let previousUserDetailIndex = userDetailIndex.flatMap { $0 + 1 }
+            let previousUserDetail = previousUserDetailIndex.flatMap { userDetails.indices.contains($0) ? userDetails[$0] : nil }
 
-        List {
-            ForEach(sortedUserDetails.reversed()) { userDetail in
-                let previousUserDetailIndex = (sortedUserDetails.firstIndex(of: userDetail) ?? 0) - 1
-                let previousUserDetail = (sortedUserDetails.startIndex..<sortedUserDetails.endIndex).contains(previousUserDetailIndex) ? sortedUserDetails[previousUserDetailIndex] : nil
-
-                UsersDiffListSection(previousUserDetail: previousUserDetail, currentUserDetail: userDetail, diffKeyPath: $diffKeyPath, searchQuery: $searchQuery)
-            }
+            UsersDiffListSection(
+                header: Text(verbatim: userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description),
+                userIDs: OrderedSet(userDetail[keyPath: diffKeyPath] ?? []),
+                previousUserIDs: OrderedSet(previousUserDetail?[keyPath: diffKeyPath] ?? []),
+                searchQuery: $searchQuery
+            )
         }
         .searchable(text: $searchQuery)
+    }
+
+    var body: some View {
+        #if os(macOS)
+        NavigationView {
+            usersDiffList
+                .listStyle(.plain)
+                .navigationTitle(title)
+        }
+        .navigationViewStyle(.columns)
+        #else
+        usersDiffList
+            .navigationTitle(title)
+        #endif
+    }
+
+    init(user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>, title: Text) {
+        self._userDetails = FetchRequest(
+            fetchRequest: {
+                let fetchRequest = UserDetail.fetchRequest()
+                fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                    user.flatMap { NSPredicate(format: "user == %@", $0.objectID) } ?? NSPredicate(value: false),
+                    diffKeyPath._kvcKeyPathString.flatMap { NSPredicate(format: "%K != NULL", $0) },
+                ].compactMap({ $0 }))
+                fetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                ]
+                if let keyPathString = diffKeyPath._kvcKeyPathString {
+                    fetchRequest.propertiesToFetch = ["creationDate", keyPathString]
+                } else {
+                    fetchRequest.returnsObjectsAsFaults = false
+                }
+
+                return fetchRequest
+            }()
+        )
+
+        self.title = title
+        self.diffKeyPath = diffKeyPath
     }
 }
 

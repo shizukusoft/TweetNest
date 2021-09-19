@@ -5,22 +5,22 @@
 //  Created by Jaehong Kang on 2021/08/15.
 //
 
-#if os(iOS) || os(macOS)
-
 import SwiftUI
 import TweetNestKit
 import Twitter
 
 struct DeleteBulkTweetsRecentTweetsView: View {
+    @Environment(\.session) private var session: TweetNestKit.Session
+
     let account: TweetNestKit.Account
 
     @Binding var isPresented: Bool
-    
-    @State var tweets: [Tweet]? = nil
-    
+
+    @State var tweets: [Tweet]?
+
     @State var showError: Bool = false
-    @State var error: TweetNestError? = nil
-    
+    @State var error: TweetNestError?
+
     var body: some View {
         ZStack {
             if let tweets = tweets {
@@ -28,7 +28,7 @@ struct DeleteBulkTweetsRecentTweetsView: View {
                     .environment(\.account, account)
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
             } else {
-                ProgressView(String(localized: "Loading Recent Tweets..."))
+                ProgressView("Loading Recent Tweets...")
                     .task {
                         await fetchTweets()
                     }
@@ -51,12 +51,12 @@ struct DeleteBulkTweetsRecentTweetsView: View {
     }
 
     func fetchTweets() async {
-        guard let userID = account.user?.id else {
+        guard let userID = account.userID else {
             return
         }
 
         do {
-            let tweets = try await User.tweets(forUserID: userID, session: .session(for: account))
+            let tweets = try await User.tweets(forUserID: userID, session: .session(for: account, session: session))
                 .map { try $0.get() }
 
             withAnimation {
@@ -74,5 +74,3 @@ struct DeleteBulkTweetsRecentTweetsView_Previews: PreviewProvider {
         DeleteBulkTweetsRecentTweetsView(account: .preview, isPresented: .constant(true))
     }
 }
-
-#endif
