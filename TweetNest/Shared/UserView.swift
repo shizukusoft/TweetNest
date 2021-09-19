@@ -73,12 +73,14 @@ extension UserView {
                 } label: {
                     Text("Delete Recent Tweets")
                 }
+                .accessibilityIdentifier("Delete Recent Tweets")
 
                 Button(role: .destructive) {
                     showBulkDeleteAllTweets = true
                 } label: {
                     Text("Delete All Tweets")
                 }
+                .accessibilityIdentifier("Delete All Tweets")
             } label: {
                 Label {
                     Text("Delete")
@@ -86,12 +88,14 @@ extension UserView {
                     Image(systemName: "trash")
                 }
             }
+            .accessibilityIdentifier("Delete")
             #else
             Button(role: .destructive) {
                 showBulkDeleteRecentTweets = true
             } label: {
                 Text("Delete Recent Tweets")
             }
+            .accessibilityIdentifier("Delete Recent Tweets")
             #endif
         }
 
@@ -212,6 +216,7 @@ extension UserView {
                                 Label("More", systemImage: "ellipsis.circle")
                                     .labelStyle(.iconOnly)
                             }
+                            .accessibilityIdentifier("More")
                         } else {
                             if let userProfileURL = userProfileURL {
                                 Link(destination: userProfileURL) {
