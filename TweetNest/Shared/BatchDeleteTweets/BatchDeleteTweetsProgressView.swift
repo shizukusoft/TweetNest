@@ -89,37 +89,37 @@ struct BatchDeleteTweetsProgressView: View {
             isBatchDeletionExecuting = false
         }
 
-//        await withExtendedBackgroundExecution {
-//            await withTaskCancellationHandler {
-//                guard let account = account else {
-//                    return
-//                }
-//
-//                await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
-//                    for (offset, targetTweetID) in targetTweets.keys.enumerated() {
-//                        taskGroup.addTask {
-//                            do {
-//                                try await Tweet.delete(targetTweetID, session: .session(for: account, session: session))
-//                                return (offset, .success(()))
-//                            } catch {
-//                                return (offset, .failure(error))
-//                            }
-//                        }
-//                    }
-//
-//                    for await result in taskGroup {
-//                        results[result.0] = result.1
-//
-//                        progress.completedUnitCount = Int64(results.count)
-//                        updateProgressDescription()
-//                    }
-//
-//                    isBatchDeletionFinished = true
-//                }
-//            } onCancel: {
-//                progress.cancel()
-//            }
-//        }
+        await withExtendedBackgroundExecution {
+            await withTaskCancellationHandler {
+                guard let account = account else {
+                    return
+                }
+
+                await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
+                    for (offset, targetTweetID) in targetTweets.keys.enumerated() {
+                        taskGroup.addTask {
+                            do {
+                                try await Tweet.delete(targetTweetID, session: .session(for: account, session: session))
+                                return (offset, .success(()))
+                            } catch {
+                                return (offset, .failure(error))
+                            }
+                        }
+                    }
+
+                    for await result in taskGroup {
+                        results[result.0] = result.1
+
+                        progress.completedUnitCount = Int64(results.count)
+                        updateProgressDescription()
+                    }
+
+                    isBatchDeletionFinished = true
+                }
+            } onCancel: {
+                progress.cancel()
+            }
+        }
     }
 
     private func updateProgressDescription() {

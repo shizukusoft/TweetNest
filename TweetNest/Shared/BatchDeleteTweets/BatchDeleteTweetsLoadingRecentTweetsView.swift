@@ -35,8 +35,6 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
             return
         }
 
-        sleep(2)
-
         do {
             let tweets: OrderedDictionary<Tweet.ID, [Tweet]> = OrderedDictionary(
                 grouping: try await User.tweets(forUserID: userID, session: .session(for: account, session: session)).compactMap { try? $0.get() }
