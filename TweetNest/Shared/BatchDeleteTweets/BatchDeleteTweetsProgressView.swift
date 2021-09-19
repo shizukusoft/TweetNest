@@ -125,13 +125,13 @@ struct BatchDeleteTweetsProgressView: View {
     private func updateProgressDescription() {
         progress.localizedDescription = String(localized: "Deleting \(progress.totalUnitCount.twnk_formatted()) tweets...")
         progress.localizedAdditionalDescription = {
-            var localizedAdditionalDescription = String(localized: "\(progress.completedUnitCount.twnk_formatted()) of \(progress.totalUnitCount.twnk_formatted()) tweets deleted.")
+            var localizedAdditionalDescription = String(localized: "\(progress.completedUnitCount.twnk_formatted()) of \(progress.totalUnitCount.twnk_formatted()) tweets deletion requested.")
 
             let failedResultsCount = failedResults.count
 
             if failedResultsCount > 0 {
                 localizedAdditionalDescription.append("\n")
-                localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.twnk_formatted()) tweets failed."))
+                localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.twnk_formatted()) tweets failed to delete."))
             }
 
             return localizedAdditionalDescription
