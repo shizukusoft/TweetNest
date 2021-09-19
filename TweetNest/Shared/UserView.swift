@@ -269,12 +269,12 @@ extension UserView {
                 .sheet(isPresented: $showBulkDeleteRecentTweets) {
                     if let account = account, user.accounts?.contains(account) == true {
                         #if os(macOS)
-                        DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                        BatchDeleteTweetsView(isPresented: $showBulkDeleteRecentTweets, account: account, source: .recentTweets)
                             .padding()
                             .frame(minWidth: 320, minHeight: 240)
                         #else
                         NavigationView {
-                            DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                            BatchDeleteTweetsView(isPresented: $showBulkDeleteRecentTweets, account: account, source: .recentTweets)
                         }
                         #endif
                     }
@@ -283,12 +283,12 @@ extension UserView {
                 .sheet(isPresented: $showBulkDeleteAllTweets) {
                     if let account = account,user.accounts?.contains(account) == true {
                         #if os(macOS)
-                        DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
+                        BatchDeleteTweetsView(isPresented: $showBulkDeleteAllTweets, account: account, source: .twitterArchive)
                             .padding()
                             .frame(minWidth: 320, minHeight: 240)
                         #else
                         NavigationView {
-                            DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
+                            BatchDeleteTweetsView(isPresented: $showBulkDeleteAllTweets, account: account, source: .twitterArchive)
                         }
                         #endif
                     }
