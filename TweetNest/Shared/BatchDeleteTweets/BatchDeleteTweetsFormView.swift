@@ -80,6 +80,9 @@ struct BatchDeleteTweetsFormView: View {
                 }
             }
         }
+        .onAppear {
+            updateTargetTweets()
+        }
         .toolbar {
             ToolbarItemGroup(placement: .destructiveAction) {
                 Button(role: .destructive) {
@@ -128,11 +131,22 @@ struct BatchDeleteTweetsFormView: View {
     }
 
     private func updateTargetTweets() {
+        let calendar = Calendar.current
+
+        let sinceDate = calendar.startOfDay(for: sinceDate)
+        let untilDate = untilDate
+        let nextUntilDate = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: untilDate))
+
         self.targetTweets = OrderedDictionary(
             uniqueKeysWithValues: sourceTweets
                 .lazy
-                .filter { $0.value.createdAt >= sinceDate }
-                .filter { $0.value.createdAt <= untilDate.addingTimeInterval(60 * 60 * 24 - 1) }
+                .filter {
+                    if let nextUntilDate = nextUntilDate {
+                        return (sinceDate..<nextUntilDate).contains($0.value.createdAt)
+                    } else {
+                        return (sinceDate...untilDate).contains($0.value.createdAt)
+                    }
+                }
                 .filter {
                     if $0.value.text.starts(with: "RT @") { // Twitter Archive Does (assets/js/ondemand.App.{hash}.js)
                         return includesRetweets
