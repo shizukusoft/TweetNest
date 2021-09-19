@@ -244,7 +244,7 @@ extension UserView {
                             refreshButton
                             #endif
 
-                            if let account = account, user.accounts?.contains(account) == false {
+                            if let account = account, user.accounts?.contains(account) != false {
                                 deleteMenu
                             }
                         }
