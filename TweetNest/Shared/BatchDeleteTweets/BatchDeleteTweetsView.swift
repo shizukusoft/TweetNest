@@ -64,7 +64,7 @@ struct BatchDeleteTweetsView: View {
             }
         }
         .environment(\.account, account)
-        .navigationTitle(Text("Delete Tweets"))
+        .navigationTitle("Delete Tweets")
         .toolbar {
             ToolbarItemGroup(placement: .cancellationAction) {
                 if isBatchDeletionFinished == false {
