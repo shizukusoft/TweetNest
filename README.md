@@ -1,11 +1,10 @@
 # TweetNest
 
-A Twitter manager for iOS/iPadOS/macOS.
-
 ## Description
 
 ### en-US
 
+```
 TweetNest is a Twitter account manager for iOS, watchOS and macOS.
 
 Key Features:
@@ -21,9 +20,11 @@ Stores all data only in your device and iCloud.
 
 Tweet Delete
 Delete your all or some tweets.
+```
 
 ### ko
 
+```
 TweetNest는 iOS, watchOS, macOS를 위한 Twitter 계정 관리 앱입니다.
 
 주요 기능:
@@ -39,3 +40,4 @@ iCloud 동기화
 
 트윗 지우기
 전부 혹은 일부 트윗을 지울 수 있습니다.
+```
