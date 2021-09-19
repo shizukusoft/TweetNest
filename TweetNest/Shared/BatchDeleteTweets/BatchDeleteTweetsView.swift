@@ -90,6 +90,42 @@ struct BatchDeleteTweetsView: View {
         .onChange(of: sourceTweets) { newValue in
             targetTweets = newValue ?? [:]
         }
+        #if DEBUG
+        .onAppear {
+            if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") {
+                sourceTweets = OrderedDictionary<Tweet.ID, [Tweet]>(
+                    grouping: (0..<39042).compactMap { id in
+                        return #"""
+                        {
+                          "retweeted" : false,
+                          "source" : "<a href=\"http://twitter.com/download/iphone\" rel=\"nofollow\">Twitter for iPhone</a>",
+                          "entities" : {
+                            "hashtags" : [ ],
+                            "symbols" : [ ],
+                            "user_mentions" : [ ],
+                            "urls" : [ ]
+                          },
+                          "favorite_count" : "0",
+                          "id_str" : "\#(-id)",
+                          "truncated" : false,
+                          "retweet_count" : "0",
+                          "id" : "\#(-id)",
+                          "created_at" : "Fri Apr 02 07:22:44 +0000 2021",
+                          "favorited" : false,
+                          "full_text" : "Preview Text",
+                          "lang" : "en"
+                        }
+                        """#
+                        .data(using: .utf8)
+                        .flatMap {
+                            try? JSONDecoder.twt_default.decode(Tweet.self, from: $0)
+                        }
+                    }
+                ) { $0.id }
+                .compactMapValues { $0.last }
+            }
+        }
+        #endif
     }
 }
 
