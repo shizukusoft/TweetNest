@@ -92,7 +92,7 @@ struct BatchDeleteTweetsView: View {
         }
         #if DEBUG
         .onAppear {
-            if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") {
+            if TweetNestApp.isPreview {
                 sourceTweets = OrderedDictionary<Tweet.ID, [Tweet]>(
                     grouping: (0..<39042).compactMap { id in
                         return #"""

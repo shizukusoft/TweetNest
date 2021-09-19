@@ -14,7 +14,7 @@ import UnifiedLogging
 class TweetNestAppDelegate: NSObject, ObservableObject {
     #if DEBUG
     let session: Session = {
-        if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") {
+        if TweetNestApp.isPreview {
             return Session.preview
         } else {
             return Session.shared
@@ -46,7 +46,7 @@ class TweetNestAppDelegate: NSObject, ObservableObject {
             try await session.persistentContainer.loadPersistentStores()
 
             #if DEBUG
-            if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") {
+            if TweetNestApp.isPreview {
                 try insertPreviewDataToPersistentContainer()
             }
             #endif

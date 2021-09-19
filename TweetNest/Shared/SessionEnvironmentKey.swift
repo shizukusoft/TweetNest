@@ -11,7 +11,7 @@ import TweetNestKit
 public struct SessionEnvironmentKey: EnvironmentKey {
     #if DEBUG
     public static var defaultValue: Session = {
-        if CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") {
+        if TweetNestApp.isPreview {
             return Session.preview
         } else {
             return Session.shared
