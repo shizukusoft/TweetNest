@@ -36,7 +36,6 @@ struct BatchDeleteTweetsView: View {
                         targetTweets: $targetTweets,
                         isBatchDeletionStarted: $isBatchDeletionStarted
                     )
-                    .zIndex(1)
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                 } else {
                     BatchDeleteTweetsProgressView(
@@ -44,6 +43,7 @@ struct BatchDeleteTweetsView: View {
                         isBatchDeletionExecuting: $isBatchDeletionExecuting,
                         isBatchDeletionFinished: $isBatchDeletionFinished
                     )
+                    .zIndex(-1)
                     .transition(.asymmetric(insertion: .move(edge: .trailing), removal: .move(edge: .leading)))
                 }
             } else {
