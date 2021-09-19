@@ -56,7 +56,7 @@ struct BatchDeleteTweetsProgressView: View {
         Group {
             ProgressView(progress)
                 .progressViewStyle(.linear)
-                .padding(16)
+                .padding()
                 
         }
         .onAppear {
