@@ -44,7 +44,12 @@ extension Session {
                 preferences.modificationDate = Date()
                 preferences.preferences = newValue
 
-                try! context.save()
+                do {
+                    try context.save()
+                } catch {
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
             }
         }
     }

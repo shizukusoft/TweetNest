@@ -16,6 +16,11 @@ extension TweetNestKit.Account {
     public static var preview: Account {
         let fetchRequest = Account.fetchRequest()
 
-        return try! Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
+        do {
+            return try Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
+        } catch {
+            let nsError = error as NSError
+            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+        }
     }
 }

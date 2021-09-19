@@ -43,7 +43,12 @@ extension ManagedPreferences.Preferences {
             }
 
             return value.flatMap {
-                try! PropertyListEncoder().encode($0) as NSData
+                do {
+                    return try PropertyListEncoder().encode($0) as NSData
+                } catch {
+                    let nsError = error as NSError
+                    fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+                }
             }
         }
 

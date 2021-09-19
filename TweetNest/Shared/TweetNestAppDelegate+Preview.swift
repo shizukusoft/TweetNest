@@ -7,27 +7,36 @@
 
 #if DEBUG
 import UIKit
+import CoreData
 import TweetNestKit
 
 extension TweetNestAppDelegate {
     func insertPreviewDataToPersistentContainer() throws {
         let viewContext = self.session.persistentContainer.viewContext
 
+        insertPreviewTweetNestAccountToPersistentContainer(context: viewContext)
+        insertPreviewTwitterUsersToPersistentContainer(context: viewContext)
+        insertPreviewAppleUserToPersistentContainer(context: viewContext)
+
+        try viewContext.save()
+    }
+
+    private func insertPreviewTweetNestAccountToPersistentContainer(context: NSManagedObjectContext) {
         let now = Date()
 
-        let tweetnestAccount = Account(context: viewContext)
+        let tweetnestAccount = Account(context: context)
         tweetnestAccount.creationDate = Date(timeIntervalSince1970: 1628780400)
         tweetnestAccount.userID = "1352231658661920770"
         tweetnestAccount.preferences.fetchBlockingUsers = true
 
-        let tweetnestUser = User(context: viewContext)
+        let tweetnestUser = User(context: context)
         tweetnestUser.creationDate = Date(timeIntervalSince1970: 1628780400)
         tweetnestUser.lastUpdateStartDate = now
         tweetnestUser.lastUpdateEndDate = now
         tweetnestUser.modificationDate = now
         tweetnestUser.id = "1352231658661920770"
 
-        let tweetnestUserDetail1 = UserDetail(context: viewContext)
+        let tweetnestUserDetail1 = UserDetail(context: context)
         tweetnestUserDetail1.creationDate = Date(timeIntervalSince1970: 1628780400)
         tweetnestUserDetail1.followerUserIDs = ["783214", "17874544"]
         tweetnestUserDetail1.followerUsersCount = 2
@@ -41,7 +50,7 @@ extension TweetNestAppDelegate {
         tweetnestUserDetail1.url = URL(string: "https://www.tweetnest.com")
         tweetnestUserDetail1.user = tweetnestUser
 
-        let tweetnestUserDetail2 = UserDetail(context: viewContext)
+        let tweetnestUserDetail2 = UserDetail(context: context)
         tweetnestUserDetail2.creationDate = Date(timeIntervalSince1970: 1631709579)
         tweetnestUserDetail2.followerUserIDs = ["783214"]
         tweetnestUserDetail2.followerUsersCount = 1
@@ -55,7 +64,7 @@ extension TweetNestAppDelegate {
         tweetnestUserDetail2.url = URL(string: "https://www.tweetnest.com")
         tweetnestUserDetail2.user = tweetnestUser
 
-        let tweetnestUserDetail3 = UserDetail(context: viewContext)
+        let tweetnestUserDetail3 = UserDetail(context: context)
         tweetnestUserDetail3.creationDate = now
         tweetnestUserDetail3.followerUserIDs = ["783214", "380749300"]
         tweetnestUserDetail3.followerUsersCount = 2
@@ -69,18 +78,22 @@ extension TweetNestAppDelegate {
         tweetnestUserDetail3.url = URL(string: "https://www.tweetnest.com")
         tweetnestUserDetail3.user = tweetnestUser
 
-        let tweetnestProfileImageDataAsset = DataAsset(context: viewContext)
+        let tweetnestProfileImageDataAsset = DataAsset(context: context)
         tweetnestProfileImageDataAsset.url = tweetnestUserDetail1.profileImageURL
         tweetnestProfileImageDataAsset.data = NSDataAsset(name: "TweetNestProfileImageData")?.data
+    }
 
-        let twitterUser = User(context: viewContext)
+    private func insertPreviewTwitterUsersToPersistentContainer(context: NSManagedObjectContext) {
+        let now = Date()
+
+        let twitterUser = User(context: context)
         twitterUser.creationDate = now
         twitterUser.lastUpdateStartDate = now
         twitterUser.lastUpdateEndDate = now
         twitterUser.modificationDate = now
         twitterUser.id = "783214"
 
-        let twitterUserDetail = UserDetail(context: viewContext)
+        let twitterUserDetail = UserDetail(context: context)
         twitterUserDetail.creationDate = now
         twitterUserDetail.followerUsersCount = 0
         twitterUserDetail.followingUsersCount = 0
@@ -93,14 +106,14 @@ extension TweetNestAppDelegate {
         twitterUserDetail.user = twitterUser
         twitterUserDetail.userAttributedDescription = NSAttributedString(string: "what’s happening?!")
 
-        let twitterSupportUser = User(context: viewContext)
+        let twitterSupportUser = User(context: context)
         twitterSupportUser.creationDate = now
         twitterSupportUser.lastUpdateStartDate = now
         twitterSupportUser.lastUpdateEndDate = now
         twitterSupportUser.modificationDate = now
         twitterSupportUser.id = "17874544"
 
-        let twitterSupportUserDetail = UserDetail(context: viewContext)
+        let twitterSupportUserDetail = UserDetail(context: context)
         twitterSupportUserDetail.creationDate = now
         twitterSupportUserDetail.followerUsersCount = 0
         twitterSupportUserDetail.followingUsersCount = 0
@@ -113,18 +126,22 @@ extension TweetNestAppDelegate {
         twitterSupportUserDetail.user = twitterSupportUser
         twitterSupportUserDetail.userAttributedDescription = NSAttributedString(string: "Here to help. 💙")
 
-        let twitterProfileImageDataAsset = DataAsset(context: viewContext)
+        let twitterProfileImageDataAsset = DataAsset(context: context)
         twitterProfileImageDataAsset.url = twitterUserDetail.profileImageURL
         twitterProfileImageDataAsset.data = NSDataAsset(name: "TwitterProfileImageData")?.data
+    }
 
-        let appleUser = User(context: viewContext)
+    private func insertPreviewAppleUserToPersistentContainer(context: NSManagedObjectContext) {
+        let now = Date()
+
+        let appleUser = User(context: context)
         appleUser.creationDate = now
         appleUser.lastUpdateStartDate = now
         appleUser.lastUpdateEndDate = now
         appleUser.modificationDate = now
         appleUser.id = "380749300"
 
-        let appleUserDetail = UserDetail(context: viewContext)
+        let appleUserDetail = UserDetail(context: context)
         appleUserDetail.creationDate = now
         appleUserDetail.followerUsersCount = 0
         appleUserDetail.followingUsersCount = 0
@@ -137,11 +154,9 @@ extension TweetNestAppDelegate {
         appleUserDetail.user = appleUser
         appleUserDetail.userAttributedDescription = NSAttributedString(string: "Apple.com", attributes: [.link: URL(string: "http://Apple.com")!])
 
-        let appleProfileImageDataAsset = DataAsset(context: viewContext)
+        let appleProfileImageDataAsset = DataAsset(context: context)
         appleProfileImageDataAsset.url = appleUserDetail.profileImageURL
         appleProfileImageDataAsset.data = NSDataAsset(name: "AppleProfileImageData")?.data
-
-        try viewContext.save()
     }
 }
 #endif
