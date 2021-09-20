@@ -30,7 +30,9 @@ struct UsersList: View {
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", Array(userIDs))
-        userDetailsFetchRequest.sortDescriptors = []
+        userDetailsFetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true),
+        ]
         userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
         userDetailsFetchRequest.propertiesToFetch = ["user", "name", "username", "profileImageURL"]
 
@@ -43,7 +45,7 @@ struct UsersList: View {
     private func userLabel(userID: String, userDetails: [UserDetail]) -> some View {
         let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
 
-        if let latestUserDetail = userDetails.first {
+        if let latestUserDetail = userDetails.last {
             if
                 searchQuery.isEmpty ||
                 userDetails.contains(where: {

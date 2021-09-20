@@ -74,7 +74,9 @@ struct UsersDiffListSection: View {
 
         let symmetricDifferenceUserDetailsFetchRequest = UserDetail.fetchRequest()
         symmetricDifferenceUserDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", userIDs)
-        symmetricDifferenceUserDetailsFetchRequest.sortDescriptors = []
+        symmetricDifferenceUserDetailsFetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true),
+        ]
         symmetricDifferenceUserDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
         symmetricDifferenceUserDetailsFetchRequest.propertiesToFetch = ["user", "name", "username", "profileImageURL"]
 
@@ -87,7 +89,7 @@ struct UsersDiffListSection: View {
     private func userLabel<Icon>(userID: String, userDetails: [UserDetail], @ViewBuilder icon: () -> Icon) -> some View where Icon: View {
         let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
 
-        if let latestUserDetail = userDetails.first {
+        if let latestUserDetail = userDetails.last {
             if
                 searchQuery.isEmpty ||
                 userDetails.contains(where: {
