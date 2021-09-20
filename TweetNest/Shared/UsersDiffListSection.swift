@@ -74,11 +74,8 @@ struct UsersDiffListSection: View {
 
         let symmetricDifferenceUserDetailsFetchRequest = UserDetail.fetchRequest()
         symmetricDifferenceUserDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", userIDs)
-        symmetricDifferenceUserDetailsFetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true),
-        ]
-        symmetricDifferenceUserDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
-        symmetricDifferenceUserDetailsFetchRequest.propertiesToFetch = ["user", "name", "username", "profileImageURL"]
+        symmetricDifferenceUserDetailsFetchRequest.sortDescriptors = []
+        symmetricDifferenceUserDetailsFetchRequest.propertiesToFetch = ["user", "name", "username"]
 
         self._symmetricDifferenceUserDetails = FetchRequest(
             fetchRequest: symmetricDifferenceUserDetailsFetchRequest
@@ -87,9 +84,7 @@ struct UsersDiffListSection: View {
 
     @ViewBuilder
     private func userLabel<Icon>(userID: String, userDetails: [UserDetail], @ViewBuilder icon: () -> Icon) -> some View where Icon: View {
-        let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
-
-        if let latestUserDetail = userDetails.last {
+        if userDetails.count > 0 {
             if
                 searchQuery.isEmpty ||
                 userDetails.contains(where: {
@@ -98,20 +93,21 @@ struct UsersDiffListSection: View {
             {
                 Label(
                     title: {
-                        UserLabel(userDetail: latestUserDetail, displayUserID: displayUserID)
+                        UserLabel(userID: userID)
                             #if os(watchOS)
                             .labelStyle(.titleOnly)
                             #endif
                     },
                     icon: icon
                 )
-                .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? displayUserID))
             }
         } else {
+            let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+
             if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
                 Label(
                     title: {
-                        UserLabel(displayUserID: displayUserID)
+                        UserLabel(userID: userID)
                     },
                     icon: icon
                 )

@@ -30,11 +30,8 @@ struct UsersList: View {
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", Array(userIDs))
-        userDetailsFetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true),
-        ]
-        userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
-        userDetailsFetchRequest.propertiesToFetch = ["user", "name", "username", "profileImageURL"]
+        userDetailsFetchRequest.sortDescriptors = []
+        userDetailsFetchRequest.propertiesToFetch = ["name", "username"]
 
         self._userDetails = FetchRequest(
             fetchRequest: userDetailsFetchRequest
@@ -43,24 +40,23 @@ struct UsersList: View {
 
     @ViewBuilder
     private func userLabel(userID: String, userDetails: [UserDetail]) -> some View {
-        let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
-
-        if let latestUserDetail = userDetails.last {
+        if userDetails.count > 0 {
             if
                 searchQuery.isEmpty ||
                 userDetails.contains(where: {
                     ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true)
                 })
             {
-                UserLabel(userDetail: latestUserDetail, displayUserID: displayUserID)
+                UserLabel(userID: userID)
                     #if os(watchOS)
                     .labelStyle(.titleOnly)
                     #endif
-                    .accessibilityLabel(Text(verbatim: latestUserDetail.name ?? displayUserID))
             }
         } else {
+            let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+
             if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
-                UserLabel(displayUserID: displayUserID)
+                UserLabel(userID: userID)
             }
         }
     }

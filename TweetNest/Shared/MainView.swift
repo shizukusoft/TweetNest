@@ -32,7 +32,7 @@ struct MainView: View {
             .alert(isPresented: $showErrorAlert, error: error)
             .sheet(item: $user) { user in
                 NavigationView {
-                    UserView(user: user)
+                    UserView(userID: user.id)
                         .toolbar {
                             ToolbarItemGroup(placement: .cancellationAction) {
                                 Button("Cancel", role: .cancel) {

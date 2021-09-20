@@ -21,7 +21,7 @@ struct AppSidebarAccountsSection: View {
             tag: .profile(account),
             selection: $navigationItemSelection
         ) {
-            UserView(user: users.first)
+            UserView(userID: users.first?.id)
                 .environment(\.account, account)
         } label: {
             Label("Account", systemImage: "person")
