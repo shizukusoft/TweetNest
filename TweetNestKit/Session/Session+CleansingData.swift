@@ -194,12 +194,12 @@ extension Session {
         }
     }
 
-    public nonisolated func cleansingDataAsset(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+    public nonisolated func cleansingDataAsset(for dataAssetObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
             guard
-                let dataAsset = try? context.existingObject(with: userObjectID) as? DataAsset,
+                let dataAsset = try? context.existingObject(with: dataAssetObjectID) as? DataAsset,
                 let dataAssetURL = dataAsset.url,
                 let dataAssetDataSHA512Hash = dataAsset.dataSHA512Hash
             else {
