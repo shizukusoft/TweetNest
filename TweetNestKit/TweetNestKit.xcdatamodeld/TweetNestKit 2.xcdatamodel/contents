@@ -67,8 +67,10 @@
     <configuration name="Accounts">
         <memberEntity name="Account"/>
     </configuration>
-    <configuration name="TweetNestKit">
+    <configuration name="DataAssets">
         <memberEntity name="DataAsset"/>
+    </configuration>
+    <configuration name="TweetNestKit">
         <memberEntity name="Preferences"/>
         <memberEntity name="User"/>
         <memberEntity name="UserDetail"/>
