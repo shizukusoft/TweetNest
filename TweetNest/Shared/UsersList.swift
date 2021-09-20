@@ -46,7 +46,7 @@ struct UsersList: View {
             searchQuery.isEmpty ||
             displayUserID.contains(searchQuery) ||
             userDetails.contains(where: {
-                ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true)
+                ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.displayUsername?.localizedCaseInsensitiveContains(searchQuery) == true)
             })
         {
             UserLabel(userID: userID)
