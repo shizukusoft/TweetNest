@@ -209,7 +209,7 @@ struct UserView: View {
                             }
                             #endif
 
-                            if let account = account, user?.accounts?.contains(account) != false {
+                            if let account = account, user?.accounts?.contains(account) == true {
                                 Divider()
 
                                 deleteMenu
@@ -251,7 +251,7 @@ struct UserView: View {
                         refreshButton
                         #endif
 
-                        if let account = account, user?.accounts?.contains(account) != false {
+                        if let account = account, user?.accounts?.contains(account) == true {
                             deleteMenu
                         }
                     }
