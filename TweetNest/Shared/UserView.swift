@@ -333,10 +333,7 @@ struct UserView: View {
 
             isRefreshing = true
             defer {
-                // FIXME: https://github.com/apple/swift/pull/38481/files
-                DispatchQueue.main.async {
-                    isRefreshing = false
-                }
+                isRefreshing = false
             }
 
             do {
