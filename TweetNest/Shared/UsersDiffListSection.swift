@@ -84,34 +84,24 @@ struct UsersDiffListSection: View {
 
     @ViewBuilder
     private func userLabel<Icon>(userID: String, userDetails: [UserDetail], @ViewBuilder icon: () -> Icon) -> some View where Icon: View {
-        if userDetails.count > 0 {
-            if
-                searchQuery.isEmpty ||
-                userDetails.contains(where: {
-                    ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true)
-                })
-            {
-                Label(
-                    title: {
-                        UserLabel(userID: userID)
-                            #if os(watchOS)
-                            .labelStyle(.titleOnly)
-                            #endif
-                    },
-                    icon: icon
-                )
-            }
-        } else {
-            let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+        let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
 
-            if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
-                Label(
-                    title: {
-                        UserLabel(userID: userID)
-                    },
-                    icon: icon
-                )
-            }
+        if
+            searchQuery.isEmpty ||
+            displayUserID.contains(searchQuery) ||
+            userDetails.contains(where: {
+                ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true)
+            })
+        {
+            Label(
+                title: {
+                    UserLabel(userID: userID)
+                        #if os(watchOS)
+                        .labelStyle(.titleOnly)
+                        #endif
+                },
+                icon: icon
+            )
         }
     }
 }

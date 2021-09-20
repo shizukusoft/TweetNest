@@ -40,24 +40,19 @@ struct UsersList: View {
 
     @ViewBuilder
     private func userLabel(userID: String, userDetails: [UserDetail]) -> some View {
-        if userDetails.count > 0 {
-            if
-                searchQuery.isEmpty ||
-                userDetails.contains(where: {
-                    ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true)
-                })
-            {
-                UserLabel(userID: userID)
-                    #if os(watchOS)
-                    .labelStyle(.titleOnly)
-                    #endif
-            }
-        } else {
-            let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+        let displayUserID = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
 
-            if searchQuery.isEmpty || displayUserID.contains(searchQuery) {
-                UserLabel(userID: userID)
-            }
+        if
+            searchQuery.isEmpty ||
+            displayUserID.contains(searchQuery) ||
+            userDetails.contains(where: {
+                ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.username?.localizedCaseInsensitiveContains(searchQuery) == true)
+            })
+        {
+            UserLabel(userID: userID)
+                #if os(watchOS)
+                .labelStyle(.titleOnly)
+                #endif
         }
     }
 }
