@@ -88,7 +88,7 @@ struct UsersDiffListSection: View {
 
         if
             searchQuery.isEmpty ||
-            displayUserID.contains(searchQuery) ||
+            userID.contains(searchQuery) || displayUserID.contains(searchQuery) ||
             userDetails.contains(where: {
                 ($0.name?.localizedCaseInsensitiveContains(searchQuery) == true || $0.displayUsername?.localizedCaseInsensitiveContains(searchQuery) == true)
             })
