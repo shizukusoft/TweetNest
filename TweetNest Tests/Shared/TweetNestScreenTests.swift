@@ -101,7 +101,6 @@ class TweetNestScreenTests: XCTestCase {
         add(attachment)
     }
 
-    #if !os(watchOS)
     func testBatchDeleteTweetsForm() throws {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
@@ -118,6 +117,10 @@ class TweetNestScreenTests: XCTestCase {
             app.collectionViews.buttons.element(boundBy: 3).tap() // app.collectionViews/*@START_MENU_TOKEN@*/.buttons["Delete"]/*[[".cells.buttons[\"Delete\"]",".buttons[\"Delete\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
             app.buttons["Delete Recent Tweets"].tap()
         } else {
+            #if os(watchOS)
+            scrollDown()
+            #endif
+
             app.buttons["Delete Recent Tweets"].tap()
         }
 
@@ -132,5 +135,10 @@ class TweetNestScreenTests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
     }
-    #endif
+
+    private func scrollDown() {
+        let relativeTouchPoint = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0))
+        let relativeOffset = app.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: -1.0))
+        relativeTouchPoint.press(forDuration: 0, thenDragTo: relativeOffset)
+    }
 }
