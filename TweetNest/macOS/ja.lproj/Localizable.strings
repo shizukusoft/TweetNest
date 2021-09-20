@@ -1,4 +1,7 @@
 /* No comment provided by engineer. */
+"%@ tweets will be deleted." = "%@件のツイートが削除されます。";
+
+/* No comment provided by engineer. */
 "%@'s Account" = "%@のアカウント";
 
 /* No comment provided by engineer. */
@@ -11,9 +14,6 @@
 "%@'s Followings History" = "%@のフォロー中履歴";
 
 /* No comment provided by engineer. */
-"About" = "情報";
-
-/* No comment provided by engineer. */
 "Account" = "アカウント";
 
 /* No comment provided by engineer. */
@@ -23,13 +23,7 @@
 "Add Account" = "アカウントを追加";
 
 /* No comment provided by engineer. */
-"Additional Settings" = "追加設定";
-
-/* No comment provided by engineer. */
-"All Data" = "すべてのデーター";
-
-/* No comment provided by engineer. */
-"App Version" = "バージョン";
+"Background Update" = "バックグラウンド更新";
 
 /* No comment provided by engineer. */
 "Blocked Accounts" = "ブロックしたアカウント";
@@ -41,6 +35,9 @@
 "Cancel" = "キャンセル";
 
 /* No comment provided by engineer. */
+"Date" = "日付";
+
+/* No comment provided by engineer. */
 "Delete" = "削除";
 
 /* No comment provided by engineer. */
@@ -48,6 +45,12 @@
 
 /* No comment provided by engineer. */
 "Delete Recent Tweets" = "最近のツイートを削除";
+
+/* No comment provided by engineer. */
+"Delete Tweets?" = "ツイートを削除しますか？";
+
+/* No comment provided by engineer. */
+"Fetch Blocking Users" = "ブロックしたアカウントの一覧を取得";
 
 /* No comment provided by engineer. */
 "Followers" = "フォロワー";
@@ -62,13 +65,25 @@
 "Followings History" = "フォロー中履歴";
 
 /* No comment provided by engineer. */
+"General" = "一般";
+
+/* No comment provided by engineer. */
 "Joined" = "アカウント作成日";
 
 /* No comment provided by engineer. */
-"Latest Profile" = "最新のプロフィール";
+"Listed" = "リスト";
 
 /* No comment provided by engineer. */
-"Listed" = "リスト";
+"Loaded Tweets" = "読み込んだツイート";
+
+/* No comment provided by engineer. */
+"Loading Archive..." = "アーカイブを読み込んでいます…";
+
+/* No comment provided by engineer. */
+"Loading Recent Tweets..." = "最新ツイートを読み込んでいます…";
+
+/* No comment provided by engineer. */
+"Loading..." = "読み込み中…";
 
 /* No comment provided by engineer. */
 "Location" = "場所";
@@ -77,16 +92,25 @@
 "More" = "その他";
 
 /* No comment provided by engineer. */
-"OK" = "OK";
+"Name" = "名前";
+
+/* No comment provided by engineer. */
+"Open Folder" = "フォルダーを開く";
 
 /* No comment provided by engineer. */
 "Open Profile" = "プロフィールを開く";
 
 /* No comment provided by engineer. */
-"Open Profile in Safari" = "Safariでプロフィールを開く";
+"Open Twitter Archive" = "ツイッターアーカイブを開く";
 
 /* No comment provided by engineer. */
-"Profile" = "プロフィール";
+"Open ZIP File" = "ZIPファイルを開く";
+
+/* No comment provided by engineer. */
+"Preparing to Sync..." = "同期準備中…";
+
+/* No comment provided by engineer. */
+"Profile Image" = "プロフィール画像";
 
 /* No comment provided by engineer. */
 "Protected" = "非公開";
@@ -95,22 +119,43 @@
 "Refresh" = "更新";
 
 /* No comment provided by engineer. */
+"Retweets" = "リツイート";
+
+/* No comment provided by engineer. */
 "Settings" = "設定";
 
 /* No comment provided by engineer. */
 "Share" = "共有";
 
 /* No comment provided by engineer. */
-"TweetNest" = "TweetNest";
+"Since" = "最初";
+
+/* No comment provided by engineer. */
+"Syncing..." = "同期中…";
+
+/* No comment provided by engineer. */
+"Target Tweets" = "対象ツイート";
 
 /* No comment provided by engineer. */
 "Tweets" = "ツイート";
 
 /* No comment provided by engineer. */
+"Until" = "最後";
+
+/* No comment provided by engineer. */
+"Update accounts in background on this device." = "このデバイスでアカウントのバックグラウンド更新を行います。";
+
+/* No comment provided by engineer. */
 "Updated %@ ago" = "%@前に更新されました";
 
 /* No comment provided by engineer. */
+"Updating..." = "更新中…";
+
+/* No comment provided by engineer. */
 "URL" = "Web";
+
+/* No comment provided by engineer. */
+"Username" = "ユーザー名";
 
 /* No comment provided by engineer. */
 "Verified" = "認証済み";
