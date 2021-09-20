@@ -120,7 +120,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             tweetNestKitPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
             tweetNestKitPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
             tweetNestKitPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-            tweetNestKitPersistentStoreDescription.shouldAddStoreAsynchronously = true
 
             let dataAssetsPersistentStoreDescription = NSPersistentStoreDescription(url: Self.dataAssetsPersistentStoreURL)
             dataAssetsPersistentStoreDescription.type = NSSQLiteStoreType
