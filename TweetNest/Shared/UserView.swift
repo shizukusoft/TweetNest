@@ -102,12 +102,12 @@ struct UserView: View {
     @ViewBuilder private var userView: some View {
         #if os(macOS)
         VStack(alignment: .leading, spacing: 8) {
-            if let lastUserDetail = lastUserDetail {
+            if let latestUserDetail = latestUserDetail {
                 VStack(alignment: .leading, spacing: 8) {
-                    UserDetailProfileView(userDetail: lastUserDetail)
+                    UserDetailProfileView(userDetail: latestUserDetail)
                     VStack(alignment: .leading) {
-                        user.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                        if let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
+                        user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
+                        if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
                             Group {
                                 if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
                                     Text("Updating...")
@@ -123,7 +123,9 @@ struct UserView: View {
                 }
                 .padding()
             }
-            UserAllDataView(user: user)
+            if let user = user {
+                UserAllDataView(user: user)
+            }
         }
         #else
         List {
