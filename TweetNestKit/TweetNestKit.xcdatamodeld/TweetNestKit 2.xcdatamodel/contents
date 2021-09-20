@@ -37,6 +37,9 @@
         <fetchedProperty name="accounts" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Account" predicateString="userID == $FETCH_SOURCE.id"/>
         </fetchedProperty>
+        <fetchedProperty name="sortedUserDetails" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="UserDetail" predicateString="user == $FETCH_SOURCE"/>
+        </fetchedProperty>
         <fetchIndex name="byID">
             <fetchIndexElement property="id" type="Binary" order="ascending"/>
         </fetchIndex>
@@ -74,7 +77,7 @@
         <element name="Account" positionX="-63" positionY="-18" width="128" height="140"/>
         <element name="DataAsset" positionX="-54" positionY="144" width="128" height="89"/>
         <element name="Preferences" positionX="-54" positionY="144" width="128" height="59"/>
-        <element name="User" positionX="-63" positionY="0" width="128" height="140"/>
+        <element name="User" positionX="-63" positionY="0" width="128" height="155"/>
         <element name="UserDetail" positionX="-45" positionY="27" width="128" height="299"/>
     </elements>
 </model>

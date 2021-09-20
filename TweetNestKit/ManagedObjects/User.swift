@@ -11,15 +11,7 @@ import CoreData
 import Twitter
 
 public class User: NSManagedObject {
-    public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
-        userDetails.flatMap {
-            OrderedSet(
-                $0.lazy
-                    .compactMap { $0 as? UserDetail }
-                    .sorted { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
-            )
-        }
-    }
+    @NSManaged public private(set) var sortedUserDetails: [UserDetail]? // The accessor of the sortedUserDetails property.
 
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
         let keyPaths = super.keyPathsForValuesAffectingValue(forKey: key)
@@ -33,7 +25,7 @@ public class User: NSManagedObject {
 }
 
 extension User {
-    @NSManaged public var accounts: [Account]? // The accessor of the accounts property.
+    @NSManaged public private(set) var accounts: [Account]? // The accessor of the accounts property.
 }
 
 extension User {

@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreData
+import OrderedCollections
 
 extension Session {
     private nonisolated var persistentContainerNewBackgroundContext: NSManagedObjectContext {
@@ -162,7 +163,7 @@ extension Session {
                 return
             }
 
-            var userDetails = user.sortedUserDetails ?? []
+            var userDetails = OrderedSet(user.sortedUserDetails ?? [])
 
             for (index, userDetail) in userDetails.enumerated() {
                 let previousUserIndex = index - 1

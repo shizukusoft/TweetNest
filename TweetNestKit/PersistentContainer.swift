@@ -34,6 +34,11 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             NSSortDescriptor(keyPath: \Account.creationDate, ascending: true),
         ]
 
+        let sortedUserDetailsFetchedPropertyDescription = userEntity?.propertiesByName["sortedUserDetails"] as? NSFetchedPropertyDescription
+        sortedUserDetailsFetchedPropertyDescription?.fetchRequest?.sortDescriptors = [
+            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true),
+        ]
+
         return managedObjectModel
     }()
 

@@ -30,11 +30,9 @@ struct UsersList: View {
 
         let userDetailsFetchRequest = UserDetail.fetchRequest()
         userDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", Array(userIDs))
-        userDetailsFetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
-        ]
-        userDetailsFetchRequest.propertiesToFetch = ["name", "username", "profileImageURL", "user"]
+        userDetailsFetchRequest.sortDescriptors = []
         userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
+        userDetailsFetchRequest.propertiesToFetch = ["user", "name", "username", "profileImageURL"]
 
         self._userDetails = FetchRequest(
             fetchRequest: userDetailsFetchRequest
