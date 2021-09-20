@@ -12,6 +12,7 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         case isBackgroundUpdateEnabled = "TWNKBackgroundUpdateEnabled"
         case lastBackgroundUpdate = "TWNKLastBackgroundUpdate"
         case downloadsDataAssetsUsingExpensiveNetworkAccess = "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess"
+        case persistentHistoryToken = "TWNKPersistentHistoryToken"
     }
 
     private static let _standard = TweetNestKitUserDefaults(suiteName: Session.applicationGroupIdentifier)!
@@ -34,6 +35,11 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         set { setValue(newValue, forKey: DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue) }
     }
 
+    @objc public dynamic var persistentHistoryToken: Data? {
+        get { object(forKey: DefaultsKeys.persistentHistoryToken.rawValue) as? Data }
+        set { setValue(newValue, forKey: DefaultsKeys.persistentHistoryToken.rawValue) }
+    }
+
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
         switch key {
         case "isBackgroundUpdateEnabled":
@@ -42,6 +48,8 @@ final public class TweetNestKitUserDefaults: UserDefaults {
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastBackgroundUpdate.rawValue])
         case "downloadsDataAssetsUsingExpensiveNetworkAccess":
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue])
+        case "persistentHistoryToken":
+            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.persistentHistoryToken.rawValue])
         default:
             return super.keyPathsForValuesAffectingValue(forKey: key)
         }

@@ -13,17 +13,11 @@ import OrderedCollections
 import UnifiedLogging
 
 extension Session {
-    private nonisolated var lastPersistentHistoryTokenURL: URL {
-        PersistentContainer.defaultDirectoryURL().appendingPathComponent("TweetNestKit-Session.token")
-    }
-
     private var lastPersistentHistoryToken: NSPersistentHistoryToken? {
         get {
-            guard let data = try? Data(contentsOf: lastPersistentHistoryTokenURL) else {
-                return nil
+            TweetNestKitUserDefaults.standard.persistentHistoryToken.flatMap {
+                try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: $0)
             }
-
-            return try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: data)
         }
     }
 
@@ -35,18 +29,11 @@ extension Session {
     private func updateLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) throws -> NSPersistentHistoryToken? {
         let lastPersistentHistoryToken = lastPersistentHistoryToken
 
-        if let newValue = newValue {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: true)
-            try data.write(to: lastPersistentHistoryTokenURL)
-
-            return lastPersistentHistoryToken
-        } else {
-            if FileManager.default.fileExists(atPath: lastPersistentHistoryTokenURL.path) {
-                try FileManager.default.removeItem(at: lastPersistentHistoryTokenURL)
-            }
-
-            return lastPersistentHistoryToken
+        TweetNestKitUserDefaults.standard.persistentHistoryToken = try newValue.flatMap {
+            try NSKeyedArchiver.archivedData(withRootObject: $0, requiringSecureCoding: true)
         }
+
+        return lastPersistentHistoryToken
     }
 
     private var persistentHistoryTransactions: (transactions: [NSPersistentHistoryTransaction], token: NSPersistentHistoryToken?, context: NSManagedObjectContext)? {
