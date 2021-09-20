@@ -76,7 +76,7 @@ struct UsersDiffListSection: View {
         symmetricDifferenceUserDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", userIDs)
         symmetricDifferenceUserDetailsFetchRequest.sortDescriptors = []
         symmetricDifferenceUserDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
-        symmetricDifferenceUserDetailsFetchRequest.returnsObjectsAsFaults = false
+        symmetricDifferenceUserDetailsFetchRequest.propertiesToFetch = ["user", "name", "username", "profileImageURL"]
 
         self._symmetricDifferenceUserDetails = FetchRequest(
             fetchRequest: symmetricDifferenceUserDetailsFetchRequest

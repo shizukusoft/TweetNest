@@ -32,7 +32,7 @@ struct UsersList: View {
         userDetailsFetchRequest.predicate = NSPredicate(format: "user.id in %@", Array(userIDs))
         userDetailsFetchRequest.sortDescriptors = []
         userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
-        userDetailsFetchRequest.returnsObjectsAsFaults = false
+        userDetailsFetchRequest.propertiesToFetch = ["user", "name", "username", "profileImageURL"]
 
         self._userDetails = FetchRequest(
             fetchRequest: userDetailsFetchRequest
