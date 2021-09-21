@@ -118,6 +118,10 @@ class TweetNestScreenTests: XCTestCase {
             app.collectionViews.buttons.element(boundBy: 3).tap() // app.collectionViews/*@START_MENU_TOKEN@*/.buttons["Delete"]/*[[".cells.buttons[\"Delete\"]",".buttons[\"Delete\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
             app.buttons["Delete Recent Tweets"].tap()
         } else {
+            #if os(watchOS)
+            scrollDown()
+            #endif
+
             app.buttons["Delete Recent Tweets"].tap()
         }
 
@@ -131,6 +135,12 @@ class TweetNestScreenTests: XCTestCase {
         attachment.name = "Batch Delete Tweets Form Screen"
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    private func scrollDown() {
+        let relativeTouchPoint = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0))
+        let relativeOffset = app.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: -1.0))
+        relativeTouchPoint.press(forDuration: 0, thenDragTo: relativeOffset)
     }
     #endif
 }

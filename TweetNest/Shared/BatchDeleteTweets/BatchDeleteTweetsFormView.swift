@@ -79,36 +79,35 @@ struct BatchDeleteTweetsFormView: View {
                     Text(targetTweets.count.twnk_formatted())
                 }
             }
-        }
-        .onAppear {
-            updateTargetTweets()
-        }
-        .toolbar {
-            ToolbarItemGroup(placement: .destructiveAction) {
+
+            Section {
                 Button(role: .destructive) {
                     showConfirmAlert = true
                 } label: {
                     Text("Delete")
                 }
                 .disabled(targetTweets.count <= 0)
-                .alert(Text("Delete Tweets?"), isPresented: $showConfirmAlert) {
-                    Button(role: .cancel) {
-
-                    } label: {
-                        Text("Cancel")
-                    }
-
-                    Button(role: .destructive) {
-                        withAnimation {
-                            isBatchDeletionStarted = true
-                        }
-                    } label: {
-                        Text("Delete")
-                    }
-                } message: {
-                    Text("\(targetTweets.count.twnk_formatted()) tweets will be deleted.")
-                }
             }
+        }
+        .onAppear {
+            updateTargetTweets()
+        }
+        .alert(Text("Delete Tweets?"), isPresented: $showConfirmAlert) {
+            Button(role: .cancel) {
+
+            } label: {
+                Text("Cancel")
+            }
+
+            Button(role: .destructive) {
+                withAnimation {
+                    isBatchDeletionStarted = true
+                }
+            } label: {
+                Text("Delete")
+            }
+        } message: {
+            Text("\(targetTweets.count.twnk_formatted()) tweets will be deleted.")
         }
     }
 
