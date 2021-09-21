@@ -73,12 +73,14 @@ extension UserView {
                 } label: {
                     Text("Delete Recent Tweets")
                 }
+                .accessibilityIdentifier("Delete Recent Tweets")
 
                 Button(role: .destructive) {
                     showBulkDeleteAllTweets = true
                 } label: {
                     Text("Delete All Tweets")
                 }
+                .accessibilityIdentifier("Delete All Tweets")
             } label: {
                 Label {
                     Text("Delete")
@@ -86,12 +88,14 @@ extension UserView {
                     Image(systemName: "trash")
                 }
             }
+            .accessibilityIdentifier("Delete")
             #else
             Button(role: .destructive) {
                 showBulkDeleteRecentTweets = true
             } label: {
                 Text("Delete Recent Tweets")
             }
+            .accessibilityIdentifier("Delete Recent Tweets")
             #endif
         }
 
@@ -212,6 +216,7 @@ extension UserView {
                                 Label("More", systemImage: "ellipsis.circle")
                                     .labelStyle(.iconOnly)
                             }
+                            .accessibilityIdentifier("More")
                         } else {
                             if let userProfileURL = userProfileURL {
                                 Link(destination: userProfileURL) {
@@ -244,7 +249,7 @@ extension UserView {
                             refreshButton
                             #endif
 
-                            if let account = account, user.accounts?.contains(account) == false {
+                            if let account = account, user.accounts?.contains(account) != false {
                                 deleteMenu
                             }
                         }
@@ -269,12 +274,12 @@ extension UserView {
                 .sheet(isPresented: $showBulkDeleteRecentTweets) {
                     if let account = account, user.accounts?.contains(account) == true {
                         #if os(macOS)
-                        DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                        BatchDeleteTweetsView(isPresented: $showBulkDeleteRecentTweets, account: account, source: .recentTweets)
                             .padding()
                             .frame(minWidth: 320, minHeight: 240)
                         #else
                         NavigationView {
-                            DeleteBulkTweetsRecentTweetsView(account: account, isPresented: $showBulkDeleteRecentTweets)
+                            BatchDeleteTweetsView(isPresented: $showBulkDeleteRecentTweets, account: account, source: .recentTweets)
                         }
                         #endif
                     }
@@ -283,12 +288,12 @@ extension UserView {
                 .sheet(isPresented: $showBulkDeleteAllTweets) {
                     if let account = account,user.accounts?.contains(account) == true {
                         #if os(macOS)
-                        DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
+                        BatchDeleteTweetsView(isPresented: $showBulkDeleteAllTweets, account: account, source: .twitterArchive)
                             .padding()
                             .frame(minWidth: 320, minHeight: 240)
                         #else
                         NavigationView {
-                            DeleteBulkTweetsAllTweetsView(account: account, isPresented: $showBulkDeleteAllTweets)
+                            BatchDeleteTweetsView(isPresented: $showBulkDeleteAllTweets, account: account, source: .twitterArchive)
                         }
                         #endif
                     }

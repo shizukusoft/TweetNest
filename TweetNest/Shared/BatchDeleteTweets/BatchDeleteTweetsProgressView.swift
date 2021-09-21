@@ -1,25 +1,26 @@
 //
-//  DeleteBulkTweetsView.swift
-//  DeleteBulkTweetsView
+//  BatchDeleteTweetsProgressView.swift
+//  TweetNest
 //
-//  Created by Jaehong Kang on 2021/08/19.
+//  Created by Jaehong Kang on 2021/09/19.
 //
 
 import SwiftUI
-import TweetNestKit
-import Twitter
 import OrderedCollections
 import UnifiedLogging
+import TweetNestKit
+import Twitter
 
-struct DeleteBulkTweetsView: View {
+struct BatchDeleteTweetsProgressView: View {
     @Environment(\.session) private var session: TweetNestKit.Session
     @Environment(\.account) private var account: TweetNestKit.Account?
 
-    @Binding var isPresented: Bool
-    let targetTweetIDs: OrderedSet<Tweet.ID>
+    let targetTweets: OrderedDictionary<Tweet.ID, Tweet>
+    @Binding var isBatchDeletionExecuting: Bool
+    @Binding var isBatchDeletionFinished: Bool
 
-    @State var progress: Progress
-    @State var results: [Int: Result<Void, Error>] = [:]
+    @State private var progress: Progress
+    @State private var results: [Int: Result<Void, Error>] = [:]
 
     var succeedResultsCount: Int {
         results
@@ -55,44 +56,39 @@ struct DeleteBulkTweetsView: View {
         Group {
             ProgressView(progress)
                 .progressViewStyle(.linear)
-                .padding(16)
-                .interactiveDismissDisabled(progress.isFinished == false)
-                .toolbar {
-                    ToolbarItemGroup(placement: .cancellationAction) {
-                        if progress.isFinished == false {
-                            Button(role: .cancel) {
-                                isPresented = false
-                            } label: {
-                                Text("Cancel")
-                            }
-                        }
-                    }
-
-                    ToolbarItemGroup(placement: .confirmationAction) {
-                        if progress.isFinished {
-                            Button {
-                                isPresented = false
-                            } label: {
-                                Text("Done")
-                            }
-                        }
-                    }
-                }
+                .padding()
+                
+        }
+        .onAppear {
+            withAnimation {
+                updateProgressDescription()
+            }
         }
         .task {
             await delete()
         }
     }
 
-    init(isPresented: Binding<Bool>, targetTweetIDs: OrderedSet<Tweet.ID>) {
-        _isPresented = isPresented
-        self.targetTweetIDs = targetTweetIDs
+    init(
+        targetTweets: OrderedDictionary<Tweet.ID, Tweet>,
+        isBatchDeletionExecuting: Binding<Bool>,
+        isBatchDeletionFinished: Binding<Bool>
+    ) {
+        self.targetTweets = targetTweets
+        self._isBatchDeletionExecuting = isBatchDeletionExecuting
+        self._isBatchDeletionFinished = isBatchDeletionFinished
 
-        _progress = State(initialValue: Progress(totalUnitCount: Int64(targetTweetIDs.count)))
-        updateProgressDescription()
+        _progress = State(initialValue: Progress(totalUnitCount: Int64(targetTweets.count)))
     }
 
     private func delete() async {
+        guard isBatchDeletionExecuting == false else { return }
+
+        isBatchDeletionExecuting = true
+        defer {
+            isBatchDeletionExecuting = false
+        }
+
         await withExtendedBackgroundExecution {
             await withTaskCancellationHandler {
                 guard let account = account else {
@@ -100,7 +96,7 @@ struct DeleteBulkTweetsView: View {
                 }
 
                 await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
-                    for (offset, targetTweetID) in targetTweetIDs.enumerated() {
+                    for (offset, targetTweetID) in targetTweets.keys.enumerated() {
                         taskGroup.addTask {
                             do {
                                 try await Tweet.delete(targetTweetID, session: .session(for: account, session: session))
@@ -117,6 +113,8 @@ struct DeleteBulkTweetsView: View {
                         progress.completedUnitCount = Int64(results.count)
                         updateProgressDescription()
                     }
+
+                    isBatchDeletionFinished = true
                 }
             } onCancel: {
                 progress.cancel()
@@ -127,13 +125,13 @@ struct DeleteBulkTweetsView: View {
     private func updateProgressDescription() {
         progress.localizedDescription = String(localized: "Deleting \(progress.totalUnitCount.twnk_formatted()) tweets...")
         progress.localizedAdditionalDescription = {
-            var localizedAdditionalDescription = String(localized: "\(progress.completedUnitCount.twnk_formatted()) of \(progress.totalUnitCount.twnk_formatted()) tweets.")
+            var localizedAdditionalDescription = String(localized: "\(progress.completedUnitCount.twnk_formatted()) of \(progress.totalUnitCount.twnk_formatted()) tweets deletion requested.")
 
             let failedResultsCount = failedResults.count
 
             if failedResultsCount > 0 {
                 localizedAdditionalDescription.append("\n")
-                localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.twnk_formatted()) tweets failed."))
+                localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.twnk_formatted()) tweets failed to delete."))
             }
 
             return localizedAdditionalDescription
@@ -141,8 +139,8 @@ struct DeleteBulkTweetsView: View {
     }
 }
 
-struct DeleteBulkTweetsView_Previews: PreviewProvider {
+struct BatchDeleteTweetsProgressView_Previews: PreviewProvider {
     static var previews: some View {
-        DeleteBulkTweetsView(isPresented: .constant(true), targetTweetIDs: [])
+        BatchDeleteTweetsProgressView(targetTweets: [:], isBatchDeletionExecuting: .constant(false), isBatchDeletionFinished: .constant(false))
     }
 }

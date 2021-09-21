@@ -36,7 +36,7 @@ class TweetNestScreenTests: XCTestCase {
 
         app.launch()
 
-        if app.navigationBars.buttons["BackButton"].waitForExistence(timeout: 1) {
+        if app.navigationBars.buttons["BackButton"].exists {
             app.navigationBars.buttons["BackButton"].tap()
         }
     }
@@ -53,7 +53,7 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        _ = app.staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5)
+        XCTAssertTrue(app.staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
@@ -71,7 +71,7 @@ class TweetNestScreenTests: XCTestCase {
 
         app.buttons["\(Self.dispalyUserName)'s Account"].tap()
 
-        _ = app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5)
+        XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
@@ -89,7 +89,7 @@ class TweetNestScreenTests: XCTestCase {
 
         app.buttons["\(Self.dispalyUserName)'s Followings History"].tap()
 
-        _ = app.staticTexts["@Apple"].waitForExistence(timeout: 5)
+        XCTAssertTrue(app.staticTexts["@Apple"].waitForExistence(timeout: 5))
 
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
@@ -101,21 +101,44 @@ class TweetNestScreenTests: XCTestCase {
         add(attachment)
     }
 
-    func testFollowersHistory() throws {
+    func testBatchDeleteTweetsForm() throws {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        app.buttons["\(Self.dispalyUserName)'s Followers History"].tap()
+        app.buttons["\(Self.dispalyUserName)'s Account"].tap()
 
-        _ = app.staticTexts["@Apple"].waitForExistence(timeout: 5)
+        XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
+
+        if app.buttons["Delete"].exists {
+            app.buttons["Delete"].tap()
+            app.buttons["Delete Recent Tweets"].tap()
+        } else if app.navigationBars[Self.dispalyUserName].buttons["More"].exists {
+            app.navigationBars[Self.dispalyUserName].buttons["More"].tap()
+            app.collectionViews.buttons.element(boundBy: 3).tap() // app.collectionViews/*@START_MENU_TOKEN@*/.buttons["Delete"]/*[[".cells.buttons[\"Delete\"]",".buttons[\"Delete\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+            app.buttons["Delete Recent Tweets"].tap()
+        } else {
+            #if os(watchOS)
+            scrollDown()
+            #endif
+
+            app.buttons["Delete Recent Tweets"].tap()
+        }
+
+        XCTAssertTrue(app.switches.firstMatch.waitForExistence(timeout: 5))
 
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
-        attachment.name = "Followers History Screen"
+        attachment.name = "Batch Delete Tweets Form Screen"
         attachment.lifetime = .keepAlways
         add(attachment)
+    }
+
+    private func scrollDown() {
+        let relativeTouchPoint = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0))
+        let relativeOffset = app.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: -1.0))
+        relativeTouchPoint.press(forDuration: 0, thenDragTo: relativeOffset)
     }
 }
