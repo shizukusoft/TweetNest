@@ -119,7 +119,11 @@ extension Session {
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
 
-                                async let _profileImageDataAsset = DataAsset.dataAsset(for: twitterUser.profileImageOriginalURL, session: self, context: context)
+                                async let _profileImageDataAsset = { () async throws -> DataAsset? in
+                                    guard let profileImageOriginalURL = twitterUser.profileImageOriginalURL else { return nil }
+
+                                    return try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: context)
+                                }()
 
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
