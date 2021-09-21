@@ -13,46 +13,25 @@ import OrderedCollections
 import UnifiedLogging
 
 extension Session {
-    private nonisolated var lastPersistentHistoryTokenURL: URL {
-        PersistentContainer.defaultDirectoryURL().appendingPathComponent("TweetNestKit-Session.token")
-    }
-
-    private var lastPersistentHistoryToken: NSPersistentHistoryToken? {
-        get {
-            guard let data = try? Data(contentsOf: lastPersistentHistoryTokenURL) else {
-                return nil
-            }
-
-            return try? NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: data)
-        }
-    }
-
     private nonisolated var logger: Logger {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
 
     @discardableResult
-    private func updateLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) throws -> NSPersistentHistoryToken? {
-        let lastPersistentHistoryToken = lastPersistentHistoryToken
+    private func updateLastPersistentHistoryTransactionTimestamp(_ newValue: Date?) throws -> Date? {
+        let oldValue = TweetNestKitUserDefaults.standard.lastPersistentHistoryTransactionTimestamp
 
-        if let newValue = newValue {
-            let data = try NSKeyedArchiver.archivedData(withRootObject: newValue, requiringSecureCoding: true)
-            try data.write(to: lastPersistentHistoryTokenURL)
+        TweetNestKitUserDefaults.standard.lastPersistentHistoryTransactionTimestamp = newValue
 
-            return lastPersistentHistoryToken
-        } else {
-            if FileManager.default.fileExists(atPath: lastPersistentHistoryTokenURL.path) {
-                try FileManager.default.removeItem(at: lastPersistentHistoryTokenURL)
-            }
-
-            return lastPersistentHistoryToken
-        }
+        return oldValue
     }
 
-    private var persistentHistoryTransactions: (transactions: [NSPersistentHistoryTransaction], token: NSPersistentHistoryToken?, context: NSManagedObjectContext)? {
+    private var persistentHistoryTransactions: (transactions: [NSPersistentHistoryTransaction], lastPersistentHistoryTransactionDate: Date?, context: NSManagedObjectContext)? {
         get throws {
-            let lastPersistentHistoryToken = try updateLastPersistentHistoryToken(nil)
-            let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(after: lastPersistentHistoryToken)
+            let lastPersistentHistoryTransactionDate = try updateLastPersistentHistoryTransactionTimestamp(nil)
+            let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
+                after: lastPersistentHistoryTransactionDate ?? .distantPast
+            )
 
             let context = persistentContainer.newBackgroundContext()
             context.undoManager = nil
@@ -64,9 +43,9 @@ extension Session {
                 return nil
             }
 
-            try updateLastPersistentHistoryToken(transactions.last?.token ?? lastPersistentHistoryToken)
+            try updateLastPersistentHistoryTransactionTimestamp(transactions.last?.timestamp ?? lastPersistentHistoryTransactionDate)
 
-            return (transactions, lastPersistentHistoryToken, context)
+            return (transactions, lastPersistentHistoryTransactionDate, context)
         }
     }
 
@@ -76,7 +55,7 @@ extension Session {
                 do {
                     guard
                         let transactions = try await persistentHistoryTransactions,
-                        let lastToken = transactions.token
+                        let lastPersistentHistoryTransactionDate = transactions.lastPersistentHistoryTransactionDate
                     else {
                         return
                     }
@@ -94,7 +73,7 @@ extension Session {
                     } catch {
                         if error is CancellationError {
                             do {
-                                try await updateLastPersistentHistoryToken(lastToken)
+                                try await updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
                             } catch {
                                 logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
                             }
