@@ -5,7 +5,7 @@
 ### en-US
 
 ```
-TweetNest is a Twitter account manager for iOS, watchOS and macOS.
+TweetNest is a Twitter account manager for iOS, iPadOS and watchOS.
 
 Key Features:
 
@@ -25,7 +25,7 @@ Delete your all or some tweets.
 ### ko
 
 ```
-TweetNest는 iOS, watchOS, macOS를 위한 Twitter 계정 관리 앱입니다.
+TweetNest는 iOS, iPadOS, watchOS를 위한 Twitter 계정 관리 앱입니다.
 
 주요 기능:
 
