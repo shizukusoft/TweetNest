@@ -278,6 +278,7 @@ extension Session {
 
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = notificationContentTitle
+                    notificationContent.categoryIdentifier = "NewAccountData"
 
                     if let threadIdentifier = threadIdentifier {
                         notificationContent.threadIdentifier = threadIdentifier

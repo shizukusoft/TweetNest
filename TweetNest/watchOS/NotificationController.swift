@@ -11,6 +11,10 @@ import UserNotifications
 
 class NotificationController: WKUserNotificationHostingController<NotificationView> {
 
+    var title: String?
+    var subtitle: String?
+    var message: String?
+
     override var body: NotificationView {
         return NotificationView()
     }
@@ -29,5 +33,9 @@ class NotificationController: WKUserNotificationHostingController<NotificationVi
         // This method is called when a notification needs to be presented.
         // Implement it if you use a dynamic notification interface.
         // Populate your dynamic notification interface as quickly as possible.
+
+        self.title = notification.request.content.title
+        self.subtitle = notification.request.content.subtitle
+        self.message = notification.request.content.body
     }
 }
