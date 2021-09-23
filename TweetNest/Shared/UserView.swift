@@ -10,25 +10,18 @@ import TweetNestKit
 import UnifiedLogging
 
 struct UserView: View {
-    let userID: String?
+    let userID: String
 
-    var displayUserID: String? {
-        guard let userID = userID else { return nil }
-
+    var displayUserID: String {
         return Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
     }
 
     @Environment(\.session) private var session: Session
     @Environment(\.account) var account: Account?
 
-    @FetchRequest private var latestUserDetails: FetchedResults<UserDetail>
-
-    var latestUserDetail: UserDetail? {
-        latestUserDetails.first
-    }
-
-    var user: User? {
-        latestUserDetail?.user
+    @FetchRequest private var users: FetchedResults<User>
+    private var user: User? {
+        users.first
     }
 
     @State var isRefreshing: Bool = false
@@ -102,51 +95,46 @@ struct UserView: View {
     @ViewBuilder private var userView: some View {
         #if os(macOS)
         VStack(alignment: .leading, spacing: 8) {
-            if let latestUserDetail = latestUserDetail {
-                VStack(alignment: .leading, spacing: 8) {
-                    UserDetailProfileView(userDetail: latestUserDetail)
-                    VStack(alignment: .leading) {
-                        user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                        if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
-                            Group {
-                                if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                    Text("Updating...")
-                                } else {
-                                    Text("Updated \(lastUpdateEndDate, style: .relative) ago")
-                                }
+            VStack(alignment: .leading, spacing: 8) {
+                ProfileView(user: user)
+                VStack(alignment: .leading) {
+                    user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
+                    if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
+                        Group {
+                            if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                                Text("Updating...")
+                            } else {
+                                Text("Updated \(lastUpdateEndDate, style: .relative) ago")
                             }
-                            .accessibilityAddTraits(.updatesFrequently)
                         }
+                        .accessibilityAddTraits(.updatesFrequently)
                     }
-                    .font(.footnote)
-                    .foregroundColor(.secondary)
                 }
-                .padding()
+                .font(.footnote)
+                .foregroundColor(.secondary)
             }
-            if let user = user {
-                UserAllDataView(user: user)
-            }
+            .padding()
+
+            AllDataView(user: user)
         }
         #else
         List {
-            if let latestUserDetail = latestUserDetail {
-                Section {
-                    UserDetailProfileView(userDetail: latestUserDetail)
-                } header: {
-                    Text("Latest Profile")
-                } footer: {
-                    VStack(alignment: .leading) {
-                        user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                        if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
-                            Group {
-                                if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                    Text("Updating...")
-                                } else {
-                                    Text("Updated \(lastUpdateEndDate, style: .relative) ago")
-                                }
+            Section {
+                ProfileView(user: user)
+            } header: {
+                Text("Latest Profile")
+            } footer: {
+                VStack(alignment: .leading) {
+                    user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
+                    if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
+                        Group {
+                            if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                                Text("Updating...")
+                            } else {
+                                Text("Updated \(lastUpdateEndDate, style: .relative) ago")
                             }
-                            .accessibilityAddTraits(.updatesFrequently)
                         }
+                        .accessibilityAddTraits(.updatesFrequently)
                     }
                 }
             }
@@ -157,9 +145,7 @@ struct UserView: View {
                 }
             }
             #endif
-            if let user = user {
-                UserAllDataView(user: user)
-            }
+            AllDataView(user: user)
         }
         #endif
     }
@@ -180,7 +166,7 @@ struct UserView: View {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationTitle(Text(verbatim: latestUserDetail?.displayUsername ?? displayUserID ?? ""))
+            .navigationTitle(Text(verbatim: displayUserID))
             .refreshable(action: refresh)
             #if os(iOS) || os(macOS)
             .toolbar {
@@ -305,22 +291,16 @@ struct UserView: View {
             #endif
     }
 
-    init(userID: String?) {
+    init(userID: String) {
         self.userID = userID
 
-        self._latestUserDetails = FetchRequest(fetchRequest: {
-            let fetchRequest = UserDetail.fetchRequest()
-            if let userID = userID {
-                fetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
-            } else {
-                fetchRequest.predicate = NSPredicate(value: false)
-            }
+        self._users = FetchRequest(fetchRequest: {
+            let fetchRequest = User.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
             fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
-                NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
             ]
             fetchRequest.fetchLimit = 1
-            fetchRequest.relationshipKeyPathsForPrefetching = ["user"]
             fetchRequest.returnsObjectsAsFaults = false
 
             return fetchRequest
