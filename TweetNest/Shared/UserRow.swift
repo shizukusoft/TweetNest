@@ -8,12 +8,14 @@
 import SwiftUI
 import TweetNestKit
 
-struct UserRow: View {
+struct UserRow<Icon: View>: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.account) private var account: Account?
 
     let userID: String
     let searchQuery: String?
+
+    let icon: Icon?
 
     private var displayUserID: String {
         Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
@@ -57,41 +59,66 @@ struct UserRow: View {
         return true
     }
 
-    var body: some View {
-        if shouldBeHidden == false {
-            Group {
-                if let latestUserDetail = latestUserDetail {
-                    Label {
-                        NavigationLink {
-                            UserView(userID: userID)
-                                .environment(\.account, account)
-                        } label: {
-                            userLabelTitle(latestUserDetail: latestUserDetail, displayUserID: displayUserID)
-                        }
-                    } icon: {
-                        ProfileImage(profileImageURL: latestUserDetail.profileImageURL)
-                            .frame(width: 24, height: 24)
-                    }
-                } else {
+    @ViewBuilder var userLabel: some View {
+        Group {
+            if let latestUserDetail = latestUserDetail {
+                Label {
                     NavigationLink {
                         UserView(userID: userID)
                             .environment(\.account, account)
                     } label: {
-                        Text(verbatim: displayUserID)
-                            .lineLimit(1)
+                        TweetNestStack {
+                            Text(verbatim: latestUserDetail.name ?? displayUserID)
+                                .lineLimit(1)
+
+                            if let username = latestUserDetail.username {
+                                Text(verbatim: "@\(username)")
+                                    .lineLimit(1)
+                                    .layoutPriority(1)
+                                    .foregroundColor(Color.gray)
+                            }
+                        }
                     }
+                } icon: {
+                    ProfileImage(profileImageURL: latestUserDetail.profileImageURL)
+                        .frame(width: 24, height: 24)
+                }
+            } else {
+                NavigationLink {
+                    UserView(userID: userID)
+                        .environment(\.account, account)
+                } label: {
+                    Text(verbatim: displayUserID)
+                        .lineLimit(1)
+                }
+            }
+        }
+        #if os(watchOS)
+        .labelStyle(.titleOnly)
+        #endif
+    }
+
+    var body: some View {
+        if shouldBeHidden == false {
+            Group {
+                if let icon = icon {
+                    Label {
+                        userLabel
+                    } icon: {
+                        icon
+                    }
+                } else {
+                    userLabel
                 }
             }
             .accessibilityLabel(Text(verbatim: latestUserDetail?.name ?? displayUserID))
-            #if os(watchOS)
-            .labelStyle(.titleOnly)
-            #endif
         }
     }
 
-    init(userID: String, searchQuery: String? = nil) {
+    private init(userID: String, searchQuery: String? = nil, icon: Icon?) {
         self.userID = userID
         self.searchQuery = searchQuery
+        self.icon = icon
 
         self._latestUserDetails = FetchRequest(fetchRequest: {
             let fetchRequest = UserDetail.fetchRequest()
@@ -107,19 +134,12 @@ struct UserRow: View {
         }())
     }
 
-    @ViewBuilder
-    private func userLabelTitle(latestUserDetail: UserDetail, displayUserID: String) -> some View {
-        TweetNestStack {
-            Text(verbatim: latestUserDetail.name ?? displayUserID)
-                .lineLimit(1)
+    init(userID: String, searchQuery: String? = nil, @ViewBuilder icon: () -> Icon) {
+        self.init(userID: userID, searchQuery: searchQuery, icon: icon())
+    }
 
-            if let username = latestUserDetail.username {
-                Text(verbatim: "@\(username)")
-                    .lineLimit(1)
-                    .layoutPriority(1)
-                    .foregroundColor(Color.gray)
-            }
-        }
+    init(userID: String, searchQuery: String? = nil) where Icon == EmptyView {
+        self.init(userID: userID, searchQuery: searchQuery, icon: nil)
     }
 }
 

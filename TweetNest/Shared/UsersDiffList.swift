@@ -32,18 +32,14 @@ struct UsersDiffList: View {
             if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
                 Section {
                     ForEach(appendedUserIDs, id: \.self) { userID in
-                        Label {
-                            UserRow(userID: userID, searchQuery: searchQuery)
-                        } icon: {
+                        UserRow(userID: userID, searchQuery: searchQuery) {
                             Image(systemName: "person.badge.plus")
                                 .foregroundColor(.green)
                         }
                     }
 
                     ForEach(removedUserIDs, id: \.self) { userID in
-                        Label {
-                            UserRow(userID: userID, searchQuery: searchQuery)
-                        } icon: {
+                        UserRow(userID: userID, searchQuery: searchQuery) {
                             Image(systemName: "person.badge.minus")
                                 .foregroundColor(.red)
                         }
