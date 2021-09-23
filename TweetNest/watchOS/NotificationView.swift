@@ -14,17 +14,17 @@ struct NotificationView: View {
 
     var body: some View {
         VStack {
-            if let title = title {
+            if let title = title, title.isEmpty == false {
                 Text(verbatim: title)
                     .font(.headline)
             }
 
-            if let subtitle = subtitle {
+            if let subtitle = subtitle, subtitle.isEmpty == false {
                 Text(verbatim: subtitle)
                     .font(.subheadline)
             }
 
-            if let message = message {
+            if let message = message, message.isEmpty == false {
                 Text(verbatim: message)
             }
         }

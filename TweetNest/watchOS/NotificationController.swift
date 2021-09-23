@@ -16,7 +16,7 @@ class NotificationController: WKUserNotificationHostingController<NotificationVi
     var message: String?
 
     override var body: NotificationView {
-        return NotificationView()
+        return NotificationView(title: title, subtitle: subtitle, message: message)
     }
 
     override func willActivate() {
