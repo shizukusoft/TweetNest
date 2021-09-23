@@ -316,6 +316,7 @@ struct UserView: View {
                 fetchRequest.predicate = NSPredicate(value: false)
             }
             fetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
                 NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
             ]
             fetchRequest.fetchLimit = 1

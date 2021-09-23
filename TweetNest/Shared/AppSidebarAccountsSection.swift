@@ -126,8 +126,8 @@ struct AppSidebarAccountsSection: View {
                     fetchRequest.predicate = NSPredicate(value: false)
                 }
                 fetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
                     NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
-                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false)
                 ]
                 fetchRequest.propertiesToFetch = ["id"]
                 fetchRequest.fetchLimit = 1
