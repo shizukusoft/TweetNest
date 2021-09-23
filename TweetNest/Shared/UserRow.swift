@@ -32,7 +32,7 @@ struct UserRow: View {
 
         guard
             userID.localizedCaseInsensitiveContains(searchQuery) == false &&
-                displayUserID.localizedCaseInsensitiveContains(searchQuery)
+                displayUserID.localizedCaseInsensitiveContains(searchQuery) == false
         else {
             return false
         }
@@ -49,7 +49,7 @@ struct UserRow: View {
 
         guard
             let count = try? viewContext.count(for: fetchRequest),
-            count > 0
+            count == 0
         else {
             return false
         }
