@@ -128,7 +128,6 @@ struct UserRow<Icon: View>: View {
                 NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
             ]
             fetchRequest.fetchLimit = 1
-            fetchRequest.relationshipKeyPathsForPrefetching = ["user"]
             fetchRequest.returnsObjectsAsFaults = false
 
             return fetchRequest
