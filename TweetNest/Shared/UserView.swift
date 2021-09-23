@@ -166,7 +166,7 @@ struct UserView: View {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationTitle(Text(verbatim: displayUserID))
+            .navigationTitle(Text(verbatim: user?.sortedUserDetails?.last?.displayUsername ?? displayUserID))
             .refreshable(action: refresh)
             #if os(iOS) || os(macOS)
             .toolbar {

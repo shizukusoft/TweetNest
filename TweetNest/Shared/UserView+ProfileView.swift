@@ -18,12 +18,7 @@ extension UserView {
 
         var body: some View {
             if let latestUserDetail = latestUserDetail {
-                if let displayUserName = latestUserDetail.displayUsername {
-                    UserDetailProfileView(userDetail: latestUserDetail)
-                        .navigationTitle(Text(verbatim: displayUserName))
-                } else {
-                    UserDetailProfileView(userDetail: latestUserDetail)
-                }
+                UserDetailProfileView(userDetail: latestUserDetail)
             }
         }
 
