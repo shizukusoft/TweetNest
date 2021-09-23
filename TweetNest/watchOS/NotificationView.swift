@@ -12,7 +12,7 @@ struct NotificationView: View {
     let notifications: [(date: Date, request: UNNotificationRequest)]
 
     var body: some View {
-        List(notifications, id: \.request.identifier) { notification in
+        ForEach(notifications, id: \.request.identifier) { notification in
             let title = notification.request.content.title
             let subtitle = notification.request.content.subtitle
             let message = notification.request.content.body
