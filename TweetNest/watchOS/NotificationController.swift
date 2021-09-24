@@ -8,11 +8,13 @@
 import WatchKit
 import SwiftUI
 import UserNotifications
+import OrderedCollections
 
 class NotificationController: WKUserNotificationHostingController<NotificationView> {
+    private var notifications: OrderedDictionary<String, (date: Date, request: UNNotificationRequest)> = [:]
 
     override var body: NotificationView {
-        return NotificationView()
+        return NotificationView(notifications: Array(notifications.values))
     }
 
     override func willActivate() {
@@ -29,5 +31,7 @@ class NotificationController: WKUserNotificationHostingController<NotificationVi
         // This method is called when a notification needs to be presented.
         // Implement it if you use a dynamic notification interface.
         // Populate your dynamic notification interface as quickly as possible.
+
+        notifications[notification.request.identifier] = (notification.date, notification.request)
     }
 }

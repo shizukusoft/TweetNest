@@ -104,7 +104,7 @@ struct BatchDeleteTweetsView: View {
         }
         .environment(\.account, account)
         #if !os(watchOS)
-        .navigationTitle("Delete Tweets")
+        .navigationTitle(String(localized: "Delete Tweets"))
         #endif
         .toolbar {
             ToolbarItemGroup(placement: .cancellationAction) {

@@ -15,14 +15,20 @@ struct AppSidebarAccountsSection: View {
     @FetchRequest
     private var users: FetchedResults<User>
 
+    private var user: User? {
+        users.first
+    }
+
     @ViewBuilder
     var accountNavigationLink: some View {
         NavigationLink(
             tag: .profile(account),
             selection: $navigationItemSelection
         ) {
-            UserView(user: users.first)
-                .environment(\.account, account)
+            if let userID = user?.id {
+                UserView(userID: userID)
+                    .environment(\.account, account)
+            }
         } label: {
             Label("Account", systemImage: "person")
         }
@@ -34,7 +40,7 @@ struct AppSidebarAccountsSection: View {
             tag: .followings(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(user: users.first, diffKeyPath: \.followingUserIDs, title: Text("Followings History"))
+            UsersDiffList(user: user, diffKeyPath: \.followingUserIDs, title: Text("Followings History"))
                 .environment(\.account, account)
         } label: {
             Label("Followings History", systemImage: "person.2")
@@ -47,7 +53,7 @@ struct AppSidebarAccountsSection: View {
             tag: .followers(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(user: users.first, diffKeyPath: \.followerUserIDs, title: Text("Followers History"))
+            UsersDiffList(user: user, diffKeyPath: \.followerUserIDs, title: Text("Followers History"))
                 .environment(\.account, account)
         } label: {
             Label("Followers History", systemImage: "person.2")
@@ -60,7 +66,7 @@ struct AppSidebarAccountsSection: View {
             tag: .blockings(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(user: users.first, diffKeyPath: \.blockingUserIDs, title: Text("Blocks History"))
+            UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs, title: Text("Blocks History"))
                 .environment(\.account, account)
         } label: {
             Label("Blocks History", systemImage: "nosign")
@@ -70,31 +76,35 @@ struct AppSidebarAccountsSection: View {
     var body: some View {
         Section {
             Group {
-                let displayAccountName = users.first?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description
+                let displayAccountName = user?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description
 
+                let accountTitle = String(localized: "Account for \(displayAccountName)", comment: "Navigation link for account, grouped by username.")
                 accountNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Account")
-                    .accessibilityIdentifier("\(displayAccountName)'s Account")
+                    .accessibilityLabel(accountTitle)
+                    .accessibilityIdentifier("\(displayAccountName):Account")
                     .accessibilityAddTraits(.isButton)
 
+                let followingsTitle = String(localized: "Followings History for \(displayAccountName)", comment: "Navigation link for followings history, grouped by username.")
                 followingsNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Followings History")
-                    .accessibilityIdentifier("\(displayAccountName)'s Followings History")
+                    .accessibilityLabel(followingsTitle)
+                    .accessibilityIdentifier("\(displayAccountName):FollowingsHistory")
                     .accessibilityAddTraits(.isButton)
 
+                let followersTitle = String(localized: "Followers History for \(displayAccountName)", comment: "Navigation link for followers history, grouped by username.")
                 followersNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Followers History")
-                    .accessibilityIdentifier("\(displayAccountName)'s Followers History")
+                    .accessibilityLabel(followersTitle)
+                    .accessibilityIdentifier("\(displayAccountName):FollowersHistory")
                     .accessibilityAddTraits(.isButton)
 
                 if account.preferences.fetchBlockingUsers {
+                    let blockingTitle = String(localized: "Blocks History for \(displayAccountName)", comment: "Navigation link for blocks history, grouped by username.")
                     blockingsNavigationLink
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("\(displayAccountName)'s Blocks History")
-                        .accessibilityIdentifier("\(displayAccountName)'s Blocks History")
+                        .accessibilityLabel(blockingTitle)
+                        .accessibilityIdentifier("\(displayAccountName):BlocksHistory")
                         .accessibilityAddTraits(.isButton)
                 }
             }
@@ -126,8 +136,8 @@ struct AppSidebarAccountsSection: View {
                     fetchRequest.predicate = NSPredicate(value: false)
                 }
                 fetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
                     NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
-                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false)
                 ]
                 fetchRequest.propertiesToFetch = ["id"]
                 fetchRequest.fetchLimit = 1

@@ -180,9 +180,10 @@ struct AppSidebarNavigation: View {
             HStack(spacing: 4) {
                 #if !os(watchOS)
                 ProgressView()
+                .accessibilityHidden(true)
                 #endif
 
-                Text("Loading...")
+                Text("Loading…")
                     #if !os(watchOS)
                     .font(.system(.callout))
                     .foregroundColor(.secondary)
@@ -191,18 +192,20 @@ struct AppSidebarNavigation: View {
                     .fixedSize()
                     #endif
             }
+            .accessibilityElement(children: .combine)
         } else if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
             HStack(spacing: 4) {
                 #if !os(watchOS)
                 ProgressView()
+                .accessibilityHidden(true)
                 #endif
 
                 Group {
                     switch inProgressPersistentContainerCloudKitEvent.type {
                     case .setup:
-                        Text("Preparing to Sync...")
+                        Text("Preparing to Sync…")
                     case .import, .export, .unknown:
-                        Text("Syncing...")
+                        Text("Syncing…")
                     }
                 }
                 #if !os(watchOS)
@@ -213,6 +216,8 @@ struct AppSidebarNavigation: View {
                 .fixedSize()
                 #endif
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.updatesFrequently)
         }
     }
 

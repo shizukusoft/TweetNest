@@ -31,7 +31,11 @@ extension Session {
     ) async throws -> [Twitter.User.ID: (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)] where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
         try await withExtendedBackgroundExecution {
             let context = _context ?? self.persistentContainer.newBackgroundContext()
-            context.undoManager = _context?.undoManager
+            await context.perform {
+                let undoManager = _context.flatMap { _context in _context.performAndWait { _context.undoManager }  }
+
+                context.undoManager = undoManager
+            }
 
             let accountPreferences = try await context.perform { () -> Account.Preferences in
                 guard let account = try? context.existingObject(with: accountObjectID) as? Account else {

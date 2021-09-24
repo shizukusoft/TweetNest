@@ -52,7 +52,11 @@ extension Session {
     ) async throws -> (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)? {
         try await withExtendedBackgroundExecution {
             let context = _context ?? self.persistentContainer.newBackgroundContext()
-            context.undoManager = _context?.undoManager
+            await context.perform {
+                let undoManager = _context.flatMap { _context in _context.performAndWait { _context.undoManager }  }
+
+                context.undoManager = undoManager
+            }
 
             let twitterSession = try await self.twitterSession(for: accountObjectID)
             let twitterAccount = try await Twitter.Account.me(session: twitterSession)

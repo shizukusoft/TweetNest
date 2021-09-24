@@ -13,9 +13,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>other</key>
-			<string>새로운 팔로워 %ld명</string>
+			<string>%ld人の新規フォロワー</string>
 			<key>zero</key>
-			<string>새로운 팔로워 0명</string>
+			<string>0人の新規フォロワー</string>
 		</dict>
 	</dict>
 	<key>%ld new following(s)</key>
@@ -29,9 +29,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>other</key>
-			<string>새로운 팔로우 %ld명</string>
+			<string>%ld人の新規フォロー</string>
 			<key>zero</key>
-			<string>새로운 팔로우 0명</string>
+			<string>0人の新規フォロー</string>
 		</dict>
 	</dict>
 	<key>%ld new unfollower(s)</key>
@@ -45,9 +45,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>other</key>
-			<string>새로운 언팔로워 %ld명</string>
+			<string>%ld人の新規アンフォロワー</string>
 			<key>zero</key>
-			<string>새로운 언팔로워 0명</string>
+			<string>0人の新規アンフォロワー</string>
 		</dict>
 	</dict>
 	<key>%ld new unfollowing(s)</key>
@@ -61,9 +61,9 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>other</key>
-			<string>새로운 언팔로우 %ld명</string>
+			<string>%ld人の新規アンフォロー</string>
 			<key>zero</key>
-			<string>새로운 언팔로우 0명</string>
+			<string>0人の新規アンフォロー</string>
 		</dict>
 	</dict>
 </dict>

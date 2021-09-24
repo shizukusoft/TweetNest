@@ -69,7 +69,7 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        app.buttons["\(Self.dispalyUserName)'s Account"].tap()
+        app.buttons["\(Self.dispalyUserName):Account"].tap()
 
         XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
@@ -87,7 +87,7 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        app.buttons["\(Self.dispalyUserName)'s Followings History"].tap()
+        app.buttons["\(Self.dispalyUserName):FollowingsHistory"].tap()
 
         XCTAssertTrue(app.staticTexts["@Apple"].waitForExistence(timeout: 5))
 
@@ -101,11 +101,12 @@ class TweetNestScreenTests: XCTestCase {
         add(attachment)
     }
 
+    #if !os(watchOS)
     func testBatchDeleteTweetsForm() throws {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        app.buttons["\(Self.dispalyUserName)'s Account"].tap()
+        app.buttons["\(Self.dispalyUserName):Account"].tap()
 
         XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
@@ -141,4 +142,5 @@ class TweetNestScreenTests: XCTestCase {
         let relativeOffset = app.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: -1.0))
         relativeTouchPoint.press(forDuration: 0, thenDragTo: relativeOffset)
     }
+    #endif
 }
