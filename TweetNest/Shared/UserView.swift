@@ -207,6 +207,7 @@ struct UserView: View {
                                 .labelStyle(.iconOnly)
                         }
                         .accessibilityIdentifier("More")
+                        .accessibilityLabel("More")
                     } else {
                         if let userProfileURL = userProfileURL {
                             Link(destination: userProfileURL) {
