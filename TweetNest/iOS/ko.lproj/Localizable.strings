@@ -26,6 +26,9 @@
 "Additional Settings" = "기타 설정";
 
 /* No comment provided by engineer. */
+"All Data" = "모든 데이터";
+
+/* No comment provided by engineer. */
 "App Version" = "앱 버전";
 
 /* No comment provided by engineer. */
@@ -54,6 +57,9 @@
 
 /* No comment provided by engineer. */
 "Delete Recent Tweets" = "최근 트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets" = "트윗 삭제";
 
 /* No comment provided by engineer. */
 "Delete Tweets?" = "트윗을 삭제하시겠습니까?";
@@ -138,6 +144,9 @@
 
 /* No comment provided by engineer. */
 "Preparing to Sync…" = "동기화 준비 중…";
+
+/* No comment provided by engineer. */
+"Profile" = "프로필";
 
 /* No comment provided by engineer. */
 "Protected" = "비공개 계정";

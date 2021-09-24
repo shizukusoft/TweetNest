@@ -48,7 +48,7 @@ struct UserDetailView: View {
 
     var body: some View {
         List {
-            Section("Profile") {
+            Section(String(localized: "Profile")) {
                 UserDetailProfileView(userDetail: userDetail)
             }
 
