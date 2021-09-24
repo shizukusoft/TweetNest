@@ -25,7 +25,9 @@ extension Session {
         try await cleansingAllUsersAndUserDetails(context: context)
         try await cleansingAllDataAssets(context: context)
 
-        await preferences.lastCleansed = Date()
+        await context.perform {
+            self.preferences(for: context).lastCleansed = Date()
+        }
     }
 
     public nonisolated func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {

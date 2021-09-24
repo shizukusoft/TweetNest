@@ -37,7 +37,7 @@ extension Session {
             context.undoManager = nil
 
             guard
-                let persistentHistoryResult = try context.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
+                let persistentHistoryResult = try context.performAndWait({ try context.execute(fetchHistoryRequest) }) as? NSPersistentHistoryResult,
                 let transactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
             else {
                 return nil
@@ -278,6 +278,7 @@ extension Session {
 
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = notificationContentTitle
+                    notificationContent.categoryIdentifier = "NewAccountData"
 
                     if let threadIdentifier = threadIdentifier {
                         notificationContent.threadIdentifier = threadIdentifier

@@ -50,6 +50,8 @@ struct TweetNestApp: App {
                     .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
             }
+            #elseif os(watchOS)
+            WKNotificationScene(controller: NotificationController.self, category: "NewAccountData")
             #endif
         }
         .onChange(of: scenePhase) { phase in
