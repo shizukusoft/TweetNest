@@ -2,42 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>%ld new following(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@followings@</string>
-		<key>followings</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>zero</key>
-			<string>0 new followings</string>
-			<key>one</key>
-			<string>a new followings</string>
-			<key>other</key>
-			<string>%ld new followings</string>
-		</dict>
-	</dict>
-	<key>%ld new unfollowing(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@unfollowings@</string>
-		<key>unfollowings</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>zero</key>
-			<string>0 new unfollowings</string>
-			<key>one</key>
-			<string>a new unfollowings</string>
-			<key>other</key>
-			<string>%ld new unfollowings</string>
-		</dict>
-	</dict>
 	<key>%ld new follower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -48,12 +12,30 @@
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
-			<key>zero</key>
-			<string>0 new followers</string>
 			<key>one</key>
-			<string>a new followers</string>
+			<string>1 new follower</string>
 			<key>other</key>
 			<string>%ld new followers</string>
+			<key>zero</key>
+			<string>0 new followers</string>
+		</dict>
+	</dict>
+	<key>%ld new following(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@followings@</string>
+		<key>followings</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>1 new following</string>
+			<key>other</key>
+			<string>%ld new followings</string>
+			<key>zero</key>
+			<string>0 new followings</string>
 		</dict>
 	</dict>
 	<key>%ld new unfollower(s)</key>
@@ -66,12 +48,30 @@
 			<string>NSStringPluralRuleType</string>
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
-			<key>zero</key>
-			<string>0 new unfollowers</string>
 			<key>one</key>
-			<string>a new unfollowers</string>
+			<string>1 new unfollower</string>
 			<key>other</key>
 			<string>%ld new unfollowers</string>
+			<key>zero</key>
+			<string>0 new unfollowers</string>
+		</dict>
+	</dict>
+	<key>%ld new unfollowing(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unfollowings@</string>
+		<key>unfollowings</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>1 new unfollowing</string>
+			<key>other</key>
+			<string>%ld new unfollowings</string>
+			<key>zero</key>
+			<string>0 new unfollowings</string>
 		</dict>
 	</dict>
 </dict>
