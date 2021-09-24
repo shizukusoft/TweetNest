@@ -8,22 +8,13 @@
 "%@ tweets will be deleted." = "%@件のツイートが削除されます。";
 
 /* No comment provided by engineer. */
-"%@'s Account" = "%@のアカウント";
-
-/* No comment provided by engineer. */
-"%@'s Blocks History" = "%@のブロック履歴";
-
-/* No comment provided by engineer. */
-"%@'s Followers History" = "%@のフォロワー履歴";
-
-/* No comment provided by engineer. */
-"%@'s Followings History" = "%@のフォロー中履歴";
-
-/* No comment provided by engineer. */
 "About" = "情報";
 
 /* No comment provided by engineer. */
 "Account" = "アカウント";
+
+/* Navigation link for account, grouped by username. */
+"Account for %@" = "%@のアカウント";
 
 /* No comment provided by engineer. */
 "Accounts" = "アカウント";
@@ -46,8 +37,14 @@
 /* No comment provided by engineer. */
 "Blocks History" = "ブロック履歴";
 
+/* Navigation link for blocks history, grouped by username. */
+"Blocks History for %@" = "%@のブロック履歴";
+
 /* No comment provided by engineer. */
 "Cancel" = "キャンセル";
+
+/* No comment provided by engineer. */
+"Copy" = "コピー";
 
 /* No comment provided by engineer. */
 "Delete" = "削除";
@@ -62,7 +59,7 @@
 "Delete Tweets?" = "ツイートを削除しますか？";
 
 /* No comment provided by engineer. */
-"Deleting %@ tweets..." = "%@ツイートを削除しています…";
+"Deleting %@ tweets…" = "%@件のツイートを削除しています…";
 
 /* No comment provided by engineer. */
 "Done" = "完了";
@@ -71,7 +68,7 @@
 "Download Images Using Cellular" = "モバイル通信での画像のダウンロードを許可";
 
 /* No comment provided by engineer. */
-"Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If \"Allow More Data on 5G\" is turned on this device, this option will be ignored." = "他のネットワークに接続できない場合、モバイル通信か共有ネットワークを使用して画像をダウンロードできるようにします。“5Gでより多くのデータを許容”をオンにしていると、この設定は無視されます。";
+"Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If “Allow More Data on 5G” is turned on this device, this option will be ignored." = "他のネットワークに接続できない場合、モバイル通信か共有ネットワークを使用して画像をダウンロードできるようにします。“5Gでより多くのデータを許容”をオンにしていると、この設定は無視されます。";
 
 /* No comment provided by engineer. */
 "Fetch Blocking Users" = "ブロックしたアカウントの一覧を取得";
@@ -82,11 +79,17 @@
 /* No comment provided by engineer. */
 "Followers History" = "フォロワー履歴";
 
-/* No comment provided by engineer. */
-"Followings" = "フォロー中";
+/* Navigation link for followers history, grouped by username. */
+"Followers History for %@" = "%@のフォロワー履歴";
 
 /* No comment provided by engineer. */
-"Followings History" = "フォロー中履歴";
+"Followings" = "フォロー";
+
+/* No comment provided by engineer. */
+"Followings History" = "フォロー履歴";
+
+/* Navigation link for followings history, grouped by username. */
+"Followings History for %@" = "%@のフォロー履歴";
 
 /* No comment provided by engineer. */
 "General" = "一般";
@@ -104,10 +107,13 @@
 "Loaded Tweets" = "読み込んだツイート";
 
 /* No comment provided by engineer. */
-"Loading Recent Tweets..." = "最新ツイートを読み込んでいます…";
+"Loading Archive…" = "アーカイブ読み込み中…";
 
 /* No comment provided by engineer. */
-"Loading..." = "読み込み中…";
+"Loading Recent Tweets…" = "最新ツイートを読み込んでいます…";
+
+/* No comment provided by engineer. */
+"Loading…" = "読み込み中…";
 
 /* No comment provided by engineer. */
 "Location" = "場所";
@@ -116,13 +122,22 @@
 "More" = "その他";
 
 /* No comment provided by engineer. */
+"Open Folder" = "フォルダーを開く";
+
+/* No comment provided by engineer. */
 "Open Profile" = "プロフィールを開く";
 
 /* No comment provided by engineer. */
 "Open Profile in Safari" = "Safariでプロフィールを開く";
 
 /* No comment provided by engineer. */
-"Preparing to Sync..." = "同期準備中…";
+"Open Twitter Archive" = "Twitterアーカイブを開く";
+
+/* No comment provided by engineer. */
+"Open ZIP File" = "ZIPファイルを開く";
+
+/* No comment provided by engineer. */
+"Preparing to Sync…" = "同期準備中…";
 
 /* No comment provided by engineer. */
 "Protected" = "非公開";
@@ -143,7 +158,7 @@
 "Since" = "最初";
 
 /* No comment provided by engineer. */
-"Syncing..." = "同期中…";
+"Syncing…" = "同期中…";
 
 /* No comment provided by engineer. */
 "Target Tweets" = "対象ツイート";
@@ -161,7 +176,7 @@
 "Updated %@ ago" = "%@前に更新されました";
 
 /* No comment provided by engineer. */
-"Updating..." = "更新中…";
+"Updating…" = "更新中…";
 
 /* No comment provided by engineer. */
 "URL" = "Web";
