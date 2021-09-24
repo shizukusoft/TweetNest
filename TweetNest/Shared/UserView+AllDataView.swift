@@ -56,7 +56,7 @@ extension UserView {
                 }
             }
             #else
-            Section("All Data") {
+            Section(String(localized: "All Data")) {
                 ForEach(userDetails) { userDetail in
                     NavigationLink(
                         userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ??
