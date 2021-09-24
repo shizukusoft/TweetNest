@@ -78,29 +78,33 @@ struct AppSidebarAccountsSection: View {
             Group {
                 let displayAccountName = user?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description
 
+                let accountTitle = String(localized: "Account for \(displayAccountName)", comment: "Navigation link for account, grouped by username.")
                 accountNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Account")
-                    .accessibilityIdentifier("\(displayAccountName)'s Account")
+                    .accessibilityLabel(accountTitle)
+                    .accessibilityIdentifier(accountTitle)
                     .accessibilityAddTraits(.isButton)
 
+                let followingsTitle = String(localized: "Followings History for \(displayAccountName)", comment: "Navigation link for followings history, grouped by username.")
                 followingsNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Followings History")
-                    .accessibilityIdentifier("\(displayAccountName)'s Followings History")
+                    .accessibilityLabel(followingsTitle)
+                    .accessibilityIdentifier(followingsTitle)
                     .accessibilityAddTraits(.isButton)
 
+                let followersTitle = String(localized: "Followers History for \(displayAccountName)", comment: "Navigation link for followers history, grouped by username.")
                 followersNavigationLink
                     .accessibilityElement(children: .ignore)
-                    .accessibilityLabel("\(displayAccountName)'s Followers History")
-                    .accessibilityIdentifier("\(displayAccountName)'s Followers History")
+                    .accessibilityLabel(followersTitle)
+                    .accessibilityIdentifier(followersTitle)
                     .accessibilityAddTraits(.isButton)
 
                 if account.preferences.fetchBlockingUsers {
+                    let blockingTitle = String(localized: "Blocks History for \(displayAccountName)", comment: "Navigation link for blocks history, grouped by username.")
                     blockingsNavigationLink
                         .accessibilityElement(children: .ignore)
-                        .accessibilityLabel("\(displayAccountName)'s Blocks History")
-                        .accessibilityIdentifier("\(displayAccountName)'s Blocks History")
+                        .accessibilityLabel(blockingTitle)
+                        .accessibilityIdentifier(blockingTitle)
                         .accessibilityAddTraits(.isButton)
                 }
             }
