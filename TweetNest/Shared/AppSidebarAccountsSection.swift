@@ -82,21 +82,21 @@ struct AppSidebarAccountsSection: View {
                 accountNavigationLink
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(accountTitle)
-                    .accessibilityIdentifier(accountTitle)
+                    .accessibilityIdentifier("\(displayAccountName):Account")
                     .accessibilityAddTraits(.isButton)
 
                 let followingsTitle = String(localized: "Followings History for \(displayAccountName)", comment: "Navigation link for followings history, grouped by username.")
                 followingsNavigationLink
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(followingsTitle)
-                    .accessibilityIdentifier(followingsTitle)
+                    .accessibilityIdentifier("\(displayAccountName):FollowingsHistory")
                     .accessibilityAddTraits(.isButton)
 
                 let followersTitle = String(localized: "Followers History for \(displayAccountName)", comment: "Navigation link for followers history, grouped by username.")
                 followersNavigationLink
                     .accessibilityElement(children: .ignore)
                     .accessibilityLabel(followersTitle)
-                    .accessibilityIdentifier(followersTitle)
+                    .accessibilityIdentifier("\(displayAccountName):FollowersHistory")
                     .accessibilityAddTraits(.isButton)
 
                 if account.preferences.fetchBlockingUsers {
@@ -104,7 +104,7 @@ struct AppSidebarAccountsSection: View {
                     blockingsNavigationLink
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(blockingTitle)
-                        .accessibilityIdentifier(blockingTitle)
+                        .accessibilityIdentifier("\(displayAccountName):BlocksHistory")
                         .accessibilityAddTraits(.isButton)
                 }
             }
