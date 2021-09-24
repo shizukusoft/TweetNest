@@ -27,6 +27,7 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
             .alert(isPresented: $showError, error: error)
     }
 
+    @MainActor
     func fetchTweets() async {
         guard
             let account = account,
