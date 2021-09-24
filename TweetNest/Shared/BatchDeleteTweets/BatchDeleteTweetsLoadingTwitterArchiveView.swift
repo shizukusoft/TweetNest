@@ -51,7 +51,7 @@ struct BatchDeleteTweetsLoadingTwitterArchiveView: View {
                 .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: allowedFileImporterContentTypes, onCompletion: onFileImporterCompletion(result:))
                 .transition(.opacity)
             } else {
-                ProgressView("Loading Archive...")
+                ProgressView("Loading Archive…")
                     .alert(isPresented: $showError, error: error)
                     .zIndex(-1)
                     .transition(.opacity)

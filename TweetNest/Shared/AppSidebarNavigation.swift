@@ -182,7 +182,7 @@ struct AppSidebarNavigation: View {
                 ProgressView()
                 #endif
 
-                Text("Loading...")
+                Text("Loading…")
                     #if !os(watchOS)
                     .font(.system(.callout))
                     .foregroundColor(.secondary)
@@ -200,9 +200,9 @@ struct AppSidebarNavigation: View {
                 Group {
                     switch inProgressPersistentContainerCloudKitEvent.type {
                     case .setup:
-                        Text("Preparing to Sync...")
+                        Text("Preparing to Sync…")
                     case .import, .export, .unknown:
-                        Text("Syncing...")
+                        Text("Syncing…")
                     }
                 }
                 #if !os(watchOS)

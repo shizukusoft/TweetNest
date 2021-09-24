@@ -102,7 +102,7 @@ struct UserView: View {
                     if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
                         Group {
                             if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                Text("Updating...")
+                                Text("Updating…")
                             } else {
                                 Text("Updated \(lastUpdateEndDate, style: .relative) ago")
                             }
@@ -129,7 +129,7 @@ struct UserView: View {
                     if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
                         Group {
                             if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                Text("Updating...")
+                                Text("Updating…")
                             } else {
                                 Text("Updated \(lastUpdateEndDate, style: .relative) ago")
                             }
