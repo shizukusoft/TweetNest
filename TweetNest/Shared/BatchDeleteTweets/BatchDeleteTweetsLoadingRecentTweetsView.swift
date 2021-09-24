@@ -20,7 +20,7 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
     @State private var error: TweetNestError?
 
     var body: some View {
-        ProgressView("Loading Recent Tweets...")
+        ProgressView("Loading Recent Tweets…")
             .task {
                 await fetchTweets()
             }
