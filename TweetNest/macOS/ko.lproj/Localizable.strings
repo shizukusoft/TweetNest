@@ -1,26 +1,23 @@
 /* No comment provided by engineer. */
-"%@'s Account" = "%@의 계정";
+"%@ of %@ tweets deletion requested." = "트윗 총 %2$@개 중 %1$@개 삭제 요청했습니다.";
 
 /* No comment provided by engineer. */
-"%@'s Blocks History" = "%@의 차단 기록";
+"%@ tweets failed to delete." = "트윗을 %@개 삭제 실패했습니다.";
 
 /* No comment provided by engineer. */
-"%@'s Followers History" = "%@의 팔로워 기록";
-
-/* No comment provided by engineer. */
-"%@'s Followings History" = "%@의 팔로잉 기록";
+"%@ tweets will be deleted." = "트윗 %@개를 삭제합니다.";
 
 /* No comment provided by engineer. */
 "Account" = "계정";
+
+/* Navigation link for account, grouped by username. */
+"Account for %@" = "%@의 계정";
 
 /* No comment provided by engineer. */
 "Accounts" = "계정";
 
 /* No comment provided by engineer. */
 "Add Account" = "계정 추가";
-
-/* No comment provided by engineer. */
-"All Data" = "모든 데이터";
 
 /* No comment provided by engineer. */
 "Background Update" = "백그라운드 업데이트";
@@ -31,8 +28,14 @@
 /* No comment provided by engineer. */
 "Blocks History" = "차단 기록";
 
+/* Navigation link for blocks history, grouped by username. */
+"Blocks History for %@" = "%@의 차단 기록";
+
 /* No comment provided by engineer. */
 "Cancel" = "취소";
+
+/* No comment provided by engineer. */
+"Date" = "날짜";
 
 /* No comment provided by engineer. */
 "Delete" = "삭제";
@@ -44,7 +47,16 @@
 "Delete Recent Tweets" = "최근 트윗 삭제";
 
 /* No comment provided by engineer. */
-"Delete Tweets" = "";
+"Delete Tweets" = "트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets?" = "트윗을 삭제하시겠습니까?";
+
+/* No comment provided by engineer. */
+"Deleting %@ tweets…" = "트윗 %@개 삭제 중…";
+
+/* No comment provided by engineer. */
+"Done" = "완료";
 
 /* No comment provided by engineer. */
 "Fetch Blocking Users" = "블락한 유저 가져오기";
@@ -55,11 +67,17 @@
 /* No comment provided by engineer. */
 "Followers History" = "팔로워 기록";
 
+/* Navigation link for followers history, grouped by username. */
+"Followers History for %@" = "%@의 팔로워 기록";
+
 /* No comment provided by engineer. */
 "Followings" = "팔로잉";
 
 /* No comment provided by engineer. */
 "Followings History" = "팔로잉 기록";
+
+/* Navigation link for followings history, grouped by username. */
+"Followings History for %@" = "%@의 팔로잉 기록";
 
 /* No comment provided by engineer. */
 "General" = "일반";
@@ -68,13 +86,19 @@
 "Joined" = "가입 날짜";
 
 /* No comment provided by engineer. */
-"Latest Profile" = "최신 프로필";
-
-/* No comment provided by engineer. */
 "Listed" = "리스트";
 
 /* No comment provided by engineer. */
-"Loading Archive..." = "아카이브 로드 중...";
+"Loaded Tweets" = "로드한 트윗";
+
+/* No comment provided by engineer. */
+"Loading Archive…" = "아카이브 로드 중…";
+
+/* No comment provided by engineer. */
+"Loading Recent Tweets…" = "최신 트윗 로드 중…";
+
+/* No comment provided by engineer. */
+"Loading…" = "로드 중…";
 
 /* No comment provided by engineer. */
 "Location" = "위치";
@@ -83,13 +107,13 @@
 "More" = "더 보기";
 
 /* No comment provided by engineer. */
+"Name" = "이름";
+
+/* No comment provided by engineer. */
 "Open Folder" = "폴더 열기";
 
 /* No comment provided by engineer. */
 "Open Profile" = "프로필 열기";
-
-/* No comment provided by engineer. */
-"Open Profile in Safari" = "Safari에서 프로필 열기";
 
 /* No comment provided by engineer. */
 "Open Twitter Archive" = "Twitter 아카이브 열기";
@@ -98,10 +122,10 @@
 "Open ZIP File" = "ZIP 파일 열기";
 
 /* No comment provided by engineer. */
-"Preparing..." = "준비 중...";
+"Preparing to Sync…" = "동기화 준비 중…";
 
 /* No comment provided by engineer. */
-"Profile" = "프로필";
+"Profile Image" = "프로필 사진";
 
 /* No comment provided by engineer. */
 "Protected" = "비공개 계정";
@@ -110,7 +134,7 @@
 "Refresh" = "새로 고침";
 
 /* No comment provided by engineer. */
-"Results" = "결과";
+"Retweets" = "리트윗";
 
 /* No comment provided by engineer. */
 "Settings" = "설정";
@@ -119,19 +143,34 @@
 "Share" = "공유";
 
 /* No comment provided by engineer. */
-"Syncing..." = "동기화 중...";
+"Since" = "시작";
+
+/* No comment provided by engineer. */
+"Syncing…" = "동기화 중…";
+
+/* No comment provided by engineer. */
+"Target Tweets" = "대상 트윗";
 
 /* No comment provided by engineer. */
 "Tweets" = "트윗";
 
 /* No comment provided by engineer. */
+"Until" = "종료";
+
+/* No comment provided by engineer. */
+"Update accounts in background on this device." = "이 기기에서 백그라운드로 계정 정보를 업데이트합니다.";
+
+/* No comment provided by engineer. */
 "Updated %@ ago" = "%@ 전에 업데이트됨";
 
 /* No comment provided by engineer. */
-"Updating..." = "업데이트 중...";
+"Updating…" = "업데이트 중…";
 
 /* No comment provided by engineer. */
 "URL" = "웹사이트";
+
+/* No comment provided by engineer. */
+"Username" = "사용자명";
 
 /* No comment provided by engineer. */
 "Verified" = "인증된 계정";

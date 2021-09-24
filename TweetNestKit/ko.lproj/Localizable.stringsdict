@@ -15,7 +15,7 @@
 			<key>other</key>
 			<string>새로운 팔로워 %ld명</string>
 			<key>zero</key>
-			<string>0 new followers</string>
+			<string>새로운 팔로워 0명</string>
 		</dict>
 	</dict>
 	<key>%ld new following(s)</key>
@@ -31,7 +31,7 @@
 			<key>other</key>
 			<string>새로운 팔로우 %ld명</string>
 			<key>zero</key>
-			<string>0 new followings</string>
+			<string>새로운 팔로우 0명</string>
 		</dict>
 	</dict>
 	<key>%ld new unfollower(s)</key>
@@ -47,7 +47,7 @@
 			<key>other</key>
 			<string>새로운 언팔로워 %ld명</string>
 			<key>zero</key>
-			<string>0 new unfollowers</string>
+			<string>새로운 언팔로워 0명</string>
 		</dict>
 	</dict>
 	<key>%ld new unfollowing(s)</key>
@@ -63,7 +63,7 @@
 			<key>other</key>
 			<string>새로운 언팔로우 %ld명</string>
 			<key>zero</key>
-			<string>0 new unfollowings</string>
+			<string>새로운 언팔로우 0명</string>
 		</dict>
 	</dict>
 </dict>
