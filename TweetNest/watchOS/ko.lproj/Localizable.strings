@@ -23,7 +23,13 @@
 "Add Account" = "계정 추가";
 
 /* No comment provided by engineer. */
+"All Data" = "모든 데이터";
+
+/* No comment provided by engineer. */
 "App Version" = "앱 버전";
+
+/* No comment provided by engineer. */
+"Background Update" = "백그라운드 업데이트";
 
 /* No comment provided by engineer. */
 "Blocked Accounts" = "차단한 계정";
@@ -51,6 +57,12 @@
 
 /* No comment provided by engineer. */
 "Done" = "완료";
+
+/* No comment provided by engineer. */
+"Download Images Using Cellular" = "셀룰러를 사용하여 이미지 다운로드";
+
+/* No comment provided by engineer. */
+"Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If “Allow More Data on 5G” is turned on this device, this option will be ignored." = "이 기기에서 다른 네트워크가 사용 불가능할 때, 셀룰러나 개인용 핫스팟을 이용하여 이미지를 다운로드합니다. 이 기기에서 “5G에서 데이터 더 사용”이 활성화되어 있으면, 이 옵션은 무시됩니다.";
 
 /* No comment provided by engineer. */
 "Followers" = "팔로워";
@@ -98,6 +110,9 @@
 "Preparing to Sync…" = "동기화 준비 중…";
 
 /* No comment provided by engineer. */
+"Profile" = "프로필";
+
+/* No comment provided by engineer. */
 "Protected" = "비공개 계정";
 
 /* No comment provided by engineer. */
@@ -117,6 +132,9 @@
 
 /* No comment provided by engineer. */
 "Tweets" = "트윗";
+
+/* No comment provided by engineer. */
+"Update accounts in background on this device." = "이 기기에서 백그라운드로 계정 정보를 업데이트합니다.";
 
 /* No comment provided by engineer. */
 "Updated %@ ago" = "%@ 전에 업데이트됨";
