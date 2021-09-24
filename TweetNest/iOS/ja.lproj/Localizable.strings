@@ -26,6 +26,9 @@
 "Additional Settings" = "追加設定";
 
 /* No comment provided by engineer. */
+"All Data" = "すべてのデータ";
+
+/* No comment provided by engineer. */
 "App Version" = "バージョン";
 
 /* No comment provided by engineer. */
@@ -54,6 +57,9 @@
 
 /* No comment provided by engineer. */
 "Delete Recent Tweets" = "最近のツイートを削除";
+
+/* No comment provided by engineer. */
+"Delete Tweets" = "ツイートを削除";
 
 /* No comment provided by engineer. */
 "Delete Tweets?" = "ツイートを削除しますか？";
@@ -138,6 +144,9 @@
 
 /* No comment provided by engineer. */
 "Preparing to Sync…" = "同期準備中…";
+
+/* No comment provided by engineer. */
+"Profile" = "プロフィール";
 
 /* No comment provided by engineer. */
 "Protected" = "非公開";
