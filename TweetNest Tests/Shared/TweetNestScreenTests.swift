@@ -69,7 +69,7 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        app.buttons["\(Self.dispalyUserName)'s Account"].tap()
+        app.buttons["Account for \(Self.dispalyUserName)"].tap()
 
         XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
@@ -87,7 +87,7 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        app.buttons["\(Self.dispalyUserName)'s Followings History"].tap()
+        app.buttons["Followings History for \(Self.dispalyUserName)"].tap()
 
         XCTAssertTrue(app.staticTexts["@Apple"].waitForExistence(timeout: 5))
 
@@ -106,7 +106,7 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        app.buttons["\(Self.dispalyUserName)'s Account"].tap()
+        app.buttons["Account for \(Self.dispalyUserName)"].tap()
 
         XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
