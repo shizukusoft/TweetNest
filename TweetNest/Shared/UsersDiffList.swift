@@ -10,6 +10,10 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffList: View {
+    #if os(iOS)
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    #endif
+
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
     let title: Text
@@ -45,7 +49,39 @@ struct UsersDiffList: View {
                         }
                     }
                 } header: {
-                    Text(verbatim: userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
+                    HStack {
+                        Group {
+                            if let creationDate = userDetail.creationDate {
+                                #if os(iOS)
+                                let creationDateText = creationDate.twnk_formatted(compact: horizontalSizeClass == .compact)
+                                #elseif os(watchOS)
+                                let creationDateText = creationDate.twnk_formatted(compact: true)
+                                #else
+                                let creationDateText = creationDate.twnk_formatted(compact: false)
+                                #endif
+
+                                Text(verbatim: creationDateText)
+                            } else {
+                                Text(verbatim: userDetail.objectID.description)
+                            }
+                        }
+
+                        Spacer()
+
+                        HStack {
+                            if appendedUserIDs.count > 0 {
+                                Text("+\(appendedUserIDs.count.formatted())")
+                                    .foregroundColor(.green)
+                            }
+
+                            if removedUserIDs.count > 0 {
+                                Text("-\(removedUserIDs.count.formatted())")
+                                    .foregroundColor(.red)
+                            }
+
+                            Text(userIDs.count.formatted())
+                        }
+                    }
                 }
             }
         }
