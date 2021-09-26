@@ -28,7 +28,7 @@ extension Session {
 
     private var persistentHistoryTransactions: (transactions: [NSPersistentHistoryTransaction], lastPersistentHistoryTransactionDate: Date?, context: NSManagedObjectContext)? {
         get throws {
-            let lastPersistentHistoryTransactionDate = try updateLastPersistentHistoryTransactionTimestamp(nil)
+            let lastPersistentHistoryTransactionDate = try updateLastPersistentHistoryTransactionTimestamp(Date())
             let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
                 after: lastPersistentHistoryTransactionDate ?? .distantPast
             )
