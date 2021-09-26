@@ -51,6 +51,8 @@ extension Session {
 
             return try await withThrowingTaskGroup(of: (Date, [Result<Twitter.User, TwitterServerError>]).self) { chunkedUsersTaskGroup in
                 for chunkedUserIDs in userIDs.chunked(into: 100) {
+                    let context = self.persistentContainer.newBackgroundContext()
+
                     chunkedUsersTaskGroup.addTask {
                         let updateStartDate = Date()
 
@@ -103,6 +105,15 @@ extension Session {
                 }
 
                 return try await withThrowingTaskGroup(of: (Twitter.User.ID, (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)?).self) { taskGroup in
+                    defer {
+                        // For cancellation or error occured.
+                        context.performAndWait {
+                            if context.hasChanges {
+                                try? context.save()
+                            }
+                        }
+                    }
+
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
 
