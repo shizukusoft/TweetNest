@@ -109,6 +109,7 @@
 		1970663F26E709FE00D7F21D /* AccountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663E26E709FE00D7F21D /* AccountLabel.swift */; };
 		1970664026E709FE00D7F21D /* AccountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663E26E709FE00D7F21D /* AccountLabel.swift */; };
 		1970664126E709FE00D7F21D /* AccountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663E26E709FE00D7F21D /* AccountLabel.swift */; };
+		19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19718875270022BB000840C7 /* Date+TweetNestKit.swift */; };
 		197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */; };
 		197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */; };
 		1985B42926E497B5000C6126 /* Session+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1985B42826E497B5000C6126 /* Session+Preferences.swift */; };
@@ -409,6 +410,7 @@
 		196CD87526FC0EFF00D62B74 /* UserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRow.swift; sourceTree = "<group>"; };
 		1970663A26E7043500D7F21D /* SettingsGeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGeneralView.swift; sourceTree = "<group>"; };
 		1970663E26E709FE00D7F21D /* AccountLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLabel.swift; sourceTree = "<group>"; };
+		19718875270022BB000840C7 /* Date+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TweetNestKit.swift"; sourceTree = "<group>"; };
 		197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNumber+TwetNestKit.swift"; sourceTree = "<group>"; };
 		197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+CleansingData.swift"; sourceTree = "<group>"; };
 		1985B42826E497B5000C6126 /* Session+Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Preferences.swift"; sourceTree = "<group>"; };
@@ -770,6 +772,7 @@
 			children = (
 				195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */,
 				197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */,
+				19718875270022BB000840C7 /* Date+TweetNestKit.swift */,
 			);
 			path = Swift;
 			sourceTree = "<group>";
@@ -1621,6 +1624,7 @@
 				19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */,
 				19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */,
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
+				19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */,
 				1985B42D26E49A01000C6126 /* Preferences+CoreDataProperties.swift in Sources */,
 				19AFA14126E837B800764D79 /* BackgroundTaskScheduler.swift in Sources */,
 				19C5A2B526BC1F8A00AB1122 /* PersistentContainer.swift in Sources */,

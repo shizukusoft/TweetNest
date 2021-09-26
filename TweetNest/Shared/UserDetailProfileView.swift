@@ -17,16 +17,6 @@ struct UserDetailProfileView: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
 
-    private var shouldCompactForHorizontal: Bool {
-        #if os(iOS)
-        return horizontalSizeClass == .compact
-        #elseif os(watchOS)
-        return true
-        #else
-        return false
-        #endif
-    }
-
     var body: some View {
         Group {
             VStack(alignment: .leading, spacing: 16) {
@@ -106,6 +96,14 @@ struct UserDetailProfileView: View {
             }
 
             if let userCreationDate = userDetail.userCreationDate {
+                #if os(iOS)
+                let joinedDateText = userCreationDate.twnk_formatted(compact: horizontalSizeClass == .compact)
+                #elseif os(watchOS)
+                let joinedDateText = userCreationDate.twnk_formatted(compact: true)
+                #else
+                let joinedDateText = userCreationDate.twnk_formatted(compact: false)
+                #endif
+
                 Label {
                     TweetNestStack {
                         Text("Joined")
@@ -115,11 +113,7 @@ struct UserDetailProfileView: View {
                         Spacer()
                         #endif
                         Group {
-                            if shouldCompactForHorizontal {
-                                Text(userCreationDate.formatted(date: .numeric, time: .shortened))
-                            } else {
-                                Text(userCreationDate.formatted(date: .numeric, time: .standard))
-                            }
+                            Text(verbatim: joinedDateText)
                         }
                         .foregroundColor(.secondary)
                         .lineLimit(1)
@@ -130,7 +124,7 @@ struct UserDetailProfileView: View {
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
-                .accessibilityValue(Text(userCreationDate.formatted(date: .long, time: .standard)))
+                .accessibilityValue(joinedDateText)
             }
 
             if userDetail.isProtected {
