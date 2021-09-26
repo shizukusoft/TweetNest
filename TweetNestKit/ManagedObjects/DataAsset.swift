@@ -57,12 +57,10 @@ extension DataAsset {
 
         let data = try await session.data(for: urlRequest)
 
-        return try await withExtendedBackgroundExecution {
-            try await context.perform(schedule: .enqueued) {
-                try Task.checkCancellation()
+        return try await context.perform(schedule: .enqueued) {
+            try Task.checkCancellation()
 
-                return try .dataAsset(data: data, url: url, context: context)
-            }
+            return try .dataAsset(data: data, url: url, context: context)
         }
     }
 }

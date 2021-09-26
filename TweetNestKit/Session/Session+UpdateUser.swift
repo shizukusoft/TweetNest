@@ -144,6 +144,12 @@ extension Session {
                                             let context = self.persistentContainer.newBackgroundContext()
 
                                             try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: context)
+
+                                            try await context.perform {
+                                                if context.hasChanges {
+                                                    try context.save()
+                                                }
+                                            }
                                         } catch {
                                             Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
                                                 .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
