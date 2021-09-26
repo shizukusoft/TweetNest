@@ -134,11 +134,22 @@ extension Session {
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
 
-                                async let _profileImageDataAsset = { () async throws -> DataAsset? in
-                                    guard let profileImageOriginalURL = twitterUser.profileImageOriginalURL else { return nil }
+                                Task.detached(priority: .utility) {
+                                    guard let profileImageOriginalURL = twitterUser.profileImageOriginalURL else { return }
 
-                                    return try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: context)
-                                }()
+                                    await withExtendedBackgroundExecution {
+                                        do {
+                                            try Task.checkCancellation()
+
+                                            let context = self.persistentContainer.newBackgroundContext()
+
+                                            try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: context)
+                                        } catch {
+                                            Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
+                                                .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                                        }
+                                    }
+                                }
 
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
@@ -177,13 +188,6 @@ extension Session {
                                     )
 
                                     return (previousUserDetail?.objectID, userDetail.objectID)
-                                }
-
-                                do {
-                                    _ = try await _profileImageDataAsset
-                                } catch {
-                                    Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
-                                        .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                                 }
 
                                 try await _ = _updatingUsers
