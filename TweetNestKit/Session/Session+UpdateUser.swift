@@ -50,19 +50,19 @@ extension Session {
             let userIDs = OrderedSet(userIDs)
 
             return try await withThrowingTaskGroup(of: (Date, [Result<Twitter.User, TwitterServerError>]).self) { chunkedUsersTaskGroup in
-                for chunkedUserIDs in userIDs.chunked(into: 100) {
-                    let context = self.persistentContainer.newBackgroundContext()
+                let preupdateContext = self.persistentContainer.newBackgroundContext()
 
+                for chunkedUserIDs in userIDs.chunked(into: 100) {
                     chunkedUsersTaskGroup.addTask {
                         let updateStartDate = Date()
 
-                        let userIDs: [Twitter.User.ID] = try await context.perform(schedule: .enqueued) {
+                        let userIDs: [Twitter.User.ID] = try await preupdateContext.perform(schedule: .enqueued) {
                             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                             userFetchRequest.predicate = NSPredicate(format: "id IN %@", chunkedUserIDs)
                             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
 
                             let users = Dictionary(
-                                try context.fetch(userFetchRequest).map { ($0.id, $0) },
+                                try preupdateContext.fetch(userFetchRequest).map { ($0.id, $0) },
                                 uniquingKeysWith: {
                                     if ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast) {
                                         return $1
@@ -91,7 +91,7 @@ extension Session {
                                 return $0
                             }
 
-                            try context.save()
+                            try preupdateContext.save()
 
                             return userIDs
                         }
@@ -113,6 +113,8 @@ extension Session {
                             }
                         }
                     }
+
+                    let dataAssetContext = self.persistentContainer.newBackgroundContext()
 
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
@@ -141,13 +143,9 @@ extension Session {
                                         do {
                                             try Task.checkCancellation()
 
-                                            let context = self.persistentContainer.newBackgroundContext()
-
-                                            try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: context)
-
-                                            try await context.perform {
-                                                if context.hasChanges {
-                                                    try context.save()
+                                            try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: dataAssetContext) { _ in
+                                                if dataAssetContext.hasChanges {
+                                                    try dataAssetContext.save()
                                                 }
                                             }
                                         } catch {
