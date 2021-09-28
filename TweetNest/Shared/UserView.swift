@@ -209,7 +209,19 @@ struct UserView: View {
                         .accessibilityIdentifier("More")
                         .accessibilityLabel("More")
                     } else {
+                        if let account = account, user?.accounts?.contains(account) == true {
+                            deleteMenu
+                        }
+
                         if let userProfileURL = userProfileURL {
+                            #if os(iOS)
+                            Button {
+                                shareSheetURL = userProfileURL
+                            } label: {
+                                Label("Share", systemImage: "square.and.arrow.up")
+                            }
+                            #endif
+
                             Link(destination: userProfileURL) {
                                 Label("Open Profile", systemImage: "safari")
                             }
@@ -226,23 +238,11 @@ struct UserView: View {
                                 }
                             }
                             #endif
-
-                            #if os(iOS)
-                            Button {
-                                shareSheetURL = userProfileURL
-                            } label: {
-                                Label("Share", systemImage: "square.and.arrow.up")
-                            }
-                            #endif
                         }
 
-                        #if !os(iOS)
+                        #if os(macOS)
                         refreshButton
                         #endif
-
-                        if let account = account, user?.accounts?.contains(account) == true {
-                            deleteMenu
-                        }
                     }
                 }
             }
