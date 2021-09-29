@@ -28,7 +28,7 @@ extension Session {
 
     private var persistentHistoryTransactions: (transactions: [NSPersistentHistoryTransaction], lastPersistentHistoryTransactionDate: Date?, context: NSManagedObjectContext)? {
         get throws {
-            let lastPersistentHistoryTransactionDate = try updateLastPersistentHistoryTransactionTimestamp(nil)
+            let lastPersistentHistoryTransactionDate = try updateLastPersistentHistoryTransactionTimestamp(Date())
             let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
                 after: lastPersistentHistoryTransactionDate ?? .distantPast
             )
@@ -50,19 +50,19 @@ extension Session {
     }
 
     nonisolated func handlePersistentStoreRemoteChanges() {
-        Task.detached(priority: .utility) { [self] in
-            await withExtendedBackgroundExecution {
-                do {
-                    guard
-                        let transactions = try await persistentHistoryTransactions,
-                        let lastPersistentHistoryTransactionDate = transactions.lastPersistentHistoryTransactionDate
-                    else {
-                        return
-                    }
+        Task.detached { [self] in
+            do {
+                guard
+                    let transactions = try await persistentHistoryTransactions,
+                    let lastPersistentHistoryTransactionDate = transactions.lastPersistentHistoryTransactionDate
+                else {
+                    return
+                }
+
+                try await withExtendedBackgroundExecution {
+                    try Task.checkCancellation()
 
                     do {
-                        try Task.checkCancellation()
-
                         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
                             taskGroup.addTask { try await handleUserDetailChanges(transactions: transactions.transactions, context: transactions.context) }
                             taskGroup.addTask { try await handleAccountChanges(transactions: transactions.transactions, context: transactions.context) }
@@ -82,9 +82,9 @@ extension Session {
 
                         throw error
                     }
-                } catch {
-                    logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
                 }
+            } catch {
+                logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
             }
         }
     }

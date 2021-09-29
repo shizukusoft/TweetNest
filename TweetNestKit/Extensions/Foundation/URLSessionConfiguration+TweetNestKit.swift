@@ -27,6 +27,8 @@ extension URLSessionConfiguration {
         urlSessionConfiguration.multipathServiceType = .handover
         #endif
 
+        urlSessionConfiguration.timeoutIntervalForRequest = 15
+
         return urlSessionConfiguration
     }
 }

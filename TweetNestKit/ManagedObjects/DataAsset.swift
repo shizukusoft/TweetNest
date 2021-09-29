@@ -17,6 +17,7 @@ public class DataAsset: NSManagedObject {
 }
 
 extension DataAsset {
+    @discardableResult
     static func dataAsset(
         data: Data,
         url: URL,
@@ -49,7 +50,8 @@ extension DataAsset {
 }
 
 extension DataAsset {
-    static func dataAsset(for url: URL, session: Session, context: NSManagedObjectContext) async throws -> DataAsset {
+    @discardableResult
+    static func dataAsset<T>(for url: URL, session: Session, context: NSManagedObjectContext, _ block: @escaping (DataAsset) throws -> T) async throws -> T {
         var urlRequest = URLRequest(url: url)
         urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
 
@@ -58,7 +60,7 @@ extension DataAsset {
         return try await context.perform(schedule: .enqueued) {
             try Task.checkCancellation()
 
-            return try .dataAsset(data: data, url: url, context: context)
+            return try block(.dataAsset(data: data, url: url, context: context))
         }
     }
 }

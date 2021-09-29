@@ -50,17 +50,19 @@ extension Session {
             let userIDs = OrderedSet(userIDs)
 
             return try await withThrowingTaskGroup(of: (Date, [Result<Twitter.User, TwitterServerError>]).self) { chunkedUsersTaskGroup in
+                let preupdateContext = self.persistentContainer.newBackgroundContext()
+
                 for chunkedUserIDs in userIDs.chunked(into: 100) {
                     chunkedUsersTaskGroup.addTask {
                         let updateStartDate = Date()
 
-                        let userIDs: [Twitter.User.ID] = try await context.perform(schedule: .enqueued) {
+                        let userIDs: [Twitter.User.ID] = try await preupdateContext.perform(schedule: .enqueued) {
                             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                             userFetchRequest.predicate = NSPredicate(format: "id IN %@", chunkedUserIDs)
                             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
 
                             let users = Dictionary(
-                                try context.fetch(userFetchRequest).map { ($0.id, $0) },
+                                try preupdateContext.fetch(userFetchRequest).map { ($0.id, $0) },
                                 uniquingKeysWith: {
                                     if ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast) {
                                         return $1
@@ -89,7 +91,7 @@ extension Session {
                                 return $0
                             }
 
-                            try context.save()
+                            try preupdateContext.save()
 
                             return userIDs
                         }
@@ -103,6 +105,17 @@ extension Session {
                 }
 
                 return try await withThrowingTaskGroup(of: (Twitter.User.ID, (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)?).self) { taskGroup in
+                    defer {
+                        // For cancellation or error occured.
+                        context.performAndWait {
+                            if context.hasChanges {
+                                try? context.save()
+                            }
+                        }
+                    }
+
+                    let dataAssetContext = self.persistentContainer.newBackgroundContext()
+
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         try Task.checkCancellation()
 
@@ -123,11 +136,24 @@ extension Session {
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
 
-                                async let _profileImageDataAsset = { () async throws -> DataAsset? in
-                                    guard let profileImageOriginalURL = twitterUser.profileImageOriginalURL else { return nil }
+                                Task.detached(priority: .utility) {
+                                    guard let profileImageOriginalURL = twitterUser.profileImageOriginalURL else { return }
 
-                                    return try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: context)
-                                }()
+                                    await withExtendedBackgroundExecution {
+                                        do {
+                                            try Task.checkCancellation()
+
+                                            try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: dataAssetContext) { _ in
+                                                if dataAssetContext.hasChanges {
+                                                    try dataAssetContext.save()
+                                                }
+                                            }
+                                        } catch {
+                                            Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
+                                                .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                                        }
+                                    }
+                                }
 
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
@@ -166,13 +192,6 @@ extension Session {
                                     )
 
                                     return (previousUserDetail?.objectID, userDetail.objectID)
-                                }
-
-                                do {
-                                    _ = try await _profileImageDataAsset
-                                } catch {
-                                    Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
-                                        .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                                 }
 
                                 try await _ = _updatingUsers
