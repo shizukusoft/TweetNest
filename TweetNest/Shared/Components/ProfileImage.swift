@@ -10,35 +10,25 @@ import TweetNestKit
 
 struct ProfileImage: View {
     let profileImageURL: URL?
-
-    @ViewBuilder private var profileImage: some View {
-        if let profileImageURL = profileImageURL {
-            DataAssetImage(url: profileImageURL) { image in
-                if let image = image {
-                    image
-                        .interpolation(.high)
-                        .resizable()
-                } else {
-                    Color.gray
-                }
-            }
-        } else {
-            Color.gray
-        }
-    }
+    let isExportable: Bool
 
     var body: some View {
-        profileImage
+        DataAssetImage(url: profileImageURL, showsDetailImageViewOnTap: isExportable)
             .clipShape(Circle())
             .accessibilityElement(children: .ignore)
             .accessibilityHidden(true)
+    }
+
+    init(profileImageURL: URL?, isExportable: Bool = false) {
+        self.profileImageURL = profileImageURL
+        self.isExportable = isExportable
     }
 }
 
 #if DEBUG
 struct ProfileImage_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileImage(profileImageURL: nil)
+        ProfileImage(profileImageURL: nil, isExportable: false)
     }
 }
 #endif
