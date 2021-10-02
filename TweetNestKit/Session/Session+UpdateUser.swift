@@ -53,10 +53,12 @@ extension Session {
                 let preupdateContext = self.persistentContainer.newBackgroundContext()
 
                 for chunkedUserIDs in userIDs.chunked(into: 100) {
+                    try Task.checkCancellation()
+
                     chunkedUsersTaskGroup.addTask {
                         let updateStartDate = Date()
 
-                        let userIDs: [Twitter.User.ID] = try await preupdateContext.perform(schedule: .enqueued) {
+                        let userIDs: [Twitter.User.ID] = try await preupdateContext.perform {
                             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                             userFetchRequest.predicate = NSPredicate(format: "id IN %@", chunkedUserIDs)
                             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -117,9 +119,9 @@ extension Session {
                     let dataAssetContext = self.persistentContainer.newBackgroundContext()
 
                     for try await chunkedUsers in chunkedUsersTaskGroup {
-                        try Task.checkCancellation()
-
                         for twitterUserResult in chunkedUsers.1 {
+                            try Task.checkCancellation()
+
                             let twitterUser: Twitter.User
                             do {
                                 twitterUser = try twitterUserResult.get()
@@ -194,8 +196,10 @@ extension Session {
                                     return (previousUserDetail?.objectID, userDetail.objectID)
                                 }
 
+                                try Task.checkCancellation()
                                 try await _ = _updatingUsers
 
+                                try Task.checkCancellation()
                                 return try await (twitterUser.id, userDetailObjectIDs)
                             }
                         }
