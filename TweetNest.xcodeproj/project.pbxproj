@@ -817,13 +817,10 @@
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19EE473126C144A2007D2814 /* UsersDiffList.swift */,
 				196CD87526FC0EFF00D62B74 /* UserRow.swift */,
-				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
-				195DD4C126BEF91C008F0309 /* ProfileImage.swift */,
-				195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */,
 				19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */,
 				192DBDCF26D8755E0096AB54 /* SessionEnvironmentKey.swift */,
 				199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */,
-				19C12F8726D93F9E0022793C /* TweetNestStack.swift */,
+				19DB9E4A27084E5C000E5FA2 /* Components */,
 				1908FBFB26F6EE020095AF77 /* BatchDeleteTweets */,
 				193AFB6726CA33D3008BFF67 /* Settings */,
 				193AB25926B6FCFA00B18D45 /* Extensions */,
@@ -985,6 +982,17 @@
 				195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */,
 			);
 			path = Foundation;
+			sourceTree = "<group>";
+		};
+		19DB9E4A27084E5C000E5FA2 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */,
+				195DD4C126BEF91C008F0309 /* ProfileImage.swift */,
+				19C12F8726D93F9E0022793C /* TweetNestStack.swift */,
+				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
