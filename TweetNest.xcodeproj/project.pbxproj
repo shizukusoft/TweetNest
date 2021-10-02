@@ -89,6 +89,9 @@
 		1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1946203C26D68F0E003DB010 /* CloudKit.framework */; };
 		194EF57E26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
 		194EF57F26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
+		1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
+		1951EBEC270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
+		1951EBED270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
 		195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */; };
 		195DD4B026BEE7EC008F0309 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 195DD4B226BEE7EC008F0309 /* Localizable.strings */; };
 		195DD4BA26BEF09D008F0309 /* DataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4B826BEF09D008F0309 /* DataAsset.swift */; };
@@ -401,6 +404,7 @@
 		1945F84126F0D3D900CE4EFB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1946203C26D68F0E003DB010 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSection.swift; sourceTree = "<group>"; };
+		1951EBEA270850FC00311B3C /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
 		195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKitUserDefaults.swift; sourceTree = "<group>"; };
 		195DD4B326BEE7ED008F0309 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		195DD4B826BEF09D008F0309 /* DataAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAsset.swift; sourceTree = "<group>"; };
@@ -992,6 +996,7 @@
 			isa = PBXGroup;
 			children = (
 				195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */,
+				1951EBEA270850FC00311B3C /* DetailImageView.swift */,
 				19DB9E4B27084E96000E5FA2 /* PDFView.swift */,
 				195DD4C126BEF91C008F0309 /* ProfileImage.swift */,
 				19C12F8726D93F9E0022793C /* TweetNestStack.swift */,
@@ -1459,6 +1464,7 @@
 				193659B1260978F900865D40 /* WebAuthenticationView.swift in Sources */,
 				19DB9E4C27084E96000E5FA2 /* PDFView.swift in Sources */,
 				19B3130426E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
+				1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */,
 				196CD87626FC0EFF00D62B74 /* UserRow.swift in Sources */,
 				19C12F8826D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				192F008426FC2596000EC734 /* UserView+ProfileView.swift in Sources */,
@@ -1498,6 +1504,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19C12F8926D93F9E0022793C /* TweetNestStack.swift in Sources */,
+				1951EBEC270850FC00311B3C /* DetailImageView.swift in Sources */,
 				66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */,
 				1908FC0626F6EFFD0095AF77 /* BatchDeleteTweetsLoadingTwitterArchiveView.swift in Sources */,
 				19DA23D226B98767002436DC /* UserDetailProfileView.swift in Sources */,
@@ -1581,6 +1588,7 @@
 				19EABBC826D6877600D3B003 /* UserDetailProfileView.swift in Sources */,
 				19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				19A24E3326F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift in Sources */,
+				1951EBED270850FC00311B3C /* DetailImageView.swift in Sources */,
 				1970663D26E7043500D7F21D /* SettingsGeneralView.swift in Sources */,
 				19EABBD826D6877A00D3B003 /* SettingsMainView.swift in Sources */,
 				19EABBD126D6877600D3B003 /* AppSidebarAccountsSection.swift in Sources */,
