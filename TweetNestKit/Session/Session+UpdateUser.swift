@@ -62,6 +62,7 @@ extension Session {
                             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                             userFetchRequest.predicate = NSPredicate(format: "id IN %@", chunkedUserIDs)
                             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                            userFetchRequest.returnsObjectsAsFaults = false
 
                             let users = Dictionary(
                                 try preupdateContext.fetch(userFetchRequest).map { ($0.id, $0) },
@@ -172,6 +173,7 @@ extension Session {
                                     fetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
                                     fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
                                     fetchRequest.fetchLimit = 1
+                                    fetchRequest.returnsObjectsAsFaults = false
                                     fetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
 
                                     let user = try context.fetch(fetchRequest).first

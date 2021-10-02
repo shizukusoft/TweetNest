@@ -31,6 +31,7 @@ extension UserDetail {
         userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
         userFetchRequest.fetchLimit = 1
         userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
+        userFetchRequest.returnsObjectsAsFaults = false
 
         let user = try context.fetch(userFetchRequest).first ?? {
             let user = User(context: context)
