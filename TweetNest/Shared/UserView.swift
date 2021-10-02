@@ -92,26 +92,32 @@ struct UserView: View {
         #endif
     }
 
+    @ViewBuilder private var userFootnotes: some View {
+        VStack(alignment: .leading) {
+            user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
+            if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
+                Group {
+                    if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                        Text("Updating…")
+                    } else {
+                        Text("Updated \(lastUpdateEndDate, style: .relative) ago")
+                    }
+                }
+                .accessibilityAddTraits(.updatesFrequently)
+            }
+        }
+        #if os(macOS)
+        .font(.footnote)
+        .foregroundColor(.secondary)
+        #endif
+    }
+
     @ViewBuilder private var userView: some View {
         #if os(macOS)
         VStack(alignment: .leading, spacing: 8) {
             VStack(alignment: .leading, spacing: 8) {
                 ProfileView(user: user)
-                VStack(alignment: .leading) {
-                    user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                    if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
-                        Group {
-                            if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                Text("Updating…")
-                            } else {
-                                Text("Updated \(lastUpdateEndDate, style: .relative) ago")
-                            }
-                        }
-                        .accessibilityAddTraits(.updatesFrequently)
-                    }
-                }
-                .font(.footnote)
-                .foregroundColor(.secondary)
+                userFootnotes
             }
             .padding()
 
@@ -124,19 +130,7 @@ struct UserView: View {
             } header: {
                 Text("Latest Profile")
             } footer: {
-                VStack(alignment: .leading) {
-                    user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                    if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
-                        Group {
-                            if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                Text("Updating…")
-                            } else {
-                                Text("Updated \(lastUpdateEndDate, style: .relative) ago")
-                            }
-                        }
-                        .accessibilityAddTraits(.updatesFrequently)
-                    }
-                }
+                userFootnotes
             }
             #if os(watchOS)
             if let account = account, user?.accounts?.contains(account) == true {
