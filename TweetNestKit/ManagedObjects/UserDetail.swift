@@ -92,6 +92,10 @@ extension UserDetail {
         lhs.blockingUserIDs == rhs.blockingUserIDs &&
         lhs.followingUserIDs == rhs.followingUserIDs &&
         lhs.followerUserIDs == rhs.followerUserIDs &&
+        lhs.followerUsersCount == rhs.followerUsersCount &&
+        lhs.followingUsersCount == rhs.followingUsersCount &&
+        lhs.tweetsCount == rhs.tweetsCount &&
+        lhs.listedCount == rhs.listedCount &&
         lhs.isProfileEqual(to: rhs)
     }
 }
@@ -111,16 +115,12 @@ extension Optional where Wrapped == UserDetail {
 
 extension UserDetail {
     func isProfileEqual(to userDetail: UserDetail) -> Bool {
-        followerUsersCount == userDetail.followerUsersCount &&
-        followingUsersCount == userDetail.followingUsersCount &&
         isProtected == userDetail.isProtected &&
         isVerified == userDetail.isVerified &&
-        listedCount == userDetail.listedCount &&
         location == userDetail.location &&
         name == userDetail.name &&
         profileHeaderImageURL == userDetail.profileHeaderImageURL &&
         profileImageURL == userDetail.profileImageURL &&
-        tweetsCount == userDetail.tweetsCount &&
         url == userDetail.url &&
         userCreationDate == userDetail.userCreationDate &&
         userAttributedDescription == userDetail.userAttributedDescription &&
