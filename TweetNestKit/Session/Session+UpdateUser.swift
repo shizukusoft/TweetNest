@@ -146,7 +146,7 @@ extension Session {
 
                                 try Task.checkCancellation()
 
-                                let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] })
+                                let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] }).shuffled()
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
 
                                 let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID)? = try await context.perform(schedule: .enqueued) {
