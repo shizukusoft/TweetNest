@@ -11,8 +11,7 @@ import CoreData
 
 @dynamicMemberLookup
 public class ManagedPreferences: NSManagedObject {
-
-    subscript<T>(dynamicMember keyPath: WritableKeyPath<Preferences, T>) -> T {
+    public subscript<T>(dynamicMember keyPath: WritableKeyPath<Preferences, T>) -> T {
         get {
             preferences[keyPath: keyPath]
         }
