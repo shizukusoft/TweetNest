@@ -11,6 +11,7 @@ import UnifiedLogging
 
 struct UserView: View {
     let userID: String
+    let userProfileURL: URL
 
     var displayUserID: String {
         return Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
@@ -45,12 +46,6 @@ struct UserView: View {
     @State var safariSheetURL: URL?
     @State var shareSheetURL: URL?
     #endif
-
-    var userProfileURL: URL? {
-        user?.id.flatMap {
-            URL(string: "https://twitter.com/intent/user?user_id=\($0)")!
-        }
-    }
 
     @State var showBulkDeleteRecentTweets: Bool = false
     #if os(iOS) || os(macOS)
@@ -165,25 +160,20 @@ struct UserView: View {
             #if os(iOS) || os(macOS)
             .toolbar {
                 ToolbarItemGroup(placement: .automatic) {
+                    let userProfileURL = self.userProfileURL
                     if shouldCompactToolbar {
                         Menu {
-                            if let userProfileURL = userProfileURL {
-                                Link(destination: userProfileURL) {
-                                    Label("Open Profile", systemImage: "safari")
-                                }
-
-                                #if os(iOS)
-                                Button {
-                                    safariSheetURL = userProfileURL
-                                } label: {
-                                    Label("Open Profile in Safari", systemImage: "safari")
-                                }
-                                #endif
+                            Link(destination: userProfileURL) {
+                                Label("Open Profile", systemImage: "safari")
                             }
 
                             #if os(iOS)
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label("Open Profile in Safari", systemImage: "safari")
+                            }
                             Divider()
-
                             Button {
                                 shareSheetURL = userProfileURL
                             } label: {
@@ -207,32 +197,30 @@ struct UserView: View {
                             deleteMenu
                         }
 
-                        if let userProfileURL = userProfileURL {
-                            #if os(iOS)
-                            Button {
-                                shareSheetURL = userProfileURL
-                            } label: {
-                                Label("Share", systemImage: "square.and.arrow.up")
-                            }
-                            #endif
+                        #if os(iOS)
+                        Button {
+                            shareSheetURL = userProfileURL
+                        } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                        #endif
 
+                        Link(destination: userProfileURL) {
+                            Label("Open Profile", systemImage: "safari")
+                        }
+                        #if os(iOS)
+                        .contextMenu {
                             Link(destination: userProfileURL) {
                                 Label("Open Profile", systemImage: "safari")
                             }
-                            #if os(iOS)
-                            .contextMenu {
-                                Link(destination: userProfileURL) {
-                                    Label("Open Profile", systemImage: "safari")
-                                }
 
-                                Button {
-                                    safariSheetURL = userProfileURL
-                                } label: {
-                                    Label("Open Profile in Safari", systemImage: "safari")
-                                }
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label("Open Profile in Safari", systemImage: "safari")
                             }
-                            #endif
                         }
+                        #endif
 
                         #if os(macOS)
                         refreshButton
@@ -288,6 +276,7 @@ struct UserView: View {
 
     init(userID: String) {
         self.userID = userID
+        self.userProfileURL = .init(string: "https://twitter.com/intent/user?user_id=\(userID)")!
 
         self._users = FetchRequest(fetchRequest: {
             let fetchRequest = User.fetchRequest()
