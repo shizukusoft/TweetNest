@@ -7,55 +7,62 @@
 
 import SwiftUI
 import UserNotifications
+import OrderedCollections
 
 struct NotificationView: View {
-    let notifications: [(date: Date, request: UNNotificationRequest)]
+    let notifications: OrderedDictionary<String, OrderedDictionary<String, [(date: Date, request: UNNotificationRequest)]>>
 
     var body: some View {
-        ForEach(notifications, id: \.request.identifier) { notification in
-            let title = notification.request.content.title
-            let subtitle = notification.request.content.subtitle
-            let message = notification.request.content.body
+        VStack(alignment: .leading) {
+            ForEach(notifications.elements, id: \.key) { notifications in
+                Text(verbatim: notifications.key)
+                    .font(.headline)
 
-            VStack(alignment: .leading) {
-                if let title = title, title.isEmpty == false {
-                    Text(verbatim: title)
-                        .font(.headline)
-                }
+                VStack(alignment: .leading) {
+                    ForEach(notifications.value.elements, id: \.key) { notifications in
+                        Text(verbatim: notifications.key)
+                            .font(.headline)
 
-                if let subtitle = subtitle, subtitle.isEmpty == false {
-                    Text(verbatim: subtitle)
-                        .font(.subheadline)
-                }
+                        VStack(alignment: .leading) {
+                            ForEach(notifications.value, id: \.request.identifier) { notification in
+                                if let message = notification.request.content.body, message.isEmpty == false {
+                                    HStack {
+                                        Text(verbatim: message)
 
-                if let message = message, message.isEmpty == false {
-                    Text(verbatim: message)
-                        .foregroundColor(.secondary)
+                                        Spacer()
+
+                                        Text("\(notification.date, style: .relative) ago")
+                                            .foregroundColor(.secondary)
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
-            .lineLimit(0)
         }
+        .lineLimit(0)
     }
 }
 
-struct NotificationView_Previews: PreviewProvider {
-    static var previews: some View {
-        NotificationView(notifications: [
-            (
-                date: Date(),
-                request: UNNotificationRequest(
-                    identifier: "abcd",
-                    content: {
-                        let content = UNMutableNotificationContent()
-                        content.title = "TweetNest (@TweetNest_App)"
-                        content.subtitle = "New Data Available"
-                        content.body = "1 new followings"
-
-                        return content
-                    }(),
-                    trigger: nil
-                )
-            )
-        ])
-    }
-}
+//struct NotificationView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NotificationView(notifications: [
+//            (
+//                date: Date(),
+//                request: UNNotificationRequest(
+//                    identifier: "abcd",
+//                    content: {
+//                        let content = UNMutableNotificationContent()
+//                        content.title = "TweetNest (@TweetNest_App)"
+//                        content.subtitle = "New Data Available"
+//                        content.body = "1 new followings"
+//
+//                        return content
+//                    }(),
+//                    trigger: nil
+//                )
+//            )
+//        ])
+//    }
+//}
