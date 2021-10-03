@@ -21,6 +21,8 @@ struct UserRow<Icon: View>: View {
         Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
     }
 
+    @State private var isNavigationLinkActive: Bool = false
+
     @FetchRequest private var latestUserDetails: FetchedResults<UserDetail>
 
     private var latestUserDetail: UserDetail? {
@@ -63,7 +65,7 @@ struct UserRow<Icon: View>: View {
         Group {
             if let latestUserDetail = latestUserDetail {
                 Label {
-                    NavigationLink {
+                    NavigationLink(isActive: $isNavigationLinkActive) {
                         UserView(userID: userID)
                             .environment(\.account, account)
                     } label: {
@@ -84,7 +86,7 @@ struct UserRow<Icon: View>: View {
                         .frame(width: 24, height: 24)
                 }
             } else {
-                NavigationLink {
+                NavigationLink(isActive: $isNavigationLinkActive) {
                     UserView(userID: userID)
                         .environment(\.account, account)
                 } label: {
