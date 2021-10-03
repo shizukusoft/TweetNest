@@ -16,6 +16,7 @@ struct UsersDiffList: View {
 
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
+    let role: Role
     let title: Text
     let diffKeyPath: KeyPath<UserDetail, [String]?>
 
@@ -102,29 +103,46 @@ struct UsersDiffList: View {
         #endif
     }
 
-    init(user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>, title: Text) {
-        self._userDetails = FetchRequest(
-            fetchRequest: {
-                let fetchRequest = UserDetail.fetchRequest()
-                fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-                    user.flatMap { NSPredicate(format: "user == %@", $0.objectID) } ?? NSPredicate(value: false),
-                    diffKeyPath._kvcKeyPathString.flatMap { NSPredicate(format: "%K != NULL", $0) },
-                ].compactMap({ $0 }))
-                fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
-                ]
-                if let keyPathString = diffKeyPath._kvcKeyPathString {
-                    fetchRequest.propertiesToFetch = ["creationDate", keyPathString]
-                } else {
-                    fetchRequest.returnsObjectsAsFaults = false
-                }
+    init(role: Role, user: User?) {
+        self.role = role
+        switch role {
+        case .followings:
+            title = .init("Followings History")
+            diffKeyPath = \.followingUserIDs
+        case .followers:
+            title = .init("Followers History")
+            diffKeyPath = \.followerUserIDs
+        case .blockings:
+            title = .init("Blocks History")
+            diffKeyPath = \.blockingUserIDs
+        }
+        let fetchRequest = UserDetail.fetchRequest()
+        fetchRequest.predicate =
+            NSCompoundPredicate(
+                andPredicateWithSubpredicates:
+                    [
+                        user.flatMap({.init(format: "user == %@", $0.objectID)}) ?? .init(value: false),
+                        diffKeyPath._kvcKeyPathString.flatMap({.init(format: "%K != NULL", $0)}),
+                    ]
+                    .compactMap({$0}))
+        fetchRequest.sortDescriptors = [.init(keyPath: \UserDetail.creationDate, ascending: false)]
+        if let keyPathString = diffKeyPath._kvcKeyPathString {
+            fetchRequest.propertiesToFetch = ["creationDate", keyPathString]
+        }
+        else {
+            fetchRequest.returnsObjectsAsFaults = false
+        }
+        _userDetails = .init(fetchRequest: fetchRequest)
+    }
+}
 
-                return fetchRequest
-            }()
-        )
+extension UsersDiffList {
 
-        self.title = title
-        self.diffKeyPath = diffKeyPath
+    enum Role {
+
+        case followings
+        case followers
+        case blockings
     }
 }
 
