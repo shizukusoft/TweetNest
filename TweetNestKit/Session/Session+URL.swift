@@ -8,7 +8,7 @@
 import Foundation
 
 extension Session {
-    public func data(for request: URLRequest) async throws -> Data {
+    public func data(for request: URLRequest) async throws -> (Data, URLResponse) {
         let (data, response) = try await urlSession.data(for: request)
         guard
             let httpResponse = response as? HTTPURLResponse,
@@ -17,6 +17,6 @@ extension Session {
             throw SessionError.invalidServerResponse(response)
         }
 
-        return data
+        return (data, response)
     }
 }

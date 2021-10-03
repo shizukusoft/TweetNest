@@ -21,6 +21,17 @@ struct DetailImageView: View {
     @Environment(\.dismiss)
     private var dismiss
 
+    @State private var temporaryFileDirectoryURL = URL(fileURLWithPath: NSTemporaryDirectory())
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+
+    @State private var isFileMoverPresented: Bool = false
+    private var temporaryFileURL: URL {
+        temporaryFileDirectoryURL.appendingPathComponent(filename)
+    }
+
+    @State var showError: Bool = false
+    @State var error: TweetNestError?
+
     private var pdfDocument: PDFDocument {
         let pdfDocument = PDFDocument()
         #if os(macOS)
@@ -36,6 +47,24 @@ struct DetailImageView: View {
         return pdfDocument
     }
 
+    @ViewBuilder
+    var toolbarItems: some View {
+        Button {
+            do {
+                try? FileManager.default.removeItem(at: temporaryFileURL)
+
+                try imageData.write(to: temporaryFileURL)
+
+                self.isFileMoverPresented = true
+            } catch {
+                self.error = TweetNestError(error)
+                showError = true
+            }
+        } label: {
+            Label("Save", systemImage: "square.and.arrow.down")
+        }
+    }
+
     var body: some View {
         PDFView(document: pdfDocument)
             #if os(iOS)
@@ -48,7 +77,32 @@ struct DetailImageView: View {
                         dismiss()
                     }
                 }
+
+                #if os(iOS)
+                ToolbarItemGroup(placement: .bottomBar) {
+                    toolbarItems
+                }
+                #else
+                ToolbarItemGroup(placement: .automatic) {
+                    toolbarItems
+                }
+                #endif
             }
+            .fileMover(isPresented: $isFileMoverPresented, file: temporaryFileURL) { result in
+                do {
+                    _ = try result.get()
+                } catch {
+                    self.error = TweetNestError(error)
+                    showError = true
+                }
+            }
+            .onAppear {
+                try? FileManager.default.createDirectory(at: temporaryFileDirectoryURL, withIntermediateDirectories: true, attributes: nil)
+            }
+            .onDisappear {
+                try? FileManager.default.removeItem(at: temporaryFileDirectoryURL)
+            }
+            .alert(isPresented: $showError, error: error)
     }
 }
 

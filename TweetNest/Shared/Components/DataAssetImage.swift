@@ -26,6 +26,7 @@ struct DataAssetImage: View {
     }()
 
     @State private var data: Data?
+    @State private var dataMIMEType: String?
 
     @State private var cgImage: CGImage?
     @State private var cgImageScale: CGFloat?
@@ -57,7 +58,17 @@ struct DataAssetImage: View {
             .resizable()
 
         #if canImport(PDFKit)
-        if isExportable, let data = data , let url = url {
+        if isExportable, let data = data, let url = url {
+            let utType = dataMIMEType.flatMap { UTType(mimeType: $0) }
+
+            let filename: String = {
+                if url.pathExtension.isEmpty, let utType = utType {
+                    return url.appendingPathExtension(for: utType).lastPathComponent
+                } else {
+                    return url.lastPathComponent
+                }
+            }()
+
             Group {
                 #if os(macOS)
                 image
@@ -100,18 +111,18 @@ struct DataAssetImage: View {
                 #endif
             }
             .onDrag {
-                let itemProvider = NSItemProvider(item: data as NSSecureCoding?, typeIdentifier: UTType(filenameExtension: url.pathExtension)?.identifier)
-                itemProvider.suggestedName = url.lastPathComponent
+                let itemProvider = NSItemProvider(item: data as NSSecureCoding?, typeIdentifier: utType?.identifier)
+                itemProvider.suggestedName = filename
 
                 return itemProvider
             }
             .sheet(isPresented: $isDetailProfileImagePresented) {
                 #if os(macOS)
-                DetailImageView(imageData: data, image: cgImage, imageScale: cgImageScale ?? 1.0, filename: url.lastPathComponent)
+                DetailImageView(imageData: data, image: cgImage, imageScale: cgImageScale ?? 1.0, filename: filename)
                     .frame(minWidth: 120, idealWidth: 410, minHeight: 120, idealHeight: 410)
                 #else
                 NavigationView {
-                    DetailImageView(imageData: data, image: cgImage, imageScale: cgImageScale ?? 1.0, filename: url.lastPathComponent)
+                    DetailImageView(imageData: data, image: cgImage, imageScale: cgImageScale ?? 1.0, filename: filename)
                 }
                 #endif
             }
@@ -140,7 +151,10 @@ struct DataAssetImage: View {
     }
 
     private func updateImage(data: Data?) {
-        let data = dataAssets.first?.data
+        let dataAsset = dataAssets.first
+
+        let data = dataAsset?.data
+        let dataMIMEType = dataAsset?.dataMIMEType
 
         operaionQueue.addOperation {
             let cgImageAndScale: (CGImage, CGFloat?)? = data.flatMap {
@@ -173,6 +187,7 @@ struct DataAssetImage: View {
 
             DispatchQueue.main.async {
                 self.data = data
+                self.dataMIMEType = dataMIMEType
                 self.cgImage = cgImageAndScale?.0
                 self.cgImageScale = cgImageAndScale?.1
             }
