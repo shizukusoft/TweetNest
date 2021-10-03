@@ -23,6 +23,7 @@ struct UserDetailProfileView: View {
             if let profileHeaderImageURL = userDetail.profileHeaderImageURL {
                 DataAssetImage(url: profileHeaderImageURL, isExportable: true)
                     .aspectRatio(3, contentMode: .fill)
+                    .listRowSeparator(.hidden)
                     .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
             #endif
