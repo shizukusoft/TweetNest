@@ -65,6 +65,7 @@ extension ManagedPreferences.Preferences {
 extension ManagedPreferences {
     struct Key {
         static let preferences = "preferences"
+        static let modificationDate = "modificationDate"
     }
 
     public dynamic var preferences: Preferences {
@@ -86,6 +87,11 @@ extension ManagedPreferences {
             defer { didChangeValue(forKey: Key.preferences) }
 
             setPrimitiveValue(newValue, forKey: Key.preferences)
+
+            willChangeValue(forKey: Key.modificationDate)
+            defer { didChangeValue(forKey: Key.modificationDate) }
+
+            setPrimitiveValue(Date(), forKey: Key.modificationDate)
         }
     }
 }
