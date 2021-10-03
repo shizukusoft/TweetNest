@@ -144,7 +144,9 @@ extension Session {
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
                                 let myBlockingUserIDs = try await _myBlockingUserIDs
-                                let profileBannerImageURL = try? await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
+
+                                let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
+
                                 let twitterUserFetchDate = Date()
 
                                 try Task.checkCancellation()
@@ -172,7 +174,7 @@ extension Session {
 
                                     let userDetail = try UserDetail.createOrUpdate(
                                         twitterUser: twitterUser,
-                                        profileBannerImageURL: profileBannerImageURL,
+                                        profileHeaderImageURL: profileHeaderImageURL,
                                         followingUserIDs: followingUserIDs,
                                         followerUserIDs: followerIDs,
                                         blockingUserIDs: myBlockingUserIDs,
