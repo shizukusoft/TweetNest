@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>%ld new follower(s)</key>
+	<key>%ld New Follower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@followers@</string>
@@ -15,10 +15,10 @@
 			<key>other</key>
 			<string>새로운 팔로워 %ld명</string>
 			<key>zero</key>
-			<string>새로운 팔로워 0명</string>
+			<string>새로운 팔로워 %ld명</string>
 		</dict>
 	</dict>
-	<key>%ld new following(s)</key>
+	<key>%ld New Following(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@followings@</string>
@@ -31,10 +31,10 @@
 			<key>other</key>
 			<string>새로운 팔로우 %ld명</string>
 			<key>zero</key>
-			<string>새로운 팔로우 0명</string>
+			<string>새로운 팔로우 %ld명</string>
 		</dict>
 	</dict>
-	<key>%ld new unfollower(s)</key>
+	<key>%ld New Unfollower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@unfollowers@</string>
@@ -47,10 +47,10 @@
 			<key>other</key>
 			<string>새로운 언팔로워 %ld명</string>
 			<key>zero</key>
-			<string>새로운 언팔로워 0명</string>
+			<string>새로운 언팔로워 %ld명</string>
 		</dict>
 	</dict>
-	<key>%ld new unfollowing(s)</key>
+	<key>%ld New Unfollowing(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@unfollowings@</string>
@@ -63,7 +63,7 @@
 			<key>other</key>
 			<string>새로운 언팔로우 %ld명</string>
 			<key>zero</key>
-			<string>새로운 언팔로우 0명</string>
+			<string>새로운 언팔로우 %ld명</string>
 		</dict>
 	</dict>
 </dict>

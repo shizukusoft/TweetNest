@@ -264,21 +264,19 @@ extension Session {
                         return nil
                     }
 
+                    let hasProfilechanges = oldUserDetail.flatMap { newUserDetail.isProfileEqual(to: $0) == false } ?? true
                     let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
                     let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
 
-                    let notificationContentTitle: String
-                    if let name = newUserDetail.name, let displayUsername = newUserDetail.displayUsername, name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
-                        notificationContentTitle = "\(name) (\(displayUsername))"
-                    } else if let displayUsername = newUserDetail.displayUsername {
-                        notificationContentTitle = displayUsername
-                    } else {
-                        notificationContentTitle = account.userID.flatMap { Int64($0).flatMap { "#\($0.twnk_formatted())" } } ?? account.userID.flatMap { "#\($0)" } ?? account.objectID.uriRepresentation().absoluteString
-                    }
-
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = notificationContentTitle
+                    notificationContent.title = newUserDetail.name ?? account.objectID.description
+                    if let displayUsername = newUserDetail.displayUsername {
+                        notificationContent.subtitle = displayUsername
+                    } else if let userID = account.userID {
+                        notificationContent.subtitle = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+                    }
                     notificationContent.categoryIdentifier = "NewAccountData"
+                    notificationContent.interruptionLevel = .passive
 
                     if let threadIdentifier = threadIdentifier {
                         notificationContent.threadIdentifier = threadIdentifier
@@ -286,27 +284,34 @@ extension Session {
 
                     var changes: [String] = []
                     if followingUserChanges.followingUsersCount > 0 {
-                        changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                    }
-                    if followingUserChanges.unfollowingUsersCount > 0 {
-                        changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                    }
-                    if followerUserChanges.followerUsersCount > 0 {
-                        changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                    }
-                    if followerUserChanges.unfollowerUsersCount > 0 {
-                        changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                    }
-
-                    if changes.isEmpty == false {
-                        notificationContent.subtitle = String(localized: "New Data Available", bundle: .tweetNestKit, comment: "background-refresh notification.")
-                        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
                         notificationContent.sound = .default
                         notificationContent.interruptionLevel = .timeSensitive
-                    } else {
-                        notificationContent.body = String(localized: "New Data Available", bundle: .tweetNestKit, comment: "background-refresh notification.")
-                        notificationContent.interruptionLevel = .passive
+                        changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
                     }
+                    if followingUserChanges.unfollowingUsersCount > 0 {
+                        notificationContent.sound = .default
+                        notificationContent.interruptionLevel = .timeSensitive
+                        changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                    }
+                    if followerUserChanges.followerUsersCount > 0 {
+                        notificationContent.sound = .default
+                        notificationContent.interruptionLevel = .timeSensitive
+                        changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                    }
+                    if followerUserChanges.unfollowerUsersCount > 0 {
+                        notificationContent.sound = .default
+                        notificationContent.interruptionLevel = .timeSensitive
+                        changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                    }
+                    if hasProfilechanges {
+                        changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                    }
+
+                    guard changes.isEmpty == false else {
+                        return nil
+                    }
+
+                    notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
 
                     return notificationContent
                 }

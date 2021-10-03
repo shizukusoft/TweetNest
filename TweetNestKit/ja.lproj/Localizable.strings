@@ -4,6 +4,5 @@
 /* update-accounts notification subtitle. */
 "Error" = "エラー";
 
-/* background-refresh notification. */
-"New Data Available" = "新しいデータがあります";
-
+/* background-refresh notification body. */
+"New Profile" = "新しいプロフィール";

@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>%ld new follower(s)</key>
+	<key>%ld New Follower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@followers@</string>
@@ -13,14 +13,14 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>one</key>
-			<string>1 new follower</string>
+			<string>%ld New Follower</string>
 			<key>other</key>
-			<string>%ld new followers</string>
+			<string>%ld New Followers</string>
 			<key>zero</key>
-			<string>0 new followers</string>
+			<string>%ld New Followers</string>
 		</dict>
 	</dict>
-	<key>%ld new following(s)</key>
+	<key>%ld New Following(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@followings@</string>
@@ -31,14 +31,14 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>one</key>
-			<string>1 new following</string>
+			<string>%ld New Following</string>
 			<key>other</key>
-			<string>%ld new followings</string>
+			<string>%ld New Followings</string>
 			<key>zero</key>
-			<string>0 new followings</string>
+			<string>%ld New Followings</string>
 		</dict>
 	</dict>
-	<key>%ld new unfollower(s)</key>
+	<key>%ld New Unfollower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@unfollowers@</string>
@@ -49,14 +49,14 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>one</key>
-			<string>1 new unfollower</string>
+			<string>%ld New Unfollower</string>
 			<key>other</key>
-			<string>%ld new unfollowers</string>
+			<string>%ld New Unfollowers</string>
 			<key>zero</key>
-			<string>0 new unfollowers</string>
+			<string>%ld New Unfollowers</string>
 		</dict>
 	</dict>
-	<key>%ld new unfollowing(s)</key>
+	<key>%ld New Unfollowing(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@unfollowings@</string>
@@ -67,11 +67,11 @@
 			<key>NSStringFormatValueTypeKey</key>
 			<string>ld</string>
 			<key>one</key>
-			<string>1 new unfollowing</string>
+			<string>%ld New Unfollowing</string>
 			<key>other</key>
-			<string>%ld new unfollowings</string>
+			<string>%ld New Unfollowings</string>
 			<key>zero</key>
-			<string>0 new unfollowings</string>
+			<string>%ld New Unfollowings</string>
 		</dict>
 	</dict>
 </dict>

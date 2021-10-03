@@ -92,20 +92,7 @@ extension UserDetail {
         lhs.blockingUserIDs == rhs.blockingUserIDs &&
         lhs.followingUserIDs == rhs.followingUserIDs &&
         lhs.followerUserIDs == rhs.followerUserIDs &&
-        lhs.followerUsersCount == rhs.followerUsersCount &&
-        lhs.followingUsersCount == rhs.followingUsersCount &&
-        lhs.isProtected == rhs.isProtected &&
-        lhs.isVerified == rhs.isVerified &&
-        lhs.listedCount == rhs.listedCount &&
-        lhs.location == rhs.location &&
-        lhs.name == rhs.name &&
-        lhs.profileHeaderImageURL == rhs.profileHeaderImageURL &&
-        lhs.profileImageURL == rhs.profileImageURL &&
-        lhs.tweetsCount == rhs.tweetsCount &&
-        lhs.url == rhs.url &&
-        lhs.userCreationDate == rhs.userCreationDate &&
-        lhs.userAttributedDescription == rhs.userAttributedDescription &&
-        lhs.username == rhs.username
+        lhs.isProfileEqual(to: rhs)
     }
 }
 
@@ -119,6 +106,25 @@ extension Optional where Wrapped == UserDetail {
         case (.some(let lhs), .some(let rhs)):
             return lhs ~= rhs
         }
+    }
+}
+
+extension UserDetail {
+    func isProfileEqual(to userDetail: UserDetail) -> Bool {
+        followerUsersCount == userDetail.followerUsersCount &&
+        followingUsersCount == userDetail.followingUsersCount &&
+        isProtected == userDetail.isProtected &&
+        isVerified == userDetail.isVerified &&
+        listedCount == userDetail.listedCount &&
+        location == userDetail.location &&
+        name == userDetail.name &&
+        profileHeaderImageURL == userDetail.profileHeaderImageURL &&
+        profileImageURL == userDetail.profileImageURL &&
+        tweetsCount == userDetail.tweetsCount &&
+        url == userDetail.url &&
+        userCreationDate == userDetail.userCreationDate &&
+        userAttributedDescription == userDetail.userAttributedDescription &&
+        username == userDetail.username
     }
 }
 
