@@ -18,6 +18,7 @@ extension UserDetail {
     @discardableResult
     static func createOrUpdate(
         twitterUser: Twitter.User,
+        profileBannerImageURL: URL?,
         followingUserIDs: [String]? = nil,
         followerUserIDs: [String]? = nil,
         blockingUserIDs: [String]? = nil,
@@ -56,6 +57,7 @@ extension UserDetail {
         newUserDetail.listedCount = Int32(twitterUser.publicMetrics.listedCount)
         newUserDetail.location = twitterUser.location
         newUserDetail.name = twitterUser.name
+        newUserDetail.profileBannerImageURL = profileBannerImageURL
         newUserDetail.profileImageURL = twitterUser.profileImageOriginalURL
         newUserDetail.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
         newUserDetail.url = twitterUser.expandedURL
@@ -97,6 +99,7 @@ extension UserDetail {
         lhs.listedCount == rhs.listedCount &&
         lhs.location == rhs.location &&
         lhs.name == rhs.name &&
+        lhs.profileBannerImageURL == rhs.profileBannerImageURL &&
         lhs.profileImageURL == rhs.profileImageURL &&
         lhs.tweetsCount == rhs.tweetsCount &&
         lhs.url == rhs.url &&

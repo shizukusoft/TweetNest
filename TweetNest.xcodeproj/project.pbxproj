@@ -450,6 +450,7 @@
 		19ABAD8426DC8D7200103F01 /* SessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTests.swift; sourceTree = "<group>"; };
 		19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskScheduler.swift; sourceTree = "<group>"; };
 		19AFA14226E847B800764D79 /* BackgroundTaskScheduler+BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundTaskScheduler+BackgroundTask.swift"; sourceTree = "<group>"; };
+		19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
 		19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountsView.swift; sourceTree = "<group>"; };
 		19C12F8726D93F9E0022793C /* TweetNestStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestStack.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
@@ -2698,10 +2699,11 @@
 		19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */,
 				19131AB726F0332C0063984B /* TweetNestKit 2.xcdatamodel */,
 				19C5A2C026BC1F9800AB1122 /* TweetNestKit.xcdatamodel */,
 			);
-			currentVersion = 19131AB726F0332C0063984B /* TweetNestKit 2.xcdatamodel */;
+			currentVersion = 19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */;
 			path = TweetNestKit.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

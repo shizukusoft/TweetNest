@@ -25,6 +25,7 @@ public class ManagedPreferences: NSManagedObject {
 extension ManagedPreferences {
     public struct Preferences {
         public var lastCleansed: Date = .distantPast
+        public var fetchProfileHeaderImages: Bool = false
     }
 }
 

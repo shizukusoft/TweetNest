@@ -139,14 +139,18 @@ extension Session {
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
 
+                                async let _profileBanner = context.performAndWait { self.preferences(for: context).fetchProfileHeaderImages == true } ? twitterUser.profileBanner(session: twitterSession) : nil
+
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
                                 let myBlockingUserIDs = try await _myBlockingUserIDs
+                                let profileBannerImageURL = try? await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
                                 let twitterUserFetchDate = Date()
 
                                 try Task.checkCancellation()
 
-                                let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] }).shuffled()
+                                
+                                let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] })
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
 
                                 let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID)? = try await context.perform(schedule: .enqueued) {
@@ -168,6 +172,7 @@ extension Session {
 
                                     let userDetail = try UserDetail.createOrUpdate(
                                         twitterUser: twitterUser,
+                                        profileBannerImageURL: profileBannerImageURL,
                                         followingUserIDs: followingUserIDs,
                                         followerUserIDs: followerIDs,
                                         blockingUserIDs: myBlockingUserIDs,
