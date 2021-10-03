@@ -139,25 +139,6 @@ extension Session {
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
 
-                                Task.detached(priority: .utility) {
-                                    guard let profileImageOriginalURL = twitterUser.profileImageOriginalURL else { return }
-
-                                    await withExtendedBackgroundExecution {
-                                        do {
-                                            try Task.checkCancellation()
-
-                                            try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: dataAssetContext) { _ in
-                                                if dataAssetContext.hasChanges {
-                                                    try dataAssetContext.save()
-                                                }
-                                            }
-                                        } catch {
-                                            Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
-                                                .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
-                                        }
-                                    }
-                                }
-
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
                                 let myBlockingUserIDs = try await _myBlockingUserIDs
@@ -168,7 +149,7 @@ extension Session {
                                 let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] })
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
 
-                                async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID)? = context.perform(schedule: .enqueued) {
+                                let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID)? = try await context.perform(schedule: .enqueued) {
                                     let fetchRequest = User.fetchRequest()
                                     fetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
                                     fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
@@ -201,13 +182,35 @@ extension Session {
                                 try Task.checkCancellation()
                                 try await _ = _updatingUsers
 
-                                try Task.checkCancellation()
-                                return try await (twitterUser.id, userDetailObjectIDs)
+                                if let profileImageOriginalURL = twitterUser.profileImageOriginalURL {
+                                    Task.detached(priority: .utility) {
+                                        await withExtendedBackgroundExecution {
+                                            do {
+                                                try Task.checkCancellation()
+
+                                                try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: dataAssetContext) { _ in
+                                                    if dataAssetContext.hasChanges {
+                                                        try dataAssetContext.save()
+                                                    }
+                                                }
+                                            } catch {
+                                                Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
+                                                    .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                                            }
+                                        }
+                                    }
+                                }
+
+                                return (twitterUser.id, userDetailObjectIDs)
                             }
                         }
                     }
 
-                    let userDetailObjectIDs = try await taskGroup.reduce(into: [:], { $0[$1.0] = $1.1 })
+                    let userDetailObjectIDs: [Twitter.User.ID: (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)] = try await taskGroup.reduce(into: [:]) {
+                        try Task.checkCancellation()
+
+                        $0[$1.0] = $1.1
+                    }
 
                     try await context.perform {
                         if context.hasChanges {
