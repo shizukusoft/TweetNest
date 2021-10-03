@@ -108,15 +108,6 @@ extension Session {
                 }
 
                 return try await withThrowingTaskGroup(of: (Twitter.User.ID, (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)?).self) { taskGroup in
-                    defer {
-                        // For cancellation or error occured.
-                        context.performAndWait {
-                            if context.hasChanges {
-                                try? context.save()
-                            }
-                        }
-                    }
-
                     let dataAssetContext = self.persistentContainer.newBackgroundContext()
 
                     for try await chunkedUsers in chunkedUsersTaskGroup {
