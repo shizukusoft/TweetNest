@@ -71,6 +71,7 @@ struct DetailImageView: View {
             .navigationBarTitleDisplayMode(.inline)
             #endif
             .navigationTitle(filename)
+            .interactiveDismissDisabled(true)
             .toolbar {
                 ToolbarItemGroup(placement: .confirmationAction) {
                     Button("Done") {
