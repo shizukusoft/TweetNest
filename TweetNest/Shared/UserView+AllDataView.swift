@@ -15,6 +15,8 @@ extension UserView {
         @FetchRequest
         private var userDetails: FetchedResults<UserDetail>
 
+        @State private var selectedUserDetail: UserDetail?
+
         var body: some View {
             #if os(macOS)
             Table(userDetails) {
@@ -59,9 +61,9 @@ extension UserView {
             Section(String(localized: "All Data")) {
                 ForEach(userDetails) { userDetail in
                     NavigationLink(
-                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ??
-                        userDetail.objectID.description
-                    ) {
+                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description,
+                        tag: userDetail,
+                        selection: $selectedUserDetail) {
                         UserDetailView(userDetail: userDetail)
                             .navigationTitle(
                                 Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
