@@ -70,12 +70,12 @@ struct UsersDiffList: View {
 
                         HStack {
                             if appendedUserIDs.count > 0 {
-                                Text("+\(appendedUserIDs.count.formatted())")
+                                Text(verbatim: "+\(appendedUserIDs.count.formatted())")
                                     .foregroundColor(.green)
                             }
 
                             if removedUserIDs.count > 0 {
-                                Text("-\(removedUserIDs.count.formatted())")
+                                Text(verbatim: "-\(removedUserIDs.count.formatted())")
                                     .foregroundColor(.red)
                             }
 
