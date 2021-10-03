@@ -123,9 +123,9 @@ struct DataAssetImage: View {
         #endif
     }
 
-    init(url: URL?, showsDetailImageViewOnTap: Bool) {
+    init(url: URL?, isExportable: Bool = false) {
         self.url = url
-        self.isExportable = showsDetailImageViewOnTap
+        self.isExportable = isExportable
 
         let fetchRequest = TweetNestKit.DataAsset.fetchRequest()
         fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]

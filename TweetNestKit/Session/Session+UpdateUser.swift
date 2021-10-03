@@ -144,13 +144,10 @@ extension Session {
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
                                 let myBlockingUserIDs = try await _myBlockingUserIDs
-
                                 let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
-
                                 let twitterUserFetchDate = Date()
 
                                 try Task.checkCancellation()
-
                                 
                                 let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs].flatMap { $0 ?? [] })
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
@@ -202,6 +199,25 @@ extension Session {
                                                 }
                                             } catch {
                                                 Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
+                                                    .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
+                                            }
+                                        }
+                                    }
+                                }
+
+                                if let profileHeaderImageURL = profileHeaderImageURL {
+                                    Task.detached(priority: .utility) {
+                                        await withExtendedBackgroundExecution {
+                                            do {
+                                                try Task.checkCancellation()
+
+                                                try await DataAsset.dataAsset(for: profileHeaderImageURL, session: self, context: dataAssetContext) { _ in
+                                                    if dataAssetContext.hasChanges {
+                                                        try dataAssetContext.save()
+                                                    }
+                                                }
+                                            } catch {
+                                                Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-header-image")
                                                     .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
                                             }
                                         }

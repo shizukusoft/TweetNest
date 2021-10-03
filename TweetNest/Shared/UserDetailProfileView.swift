@@ -19,6 +19,14 @@ struct UserDetailProfileView: View {
 
     var body: some View {
         Group {
+            #if os(iOS) || os(macOS)
+            if let profileHeaderImageURL = userDetail.profileHeaderImageURL {
+                DataAssetImage(url: profileHeaderImageURL, isExportable: true)
+                    .aspectRatio(3, contentMode: .fill)
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+            #endif
+
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
                     ProfileImage(profileImageURL: userDetail.profileImageURL, isExportable: true)

@@ -13,7 +13,7 @@ struct ProfileImage: View {
     let isExportable: Bool
 
     var body: some View {
-        DataAssetImage(url: profileImageURL, showsDetailImageViewOnTap: isExportable)
+        DataAssetImage(url: profileImageURL, isExportable: isExportable)
             .clipShape(Circle())
             .accessibilityElement(children: .ignore)
             .accessibilityHidden(true)
