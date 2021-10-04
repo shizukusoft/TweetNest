@@ -22,11 +22,11 @@ struct UserDetailProfileView: View {
             #if os(iOS) || os(macOS)
             if let profileHeaderImageURL = userDetail.profileHeaderImageURL {
                 DataAssetImage(url: profileHeaderImageURL, isExportable: true)
-                .aspectRatio(3, contentMode: .fill)
-                #if !os(macOS)
-                .listRowSeparator(.hidden)
-                #endif
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+                    .aspectRatio(3, contentMode: .fill)
+                    #if os(iOS)
+                    .listRowSeparator(.hidden)
+                    #endif
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
             }
             #endif
 
