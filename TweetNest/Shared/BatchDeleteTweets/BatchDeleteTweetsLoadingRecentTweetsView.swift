@@ -19,6 +19,20 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
     @State private var showError: Bool = false
     @State private var error: TweetNestError?
 
+    @MainActor
+    private var accountUserID: String? {
+        account?.userID
+    }
+
+    @MainActor
+    private var twitterSession: Twitter.Session? {
+        get async throws {
+            guard let account = account else { return nil }
+
+            return try await .session(for: account, session: session)
+        }
+    }
+
     var body: some View {
         ProgressView("Loading Recent Tweets…")
             .task {
@@ -27,18 +41,17 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
             .alert(isPresented: $showError, error: error)
     }
 
-    @MainActor
     func fetchTweets() async {
-        guard
-            let account = account,
-            let userID = account.userID
-        else {
-            return
-        }
-
         do {
+            guard
+                let accountUserID = await accountUserID,
+                let twitterSession = try await twitterSession
+            else {
+                return
+            }
+
             let tweets: OrderedDictionary<Tweet.ID, [Tweet]> = OrderedDictionary(
-                grouping: try await User.tweets(forUserID: userID, session: .session(for: account, session: session)).compactMap { try? $0.get() }
+                grouping: try await User.tweets(forUserID: accountUserID, session: twitterSession).items
             ) { $0.id }
 
             withAnimation {

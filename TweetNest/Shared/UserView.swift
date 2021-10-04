@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import TweetNestKit
 import UnifiedLogging
 
@@ -295,6 +296,20 @@ struct UserView: View {
             return fetchRequest
         }())
     }
+}
+
+extension UserView {
+    @MainActor
+    private var accountObjectID: NSManagedObjectID? {
+        account?.objectID
+    }
+
+    @MainActor
+    private var isUserContainsAccount: Bool {
+        guard let account = account else { return false }
+
+        return user?.accounts?.contains(account) == true
+    }
 
     @Sendable
     private func refresh() async {
@@ -309,10 +324,14 @@ struct UserView: View {
             }
 
             do {
-                if let account = user?.accounts?.last, account == self.account {
-                    try await session.updateAccount(account.objectID)
-                } else if let account = account {
-                    try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: account.objectID)
+                guard let accountObjectID = await accountObjectID else {
+                    return
+                }
+
+                if await isUserContainsAccount {
+                    try await session.updateAccount(accountObjectID)
+                } else {
+                    _ = try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
