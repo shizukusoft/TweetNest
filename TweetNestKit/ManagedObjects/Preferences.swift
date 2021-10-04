@@ -28,7 +28,15 @@ extension ManagedPreferences {
     }
 }
 
-extension ManagedPreferences.Preferences: Codable { }
+extension ManagedPreferences.Preferences: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let defaultPreferences = ManagedPreferences.Preferences()
+
+        self.lastCleansed = try container.decodeIfPresent(Date.self, forKey: .lastCleansed) ?? defaultPreferences.lastCleansed
+        self.fetchProfileHeaderImages = try container.decodeIfPresent(Bool.self, forKey: .fetchProfileHeaderImages) ?? defaultPreferences.fetchProfileHeaderImages
+    }
+}
 
 extension ManagedPreferences.Preferences {
     @objc(TWNKManagedPreferencesTransformer)
