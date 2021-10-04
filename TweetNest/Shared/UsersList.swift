@@ -13,10 +13,11 @@ struct UsersList: View {
     let userIDs: OrderedSet<String>
     
     @State private var searchQuery: String = ""
+    @State private var navigationUserIDSelection: String?
 
     var body: some View {
         List(userIDs, id: \.self) { userID in
-            UserRow(userID: userID, searchQuery: searchQuery)
+            UserRow(userID: userID, searchQuery: searchQuery, navigationUserIDSelection: $navigationUserIDSelection)
         }
         .searchable(text: $searchQuery)
     }

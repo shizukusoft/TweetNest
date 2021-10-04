@@ -17,6 +17,8 @@ struct UserRow<Icon: View>: View {
 
     let icon: Icon?
 
+    @Binding var navigationUserIDSelection: String?
+
     private var displayUserID: String {
         Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
     }
@@ -63,7 +65,10 @@ struct UserRow<Icon: View>: View {
         Group {
             if let latestUserDetail = latestUserDetail {
                 Label {
-                    NavigationLink {
+                    NavigationLink(
+                        tag: userID,
+                        selection: $navigationUserIDSelection
+                    ) {
                         UserView(userID: userID)
                             .environment(\.account, account)
                     } label: {
@@ -84,7 +89,10 @@ struct UserRow<Icon: View>: View {
                         .frame(width: 24, height: 24)
                 }
             } else {
-                NavigationLink {
+                NavigationLink(
+                    tag: userID,
+                    selection: $navigationUserIDSelection
+                ) {
                     UserView(userID: userID)
                         .environment(\.account, account)
                 } label: {
@@ -115,9 +123,10 @@ struct UserRow<Icon: View>: View {
         }
     }
 
-    private init(userID: String, searchQuery: String? = nil, icon: Icon?) {
+    private init(userID: String, searchQuery: String? = nil, navigationUserIDSelection: Binding<String?>, icon: Icon?) {
         self.userID = userID
         self.searchQuery = searchQuery
+        self._navigationUserIDSelection = navigationUserIDSelection
         self.icon = icon
 
         self._latestUserDetails = FetchRequest(fetchRequest: {
@@ -134,17 +143,17 @@ struct UserRow<Icon: View>: View {
         }())
     }
 
-    init(userID: String, searchQuery: String? = nil, @ViewBuilder icon: () -> Icon) {
-        self.init(userID: userID, searchQuery: searchQuery, icon: icon())
+    init(userID: String, searchQuery: String? = nil, navigationUserIDSelection: Binding<String?>, @ViewBuilder icon: () -> Icon) {
+        self.init(userID: userID, searchQuery: searchQuery, navigationUserIDSelection: navigationUserIDSelection, icon: icon())
     }
 
-    init(userID: String, searchQuery: String? = nil) where Icon == EmptyView {
-        self.init(userID: userID, searchQuery: searchQuery, icon: nil)
+    init(userID: String, searchQuery: String? = nil, navigationUserIDSelection: Binding<String?>) where Icon == EmptyView {
+        self.init(userID: userID, searchQuery: searchQuery, navigationUserIDSelection: navigationUserIDSelection, icon: nil)
     }
 }
 
 struct UserRow_Previews: PreviewProvider {
     static var previews: some View {
-        UserRow(userID: "123456789")
+        UserRow(userID: "123456789", navigationUserIDSelection: .constant(nil))
     }
 }

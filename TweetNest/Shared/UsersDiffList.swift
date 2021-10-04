@@ -20,6 +20,7 @@ struct UsersDiffList: View {
     let diffKeyPath: KeyPath<UserDetail, [String]?>
 
     @State private var searchQuery: String = ""
+    @State private var navigationUserIDSelection: String?
 
     @ViewBuilder private var usersDiffList: some View {
         List(userDetails) { userDetail in
@@ -36,14 +37,14 @@ struct UsersDiffList: View {
             if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
                 Section {
                     ForEach(appendedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery) {
+                        UserRow(userID: userID, searchQuery: searchQuery, navigationUserIDSelection: $navigationUserIDSelection) {
                             Image(systemName: "person.badge.plus")
                                 .foregroundColor(.green)
                         }
                     }
 
                     ForEach(removedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery) {
+                        UserRow(userID: userID, searchQuery: searchQuery, navigationUserIDSelection: $navigationUserIDSelection) {
                             Image(systemName: "person.badge.minus")
                                 .foregroundColor(.red)
                         }
