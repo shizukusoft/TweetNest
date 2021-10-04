@@ -8,16 +8,18 @@
 import SwiftUI
 import TweetNestKit
 
-struct UserRow<Icon: View>: View {
+struct UserRow<Icon: View, Tag: Hashable>: View {
     @Environment(\.managedObjectContext) private var viewContext
     @Environment(\.account) private var account: Account?
 
     let userID: String
     let searchQuery: String?
 
+    let tag: Tag
+
     let icon: Icon?
 
-    @Binding var navigationUserIDSelection: String?
+    @Binding var selection: Tag?
 
     private var displayUserID: String {
         Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
@@ -66,8 +68,8 @@ struct UserRow<Icon: View>: View {
             if let latestUserDetail = latestUserDetail {
                 Label {
                     NavigationLink(
-                        tag: userID,
-                        selection: $navigationUserIDSelection
+                        tag: tag,
+                        selection: $selection
                     ) {
                         UserView(userID: userID)
                             .environment(\.account, account)
@@ -90,8 +92,8 @@ struct UserRow<Icon: View>: View {
                 }
             } else {
                 NavigationLink(
-                    tag: userID,
-                    selection: $navigationUserIDSelection
+                    tag: tag,
+                    selection: $selection
                 ) {
                     UserView(userID: userID)
                         .environment(\.account, account)
@@ -123,10 +125,11 @@ struct UserRow<Icon: View>: View {
         }
     }
 
-    private init(userID: String, searchQuery: String? = nil, navigationUserIDSelection: Binding<String?>, icon: Icon?) {
+    private init(userID: String, searchQuery: String? = nil, tag: Tag, selection: Binding<Tag?>, icon: Icon?) {
         self.userID = userID
         self.searchQuery = searchQuery
-        self._navigationUserIDSelection = navigationUserIDSelection
+        self.tag = tag
+        self._selection = selection
         self.icon = icon
 
         self._latestUserDetails = FetchRequest(fetchRequest: {
@@ -143,17 +146,17 @@ struct UserRow<Icon: View>: View {
         }())
     }
 
-    init(userID: String, searchQuery: String? = nil, navigationUserIDSelection: Binding<String?>, @ViewBuilder icon: () -> Icon) {
-        self.init(userID: userID, searchQuery: searchQuery, navigationUserIDSelection: navigationUserIDSelection, icon: icon())
+    init(userID: String, searchQuery: String? = nil, tag: Tag, selection: Binding<Tag?>, @ViewBuilder icon: () -> Icon) {
+        self.init(userID: userID, searchQuery: searchQuery, tag: tag, selection: selection, icon: icon())
     }
 
-    init(userID: String, searchQuery: String? = nil, navigationUserIDSelection: Binding<String?>) where Icon == EmptyView {
-        self.init(userID: userID, searchQuery: searchQuery, navigationUserIDSelection: navigationUserIDSelection, icon: nil)
+    init(userID: String, searchQuery: String? = nil, tag: Tag, selection: Binding<Tag?>) where Icon == EmptyView {
+        self.init(userID: userID, searchQuery: searchQuery, tag: tag, selection: selection, icon: nil)
     }
 }
 
 struct UserRow_Previews: PreviewProvider {
     static var previews: some View {
-        UserRow(userID: "123456789", navigationUserIDSelection: .constant(nil))
+        UserRow(userID: "123456789", tag: "123456789", selection: .constant(nil))
     }
 }
