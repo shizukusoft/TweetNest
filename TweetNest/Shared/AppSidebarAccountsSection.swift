@@ -40,7 +40,7 @@ struct AppSidebarAccountsSection: View {
             tag: .followings(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(role: .followings, user: user)
+            UsersDiffList(user: user, diffKeyPath: \.followingUserIDs, title: Text("Followings History"))
                 .environment(\.account, account)
         } label: {
             Label("Followings History", systemImage: "person.2")
@@ -53,7 +53,7 @@ struct AppSidebarAccountsSection: View {
             tag: .followers(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(role: .followers, user: user)
+            UsersDiffList(user: user, diffKeyPath: \.followerUserIDs, title: Text("Followers History"))
                 .environment(\.account, account)
         } label: {
             Label("Followers History", systemImage: "person.2")
@@ -66,7 +66,7 @@ struct AppSidebarAccountsSection: View {
             tag: .blockings(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(role: .blockings, user: user)
+            UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs, title: Text("Blocks History"))
                 .environment(\.account, account)
         } label: {
             Label("Blocks History", systemImage: "nosign")
