@@ -17,7 +17,7 @@ struct UsersList: View {
 
     var body: some View {
         List(userIDs, id: \.self) { userID in
-            UserRow(userID: userID, searchQuery: searchQuery, tag: userID, selection: $navigationUserIDSelection)
+            UserRow(userID: userID, searchQuery: searchQuery, navigationTag: userID, navigationSelection: $navigationUserIDSelection)
         }
         .searchable(text: $searchQuery)
     }

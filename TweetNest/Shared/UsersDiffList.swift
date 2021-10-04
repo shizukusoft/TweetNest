@@ -42,14 +42,14 @@ struct UsersDiffList: View {
             if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
                 Section {
                     ForEach(appendedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery, tag: .appended(userDetail, userID), selection: $navigationItemSelection) {
+                        UserRow(userID: userID, searchQuery: searchQuery, navigationTag: .appended(userDetail, userID), navigationSelection: $navigationItemSelection) {
                             Image(systemName: "person.badge.plus")
                                 .foregroundColor(.green)
                         }
                     }
 
                     ForEach(removedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery, tag: .removed(userDetail, userID), selection: $navigationItemSelection) {
+                        UserRow(userID: userID, searchQuery: searchQuery, navigationTag: .removed(userDetail, userID), navigationSelection: $navigationItemSelection) {
                             Image(systemName: "person.badge.minus")
                                 .foregroundColor(.red)
                         }

@@ -15,11 +15,11 @@ struct UserRow<Icon: View, Tag: Hashable>: View {
     let userID: String
     let searchQuery: String?
 
-    let tag: Tag
+    let navigationTag: Tag
 
     let icon: Icon?
 
-    @Binding var selection: Tag?
+    @Binding var navigationSelection: Tag?
 
     private var displayUserID: String {
         Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
@@ -68,8 +68,8 @@ struct UserRow<Icon: View, Tag: Hashable>: View {
             if let latestUserDetail = latestUserDetail {
                 Label {
                     NavigationLink(
-                        tag: tag,
-                        selection: $selection
+                        tag: navigationTag,
+                        selection: $navigationSelection
                     ) {
                         UserView(userID: userID)
                             .environment(\.account, account)
@@ -92,8 +92,8 @@ struct UserRow<Icon: View, Tag: Hashable>: View {
                 }
             } else {
                 NavigationLink(
-                    tag: tag,
-                    selection: $selection
+                    tag: navigationTag,
+                    selection: $navigationSelection
                 ) {
                     UserView(userID: userID)
                         .environment(\.account, account)
@@ -125,11 +125,11 @@ struct UserRow<Icon: View, Tag: Hashable>: View {
         }
     }
 
-    private init(userID: String, searchQuery: String? = nil, tag: Tag, selection: Binding<Tag?>, icon: Icon?) {
+    private init(userID: String, searchQuery: String? = nil, navigationTag: Tag, navigationSelection: Binding<Tag?>, icon: Icon?) {
         self.userID = userID
         self.searchQuery = searchQuery
-        self.tag = tag
-        self._selection = selection
+        self.navigationTag = navigationTag
+        self._navigationSelection = navigationSelection
         self.icon = icon
 
         self._latestUserDetails = FetchRequest(fetchRequest: {
@@ -146,17 +146,17 @@ struct UserRow<Icon: View, Tag: Hashable>: View {
         }())
     }
 
-    init(userID: String, searchQuery: String? = nil, tag: Tag, selection: Binding<Tag?>, @ViewBuilder icon: () -> Icon) {
-        self.init(userID: userID, searchQuery: searchQuery, tag: tag, selection: selection, icon: icon())
+    init(userID: String, searchQuery: String? = nil, navigationTag: Tag, navigationSelection: Binding<Tag?>, @ViewBuilder icon: () -> Icon) {
+        self.init(userID: userID, searchQuery: searchQuery, navigationTag: navigationTag, navigationSelection: navigationSelection, icon: icon())
     }
 
-    init(userID: String, searchQuery: String? = nil, tag: Tag, selection: Binding<Tag?>) where Icon == EmptyView {
-        self.init(userID: userID, searchQuery: searchQuery, tag: tag, selection: selection, icon: nil)
+    init(userID: String, searchQuery: String? = nil, navigationTag: Tag, navigationSelection: Binding<Tag?>) where Icon == EmptyView {
+        self.init(userID: userID, searchQuery: searchQuery, navigationTag: navigationTag, navigationSelection: navigationSelection, icon: nil)
     }
 }
 
 struct UserRow_Previews: PreviewProvider {
     static var previews: some View {
-        UserRow(userID: "123456789", tag: "123456789", selection: .constant(nil))
+        UserRow(userID: "123456789", navigationTag: "123456789", navigationSelection: .constant(nil))
     }
 }
