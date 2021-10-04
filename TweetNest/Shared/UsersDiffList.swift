@@ -16,7 +16,7 @@ struct UsersDiffList: View {
 
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
-    let title: Text
+    let title: LocalizedStringKey
     let diffKeyPath: KeyPath<UserDetail, [String]?>
 
     @State private var searchQuery: String = ""
@@ -102,7 +102,7 @@ struct UsersDiffList: View {
         #endif
     }
 
-    init(user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>, title: Text) {
+    init(_ title: LocalizedStringKey, user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>) {
         self._userDetails = FetchRequest(
             fetchRequest: {
                 let fetchRequest = UserDetail.fetchRequest()
