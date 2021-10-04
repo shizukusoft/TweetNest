@@ -92,8 +92,8 @@ struct UserView: View {
 
     @ViewBuilder private var userFootnotes: some View {
         VStack(alignment: .leading) {
-            user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-            if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
+            Text(verbatim: "#\(Int64(userID)?.twnk_formatted() ?? userID)")
+            if let user = user, let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
                 Group {
                     if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
                         Text("Updating…")
