@@ -16,6 +16,7 @@ enum AppSidebarNavigationItem: Hashable {
     case followings(Account)
     case followers(Account)
     case blockings(Account)
+    case mutings(Account)
 }
 
 struct AppSidebarNavigation: View {

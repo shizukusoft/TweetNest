@@ -23,6 +23,13 @@ struct SettingsAccountView: View {
             .onChange(of: account.preferences.fetchBlockingUsers) { _ in
                 save()
             }
+
+            Toggle(isOn: $account.preferences.fetchMutingUsers) {
+                Text("Fetch Muting Users")
+            }
+            .onChange(of: account.preferences.fetchMutingUsers) { _ in
+                save()
+            }
         }
         .navigationTitle(
             Text(verbatim: account.users?.last?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description)

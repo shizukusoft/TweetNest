@@ -10,6 +10,7 @@ import Foundation
 extension Account {
     public struct Preferences {
         public var fetchBlockingUsers: Bool = false
+        public var fetchMutingUsers: Bool = false
     }
 }
 

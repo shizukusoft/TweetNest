@@ -73,6 +73,19 @@ struct AppSidebarAccountsSection: View {
         }
     }
 
+    @ViewBuilder
+    var mutingsNavigationLink: some View {
+        NavigationLink(
+            tag: .mutings(account),
+            selection: $navigationItemSelection
+        ) {
+            UsersDiffList("Mutes History", user: user, diffKeyPath: \.mutingUserIDs)
+                .environment(\.account, account)
+        } label: {
+            Label("Mutes History", systemImage: "speaker.slash")
+        }
+    }
+
     var body: some View {
         Section {
             Group {
@@ -105,6 +118,15 @@ struct AppSidebarAccountsSection: View {
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(blockingTitle)
                         .accessibilityIdentifier("\(displayAccountName):BlocksHistory")
+                        .accessibilityAddTraits(.isButton)
+                }
+
+                if account.preferences.fetchMutingUsers {
+                    let mutingsTitle = String(localized: "Mutes History for \(displayAccountName)", comment: "Navigation link for mutes history, grouped by username.")
+                    mutingsNavigationLink
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(mutingsTitle)
+                        .accessibilityIdentifier("\(displayAccountName):MutesHistory")
                         .accessibilityAddTraits(.isButton)
                 }
             }

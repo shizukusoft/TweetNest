@@ -22,6 +22,7 @@ extension UserDetail {
         followingUserIDs: [String]? = nil,
         followerUserIDs: [String]? = nil,
         blockingUserIDs: [String]? = nil,
+        mutingUserIDs: [String]? = nil,
         userUpdateStartDate: Date = Date(),
         userUpdateEndDate: Date = Date(),
         userDetailCreationDate: Date = Date(),
@@ -49,6 +50,7 @@ extension UserDetail {
         newUserDetail.blockingUserIDs = blockingUserIDs
         newUserDetail.followingUserIDs = followingUserIDs
         newUserDetail.followerUserIDs = followerUserIDs
+        newUserDetail.mutingUserIDs = mutingUserIDs
 
         newUserDetail.followerUsersCount = Int32(twitterUser.publicMetrics.followersCount)
         newUserDetail.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
@@ -89,14 +91,15 @@ extension UserDetail {
 
 extension UserDetail {
     static func ~= (lhs: UserDetail, rhs: UserDetail) -> Bool {
+        lhs.isProfileEqual(to: rhs) &&
         lhs.blockingUserIDs == rhs.blockingUserIDs &&
         lhs.followingUserIDs == rhs.followingUserIDs &&
         lhs.followerUserIDs == rhs.followerUserIDs &&
         lhs.followerUsersCount == rhs.followerUsersCount &&
         lhs.followingUsersCount == rhs.followingUsersCount &&
-        lhs.tweetsCount == rhs.tweetsCount &&
         lhs.listedCount == rhs.listedCount &&
-        lhs.isProfileEqual(to: rhs)
+        lhs.mutingUserIDs == rhs.mutingUserIDs &&
+        lhs.tweetsCount == rhs.tweetsCount
     }
 }
 

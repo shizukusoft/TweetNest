@@ -126,16 +126,18 @@ extension Session {
                             taskGroup.addTask {
                                 try Task.checkCancellation()
 
+                                async let _profileBanner = context.performAndWait { self.preferences(for: context).fetchProfileHeaderImages == true } ? twitterUser.profileBanner(session: twitterSession) : nil
+
                                 async let _followingUserIDs = twitterUser.id == accountUserID ? Twitter.User.followingUserIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession) : nil
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession) : nil
+                                async let _myMutingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchMutingUsers ? Twitter.User.myMutingUserIDs(session: twitterSession) : nil
 
-                                async let _profileBanner = context.performAndWait { self.preferences(for: context).fetchProfileHeaderImages == true } ? twitterUser.profileBanner(session: twitterSession) : nil
-
+                                let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
                                 let myBlockingUserIDs = try await _myBlockingUserIDs
-                                let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
+                                let myMutingUserIDs = try await _myMutingUserIDs
                                 let twitterUserFetchDate = Date()
 
                                 try Task.checkCancellation()
@@ -166,6 +168,7 @@ extension Session {
                                         followingUserIDs: followingUserIDs,
                                         followerUserIDs: followerIDs,
                                         blockingUserIDs: myBlockingUserIDs,
+                                        mutingUserIDs: myMutingUserIDs,
                                         userUpdateStartDate: chunkedUsers.0,
                                         userDetailCreationDate: twitterUserFetchDate,
                                         context: context

@@ -26,6 +26,7 @@ extension UserDetail {
     @NSManaged public var listedCount: Int32
     @NSManaged public var location: String?
     @NSManaged public var name: String?
+    @NSManaged public var mutingUserIDs: [String]?
     @NSManaged public var profileHeaderImageURL: URL?
     @NSManaged public var profileImageURL: URL?
     @NSManaged public var tweetsCount: Int32
