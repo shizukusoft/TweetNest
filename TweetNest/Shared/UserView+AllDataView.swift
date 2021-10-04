@@ -14,6 +14,8 @@ extension UserView {
 
         @FetchRequest
         private var userDetails: FetchedResults<UserDetail>
+
+        @Binding var navigationUserDetailSelection: UserDetail?
         
         var body: some View {
             #if os(macOS)
@@ -59,7 +61,9 @@ extension UserView {
             Section(String(localized: "All Data")) {
                 ForEach(userDetails) { userDetail in
                     NavigationLink(
-                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
+                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description,
+                        tag: userDetail,
+                        selection: $navigationUserDetailSelection
                     ) {
                         UserDetailView(userDetail: userDetail)
                             .navigationTitle(
@@ -73,7 +77,9 @@ extension UserView {
             #endif
         }
 
-        init(user: User?) {
+        init(user: User?, navigationUserDetailSelection: Binding<UserDetail?>) {
+            self._navigationUserDetailSelection = navigationUserDetailSelection
+
             self._userDetails = FetchRequest(fetchRequest: {
                 let fetchRequest = UserDetail.fetchRequest()
                 if let user = user {
@@ -94,6 +100,6 @@ extension UserView {
 
 struct UserView_AllDataView_Previews: PreviewProvider {
     static var previews: some View {
-        UserView.AllDataView(user: nil)
+        UserView.AllDataView(user: nil, navigationUserDetailSelection: .constant(nil))
     }
 }
