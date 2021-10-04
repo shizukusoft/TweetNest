@@ -15,7 +15,9 @@ extension UserView {
         @FetchRequest
         private var userDetails: FetchedResults<UserDetail>
 
+        #if !os(macOS)
         @Binding var navigationUserDetailSelection: UserDetail?
+        #endif
         
         var body: some View {
             #if os(macOS)
@@ -77,6 +79,7 @@ extension UserView {
             #endif
         }
 
+        #if !os(macOS)
         init(user: User?, navigationUserDetailSelection: Binding<UserDetail?>) {
             self._navigationUserDetailSelection = navigationUserDetailSelection
 
@@ -95,6 +98,24 @@ extension UserView {
                 return fetchRequest
             }())
         }
+        #else
+        init(user: User?) {
+            self._userDetails = FetchRequest(fetchRequest: {
+                let fetchRequest = UserDetail.fetchRequest()
+                if let user = user {
+                    fetchRequest.predicate = NSPredicate(format: "user == %@", user)
+                } else {
+                    fetchRequest.predicate = NSPredicate(value: false)
+                }
+                fetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                ]
+                fetchRequest.returnsObjectsAsFaults = true
+
+                return fetchRequest
+            }())
+        }
+        #endif
     }
 }
 
