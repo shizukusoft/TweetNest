@@ -46,10 +46,8 @@ struct UserView: View {
     @State var shareSheetURL: URL?
     #endif
 
-    var userProfileURL: URL? {
-        user?.id.flatMap {
-            URL(string: "https://twitter.com/intent/user?user_id=\($0)")!
-        }
+    var userProfileURL: URL {
+        URL(string: "https://twitter.com/intent/user?user_id=\(userID)")!
     }
 
     @State var showBulkDeleteRecentTweets: Bool = false
@@ -167,19 +165,17 @@ struct UserView: View {
                 ToolbarItemGroup(placement: .automatic) {
                     if shouldCompactToolbar {
                         Menu {
-                            if let userProfileURL = userProfileURL {
-                                Link(destination: userProfileURL) {
-                                    Label("Open Profile", systemImage: "safari")
-                                }
-
-                                #if os(iOS)
-                                Button {
-                                    safariSheetURL = userProfileURL
-                                } label: {
-                                    Label("Open Profile in Safari", systemImage: "safari")
-                                }
-                                #endif
+                            Link(destination: userProfileURL) {
+                                Label("Open Profile", systemImage: "safari")
                             }
+
+                            #if os(iOS)
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label("Open Profile in Safari", systemImage: "safari")
+                            }
+                            #endif
 
                             #if os(iOS)
                             Divider()
@@ -207,32 +203,30 @@ struct UserView: View {
                             deleteMenu
                         }
 
-                        if let userProfileURL = userProfileURL {
-                            #if os(iOS)
-                            Button {
-                                shareSheetURL = userProfileURL
-                            } label: {
-                                Label("Share", systemImage: "square.and.arrow.up")
-                            }
-                            #endif
+                        #if os(iOS)
+                        Button {
+                            shareSheetURL = userProfileURL
+                        } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                        #endif
 
+                        Link(destination: userProfileURL) {
+                            Label("Open Profile", systemImage: "safari")
+                        }
+                        #if os(iOS)
+                        .contextMenu {
                             Link(destination: userProfileURL) {
                                 Label("Open Profile", systemImage: "safari")
                             }
-                            #if os(iOS)
-                            .contextMenu {
-                                Link(destination: userProfileURL) {
-                                    Label("Open Profile", systemImage: "safari")
-                                }
 
-                                Button {
-                                    safariSheetURL = userProfileURL
-                                } label: {
-                                    Label("Open Profile in Safari", systemImage: "safari")
-                                }
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label("Open Profile in Safari", systemImage: "safari")
                             }
-                            #endif
                         }
+                        #endif
 
                         #if os(macOS)
                         refreshButton
