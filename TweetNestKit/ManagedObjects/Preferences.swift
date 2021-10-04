@@ -25,6 +25,11 @@ extension ManagedPreferences {
     public struct Preferences {
         public var lastCleansed: Date = .distantPast
         public var fetchProfileHeaderImages: Bool = false
+        public var notifyProfileChanges: Bool = true
+        public var notifyFollowingChanges: Bool = true
+        public var notifyFollowerChanges: Bool = true
+        public var notifyBlockingChanges: Bool = false
+        public var notifyMutingChanges: Bool = false
     }
 }
 
@@ -35,6 +40,11 @@ extension ManagedPreferences.Preferences: Codable {
 
         self.lastCleansed = try container.decodeIfPresent(Date.self, forKey: .lastCleansed) ?? defaultPreferences.lastCleansed
         self.fetchProfileHeaderImages = try container.decodeIfPresent(Bool.self, forKey: .fetchProfileHeaderImages) ?? defaultPreferences.fetchProfileHeaderImages
+        self.notifyProfileChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyProfileChanges) ?? defaultPreferences.notifyProfileChanges
+        self.notifyFollowingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowingChanges) ?? defaultPreferences.notifyFollowingChanges
+        self.notifyFollowerChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowerChanges) ?? defaultPreferences.notifyFollowerChanges
+        self.notifyBlockingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyBlockingChanges) ?? defaultPreferences.notifyBlockingChanges
+        self.notifyMutingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyMutingChanges) ?? defaultPreferences.notifyMutingChanges
     }
 }
 

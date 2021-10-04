@@ -258,15 +258,11 @@ extension Session {
 
                     let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
 
-                    let oldUserDetail = oldUserDetailIndex.flatMap { sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }
-
-                    guard (oldUserDetail ~= newUserDetail) == false else {
+                    guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
                         return nil
                     }
 
-                    let hasProfilechanges = oldUserDetail.flatMap { newUserDetail.isProfileEqual(to: $0) == false } ?? true
-                    let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
-                    let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
+                    let preferences = self.preferences(for: context)
 
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = newUserDetail.name ?? account.objectID.description
@@ -283,28 +279,63 @@ extension Session {
                     }
 
                     var changes: [String] = []
-                    if followingUserChanges.followingUsersCount > 0 {
-                        notificationContent.sound = .default
-                        notificationContent.interruptionLevel = .timeSensitive
-                        changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+
+                    if preferences.notifyProfileChanges {
+                        if oldUserDetail.isProfileEqual(to: newUserDetail) == false {
+                            changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
                     }
-                    if followingUserChanges.unfollowingUsersCount > 0 {
-                        notificationContent.sound = .default
-                        notificationContent.interruptionLevel = .timeSensitive
-                        changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+
+                    if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followingUserIDs) {
+                        if followingUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if followingUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
                     }
-                    if followerUserChanges.followerUsersCount > 0 {
-                        notificationContent.sound = .default
-                        notificationContent.interruptionLevel = .timeSensitive
-                        changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+
+                    if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followerUserIDs) {
+                        if followerUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if followerUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
                     }
-                    if followerUserChanges.unfollowerUsersCount > 0 {
-                        notificationContent.sound = .default
-                        notificationContent.interruptionLevel = .timeSensitive
-                        changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+
+                    if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.blockingUserIDs) {
+                        if blockingUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if blockingUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
                     }
-                    if hasProfilechanges {
-                        changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+
+                    if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.mutingUserIDs) {
+                        if mutingUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if mutingUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
                     }
 
                     guard changes.isEmpty == false else {

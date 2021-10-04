@@ -149,6 +149,9 @@
 		19B3130526E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */; };
 		19B3130626E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */; };
 		19B4862E26D1E4A900A80D85 /* ZIP in Frameworks */ = {isa = PBXBuildFile; platformFilters = (driverkit, ios, maccatalyst, macos, tvos, ); productRef = 19B4862D26D1E4A900A80D85 /* ZIP */; };
+		19BE3E94270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
+		19BE3E95270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
+		19BE3E96270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
 		19C12F8826D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
 		19C12F8926D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
 		19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
@@ -452,6 +455,7 @@
 		19AFA14226E847B800764D79 /* BackgroundTaskScheduler+BackgroundTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundTaskScheduler+BackgroundTask.swift"; sourceTree = "<group>"; };
 		19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
 		19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountsView.swift; sourceTree = "<group>"; };
+		19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNotificationsView.swift; sourceTree = "<group>"; };
 		19C12F8726D93F9E0022793C /* TweetNestStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestStack.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C3C82226E84E0D001FA25D /* BackgroundTaskScheduler+WatchKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BackgroundTaskScheduler+WatchKit.swift"; sourceTree = "<group>"; };
@@ -721,6 +725,7 @@
 			children = (
 				193AFB6826CA3411008BFF67 /* SettingsMainView.swift */,
 				1970663A26E7043500D7F21D /* SettingsGeneralView.swift */,
+				19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */,
 				19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */,
 				193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */,
 			);
@@ -1443,6 +1448,7 @@
 				1908FC0D26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift in Sources */,
 				19861E3D26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */,
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
+				19BE3E94270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */,
 				193AFB6F26CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
 				193659FA26097A2600865D40 /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
@@ -1502,6 +1508,7 @@
 				196CD87726FC0EFF00D62B74 /* UserRow.swift in Sources */,
 				193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */,
 				194EF57F26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */,
+				19BE3E95270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */,
 				1908FBFE26F6EE140095AF77 /* BatchDeleteTweetsView.swift in Sources */,
 				19861E3E26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */,
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
@@ -1571,6 +1578,7 @@
 				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
 				19EABBC926D6877600D3B003 /* UsersList.swift in Sources */,
 				19EABBC826D6877600D3B003 /* UserDetailProfileView.swift in Sources */,
+				19BE3E96270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */,
 				19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				19A24E3326F0F6B600B1D39F /* AppSidebarNavigationAccountsRowContent.swift in Sources */,
 				1951EBED270850FC00311B3C /* DetailImageView.swift in Sources */,

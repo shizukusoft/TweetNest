@@ -12,6 +12,7 @@ import TweetNestKit
 enum SettingsNavigationItem: Hashable {
     case general
     case accounts
+    case notifications
 }
 
 struct SettingsMainView: View {
@@ -35,6 +36,12 @@ struct SettingsMainView: View {
                     Label("Accounts", systemImage: "person.2")
                 }
                 .tag(SettingsNavigationItem.accounts)
+
+            SettingsNotificationsView()
+                .tabItem {
+                    Label("Notifications", systemImage: "bell")
+                }
+                .tag(SettingsNavigationItem.notifications)
         }
         .frame(minWidth: 600, minHeight: 300)
     }
@@ -58,6 +65,15 @@ struct SettingsMainView: View {
                     SettingsAccountsView()
                 } label: {
                     Label("Accounts", systemImage: "person.2")
+                }
+
+                NavigationLink(
+                    tag: SettingsNavigationItem.notifications,
+                    selection: $selectedNavigationItem
+                ) {
+                    SettingsNotificationsView()
+                } label: {
+                    Label("Notifications", systemImage: "bell")
                 }
             }
 

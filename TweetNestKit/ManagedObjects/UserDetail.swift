@@ -132,6 +132,20 @@ extension UserDetail {
 }
 
 extension UserDetail {
+    func userIDsChanges(from oldUserDetail: UserDetail?, for keyPath: KeyPath<UserDetail, [String]?>) -> (addedUserIDsCount: Int, removedUserIDsCount: Int)? {
+        let previousUserIDs = oldUserDetail == nil ? [] : oldUserDetail?[keyPath: keyPath].flatMap { Set($0) }
+        let latestUserIDs = self[keyPath: keyPath].flatMap { Set($0) }
+
+        guard let previousUserIDs = previousUserIDs, let latestUserIDs = latestUserIDs else {
+            return nil
+        }
+
+        let addedUserIDsCount = latestUserIDs.subtracting(previousUserIDs).count
+        let removedUserIDsCount = previousUserIDs.subtracting(latestUserIDs).count
+
+        return (addedUserIDsCount, removedUserIDsCount)
+    }
+
     func followingUserChanges(from oldUserDetail: UserDetail?) -> (followingUsersCount: Int, unfollowingUsersCount: Int) {
         let previousFollowingUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followingUserIDs.flatMap { Set($0) }
         let latestFollowingUserIDs = followingUserIDs.flatMap { Set($0) }
