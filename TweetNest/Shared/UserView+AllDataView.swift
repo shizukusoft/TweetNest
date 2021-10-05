@@ -14,10 +14,6 @@ extension UserView {
 
         @FetchRequest
         private var userDetails: FetchedResults<UserDetail>
-
-        #if !os(macOS)
-        @Binding var navigationUserDetailSelection: UserDetail?
-        #endif
         
         var body: some View {
             #if os(macOS)
@@ -63,9 +59,7 @@ extension UserView {
             Section(String(localized: "All Data")) {
                 ForEach(userDetails) { userDetail in
                     NavigationLink(
-                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description,
-                        tag: userDetail,
-                        selection: $navigationUserDetailSelection
+                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
                     ) {
                         UserDetailView(userDetail: userDetail)
                             .navigationTitle(
@@ -79,26 +73,6 @@ extension UserView {
             #endif
         }
 
-        #if !os(macOS)
-        init(user: User?, navigationUserDetailSelection: Binding<UserDetail?>) {
-            self._navigationUserDetailSelection = navigationUserDetailSelection
-
-            self._userDetails = FetchRequest(fetchRequest: {
-                let fetchRequest = UserDetail.fetchRequest()
-                if let user = user {
-                    fetchRequest.predicate = NSPredicate(format: "user == %@", user)
-                } else {
-                    fetchRequest.predicate = NSPredicate(value: false)
-                }
-                fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
-                ]
-                fetchRequest.returnsObjectsAsFaults = true
-
-                return fetchRequest
-            }())
-        }
-        #else
         init(user: User?) {
             self._userDetails = FetchRequest(fetchRequest: {
                 let fetchRequest = UserDetail.fetchRequest()
@@ -115,12 +89,11 @@ extension UserView {
                 return fetchRequest
             }())
         }
-        #endif
     }
 }
 
 struct UserView_AllDataView_Previews: PreviewProvider {
     static var previews: some View {
-        UserView.AllDataView(user: nil, navigationUserDetailSelection: .constant(nil))
+        UserView.AllDataView(user: nil)
     }
 }

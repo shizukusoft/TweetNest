@@ -10,11 +10,6 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffList: View {
-    enum NavigationItemSelection: Hashable {
-        case appended(UserDetail, String)
-        case removed(UserDetail, String)
-    }
-
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     #endif
@@ -25,7 +20,6 @@ struct UsersDiffList: View {
     let diffKeyPath: KeyPath<UserDetail, [String]?>
 
     @State private var searchQuery: String = ""
-    @State private var navigationItemSelection: NavigationItemSelection?
 
     @ViewBuilder private var usersDiffList: some View {
         List(userDetails) { userDetail in
@@ -42,14 +36,14 @@ struct UsersDiffList: View {
             if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
                 Section {
                     ForEach(appendedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery, navigationTag: .appended(userDetail, userID), navigationSelection: $navigationItemSelection) {
+                        UserRow(userID: userID, searchQuery: searchQuery) {
                             Image(systemName: "person.badge.plus")
                                 .foregroundColor(.green)
                         }
                     }
 
                     ForEach(removedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery, navigationTag: .removed(userDetail, userID), navigationSelection: $navigationItemSelection) {
+                        UserRow(userID: userID, searchQuery: searchQuery) {
                             Image(systemName: "person.badge.minus")
                                 .foregroundColor(.red)
                         }

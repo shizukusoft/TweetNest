@@ -25,8 +25,6 @@ struct UserView: View {
         users.first
     }
 
-    @State var navigationUserDetailSelection: UserDetail?
-
     @State var isRefreshing: Bool = false
 
     @State var showErrorAlert: Bool = false
@@ -140,7 +138,7 @@ struct UserView: View {
                 }
             }
             #endif
-            AllDataView(user: user, navigationUserDetailSelection: $navigationUserDetailSelection)
+            AllDataView(user: user)
         }
         #endif
     }
