@@ -56,18 +56,16 @@ extension UserView {
                 }
             }
             #else
-            Section(String(localized: "All Data")) {
-                ForEach(userDetails) { userDetail in
-                    NavigationLink(
-                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
-                    ) {
-                        UserDetailView(userDetail: userDetail)
-                            .navigationTitle(
-                                Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
-                                .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
-                            )
-                            .environment(\.account, account)
-                    }
+            ForEach(userDetails) { userDetail in
+                NavigationLink(
+                    userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
+                ) {
+                    UserDetailView(userDetail: userDetail)
+                        .navigationTitle(
+                            Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
+                            .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
+                        )
+                        .environment(\.account, account)
                 }
             }
             #endif

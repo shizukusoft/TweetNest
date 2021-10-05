@@ -131,6 +131,7 @@ struct UserView: View {
             } footer: {
                 userFootnotes
             }
+
             #if os(watchOS)
             if let account = account, user?.accounts?.contains(account) == true {
                 Section {
@@ -138,7 +139,10 @@ struct UserView: View {
                 }
             }
             #endif
-            AllDataView(user: user)
+
+            Section(String(localized: "All Data")) {
+                AllDataView(user: user)
+            }
         }
         #endif
     }
