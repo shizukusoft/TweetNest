@@ -13,10 +13,6 @@ struct UserDetailProfileView: View {
 
     @Environment(\.openURL) private var openURL
 
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    #endif
-
     var body: some View {
         Group {
             #if os(iOS) || os(macOS)
@@ -107,14 +103,6 @@ struct UserDetailProfileView: View {
             }
 
             if let userCreationDate = userDetail.userCreationDate {
-                #if os(iOS)
-                let joinedDateText = userCreationDate.twnk_formatted(compact: horizontalSizeClass == .compact)
-                #elseif os(watchOS)
-                let joinedDateText = userCreationDate.twnk_formatted(compact: true)
-                #else
-                let joinedDateText = userCreationDate.twnk_formatted(compact: false)
-                #endif
-
                 Label {
                     TweetNestStack {
                         Text("Joined")
@@ -124,7 +112,7 @@ struct UserDetailProfileView: View {
                         Spacer()
                         #endif
                         Group {
-                            Text(verbatim: joinedDateText)
+                            DateText(date: userCreationDate)
                         }
                         .foregroundColor(.secondary)
                         .lineLimit(1)
@@ -135,7 +123,7 @@ struct UserDetailProfileView: View {
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
-                .accessibilityValue(joinedDateText)
+                .accessibilityValue(userCreationDate.twnk_formatted(compact: false))
             }
 
             if userDetail.isProtected {
