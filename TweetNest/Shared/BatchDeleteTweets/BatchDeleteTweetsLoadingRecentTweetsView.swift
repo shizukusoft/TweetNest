@@ -51,7 +51,7 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
             }
 
             let tweets: OrderedDictionary<Tweet.ID, [Tweet]> = OrderedDictionary(
-                grouping: try await User.tweets(forUserID: accountUserID, session: twitterSession).items
+                grouping: try await User.tweets(forUserID: accountUserID, session: twitterSession).tweets
             ) { $0.id }
 
             withAnimation {
