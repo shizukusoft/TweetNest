@@ -315,16 +315,31 @@ extension UserView {
         return user?.accounts?.contains(account) == true
     }
 
+    private func startRefreshing() {
+        isRefreshing = true
+    }
+
+    private func endRefreshing() {
+        isRefreshing = false
+    }
+
+    private func presentError(error: TweetNestError) {
+        self.error = error
+        showErrorAlert = true
+    }
+
     @Sendable
     private func refresh() async {
         await withExtendedBackgroundExecution {
-            guard isRefreshing == false else {
+            guard await isRefreshing == false else {
                 return
             }
 
-            isRefreshing = true
+            await startRefreshing()
             defer {
-                isRefreshing = false
+                Task {
+                    await endRefreshing()
+                }
             }
 
             do {
@@ -339,8 +354,7 @@ extension UserView {
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                self.error = TweetNestError(error)
-                showErrorAlert = true
+                await presentError(error: TweetNestError(error))
             }
         }
     }
