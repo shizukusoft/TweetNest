@@ -2675,7 +2675,7 @@
 			repositoryURL = "https://github.com/apple/swift-collections";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.0.4;
+				minimumVersion = 1.0.2;
 			};
 		};
 		19C5A2CC26BC207D00AB1122 /* XCRemoteSwiftPackageReference "swift-unified-log" */ = {
