@@ -90,7 +90,7 @@ extension UserView {
     }
 }
 
-struct UserView_AllDataView_Previews: PreviewProvider {
+struct UserViewAllDataView_Previews: PreviewProvider {
     static var previews: some View {
         UserView.AllDataView(user: nil)
     }
