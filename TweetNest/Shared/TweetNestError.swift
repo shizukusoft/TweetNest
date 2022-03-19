@@ -30,6 +30,8 @@ extension TweetNestError: LocalizedError {
         switch (kind, error) {
         case (_, .some(TwitterError.serverError(.error(let error), urlResponse: _))):
             return error.title
+        case (_, .some(let error as TwitterServerError)):
+            return error.title
         default:
             return error?.localizedDescription
         }
@@ -41,6 +43,8 @@ extension TweetNestError: LocalizedError {
             return error.detail
         case (_, .some(TwitterError.serverError(.string(let error), urlResponse: _))):
             return error
+        case (_, .some(let error as TwitterServerError)):
+            return error.detail
         default:
            return (error as? LocalizedError)?.failureReason
         }
@@ -56,6 +60,7 @@ extension TweetNestError: RecoverableError {
         return false
     }
 }
+
 
 extension View {
     @ViewBuilder

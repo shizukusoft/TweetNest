@@ -49,7 +49,7 @@ extension Session {
     public nonisolated func updateAccount(
         _ accountObjectID: NSManagedObjectID,
         context _context: NSManagedObjectContext? = nil
-    ) async throws -> (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID)? {
+    ) async throws -> (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?)? {
         try await withExtendedBackgroundExecution {
             let context = _context ?? self.persistentContainer.newBackgroundContext()
             await context.perform {
@@ -75,7 +75,7 @@ extension Session {
                 }
             }
 
-            return try await self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)[userID]
+            return try await self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)[userID]?.get()
         }
     }
 }

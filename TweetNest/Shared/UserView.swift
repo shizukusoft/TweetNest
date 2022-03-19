@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import TweetNestKit
 import UnifiedLogging
 
@@ -92,8 +93,8 @@ struct UserView: View {
 
     @ViewBuilder private var userFootnotes: some View {
         VStack(alignment: .leading) {
-            user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-            if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
+            Text(verbatim: "#\(Int64(userID)?.twnk_formatted() ?? userID)")
+            if let user = user, let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
                 Group {
                     if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
                         Text("Updating…")
@@ -130,6 +131,7 @@ struct UserView: View {
             } footer: {
                 userFootnotes
             }
+
             #if os(watchOS)
             if let account = account, user?.accounts?.contains(account) == true {
                 Section {
@@ -137,7 +139,10 @@ struct UserView: View {
                 }
             }
             #endif
-            AllDataView(user: user)
+
+            Section(String(localized: "All Data")) {
+                AllDataView(user: user)
+            }
         }
         #endif
     }
@@ -295,29 +300,61 @@ struct UserView: View {
             return fetchRequest
         }())
     }
+}
+
+extension UserView {
+    @MainActor
+    private var accountObjectID: NSManagedObjectID? {
+        account?.objectID
+    }
+
+    @MainActor
+    private var isUserContainsAccount: Bool {
+        guard let account = account else { return false }
+
+        return user?.accounts?.contains(account) == true
+    }
+
+    private func startRefreshing() {
+        isRefreshing = true
+    }
+
+    private func endRefreshing() {
+        isRefreshing = false
+    }
+
+    private func presentError(error: TweetNestError) {
+        self.error = error
+        showErrorAlert = true
+    }
 
     @Sendable
     private func refresh() async {
         await withExtendedBackgroundExecution {
-            guard isRefreshing == false else {
+            guard await isRefreshing == false else {
                 return
             }
 
-            isRefreshing = true
+            await startRefreshing()
             defer {
-                isRefreshing = false
+                Task {
+                    await endRefreshing()
+                }
             }
 
             do {
-                if let account = user?.accounts?.last, account == self.account {
-                    try await session.updateAccount(account.objectID)
-                } else if let account = account {
-                    try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: account.objectID)
+                guard let accountObjectID = await accountObjectID else {
+                    return
+                }
+
+                if await isUserContainsAccount {
+                    try await session.updateAccount(accountObjectID)
+                } else {
+                    _ = try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                self.error = TweetNestError(error)
-                showErrorAlert = true
+                await presentError(error: TweetNestError(error))
             }
         }
     }

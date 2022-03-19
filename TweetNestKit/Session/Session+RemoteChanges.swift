@@ -64,19 +64,19 @@ extension Session {
 
                     do {
                         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-                            taskGroup.addTask { try await handleUserDetailChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await handleAccountChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await handleUserChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await handleDataAssetsChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleUserDetailChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleAccountChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleUserChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleDataAssetsChanges(transactions: transactions.transactions, context: transactions.context) }
 
                             try await taskGroup.waitForAll()
                         }
                     } catch {
                         if error is CancellationError {
                             do {
-                                try await updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
+                                try await self.updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
                             } catch {
-                                logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
+                                self.logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
                             }
                         }
 

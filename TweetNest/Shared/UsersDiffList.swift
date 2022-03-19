@@ -10,10 +10,6 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffList: View {
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    #endif
-
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
     let title: LocalizedStringKey
@@ -52,15 +48,7 @@ struct UsersDiffList: View {
                     HStack {
                         Group {
                             if let creationDate = userDetail.creationDate {
-                                #if os(iOS)
-                                let creationDateText = creationDate.twnk_formatted(compact: horizontalSizeClass == .compact)
-                                #elseif os(watchOS)
-                                let creationDateText = creationDate.twnk_formatted(compact: true)
-                                #else
-                                let creationDateText = creationDate.twnk_formatted(compact: false)
-                                #endif
-
-                                Text(verbatim: creationDateText)
+                                DateText(date: creationDate)
                             } else {
                                 Text(verbatim: userDetail.objectID.description)
                             }
