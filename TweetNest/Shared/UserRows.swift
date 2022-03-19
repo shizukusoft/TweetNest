@@ -112,6 +112,7 @@ struct UserRows<Icon: View>: View {
                         NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
                         NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
                     ]
+                    fetchRequest.relationshipKeyPathsForPrefetching = ["user"]
 
                     return fetchRequest
                 }(),
