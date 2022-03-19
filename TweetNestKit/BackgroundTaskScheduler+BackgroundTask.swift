@@ -29,7 +29,7 @@ extension BackgroundTaskScheduler {
                     expirationHandler()
                 }
 
-                backgroundTask.setTaskCompleted(success: await backgroundRefresh())
+                backgroundTask.setTaskCompleted(success: await self.backgroundRefresh())
             }
         }
     }
@@ -44,7 +44,7 @@ extension BackgroundTaskScheduler {
                     expirationHandler()
                 }
 
-                backgroundTask.setTaskCompleted(success: await backgroundDataCleansing())
+                backgroundTask.setTaskCompleted(success: await self.backgroundDataCleansing())
             }
 
         }
