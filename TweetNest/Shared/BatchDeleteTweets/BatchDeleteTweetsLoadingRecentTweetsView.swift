@@ -11,7 +11,6 @@ import TweetNestKit
 import Twitter
 
 struct BatchDeleteTweetsLoadingRecentTweetsView: View {
-    @Environment(\.session) private var session: TweetNestKit.Session
     @Environment(\.account) private var account: TweetNestKit.Account?
 
     @Binding var sourceTweets: OrderedDictionary<Tweet.ID, Tweet>?
@@ -29,7 +28,7 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
         get async throws {
             guard let account = account else { return nil }
 
-            return try await .session(for: account, session: session)
+            return try await .session(for: account, session: TweetNestApp.session)
         }
     }
 

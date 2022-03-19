@@ -18,7 +18,6 @@ struct MainView: View {
     @EnvironmentObject private var appDelegate: TweetNestAppDelegate
 
     @Environment(\.managedObjectContext) private var viewContext
-    @Environment(\.session) private var session: Session
 
     @State private var isPersistentContainerLoaded: Bool = false
 

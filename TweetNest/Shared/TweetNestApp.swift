@@ -19,8 +19,22 @@ typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 
 @main
 struct TweetNestApp: App {
+    #if DEBUG
     static var isPreview: Bool {
-        CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview")
+        CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+    }
+    #endif
+
+    static var session: Session {
+        #if DEBUG
+        if isPreview {
+            return Session.preview
+        } else {
+            return Session.shared
+        }
+        #else
+        return Session.shared
+        #endif
     }
 
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
@@ -35,7 +49,6 @@ struct TweetNestApp: App {
             WindowGroup {
                 MainView()
                     .environmentObject(delegate)
-                    .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
             }
             #if os(iOS) || os(macOS)

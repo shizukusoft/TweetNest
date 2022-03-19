@@ -20,8 +20,6 @@ enum AppSidebarNavigationItem: Hashable {
 }
 
 struct AppSidebarNavigation: View {
-    @Environment(\.session) private var session: Session
-
     @State private var disposables = Set<AnyCancellable>()
 
     @State private var persistentContainerCloudKitEvents: [PersistentContainer.CloudKitEvent] = []
@@ -34,6 +32,17 @@ struct AppSidebarNavigation: View {
     #if os(iOS)
     @State private var showSettings: Bool = false
     #endif
+
+    @State private var navigationItemSelection: AppSidebarNavigationItem?
+
+    @StateObject private var accountsFetchedResultsController = FetchedResultsController<Account>(
+        sortDescriptors: [
+            SortDescriptor(\.preferringSortOrder, order: .forward),
+            SortDescriptor(\.creationDate, order: .reverse),
+        ],
+        managedObjectContext: TweetNestApp.session.persistentContainer.viewContext,
+        cacheName: "Accounts"
+    )
 
     @State private var webAuthenticationSession: ASWebAuthenticationSession?
     @State private var isAddingAccount: Bool = false
@@ -83,9 +92,13 @@ struct AppSidebarNavigation: View {
     var body: some View {
         NavigationView {
             ZStack {
+                let accounts = isPersistentContainerLoaded ? accountsFetchedResultsController.fetchedObjects : []
+
                 List {
                     if isPersistentContainerLoaded {
-                        AppSidebarNavigationAccountsRowContent()
+                        ForEach(accounts) { account in
+                            AppSidebarAccountsSection(account: account, navigationItemSelection: $navigationItemSelection)
+                        }
                     }
 
                     #if os(watchOS)
@@ -109,6 +122,7 @@ struct AppSidebarNavigation: View {
                 #if os(macOS)
                 .frame(minWidth: 182)
                 #endif
+                .animation(.default, value: accounts)
 
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
@@ -116,7 +130,7 @@ struct AppSidebarNavigation: View {
                 }
             }
             .onAppear {
-                session.persistentContainer.$cloudKitEvents
+                TweetNestApp.session.persistentContainer.$cloudKitEvents
                     .map { $0.map { $0.value } }
                     .receive(on: DispatchQueue.main)
                     .assign(to: \.persistentContainerCloudKitEvents, on: self)
@@ -230,13 +244,22 @@ struct AppSidebarNavigation: View {
         Task {
             do {
                 defer {
-                    withAnimation {
-                        webAuthenticationSession = nil
-                        isAddingAccount = false
+                    Task {
+                        await MainActor.run {
+                            withAnimation {
+                                webAuthenticationSession = nil
+                                isAddingAccount = false
+                            }
+                        }
                     }
+// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
+//                    withAnimation {
+//                        webAuthenticationSession = nil
+//                        isAddingAccount = false
+//                    }
                 }
 
-                try await session.authorizeNewAccount { webAuthenticationSession in
+                try await TweetNestApp.session.authorizeNewAccount { webAuthenticationSession in
                     webAuthenticationSession.prefersEphemeralWebBrowserSession = true
 
                     self.webAuthenticationSession = webAuthenticationSession
@@ -262,12 +285,18 @@ struct AppSidebarNavigation: View {
 
             isRefreshing = true
             defer {
-                isRefreshing = false
+                Task {
+                    await MainActor.run {
+                        isRefreshing = false
+                    }
+                }
+// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
+//                isRefreshing = false
             }
 
             do {
-                let hasChanges = try await session.updateAllAccounts()
-                try await session.cleansingAllData()
+                let hasChanges = try await TweetNestApp.session.updateAllAccounts()
+                try await TweetNestApp.session.cleansingAllData()
 
                 for hasChanges in hasChanges {
                     _ = try hasChanges.1.get()
@@ -285,7 +314,6 @@ struct AppSidebarNavigation: View {
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
         AppSidebarNavigation(isPersistentContainerLoaded: .constant(true))
-            .environment(\.session, Session.preview)
             .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }
 }
