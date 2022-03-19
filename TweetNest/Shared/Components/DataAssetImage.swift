@@ -14,7 +14,7 @@ struct DataAssetImage: View {
     let url: URL?
     let isExportable: Bool
 
-    @FetchRequest private var dataAssets: FetchedResults<TweetNestKit.DataAsset>
+    @StateObject private var dataAssetsFetchedResultsController: FetchedResultsController<TweetNestKit.DataAsset>
 
     private let operaionQueue: OperationQueue = {
         let operationQueue = OperationQueue()
@@ -34,6 +34,8 @@ struct DataAssetImage: View {
     @State private var isDetailProfileImagePresented: Bool = false
 
     var body: some View {
+        let dataAsset = dataAssetsFetchedResultsController.fetchedObjects.first
+
         Group {
             if let cgImage = cgImage {
                 image(for: cgImage)
@@ -41,11 +43,11 @@ struct DataAssetImage: View {
                 Color.gray
             }
         }
-        .onChange(of: dataAssets.first?.data) { newValue in
+        .onChange(of: dataAsset?.data) { newValue in
             updateImage(data: newValue)
         }
         .onAppear {
-            updateImage(data: dataAssets.first?.data)
+            updateImage(data: dataAsset?.data)
         }
         .onDisappear {
             operaionQueue.cancelAllOperations()
@@ -144,14 +146,16 @@ struct DataAssetImage: View {
         fetchRequest.propertiesToFetch = ["data"]
         fetchRequest.fetchLimit = 1
 
-        self._dataAssets = FetchRequest(
-            fetchRequest: fetchRequest,
-            animation: .default
+        self._dataAssetsFetchedResultsController = StateObject(
+            wrappedValue: FetchedResultsController(
+                fetchRequest: fetchRequest,
+                managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
+            )
         )
     }
 
     private func updateImage(data: Data?) {
-        let dataAsset = dataAssets.first
+        let dataAsset = dataAssetsFetchedResultsController.fetchedObjects.first
 
         let data = dataAsset?.data
         let dataMIMEType = dataAsset?.dataMIMEType

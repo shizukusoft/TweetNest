@@ -40,7 +40,8 @@ struct AppSidebarNavigation: View {
             SortDescriptor(\.preferringSortOrder, order: .forward),
             SortDescriptor(\.creationDate, order: .reverse),
         ],
-        managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
+        managedObjectContext: TweetNestApp.session.persistentContainer.viewContext,
+        cacheName: "Accounts"
     )
 
     @State private var webAuthenticationSession: ASWebAuthenticationSession?
@@ -91,9 +92,11 @@ struct AppSidebarNavigation: View {
     var body: some View {
         NavigationView {
             ZStack {
+                let accounts = isPersistentContainerLoaded ? accountsFetchedResultsController.fetchedObjects : []
+
                 List {
                     if isPersistentContainerLoaded {
-                        ForEach(accountsFetchedResultsController.fetchedObjects) { account in
+                        ForEach(accounts) { account in
                             AppSidebarAccountsSection(account: account, navigationItemSelection: $navigationItemSelection)
                         }
                     }
@@ -119,7 +122,7 @@ struct AppSidebarNavigation: View {
                 #if os(macOS)
                 .frame(minWidth: 182)
                 #endif
-                .animation(.spring(), value: accountsFetchedResultsController.fetchedObjects)
+                .animation(.default, value: accounts)
 
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)

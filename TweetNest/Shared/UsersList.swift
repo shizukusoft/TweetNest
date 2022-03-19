@@ -15,8 +15,8 @@ struct UsersList: View {
     @State private var searchQuery: String = ""
 
     var body: some View {
-        List(userIDs, id: \.self) { userID in
-            UserRow(userID: userID, searchQuery: searchQuery)
+        List {
+            UserRows(userIDs: userIDs, searchQuery: $searchQuery)
         }
         .searchable(text: $searchQuery)
     }

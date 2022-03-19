@@ -89,6 +89,9 @@
 		1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
 		1951EBEC270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
 		1951EBED270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
+		195392C127E636130042B1CA /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195392C027E636130042B1CA /* UserRows.swift */; };
+		195392C227E636130042B1CA /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195392C027E636130042B1CA /* UserRows.swift */; };
+		195392C327E636130042B1CA /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195392C027E636130042B1CA /* UserRows.swift */; };
 		195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */; };
 		195DD4B026BEE7EC008F0309 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 195DD4B226BEE7EC008F0309 /* Localizable.strings */; };
 		195DD4BA26BEF09D008F0309 /* DataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4B826BEF09D008F0309 /* DataAsset.swift */; };
@@ -100,9 +103,6 @@
 		195DD4C826BFD32E008F0309 /* Array+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */; };
 		195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */; };
 		195E783E26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */; };
-		196CD87626FC0EFF00D62B74 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196CD87526FC0EFF00D62B74 /* UserRow.swift */; };
-		196CD87726FC0EFF00D62B74 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196CD87526FC0EFF00D62B74 /* UserRow.swift */; };
-		196CD87826FC0EFF00D62B74 /* UserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196CD87526FC0EFF00D62B74 /* UserRow.swift */; };
 		1970663B26E7043500D7F21D /* SettingsGeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663A26E7043500D7F21D /* SettingsGeneralView.swift */; };
 		1970663C26E7043500D7F21D /* SettingsGeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663A26E7043500D7F21D /* SettingsGeneralView.swift */; };
 		1970663D26E7043500D7F21D /* SettingsGeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663A26E7043500D7F21D /* SettingsGeneralView.swift */; };
@@ -407,6 +407,7 @@
 		1946203C26D68F0E003DB010 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSection.swift; sourceTree = "<group>"; };
 		1951EBEA270850FC00311B3C /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
+		195392C027E636130042B1CA /* UserRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRows.swift; sourceTree = "<group>"; };
 		195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKitUserDefaults.swift; sourceTree = "<group>"; };
 		195DD4B326BEE7ED008F0309 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		195DD4B826BEF09D008F0309 /* DataAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAsset.swift; sourceTree = "<group>"; };
@@ -416,7 +417,6 @@
 		195DD4C726BFD32E008F0309 /* Array+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+TweetNestKit.swift"; sourceTree = "<group>"; };
 		195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionConfiguration+TweetNestKit.swift"; sourceTree = "<group>"; };
 		195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
-		196CD87526FC0EFF00D62B74 /* UserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRow.swift; sourceTree = "<group>"; };
 		1970663A26E7043500D7F21D /* SettingsGeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGeneralView.swift; sourceTree = "<group>"; };
 		1970663E26E709FE00D7F21D /* AccountLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLabel.swift; sourceTree = "<group>"; };
 		19718875270022BB000840C7 /* Date+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TweetNestKit.swift"; sourceTree = "<group>"; };
@@ -820,7 +820,7 @@
 				19DA23D026B98767002436DC /* UserDetailProfileView.swift */,
 				190D12F126B682C20090E474 /* UsersList.swift */,
 				19EE473126C144A2007D2814 /* UsersDiffList.swift */,
-				196CD87526FC0EFF00D62B74 /* UserRow.swift */,
+				195392C027E636130042B1CA /* UserRows.swift */,
 				19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */,
 				199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */,
 				19D60700270BECCB0070125E /* DateText.swift */,
@@ -1464,7 +1464,7 @@
 				19DB9E4C27084E96000E5FA2 /* PDFView.swift in Sources */,
 				19B3130426E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
 				1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */,
-				196CD87626FC0EFF00D62B74 /* UserRow.swift in Sources */,
+				195392C127E636130042B1CA /* UserRows.swift in Sources */,
 				19C12F8826D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				192F008426FC2596000EC734 /* UserView+ProfileView.swift in Sources */,
 				1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */,
@@ -1511,7 +1511,6 @@
 				199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */,
 				1989B75726BA537900755B1E /* UserDetailView.swift in Sources */,
 				192F008926FC270B000EC734 /* UserView+AllDataView.swift in Sources */,
-				196CD87726FC0EFF00D62B74 /* UserRow.swift in Sources */,
 				193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */,
 				194EF57F26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */,
 				19BE3E95270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */,
@@ -1537,6 +1536,7 @@
 				1970663C26E7043500D7F21D /* SettingsGeneralView.swift in Sources */,
 				1908FC0E26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift in Sources */,
 				19C4655326F41A5800516C00 /* TweetNestAppDelegate+Preview.swift in Sources */,
+				195392C227E636130042B1CA /* UserRows.swift in Sources */,
 				19B3130526E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
 				1970664026E709FE00D7F21D /* AccountLabel.swift in Sources */,
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
@@ -1573,6 +1573,7 @@
 				19FB868827E5D10C00AAC5CB /* SectionedFetchedResultsController.swift in Sources */,
 				19DB9E4E27084E96000E5FA2 /* PDFView.swift in Sources */,
 				1908FC0726F6EFFD0095AF77 /* BatchDeleteTweetsLoadingTwitterArchiveView.swift in Sources */,
+				195392C327E636130042B1CA /* UserRows.swift in Sources */,
 				1908FC0B26F6F1D90095AF77 /* BatchDeleteTweetsFormView.swift in Sources */,
 				19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */,
 				192F008A26FC270B000EC734 /* UserView+AllDataView.swift in Sources */,
@@ -1580,7 +1581,6 @@
 				19EABBCC26D6877600D3B003 /* TweetNestAppDelegate.swift in Sources */,
 				19B3130626E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
 				19EABBCD26D6877600D3B003 /* MainView.swift in Sources */,
-				196CD87826FC0EFF00D62B74 /* UserRow.swift in Sources */,
 				19EABBDF26D6878400D3B003 /* URL.swift in Sources */,
 				19EABBE026D6878400D3B003 /* Session.swift in Sources */,
 				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,

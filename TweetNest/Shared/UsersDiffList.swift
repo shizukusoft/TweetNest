@@ -10,7 +10,7 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffList: View {
-    @FetchRequest private var userDetails: FetchedResults<UserDetail>
+    @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<UserDetail>
 
     let title: LocalizedStringKey
     let diffKeyPath: KeyPath<UserDetail, [String]?>
@@ -18,6 +18,8 @@ struct UsersDiffList: View {
     @State private var searchQuery: String = ""
 
     @ViewBuilder private var usersDiffList: some View {
+        let userDetails = userDetailsFetchedResultsController.fetchedObjects
+
         List(userDetails) { userDetail in
             let userDetailIndex = userDetails.firstIndex(of: userDetail)
             let previousUserDetailIndex = userDetailIndex.flatMap { $0 + 1 }
@@ -31,18 +33,14 @@ struct UsersDiffList: View {
 
             if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
                 Section {
-                    ForEach(appendedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery) {
-                            Image(systemName: "person.badge.plus")
-                                .foregroundColor(.green)
-                        }
+                    UserRows(userIDs: appendedUserIDs, searchQuery: $searchQuery) {
+                        Image(systemName: "person.badge.plus")
+                            .foregroundColor(.green)
                     }
 
-                    ForEach(removedUserIDs, id: \.self) { userID in
-                        UserRow(userID: userID, searchQuery: searchQuery) {
-                            Image(systemName: "person.badge.minus")
-                                .foregroundColor(.red)
-                        }
+                    UserRows(userIDs: removedUserIDs, searchQuery: $searchQuery) {
+                        Image(systemName: "person.badge.minus")
+                            .foregroundColor(.red)
                     }
                 } header: {
                     HStack {
@@ -91,24 +89,28 @@ struct UsersDiffList: View {
     }
 
     init(_ title: LocalizedStringKey, user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>) {
-        self._userDetails = FetchRequest(
-            fetchRequest: {
-                let fetchRequest = UserDetail.fetchRequest()
-                fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-                    user.flatMap { NSPredicate(format: "user == %@", $0.objectID) } ?? NSPredicate(value: false),
-                    diffKeyPath._kvcKeyPathString.flatMap { NSPredicate(format: "%K != NULL", $0) },
-                ].compactMap({ $0 }))
-                fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
-                ]
-                if let keyPathString = diffKeyPath._kvcKeyPathString {
-                    fetchRequest.propertiesToFetch = ["creationDate", keyPathString]
-                } else {
-                    fetchRequest.returnsObjectsAsFaults = false
-                }
+        self._userDetailsFetchedResultsController = StateObject(
+            wrappedValue: FetchedResultsController<UserDetail>(
+                fetchRequest: {
+                    let fetchRequest = UserDetail.fetchRequest()
+                    fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
+                        user.flatMap { NSPredicate(format: "user == %@", $0.objectID) } ?? NSPredicate(value: false),
+                        diffKeyPath._kvcKeyPathString.flatMap { NSPredicate(format: "%K != NULL", $0) },
+                    ].compactMap({ $0 }))
+                    fetchRequest.sortDescriptors = [
+                        NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                    ]
+                    if let keyPathString = diffKeyPath._kvcKeyPathString {
+                        fetchRequest.propertiesToFetch = ["creationDate", keyPathString]
+                    } else {
+                        fetchRequest.returnsObjectsAsFaults = false
+                    }
 
-                return fetchRequest
-            }()
+                    return fetchRequest
+                }(),
+                managedObjectContext: TweetNestApp.session.persistentContainer.viewContext,
+                cacheName: ["UserDetails", user?.id, diffKeyPath._kvcKeyPathString].compactMap { $0 }.joined(separator: "-")
+            )
         )
 
         self.title = title

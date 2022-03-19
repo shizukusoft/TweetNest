@@ -7,14 +7,11 @@
 
 import SwiftUI
 import CoreData
+import OrderedCollections
 import UnifiedLogging
 
 class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDelegate where Element: NSManagedObject {
-    private lazy var fetchedResultsController: NSFetchedResultsController<Element> = newFetchedResultsController() {
-        willSet {
-            objectWillChange.send()
-        }
-    }
+    private lazy var fetchedResultsController: NSFetchedResultsController<Element> = newFetchedResultsController()
 
     private let errorHandler: (@Sendable (Error) -> Void)?
 
@@ -30,8 +27,20 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         }
     }
 
-    var fetchedObjects: [Element] {
-        fetchedResultsController.fetchedObjects ?? []
+    var fetchedObjects: OrderedSet<Element> {
+        if fetchedResultsController.fetchedObjects == nil {
+            managedObjectContext.performAndWait {
+                do {
+                    self.objectWillChange.send()
+                    try self.fetchedResultsController.performFetch()
+                } catch {
+                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+                    self.errorHandler?(error)
+                }
+            }
+        }
+
+        return OrderedSet<Element>(fetchedResultsController.fetchedObjects ?? [])
     }
 
     init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
@@ -66,19 +75,6 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         )
 
         fetchedResultsController.delegate = self
-
-        managedObjectContext.perform {
-            do {
-                if fetchedResultsController.fetchedObjects == nil {
-                    self.objectWillChange.send()
-
-                    try fetchedResultsController.performFetch()
-                }
-            } catch {
-                Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-                self.errorHandler?(error)
-            }
-        }
 
         return fetchedResultsController
     }
