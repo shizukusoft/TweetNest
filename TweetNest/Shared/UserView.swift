@@ -331,11 +331,11 @@ extension UserView {
     @Sendable
     private func refresh() async {
         await withExtendedBackgroundExecution {
-            guard await isRefreshing == false else {
+            guard isRefreshing == false else {
                 return
             }
 
-            await startRefreshing()
+            startRefreshing()
             defer {
                 Task {
                     await endRefreshing()
@@ -343,18 +343,18 @@ extension UserView {
             }
 
             do {
-                guard let accountObjectID = await accountObjectID else {
+                guard let accountObjectID = accountObjectID else {
                     return
                 }
 
-                if await isUserContainsAccount {
+                if isUserContainsAccount {
                     try await session.updateAccount(accountObjectID)
                 } else {
                     _ = try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                await presentError(error: TweetNestError(error))
+                presentError(error: TweetNestError(error))
             }
         }
     }
