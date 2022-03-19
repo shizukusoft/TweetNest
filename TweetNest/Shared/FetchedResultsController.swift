@@ -7,22 +7,76 @@
 
 import SwiftUI
 import CoreData
+import UnifiedLogging
 
-class FetchedResultsController<FetchedResultsController, ResultType>: NSObject, NSFetchedResultsControllerDelegate where ResultType: NSFetchRequestResult, FetchedResultsController: NSFetchedResultsController<ResultType> {
-    private let nsFetchedResultsController: FetchedResultsController
-
-    private var fetchedObjects: [ResultType] {
-        nsFetchedResultsController.fetchedObjects ?? []
+class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDelegate where Element: NSManagedObject {
+    private lazy var fetchedResultsController: NSFetchedResultsController<Element> = newFetchedResultsController() {
+        willSet {
+            objectWillChange.send()
+        }
     }
 
-    convenience init(_ nsFetchedResultsController: FetchedResultsController) throws {
-        try self.init(nsFetchedResultsController: nsFetchedResultsController)
+    private let errorHandler: ((Error) -> Void)?
+
+    let managedObjectContext: NSManagedObjectContext
+    var fetchRequest: NSFetchRequest<Element> {
+        didSet {
+            fetchedResultsController = newFetchedResultsController()
+        }
+    }
+    var cacheName: String? {
+        didSet {
+            fetchedResultsController = newFetchedResultsController()
+        }
     }
 
-    init(nsFetchedResultsController: FetchedResultsController) throws {
-        self.nsFetchedResultsController = nsFetchedResultsController
+    var fetchedObjects: [Element]? {
+        fetchedResultsController.fetchedObjects
+    }
 
-        try nsFetchedResultsController.performFetch()
+    init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: ((Error) -> Void)? = nil) {
+        self.fetchRequest = fetchRequest
+        self.managedObjectContext = managedObjectContext
+        self.cacheName = cacheName
+        self.errorHandler = errorHandler
+    }
+
+    convenience init(sortDescriptors: [SortDescriptor<Element>], predicate: NSPredicate? = nil, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: ((Error) -> Void)? = nil) {
+        self.init(
+            fetchRequest: {
+                let fetchRequest = NSFetchRequest<Element>()
+                fetchRequest.entity = Element.entity()
+                fetchRequest.sortDescriptors = sortDescriptors.map { NSSortDescriptor($0) }
+                fetchRequest.predicate = predicate
+
+                return fetchRequest
+            }(),
+            managedObjectContext: managedObjectContext,
+            cacheName: cacheName,
+            onError: errorHandler
+        )
+    }
+
+    private func newFetchedResultsController() -> NSFetchedResultsController<Element> {
+        let fetchedResultsController = NSFetchedResultsController(
+            fetchRequest: fetchRequest,
+            managedObjectContext: managedObjectContext,
+            sectionNameKeyPath: nil,
+            cacheName: cacheName
+        )
+
+        fetchedResultsController.delegate = self
+
+        do {
+            if fetchedResultsController.fetchedObjects == nil {
+                try fetchedResultsController.performFetch()
+            }
+        } catch {
+            Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+            self.errorHandler?(error)
+        }
+
+        return fetchedResultsController
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -32,19 +86,18 @@ class FetchedResultsController<FetchedResultsController, ResultType>: NSObject, 
 
 extension FetchedResultsController: RandomAccessCollection {
     typealias Index = Int
-    typealias Element = ResultType
 
-    var startIndex: Index { fetchedObjects.startIndex }
-    var endIndex: Index { fetchedObjects.endIndex }
+    var startIndex: Index { (fetchedObjects ?? []).startIndex }
+    var endIndex: Index { (fetchedObjects ?? []).endIndex }
 
     subscript(position: Index) -> Element {
         get {
-            fetchedObjects[position]
+            (fetchedObjects ?? [])[position]
         }
     }
 
     func index(after i: Index) -> Index {
-        fetchedObjects.index(after: i)
+        (fetchedObjects ?? []).index(after: i)
     }
 }
 
