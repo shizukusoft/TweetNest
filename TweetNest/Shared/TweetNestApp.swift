@@ -60,7 +60,6 @@ struct TweetNestApp: App {
             #if os(macOS)
             Settings {
                 SettingsMainView()
-                    .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
             }
             #elseif os(watchOS)
