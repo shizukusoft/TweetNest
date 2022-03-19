@@ -223,6 +223,9 @@
 		19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */; };
 		19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117826DD28A1004D6DE3 /* Session+Credential.swift */; };
 		19F1117B26DD28DB004D6DE3 /* Session+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117A26DD28DB004D6DE3 /* Session+URL.swift */; };
+		19FB868227E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
+		19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
+		19FB868427E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
 		66002D6E26BF896F00B52E30 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D6C26BF896F00B52E30 /* InfoPlist.strings */; };
 		66002D7126BF897000B52E30 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D6F26BF897000B52E30 /* Localizable.strings */; };
 		66002D7426BF897000B52E30 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D7226BF897000B52E30 /* InfoPlist.strings */; };
@@ -497,6 +500,7 @@
 		19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		19F1117826DD28A1004D6DE3 /* Session+Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
 		19F1117A26DD28DB004D6DE3 /* Session+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+URL.swift"; sourceTree = "<group>"; };
+		19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
 		66002D6D26BF896F00B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		66002D7026BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		66002D7326BF897000B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -826,6 +830,7 @@
 				192DBDCF26D8755E0096AB54 /* SessionEnvironmentKey.swift */,
 				199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */,
 				19D60700270BECCB0070125E /* DateText.swift */,
+				19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */,
 				19DB9E4A27084E5C000E5FA2 /* Components */,
 				1908FBFB26F6EE020095AF77 /* BatchDeleteTweets */,
 				193AFB6726CA33D3008BFF67 /* Settings */,
@@ -1485,6 +1490,7 @@
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
 				1908FC0926F6F1D90095AF77 /* BatchDeleteTweetsFormView.swift in Sources */,
 				192DBDD026D8755E0096AB54 /* SessionEnvironmentKey.swift in Sources */,
+				19FB868227E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
 				193659AF260978F900865D40 /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1520,6 +1526,7 @@
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
 				19DB9E4D27084E96000E5FA2 /* PDFView.swift in Sources */,
 				193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
+				19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
 				192F008526FC2596000EC734 /* UserView+ProfileView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
@@ -1563,6 +1570,7 @@
 				19EABBC626D6877600D3B003 /* TweetNestApp.swift in Sources */,
 				19C4655426F41A5800516C00 /* TweetNestAppDelegate+Preview.swift in Sources */,
 				19EABBDA26D6877A00D3B003 /* SettingsAccountView.swift in Sources */,
+				19FB868427E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
 				19EABBD626D6877600D3B003 /* DataAssetImage.swift in Sources */,
 				19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */,
 				19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */,
