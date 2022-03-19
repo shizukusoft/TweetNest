@@ -20,8 +20,6 @@ enum AppSidebarNavigationItem: Hashable {
 }
 
 struct AppSidebarNavigation: View {
-    @Environment(\.session) private var session: Session
-
     @State private var disposables = Set<AnyCancellable>()
 
     @State private var persistentContainerCloudKitEvents: [PersistentContainer.CloudKitEvent] = []
@@ -129,7 +127,7 @@ struct AppSidebarNavigation: View {
                 }
             }
             .onAppear {
-                session.persistentContainer.$cloudKitEvents
+                TweetNestApp.session.persistentContainer.$cloudKitEvents
                     .map { $0.map { $0.value } }
                     .receive(on: DispatchQueue.main)
                     .assign(to: \.persistentContainerCloudKitEvents, on: self)
@@ -258,7 +256,7 @@ struct AppSidebarNavigation: View {
 //                    }
                 }
 
-                try await session.authorizeNewAccount { webAuthenticationSession in
+                try await TweetNestApp.session.authorizeNewAccount { webAuthenticationSession in
                     webAuthenticationSession.prefersEphemeralWebBrowserSession = true
 
                     self.webAuthenticationSession = webAuthenticationSession
@@ -294,8 +292,8 @@ struct AppSidebarNavigation: View {
             }
 
             do {
-                let hasChanges = try await session.updateAllAccounts()
-                try await session.cleansingAllData()
+                let hasChanges = try await TweetNestApp.session.updateAllAccounts()
+                try await TweetNestApp.session.cleansingAllData()
 
                 for hasChanges in hasChanges {
                     _ = try hasChanges.1.get()
@@ -313,7 +311,6 @@ struct AppSidebarNavigation: View {
 struct AppSidebarNavigation_Previews: PreviewProvider {
     static var previews: some View {
         AppSidebarNavigation(isPersistentContainerLoaded: .constant(true))
-            .environment(\.session, Session.preview)
             .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }
 }

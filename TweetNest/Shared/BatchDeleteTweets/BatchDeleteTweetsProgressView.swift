@@ -12,7 +12,6 @@ import TweetNestKit
 import Twitter
 
 struct BatchDeleteTweetsProgressView: View {
-    @Environment(\.session) private var session: TweetNestKit.Session
     @Environment(\.account) private var account: TweetNestKit.Account?
 
     let targetTweets: OrderedDictionary<Tweet.ID, Tweet>
@@ -99,7 +98,7 @@ struct BatchDeleteTweetsProgressView: View {
                     for (offset, targetTweetID) in targetTweets.keys.enumerated() {
                         taskGroup.addTask {
                             do {
-                                try await Tweet.delete(targetTweetID, session: .session(for: account, session: session))
+                                try await Tweet.delete(targetTweetID, session: .session(for: account, session: TweetNestApp.session))
                                 return (offset, .success(()))
                             } catch {
                                 return (offset, .failure(error))

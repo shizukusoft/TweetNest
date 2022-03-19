@@ -17,7 +17,6 @@ struct UserView: View {
         return Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
     }
 
-    @Environment(\.session) private var session: Session
     @Environment(\.account) var account: Account?
 
     @FetchRequest private var users: FetchedResults<User>
@@ -348,9 +347,9 @@ extension UserView {
                 }
 
                 if isUserContainsAccount {
-                    try await session.updateAccount(accountObjectID)
+                    try await TweetNestApp.session.updateAccount(accountObjectID)
                 } else {
-                    _ = try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
+                    _ = try await TweetNestApp.session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")

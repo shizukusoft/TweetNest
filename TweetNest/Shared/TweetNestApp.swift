@@ -47,7 +47,6 @@ struct TweetNestApp: App {
             WindowGroup {
                 MainView()
                     .environmentObject(delegate)
-                    .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
             }
             #if os(iOS) || os(macOS)
