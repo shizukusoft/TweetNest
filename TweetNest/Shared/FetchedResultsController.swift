@@ -16,7 +16,7 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         }
     }
 
-    private let errorHandler: ((Error) -> Void)?
+    private let errorHandler: (@Sendable (Error) -> Void)?
 
     let managedObjectContext: NSManagedObjectContext
     var fetchRequest: NSFetchRequest<Element> {
@@ -30,18 +30,18 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         }
     }
 
-    var fetchedObjects: [Element]? {
-        fetchedResultsController.fetchedObjects
+    var fetchedObjects: [Element] {
+        fetchedResultsController.fetchedObjects ?? []
     }
 
-    init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: ((Error) -> Void)? = nil) {
+    init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
         self.fetchRequest = fetchRequest
         self.managedObjectContext = managedObjectContext
         self.cacheName = cacheName
         self.errorHandler = errorHandler
     }
 
-    convenience init(sortDescriptors: [SortDescriptor<Element>], predicate: NSPredicate? = nil, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: ((Error) -> Void)? = nil) {
+    convenience init(sortDescriptors: [SortDescriptor<Element>], predicate: NSPredicate? = nil, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
         self.init(
             fetchRequest: {
                 let fetchRequest = NSFetchRequest<Element>()
@@ -67,13 +67,17 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
 
         fetchedResultsController.delegate = self
 
-        do {
-            if fetchedResultsController.fetchedObjects == nil {
-                try fetchedResultsController.performFetch()
+        managedObjectContext.perform {
+            do {
+                if fetchedResultsController.fetchedObjects == nil {
+                    self.objectWillChange.send()
+
+                    try fetchedResultsController.performFetch()
+                }
+            } catch {
+                Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+                self.errorHandler?(error)
             }
-        } catch {
-            Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-            self.errorHandler?(error)
         }
 
         return fetchedResultsController
@@ -81,23 +85,6 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         objectWillChange.send()
-    }
-}
-
-extension FetchedResultsController: RandomAccessCollection {
-    typealias Index = Int
-
-    var startIndex: Index { (fetchedObjects ?? []).startIndex }
-    var endIndex: Index { (fetchedObjects ?? []).endIndex }
-
-    subscript(position: Index) -> Element {
-        get {
-            (fetchedObjects ?? [])[position]
-        }
-    }
-
-    func index(after i: Index) -> Index {
-        (fetchedObjects ?? []).index(after: i)
     }
 }
 

@@ -23,6 +23,18 @@ struct TweetNestApp: App {
         CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview")
     }
 
+    static var session: Session {
+        #if DEBUG
+        if isPreview {
+            return Session.preview
+        } else {
+            return Session.shared
+        }
+        #else
+        return Session.shared
+        #endif
+    }
+
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
 

@@ -35,6 +35,16 @@ struct AppSidebarNavigation: View {
     @State private var showSettings: Bool = false
     #endif
 
+    @State private var navigationItemSelection: AppSidebarNavigationItem?
+
+    @StateObject private var accountsFetchedResultsController = FetchedResultsController<Account>(
+        sortDescriptors: [
+            SortDescriptor(\.preferringSortOrder, order: .forward),
+            SortDescriptor(\.creationDate, order: .reverse),
+        ],
+        managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
+    )
+
     @State private var webAuthenticationSession: ASWebAuthenticationSession?
     @State private var isAddingAccount: Bool = false
 
@@ -85,7 +95,9 @@ struct AppSidebarNavigation: View {
             ZStack {
                 List {
                     if isPersistentContainerLoaded {
-                        AppSidebarNavigationAccountsRowContent()
+                        ForEach(accountsFetchedResultsController.fetchedObjects) { account in
+                            AppSidebarAccountsSection(account: account, navigationItemSelection: $navigationItemSelection)
+                        }
                     }
 
                     #if os(watchOS)
@@ -109,6 +121,7 @@ struct AppSidebarNavigation: View {
                 #if os(macOS)
                 .frame(minWidth: 182)
                 #endif
+                .animation(.spring(), value: accountsFetchedResultsController.fetchedObjects)
 
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
@@ -230,10 +243,19 @@ struct AppSidebarNavigation: View {
         Task {
             do {
                 defer {
-                    withAnimation {
-                        webAuthenticationSession = nil
-                        isAddingAccount = false
+                    Task {
+                        await MainActor.run {
+                            withAnimation {
+                                webAuthenticationSession = nil
+                                isAddingAccount = false
+                            }
+                        }
                     }
+// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
+//                    withAnimation {
+//                        webAuthenticationSession = nil
+//                        isAddingAccount = false
+//                    }
                 }
 
                 try await session.authorizeNewAccount { webAuthenticationSession in
@@ -262,7 +284,13 @@ struct AppSidebarNavigation: View {
 
             isRefreshing = true
             defer {
-                isRefreshing = false
+                Task {
+                    await MainActor.run {
+                        isRefreshing = false
+                    }
+                }
+// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
+//                isRefreshing = false
             }
 
             do {
