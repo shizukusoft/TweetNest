@@ -16,33 +16,30 @@ struct UserRowsLabel: View {
     var body: some View {
         let latestUserDetail = latestUserDetailsFetchedResultsController.fetchedObjects.first
 
-        Label {
-            if let latestUserDetail = latestUserDetail {
-                TweetNestStack {
-                    Text(verbatim: latestUserDetail.name ?? userID.displayUserID)
-                        .lineLimit(1)
+        let name = latestUserDetail?.name ?? userID.displayUserID
 
-                    if let username = latestUserDetail.username {
-                        Text(verbatim: "@\(username)")
-                            .lineLimit(1)
-                            .layoutPriority(1)
-                            .foregroundColor(Color.gray)
-                    }
-                }
-            } else {
-                Text(verbatim: userID.displayUserID)
+        Label {
+            TweetNestStack {
+                Text(verbatim: name)
                     .lineLimit(1)
+
+                if latestUserDetail?.name != nil, let username = latestUserDetail?.username {
+                    Text(verbatim: "@\(username)")
+                        .lineLimit(1)
+                        .layoutPriority(1)
+                        .foregroundColor(Color.gray)
+                }
             }
         } icon: {
-            if let latestUserDetail = latestUserDetail {
-                ProfileImage(profileImageURL: latestUserDetail.profileImageURL)
+            if let profileImageURL = latestUserDetail?.profileImageURL {
+                ProfileImage(profileImageURL: profileImageURL)
                     .frame(width: 24, height: 24)
             }
         }
         #if os(watchOS)
         .labelStyle(.titleOnly)
         #endif
-        .accessibilityLabel(Text(verbatim: latestUserDetail?.name ?? userID.displayUserID))
+        .accessibilityLabel(Text(verbatim: name))
     }
 
     init(userID: String) {
@@ -54,7 +51,6 @@ struct UserRowsLabel: View {
                     let fetchRequest = UserDetail.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
                     fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
                         NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
                     ]
                     fetchRequest.fetchLimit = 1
