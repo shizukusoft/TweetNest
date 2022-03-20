@@ -57,6 +57,7 @@ struct UserRowsLabel: View {
                         NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
                         NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
                     ]
+                    fetchRequest.fetchLimit = 1
                     fetchRequest.returnsObjectsAsFaults = false
 
                     return fetchRequest
