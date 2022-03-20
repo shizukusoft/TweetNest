@@ -219,7 +219,7 @@ struct DataAssetImage: View {
                 }
                 .sheet(isPresented: $isDetailProfileImagePresented) {
                     #if os(macOS)
-                    DetailImageView(imageData: data, image: cgImage, imageScale: imageInfo.cgImageScal ?? 1.0, filename: filename)
+                    DetailImageView(imageData: data, image: cgImage, imageScale: imageInfo.cgImageScale ?? 1.0, filename: filename)
                         .frame(minWidth: 120, idealWidth: 410, minHeight: 120, idealHeight: 410)
                     #else
                     NavigationView {
