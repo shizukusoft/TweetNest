@@ -25,51 +25,12 @@ struct UsersDiffList: View {
             let previousUserDetailIndex = userDetailIndex.flatMap { userDetails.index(after: $0) }
             let previousUserDetail = previousUserDetailIndex.flatMap { userDetails.indices.contains($0) ? userDetails[$0] : nil }
 
-            let userIDs = OrderedSet(userDetail[keyPath: diffKeyPath] ?? [])
-            let previousUserIDs = OrderedSet(previousUserDetail?[keyPath: diffKeyPath] ?? [])
-
-            let appendedUserIDs = userIDs.subtracting(previousUserIDs)
-            let removedUserIDs = previousUserIDs.subtracting(userIDs)
-
-            if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
-                Section {
-                    UserRows(userIDs: appendedUserIDs, searchQuery: searchQuery) {
-                        Image(systemName: "person.badge.plus")
-                            .foregroundColor(.green)
-                    }
-
-                    UserRows(userIDs: removedUserIDs, searchQuery: searchQuery) {
-                        Image(systemName: "person.badge.minus")
-                            .foregroundColor(.red)
-                    }
-                } header: {
-                    HStack {
-                        Group {
-                            if let creationDate = userDetail.creationDate {
-                                DateText(date: creationDate)
-                            } else {
-                                Text(verbatim: userDetail.objectID.description)
-                            }
-                        }
-
-                        Spacer()
-
-                        HStack {
-                            if appendedUserIDs.count > 0 {
-                                Text(verbatim: "+\(appendedUserIDs.count.formatted())")
-                                    .foregroundColor(.green)
-                            }
-
-                            if removedUserIDs.count > 0 {
-                                Text(verbatim: "-\(removedUserIDs.count.formatted())")
-                                    .foregroundColor(.red)
-                            }
-
-                            Text(userIDs.count.formatted())
-                        }
-                    }
-                }
-            }
+            UsersDiffListSection(
+                diffKeyPath: diffKeyPath,
+                searchQuery: searchQuery,
+                previousUserDetail: previousUserDetail,
+                userDetail: userDetail
+            )
         }
         .searchable(text: $searchQuery)
     }
