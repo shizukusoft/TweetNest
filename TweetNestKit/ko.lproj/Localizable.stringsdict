@@ -114,7 +114,7 @@
 			<string>새로운 뮤트 %ld명</string>
 		</dict>
 	</dict>
-	<key>%ld New Unmutes(s)</key>
+	<key>%ld New Unmute(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@unmutes@</string>
