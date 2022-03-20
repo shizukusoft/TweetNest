@@ -66,5 +66,69 @@
 			<string>새로운 언팔로우 %ld명</string>
 		</dict>
 	</dict>
+	<key>%ld New Block(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@blocks@</string>
+		<key>blocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 차단 %ld명</string>
+			<key>zero</key>
+			<string>새로운 차단 %ld명</string>
+		</dict>
+	</dict>
+	<key>%ld New Unblock(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unblocks@</string>
+		<key>unblocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 차단 해제 %ld명</string>
+			<key>zero</key>
+			<string>새로운 차단 해제 %ld명</string>
+		</dict>
+	</dict>
+	<key>%ld New Mute(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@mutes@</string>
+		<key>mutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 뮤트 %ld명</string>
+			<key>zero</key>
+			<string>새로운 뮤트 %ld명</string>
+		</dict>
+	</dict>
+	<key>%ld New Unmutes(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unmutes@</string>
+		<key>unmutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 뮤트 해제 %ld명</string>
+			<key>zero</key>
+			<string>새로운 뮤트 해제 %ld명</string>
+		</dict>
+	</dict>
 </dict>
 </plist>

@@ -74,5 +74,77 @@
 			<string>%ld New Unfollowings</string>
 		</dict>
 	</dict>
+	<key>%ld New Block(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@blocks@</string>
+		<key>blocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>%ld New Block</string>
+			<key>other</key>
+			<string>%ld New Blocks</string>
+			<key>zero</key>
+			<string>%ld New Blocks</string>
+		</dict>
+	</dict>
+	<key>%ld New Unblock(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unblocks@</string>
+		<key>unblocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>%ld New Unblock</string>
+			<key>other</key>
+			<string>%ld New Unblocks</string>
+			<key>zero</key>
+			<string>%ld New Unblocks</string>
+		</dict>
+	</dict>
+	<key>%ld New Mute(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@mutes@</string>
+		<key>mutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>%ld New Mute</string>
+			<key>other</key>
+			<string>%ld New Mutes</string>
+			<key>zero</key>
+			<string>%ld New Mutes</string>
+		</dict>
+	</dict>
+	<key>%ld New Unmute(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unmutes@</string>
+		<key>unmutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>one</key>
+			<string>%ld New Unmute</string>
+			<key>other</key>
+			<string>%ld New Unmutes</string>
+			<key>zero</key>
+			<string>%ld New Unmutes</string>
+		</dict>
+	</dict>
 </dict>
 </plist>
