@@ -22,7 +22,7 @@ struct UsersDiffList: View {
 
         List(userDetails) { userDetail in
             let userDetailIndex = userDetails.firstIndex(of: userDetail)
-            let previousUserDetailIndex = userDetailIndex.flatMap { $0 + 1 }
+            let previousUserDetailIndex = userDetailIndex.flatMap { userDetails.index(after: $0) }
             let previousUserDetail = previousUserDetailIndex.flatMap { userDetails.indices.contains($0) ? userDetails[$0] : nil }
 
             let userIDs = OrderedSet(userDetail[keyPath: diffKeyPath] ?? [])
@@ -33,12 +33,12 @@ struct UsersDiffList: View {
 
             if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
                 Section {
-                    UserRows(userIDs: appendedUserIDs, searchQuery: $searchQuery) {
+                    UserRows(userIDs: appendedUserIDs, searchQuery: searchQuery) {
                         Image(systemName: "person.badge.plus")
                             .foregroundColor(.green)
                     }
 
-                    UserRows(userIDs: removedUserIDs, searchQuery: $searchQuery) {
+                    UserRows(userIDs: removedUserIDs, searchQuery: searchQuery) {
                         Image(systemName: "person.badge.minus")
                             .foregroundColor(.red)
                     }

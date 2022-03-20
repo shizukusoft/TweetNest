@@ -16,7 +16,7 @@ struct UsersList: View {
 
     var body: some View {
         List {
-            UserRows(userIDs: userIDs, searchQuery: $searchQuery)
+            UserRows(userIDs: userIDs, searchQuery: searchQuery)
         }
         .searchable(text: $searchQuery)
     }

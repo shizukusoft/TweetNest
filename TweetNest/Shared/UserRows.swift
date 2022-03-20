@@ -21,7 +21,7 @@ struct UserRows<Icon: View>: View {
     @Environment(\.account) private var account: Account?
 
     let userIDs: OrderedSet<String>
-    @Binding var searchQuery: String
+    let searchQuery: String
 
     let icon: Icon?
 
@@ -98,9 +98,9 @@ struct UserRows<Icon: View>: View {
         }
     }
 
-    private init<S>(userIDs: S, searchQuery: Binding<String> = .constant(""), icon: Icon?) where S: Sequence, S.Element == String {
+    private init<S>(userIDs: S, searchQuery: String = "", icon: Icon?) where S: Sequence, S.Element == String {
         self.userIDs = OrderedSet(userIDs)
-        self._searchQuery = searchQuery
+        self.searchQuery = searchQuery
         self.icon = icon
 
         self._latestUserDetailsFetchedResultsController = StateObject(
@@ -121,11 +121,11 @@ struct UserRows<Icon: View>: View {
         )
     }
 
-    init<S>(userIDs: S, searchQuery: Binding<String> = .constant(""), @ViewBuilder icon: () -> Icon) where S: Sequence, S.Element == String {
+    init<S>(userIDs: S, searchQuery: String = "", @ViewBuilder icon: () -> Icon) where S: Sequence, S.Element == String {
         self.init(userIDs: userIDs, searchQuery: searchQuery, icon: icon())
     }
 
-    init<S>(userIDs: S, searchQuery: Binding<String> = .constant("")) where S: Sequence, S.Element == String, Icon == EmptyView {
+    init<S>(userIDs: S, searchQuery: String = "") where S: Sequence, S.Element == String, Icon == EmptyView {
         self.init(userIDs: userIDs, searchQuery: searchQuery, icon: nil)
     }
 }
