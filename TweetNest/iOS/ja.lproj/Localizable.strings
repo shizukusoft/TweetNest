@@ -77,7 +77,13 @@
 "Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If “Allow More Data on 5G” is turned on this device, this option will be ignored." = "他のネットワークに接続できない場合、モバイル通信か共有ネットワークを使用して画像をダウンロードできるようにします。“5Gでより多くのデータを許容”をオンにしていると、この設定は無視されます。";
 
 /* No comment provided by engineer. */
-"Fetch Blocking Users" = "ブロックしたアカウントの一覧を取得";
+"Fetch Blocking Users" = "ブロックしたアカウントを取り込む";
+
+/* No comment provided by engineer. */
+"Fetch Muting Users" = "ミュートしているアカウントを取り込む";
+
+/* No comment provided by engineer. */
+"Fetch Profile Headers" = "プロフィールのヘッダーを取り込む";
 
 /* No comment provided by engineer. */
 "Followers" = "フォロワー";
@@ -128,6 +134,30 @@
 "More" = "その他";
 
 /* No comment provided by engineer. */
+"Mutes History" = "ミュート履歴";
+
+/* Navigation link for mutes history, grouped by username. */
+"Mutes History for %@" = "%@のミュート履歴";
+
+/* No comment provided by engineer. */
+"Notifications" = "通知";
+
+/* No comment provided by engineer. */
+"Notify Blocking Changes" = "ブロックの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Follower Changes" = "フォロワーの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Following Changes" = "フォローの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Muting Changes" = "ミュートの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Profile Changes" = "プロフィールの変更を通知する";
+
+/* No comment provided by engineer. */
 "Open Folder" = "フォルダーを開く";
 
 /* No comment provided by engineer. */
@@ -156,6 +186,9 @@
 
 /* No comment provided by engineer. */
 "Retweets" = "リツイート";
+
+/* No comment provided by engineer. */
+"Save" = "保存";
 
 /* No comment provided by engineer. */
 "Settings" = "設定";
