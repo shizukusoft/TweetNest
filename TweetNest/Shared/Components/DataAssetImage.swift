@@ -8,76 +8,190 @@
 import SwiftUI
 import ImageIO
 import UniformTypeIdentifiers
+import CoreData
 import TweetNestKit
+import UnifiedLogging
 
 struct DataAssetImage: View {
     let url: URL?
     let isExportable: Bool
 
-    @StateObject private var dataAssetsFetchedResultsController: FetchedResultsController<TweetNestKit.DataAsset>
+    private class Store: NSObject, NSFetchedResultsControllerDelegate, ObservableObject  {
+        static let managedObjectContext = TweetNestApp.session.persistentContainer.viewContext
 
-    private let operaionQueue: OperationQueue = {
-        let operationQueue = OperationQueue()
-        operationQueue.qualityOfService = .userInteractive
-        operationQueue.maxConcurrentOperationCount = 1
-        operationQueue.name = String(describing: Self.self)
+        let url: URL?
 
-        return operationQueue
-    }()
+        private var updateImageTask: Task<Void, Never>?
 
-    @State private var data: Data?
-    @State private var dataMIMEType: String?
+        struct ImageInfo {
+            var cgImage: CGImage?
+            var cgImageScale: CGFloat?
+            var data: Data?
+            var dataMIMEType: String?
+        }
+        @Published private(set) var imageInfo: ImageInfo
 
-    @State private var cgImage: CGImage?
-    @State private var cgImageScale: CGFloat?
+        private lazy var fetchedResultsController: NSFetchedResultsController<DataAsset> = {
+            let fetchedResultsController = NSFetchedResultsController<DataAsset>(
+                fetchRequest: {
+                    let fetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
+                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]
+                    fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(value: false)
+                    fetchRequest.propertiesToFetch = ["data", "dataMIMEType"]
+                    fetchRequest.returnsObjectsAsFaults = false
+                    fetchRequest.fetchLimit = 1
 
-    @State private var isDetailProfileImagePresented: Bool = false
+                    return fetchRequest
+                }(),
+                managedObjectContext: Self.managedObjectContext,
+                sectionNameKeyPath: nil,
+                cacheName: nil
+            )
 
-    var body: some View {
-        let dataAsset = dataAssetsFetchedResultsController.fetchedObjects.first
+            fetchedResultsController.delegate = self
 
-        Group {
-            if let cgImage = cgImage {
-                image(for: cgImage)
-            } else {
-                Color.gray
+            return fetchedResultsController
+        }()
+
+        private var dataAsset: DataAsset? {
+            self.fetchedResultsController.fetchedObjects?.first
+        }
+
+        init(url: URL?) {
+            self.url = url
+            self.imageInfo = ImageInfo()
+
+            super.init()
+        }
+
+        deinit {
+            updateImageTask?.cancel()
+        }
+
+        func fetch() {
+            guard url != nil && fetchedResultsController.fetchedObjects == nil else {
+                return
+            }
+
+            Self.managedObjectContext.performAndWait {
+                do {
+                    try self.fetchedResultsController.performFetch()
+                    updateImageInfo()
+                } catch {
+                    Logger().error("Error occured on \(DataAssetImage.Store.self):\n\(error as NSError)")
+                }
             }
         }
-        .onChange(of: dataAsset?.data) { newValue in
-            updateImage(data: newValue)
+
+        func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+            updateImageInfo()
         }
-        .onAppear {
-            updateImage(data: dataAsset?.data)
-        }
-        .onDisappear {
-            operaionQueue.cancelAllOperations()
+
+        private func updateImageInfo() {
+            let dataAsset = dataAsset
+
+            let data = dataAsset?.data
+            let dataMIMEType = dataAsset?.dataMIMEType
+
+            self.updateImageTask?.cancel()
+            self.updateImageTask = Task.detached(priority: .userInitiated) {
+                let cgImageAndScale: (CGImage, CGFloat?)? = data.flatMap {
+                    guard let imageSource = CGImageSourceCreateWithData(
+                        $0 as CFData,
+                        nil
+                    ) else {
+                        return nil
+                    }
+
+                    guard let image = CGImageSourceCreateThumbnailAtIndex(
+                        imageSource,
+                        0,
+                        [
+                            kCGImageSourceCreateThumbnailFromImageAlways: true,
+                            kCGImageSourceShouldCache as String: true,
+                            kCGImageSourceShouldCacheImmediately as String: true,
+                            kCGImageSourceCreateThumbnailWithTransform as String: true,
+                        ] as CFDictionary
+                    ) else {
+                        return nil
+                    }
+
+                    let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
+
+                    let imageDPI = [imageProperties?[kCGImagePropertyDPIWidth], imageProperties?[kCGImagePropertyDPIHeight]].compactMap { ($0 as? NSNumber)?.doubleValue }.min()
+
+                    return (image, imageDPI.flatMap { $0 / 72 })
+                }
+
+                guard Task.isCancelled == false else { return }
+
+                await MainActor.run {
+                    self.imageInfo = ImageInfo(
+                        cgImage: cgImageAndScale?.0,
+                        cgImageScale: cgImageAndScale?.1,
+                        data: data,
+                        dataMIMEType: dataMIMEType
+                    )
+                    self.updateImageTask = nil
+                }
+            }
         }
     }
 
-    @ViewBuilder func image(for cgImage: CGImage) -> some View {
-        let image = Image(decorative: cgImage, scale: cgImageScale ?? 1.0)
-            .interpolation(.high)
-            .resizable()
+    @StateObject private var store: Store
 
-        #if canImport(PDFKit)
-        if isExportable, let data = data, let url = url {
-            let utType = dataMIMEType.flatMap { UTType(mimeType: $0) }
+    @State private var isDetailProfileImagePresented: Bool = false
 
-            let filename: String = {
-                if url.pathExtension.isEmpty, let utType = utType {
-                    return url.appendingPathExtension(for: utType).lastPathComponent
-                } else {
-                    return url.lastPathComponent
-                }
-            }()
+    @ViewBuilder var image: some View {
+        let imageInfo = store.imageInfo
 
-            Group {
-                #if os(macOS)
-                image
-                    .onTapGesture {
-                        isDetailProfileImagePresented = true
+        if let cgImage = imageInfo.cgImage {
+            Image(decorative: cgImage, scale: imageInfo.cgImageScale ?? 1.0)
+                .interpolation(.high)
+                .resizable()
+        } else {
+            Color.gray
+        }
+    }
+
+    var body: some View {
+        let imageInfo = store.imageInfo
+
+        Group {
+            #if canImport(PDFKit)
+            if isExportable, let data = imageInfo.data, let cgImage = imageInfo.cgImage, let url = url {
+                let utType = imageInfo.dataMIMEType.flatMap { UTType(mimeType: $0) }
+
+                let filename: String = {
+                    if url.pathExtension.isEmpty, let utType = utType {
+                        return url.appendingPathExtension(for: utType).lastPathComponent
+                    } else {
+                        return url.lastPathComponent
                     }
-                    .contextMenu {
+                }()
+
+                Group {
+                    #if os(macOS)
+                    image
+                        .onTapGesture {
+                            isDetailProfileImagePresented = true
+                        }
+                        .contextMenu {
+                            Button(
+                                action: {
+                                    #if canImport(AppKit)
+                                    NSPasteboard.general.setData(data, forType: .fileContents)
+                                    #elseif canImport(UIKit)
+                                    UIPasteboard.general.image = UIImage(data: data)
+                                    #endif
+                                },
+                                label: {
+                                    Label("Copy", systemImage: "doc.on.doc")
+                                }
+                            )
+                        }
+                    #else
+                    Menu {
                         Button(
                             action: {
                                 #if canImport(AppKit)
@@ -90,111 +204,47 @@ struct DataAssetImage: View {
                                 Label("Copy", systemImage: "doc.on.doc")
                             }
                         )
+                    } label: {
+                        image
+                    } primaryAction: {
+                        isDetailProfileImagePresented = true
                     }
-                #else
-                Menu {
-                    Button(
-                        action: {
-                            #if canImport(AppKit)
-                            NSPasteboard.general.setData(data, forType: .fileContents)
-                            #elseif canImport(UIKit)
-                            UIPasteboard.general.image = UIImage(data: data)
-                            #endif
-                        },
-                        label: {
-                            Label("Copy", systemImage: "doc.on.doc")
-                        }
-                    )
-                } label: {
-                    image
-                } primaryAction: {
-                    isDetailProfileImagePresented = true
+                    #endif
                 }
-                #endif
-            }
-            .onDrag {
-                let itemProvider = NSItemProvider(item: data as NSSecureCoding?, typeIdentifier: utType?.identifier)
-                itemProvider.suggestedName = filename
+                .onDrag {
+                    let itemProvider = NSItemProvider(item: data as NSSecureCoding?, typeIdentifier: utType?.identifier)
+                    itemProvider.suggestedName = filename
 
-                return itemProvider
-            }
-            .sheet(isPresented: $isDetailProfileImagePresented) {
-                #if os(macOS)
-                DetailImageView(imageData: data, image: cgImage, imageScale: cgImageScale ?? 1.0, filename: filename)
-                    .frame(minWidth: 120, idealWidth: 410, minHeight: 120, idealHeight: 410)
-                #else
-                NavigationView {
-                    DetailImageView(imageData: data, image: cgImage, imageScale: cgImageScale ?? 1.0, filename: filename)
+                    return itemProvider
                 }
-                #endif
+                .sheet(isPresented: $isDetailProfileImagePresented) {
+                    #if os(macOS)
+                    DetailImageView(imageData: data, image: cgImage, imageScale: imageInfo.cgImageScal ?? 1.0, filename: filename)
+                        .frame(minWidth: 120, idealWidth: 410, minHeight: 120, idealHeight: 410)
+                    #else
+                    NavigationView {
+                        DetailImageView(imageData: data, image: cgImage, imageScale: imageInfo.cgImageScale ?? 1.0, filename: filename)
+                    }
+                    #endif
+                }
+            } else {
+                image
             }
-        } else {
+            #else
             image
+            #endif
         }
-        #else
-        image
-        #endif
+        .onAppear {
+            store.fetch()
+        }
     }
 
     init(url: URL?, isExportable: Bool = false) {
         self.url = url
         self.isExportable = isExportable
 
-        let fetchRequest = TweetNestKit.DataAsset.fetchRequest()
-        fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]
-        fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(value: false)
-        fetchRequest.propertiesToFetch = ["data"]
-        fetchRequest.fetchLimit = 1
-
-        self._dataAssetsFetchedResultsController = StateObject(
-            wrappedValue: FetchedResultsController(
-                fetchRequest: fetchRequest,
-                managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
-            )
+        self._store = StateObject(
+            wrappedValue: Store(url: url)
         )
-    }
-
-    private func updateImage(data: Data?) {
-        let dataAsset = dataAssetsFetchedResultsController.fetchedObjects.first
-
-        let data = dataAsset?.data
-        let dataMIMEType = dataAsset?.dataMIMEType
-
-        operaionQueue.addOperation {
-            let cgImageAndScale: (CGImage, CGFloat?)? = data.flatMap {
-                guard let imageSource = CGImageSourceCreateWithData(
-                    $0 as CFData,
-                    nil
-                ) else {
-                    return nil
-                }
-
-                guard let image = CGImageSourceCreateThumbnailAtIndex(
-                    imageSource,
-                    0,
-                    [
-                        kCGImageSourceCreateThumbnailFromImageAlways: true,
-                        kCGImageSourceShouldCache as String: true,
-                        kCGImageSourceShouldCacheImmediately as String: true,
-                        kCGImageSourceCreateThumbnailWithTransform as String: true,
-                    ] as CFDictionary
-                ) else {
-                    return nil
-                }
-
-                let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
-
-                let imageDPI = [imageProperties?[kCGImagePropertyDPIWidth], imageProperties?[kCGImagePropertyDPIHeight]].compactMap { ($0 as? NSNumber)?.doubleValue }.min()
-
-                return (image, imageDPI.flatMap { $0 / 72 })
-            }
-
-            DispatchQueue.main.async {
-                self.data = data
-                self.dataMIMEType = dataMIMEType
-                self.cgImage = cgImageAndScale?.0
-                self.cgImageScale = cgImageAndScale?.1
-            }
-        }
     }
 }

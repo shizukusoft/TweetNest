@@ -20,12 +20,12 @@ typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 @main
 struct TweetNestApp: App {
     #if DEBUG
-    static var isPreview: Bool {
+    static nonisolated var isPreview: Bool {
         CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
     }
     #endif
 
-    static var session: Session {
+    static nonisolated var session: Session {
         #if DEBUG
         if isPreview {
             return Session.preview
