@@ -39,6 +39,12 @@ class TweetNestScreenTests: XCTestCase {
         if app.navigationBars.buttons["BackButton"].exists {
             app.navigationBars.buttons["BackButton"].tap()
         }
+
+        #if os(macOS)
+        XCTAssertTrue(app.disclosureTriangles[Self.dispalyUserName].waitForExistence(timeout: 5))
+        #else
+        XCTAssertTrue(app.staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
+        #endif
     }
 
     override func tearDownWithError() throws {
@@ -52,8 +58,6 @@ class TweetNestScreenTests: XCTestCase {
     func testLaunch() throws {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
-
-        XCTAssertTrue(app.staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
@@ -69,6 +73,11 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
+        #if os(macOS)
+        app.buttons["\(Self.dispalyUserName):Account"].click()
+
+        XCTAssertTrue(app.tables.staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
+        #else
         app.buttons["\(Self.dispalyUserName):Account"].tap()
 
         XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
@@ -76,6 +85,7 @@ class TweetNestScreenTests: XCTestCase {
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
+        #endif
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Account Screen"
@@ -87,6 +97,11 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
+        #if os(macOS)
+        app.buttons["\(Self.dispalyUserName):FollowingsHistory"].click()
+
+        app.tables.tableRows.buttons["Apple"].click()
+        #else
         app.buttons["\(Self.dispalyUserName):FollowingsHistory"].tap()
 
         XCTAssertTrue(app.staticTexts["@Apple"].waitForExistence(timeout: 5))
@@ -94,6 +109,7 @@ class TweetNestScreenTests: XCTestCase {
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
+        #endif
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Followings History Screen"
@@ -106,6 +122,16 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
+        #if os(macOS)
+        app.buttons["\(Self.dispalyUserName):Account"].click()
+
+        XCTAssertTrue(app.tables.staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
+
+        app.toolbars.popUpButtons["Delete"].click()
+        app.toolbars.menuItems["Delete Recent Tweets"].click()
+
+        XCTAssertTrue(app.windows.firstMatch.sheets.firstMatch.waitForExistence(timeout: 5))
+        #else
         app.buttons["\(Self.dispalyUserName):Account"].tap()
 
         XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
@@ -130,6 +156,7 @@ class TweetNestScreenTests: XCTestCase {
         wait(for: [
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
+        #endif
 
         let attachment = XCTAttachment(screenshot: app.screenshot())
         attachment.name = "Batch Delete Tweets Form Screen"

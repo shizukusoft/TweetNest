@@ -29,7 +29,7 @@ extension UserView {
                     Text(userDetail.name ?? "")
                 }
                 TableColumn("Username") { userDetail in
-                    Text(userDetail.username ?? "")
+                    Text(verbatim: userDetail.username.flatMap { "@\($0)" } ?? "")
                 }
                 TableColumn("Location") { userDetail in
                     Text(userDetail.location ?? "")
