@@ -16,11 +16,11 @@ struct DateText: View {
 
     var body: some View {
         #if os(iOS)
-        Text(verbatim: date.twnk_formatted(compact: horizontalSizeClass == .compact))
+        Text(date, format: Date.FormatStyle(twnk_shouldCompact: horizontalSizeClass == .compact))
         #elseif os(watchOS)
-        Text(verbatim: date.twnk_formatted(compact: true))
+        Text(date, format: Date.FormatStyle(twnk_shouldCompact: true))
         #else
-        Text(verbatim: date.twnk_formatted(compact: false))
+        Text(date, format: Date.FormatStyle(twnk_shouldCompact: false))
         #endif
     }
 }

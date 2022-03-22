@@ -123,7 +123,7 @@ struct UserDetailProfileView: View {
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
-                .accessibilityValue(userCreationDate.twnk_formatted(compact: false))
+                .accessibilityValue(userCreationDate.twnk_formatted(shouldCompact: false))
             }
 
             if userDetail.isProtected {
