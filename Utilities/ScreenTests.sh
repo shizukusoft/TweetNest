@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -e -x
 
 IOS_DEVICES=(
     'iPhone 13 Pro Max' # 6.5 Inch
