@@ -63,7 +63,7 @@ class TweetNestScreenTests: XCTestCase {
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
 
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
         attachment.name = "Launch Screen"
         attachment.lifetime = .keepAlways
         add(attachment)
@@ -87,7 +87,7 @@ class TweetNestScreenTests: XCTestCase {
         ], timeout: 5.0)
         #endif
 
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
         attachment.name = "Account Screen"
         attachment.lifetime = .keepAlways
         add(attachment)
@@ -111,7 +111,7 @@ class TweetNestScreenTests: XCTestCase {
         ], timeout: 5.0)
         #endif
 
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
         attachment.name = "Followings History Screen"
         attachment.lifetime = .keepAlways
         add(attachment)
@@ -158,7 +158,7 @@ class TweetNestScreenTests: XCTestCase {
         ], timeout: 5.0)
         #endif
 
-        let attachment = XCTAttachment(screenshot: app.screenshot())
+        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
         attachment.name = "Batch Delete Tweets Form Screen"
         attachment.lifetime = .keepAlways
         add(attachment)
