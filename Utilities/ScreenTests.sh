@@ -55,4 +55,4 @@ xcodebuild -scheme "TweetNest (watchOS)" -only-testing "TweetNest Tests (watchOS
 
 #######################################################################################################################
 
-xcodebuild -scheme "TweetNest (macOS)" -only-testing "TweetNest Tests (macOS)/TweetNestScreenTests" -resultBundlePath 'ScreenTests (macOS).xcresult' test
+# xcodebuild -scheme "TweetNest (macOS)" -only-testing "TweetNest Tests (macOS)/TweetNestScreenTests" -resultBundlePath 'ScreenTests (macOS).xcresult' test
