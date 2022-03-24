@@ -2,7 +2,23 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>%ld new follower(s)</key>
+	<key>%ld New Block(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@blocks@</string>
+		<key>blocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>%ld人の新規ブロック</string>
+			<key>zero</key>
+			<string>%ld人の新規ブロック</string>
+		</dict>
+	</dict>
+	<key>%ld New Follower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@followers@</string>
@@ -15,10 +31,10 @@
 			<key>other</key>
 			<string>%ld人の新規フォロワー</string>
 			<key>zero</key>
-			<string>0人の新規フォロワー</string>
+			<string>%ld人の新規フォロワー</string>
 		</dict>
 	</dict>
-	<key>%ld new following(s)</key>
+	<key>%ld New Following(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@followings@</string>
@@ -31,10 +47,42 @@
 			<key>other</key>
 			<string>%ld人の新規フォロー</string>
 			<key>zero</key>
-			<string>0人の新規フォロー</string>
+			<string>%ld人の新規フォロー</string>
 		</dict>
 	</dict>
-	<key>%ld new unfollower(s)</key>
+	<key>%ld New Mute(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@mutes@</string>
+		<key>mutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>%ld人の新規ミュート</string>
+			<key>zero</key>
+			<string>%ld人の新規ミュート</string>
+		</dict>
+	</dict>
+	<key>%ld New Unblock(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unblocks@</string>
+		<key>unblocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>%ld人の新規アンブロック</string>
+			<key>zero</key>
+			<string>%ld人の新規アンブロック</string>
+		</dict>
+	</dict>
+	<key>%ld New Unfollower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@unfollowers@</string>
@@ -47,10 +95,10 @@
 			<key>other</key>
 			<string>%ld人の新規アンフォロワー</string>
 			<key>zero</key>
-			<string>0人の新規アンフォロワー</string>
+			<string>%ld人の新規アンフォロワー</string>
 		</dict>
 	</dict>
-	<key>%ld new unfollowing(s)</key>
+	<key>%ld New Unfollowing(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@unfollowings@</string>
@@ -63,7 +111,23 @@
 			<key>other</key>
 			<string>%ld人の新規アンフォロー</string>
 			<key>zero</key>
-			<string>0人の新規アンフォロー</string>
+			<string>%ld人の新規アンフォロー</string>
+		</dict>
+	</dict>
+	<key>%ld New Unmute(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unmutes@</string>
+		<key>unmutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>%ld人の新規アンミュート</string>
+			<key>zero</key>
+			<string>%ld人の新規アンミュート</string>
 		</dict>
 	</dict>
 </dict>

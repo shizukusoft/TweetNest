@@ -17,6 +17,7 @@
     <entity name="DataAsset" representedClassName=".DataAsset" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="dataMIMEType" optional="YES" attributeType="String"/>
         <attribute name="dataSHA512Hash" optional="YES" attributeType="Binary"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
         <fetchIndex name="byURL">
@@ -52,8 +53,9 @@
         <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="listedCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="mutingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="name" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
-        <attribute name="profileBannerImageURL" optional="YES" attributeType="URI"/>
+        <attribute name="profileHeaderImageURL" optional="YES" attributeType="URI"/>
         <attribute name="profileImageURL" optional="YES" attributeType="URI"/>
         <attribute name="tweetsCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
@@ -75,9 +77,9 @@
     </configuration>
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="140"/>
-        <element name="DataAsset" positionX="-54" positionY="144" width="128" height="89"/>
+        <element name="DataAsset" positionX="-54" positionY="144" width="128" height="104"/>
         <element name="Preferences" positionX="-54" positionY="144" width="128" height="59"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="140"/>
-        <element name="UserDetail" positionX="-45" positionY="27" width="128" height="314"/>
+        <element name="UserDetail" positionX="-45" positionY="27" width="128" height="329"/>
     </elements>
 </model>

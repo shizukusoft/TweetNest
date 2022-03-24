@@ -64,19 +64,19 @@ extension Session {
 
                     do {
                         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-                            taskGroup.addTask { try await handleUserDetailChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await handleAccountChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await handleUserChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await handleDataAssetsChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleUserDetailChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleAccountChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleUserChanges(transactions: transactions.transactions, context: transactions.context) }
+                            taskGroup.addTask { try await self.handleDataAssetsChanges(transactions: transactions.transactions, context: transactions.context) }
 
                             try await taskGroup.waitForAll()
                         }
                     } catch {
                         if error is CancellationError {
                             do {
-                                try await updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
+                                try await self.updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
                             } catch {
-                                logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
+                                self.logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
                             }
                         }
 
@@ -258,55 +258,91 @@ extension Session {
 
                     let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
 
-                    let oldUserDetail = oldUserDetailIndex.flatMap { sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }
-
-                    guard (oldUserDetail ~= newUserDetail) == false else {
+                    guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
                         return nil
                     }
 
-                    let followingUserChanges = newUserDetail.followingUserChanges(from: oldUserDetail)
-                    let followerUserChanges = newUserDetail.followerUserChanges(from: oldUserDetail)
-
-                    let notificationContentTitle: String
-                    if let name = newUserDetail.name, let displayUsername = newUserDetail.displayUsername, name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty == false {
-                        notificationContentTitle = "\(name) (\(displayUsername))"
-                    } else if let displayUsername = newUserDetail.displayUsername {
-                        notificationContentTitle = displayUsername
-                    } else {
-                        notificationContentTitle = account.userID.flatMap { Int64($0).flatMap { "#\($0.twnk_formatted())" } } ?? account.userID.flatMap { "#\($0)" } ?? account.objectID.uriRepresentation().absoluteString
-                    }
+                    let preferences = self.preferences(for: context)
 
                     let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = notificationContentTitle
+                    notificationContent.title = newUserDetail.name ?? account.objectID.description
+                    if let displayUsername = newUserDetail.displayUsername {
+                        notificationContent.subtitle = displayUsername
+                    } else if let userID = account.userID {
+                        notificationContent.subtitle = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+                    }
                     notificationContent.categoryIdentifier = "NewAccountData"
+                    notificationContent.interruptionLevel = .passive
 
                     if let threadIdentifier = threadIdentifier {
                         notificationContent.threadIdentifier = threadIdentifier
                     }
 
                     var changes: [String] = []
-                    if followingUserChanges.followingUsersCount > 0 {
-                        changes.append(String(localized: "\(followingUserChanges.followingUsersCount, specifier: "%ld") new following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                    }
-                    if followingUserChanges.unfollowingUsersCount > 0 {
-                        changes.append(String(localized: "\(followingUserChanges.unfollowingUsersCount, specifier: "%ld") new unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                    }
-                    if followerUserChanges.followerUsersCount > 0 {
-                        changes.append(String(localized: "\(followerUserChanges.followerUsersCount, specifier: "%ld") new follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                    }
-                    if followerUserChanges.unfollowerUsersCount > 0 {
-                        changes.append(String(localized: "\(followerUserChanges.unfollowerUsersCount, specifier: "%ld") new unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+
+                    if preferences.notifyProfileChanges {
+                        if oldUserDetail.isProfileEqual(to: newUserDetail) == false {
+                            changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
                     }
 
-                    if changes.isEmpty == false {
-                        notificationContent.subtitle = String(localized: "New Data Available", bundle: .tweetNestKit, comment: "background-refresh notification.")
-                        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
-                        notificationContent.sound = .default
-                        notificationContent.interruptionLevel = .timeSensitive
-                    } else {
-                        notificationContent.body = String(localized: "New Data Available", bundle: .tweetNestKit, comment: "background-refresh notification.")
-                        notificationContent.interruptionLevel = .passive
+                    if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followingUserIDs) {
+                        if followingUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if followingUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
                     }
+
+                    if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followerUserIDs) {
+                        if followerUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if followerUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                    }
+
+                    if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.blockingUserIDs) {
+                        if blockingUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if blockingUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                    }
+
+                    if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.mutingUserIDs) {
+                        if mutingUserIDsChanges.addedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                        if mutingUserIDsChanges.removedUserIDsCount > 0 {
+                            notificationContent.sound = .default
+                            notificationContent.interruptionLevel = .timeSensitive
+                            changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+                        }
+                    }
+
+                    guard changes.isEmpty == false else {
+                        return nil
+                    }
+
+                    notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
 
                     return notificationContent
                 }

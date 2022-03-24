@@ -13,13 +13,13 @@ import UnifiedLogging
 @MainActor
 class TweetNestAppDelegate: NSObject, ObservableObject {
     #if DEBUG
-    let session: Session = {
+    var session: Session {
         if TweetNestApp.isPreview {
             return Session.preview
         } else {
             return Session.shared
         }
-    }()
+    }
     #else
     let session = Session.shared
     #endif

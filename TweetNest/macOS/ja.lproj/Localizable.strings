@@ -35,6 +35,9 @@
 "Cancel" = "キャンセル";
 
 /* No comment provided by engineer. */
+"Copy" = "コピー";
+
+/* No comment provided by engineer. */
 "Date" = "日付";
 
 /* No comment provided by engineer. */
@@ -59,7 +62,13 @@
 "Done" = "完了";
 
 /* No comment provided by engineer. */
-"Fetch Blocking Users" = "ブロックしたアカウントの一覧を取得";
+"Fetch Blocking Users" = "ブロックしたアカウントを取り込む";
+
+/* No comment provided by engineer. */
+"Fetch Muting Users" = "ミュートしているアカウントを取り込む";
+
+/* No comment provided by engineer. */
+"Fetch Profile Headers" = "プロフィールのヘッダーを取り込む";
 
 /* No comment provided by engineer. */
 "Followers" = "フォロワー";
@@ -71,7 +80,7 @@
 "Followers History for %@" = "%@のフォロワー履歴";
 
 /* No comment provided by engineer. */
-"Followings" = "フォロー中";
+"Followings" = "フォロー";
 
 /* No comment provided by engineer. */
 "Followings History" = "フォロー履歴";
@@ -107,7 +116,31 @@
 "More" = "その他";
 
 /* No comment provided by engineer. */
+"Mutes History" = "ミュート履歴";
+
+/* Navigation link for mutes history, grouped by username. */
+"Mutes History for %@" = "%@のミュート履歴";
+
+/* No comment provided by engineer. */
 "Name" = "名前";
+
+/* No comment provided by engineer. */
+"Notifications" = "通知";
+
+/* No comment provided by engineer. */
+"Notify Blocking Changes" = "ブロックの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Follower Changes" = "フォロワーの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Following Changes" = "フォローの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Muting Changes" = "ミュートの変更を通知する";
+
+/* No comment provided by engineer. */
+"Notify Profile Changes" = "プロフィールの変更を通知する";
 
 /* No comment provided by engineer. */
 "Open Folder" = "フォルダーを開く";
@@ -138,6 +171,9 @@
 
 /* No comment provided by engineer. */
 "Retweets" = "リツイート";
+
+/* No comment provided by engineer. */
+"Save" = "保存";
 
 /* No comment provided by engineer. */
 "Settings" = "設定";

@@ -42,7 +42,7 @@ extension UserView {
     }
 }
 
-struct UserView_ProfileView_Previews: PreviewProvider {
+struct UserViewProfileView_Previews: PreviewProvider {
     static var previews: some View {
         UserView.ProfileView(user: nil)
     }

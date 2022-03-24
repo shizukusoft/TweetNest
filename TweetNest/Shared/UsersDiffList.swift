@@ -10,13 +10,9 @@ import TweetNestKit
 import OrderedCollections
 
 struct UsersDiffList: View {
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    #endif
-
     @FetchRequest private var userDetails: FetchedResults<UserDetail>
 
-    let title: Text
+    let title: LocalizedStringKey
     let diffKeyPath: KeyPath<UserDetail, [String]?>
 
     @State private var searchQuery: String = ""
@@ -52,15 +48,7 @@ struct UsersDiffList: View {
                     HStack {
                         Group {
                             if let creationDate = userDetail.creationDate {
-                                #if os(iOS)
-                                let creationDateText = creationDate.twnk_formatted(compact: horizontalSizeClass == .compact)
-                                #elseif os(watchOS)
-                                let creationDateText = creationDate.twnk_formatted(compact: true)
-                                #else
-                                let creationDateText = creationDate.twnk_formatted(compact: false)
-                                #endif
-
-                                Text(verbatim: creationDateText)
+                                DateText(date: creationDate)
                             } else {
                                 Text(verbatim: userDetail.objectID.description)
                             }
@@ -70,12 +58,12 @@ struct UsersDiffList: View {
 
                         HStack {
                             if appendedUserIDs.count > 0 {
-                                Text("+\(appendedUserIDs.count.formatted())")
+                                Text(verbatim: "+\(appendedUserIDs.count.formatted())")
                                     .foregroundColor(.green)
                             }
 
                             if removedUserIDs.count > 0 {
-                                Text("-\(removedUserIDs.count.formatted())")
+                                Text(verbatim: "-\(removedUserIDs.count.formatted())")
                                     .foregroundColor(.red)
                             }
 
@@ -92,6 +80,7 @@ struct UsersDiffList: View {
         #if os(macOS)
         NavigationView {
             usersDiffList
+                .frame(minWidth: 254)
                 .listStyle(.plain)
                 .navigationTitle(title)
         }
@@ -102,7 +91,7 @@ struct UsersDiffList: View {
         #endif
     }
 
-    init(user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>, title: Text) {
+    init(_ title: LocalizedStringKey, user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>) {
         self._userDetails = FetchRequest(
             fetchRequest: {
                 let fetchRequest = UserDetail.fetchRequest()

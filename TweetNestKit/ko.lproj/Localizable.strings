@@ -4,6 +4,6 @@
 /* update-accounts notification subtitle. */
 "Error" = "오류";
 
-/* background-refresh notification. */
-"New Data Available" = "새로운 데이터 있음";
+/* background-refresh notification body. */
+"New Profile" = "새 프로필";
 

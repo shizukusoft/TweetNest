@@ -18,9 +18,11 @@ extension UserDetail {
     @discardableResult
     static func createOrUpdate(
         twitterUser: Twitter.User,
+        profileHeaderImageURL: URL?,
         followingUserIDs: [String]? = nil,
         followerUserIDs: [String]? = nil,
         blockingUserIDs: [String]? = nil,
+        mutingUserIDs: [String]? = nil,
         userUpdateStartDate: Date = Date(),
         userUpdateEndDate: Date = Date(),
         userDetailCreationDate: Date = Date(),
@@ -31,6 +33,7 @@ extension UserDetail {
         userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
         userFetchRequest.fetchLimit = 1
         userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
+        userFetchRequest.returnsObjectsAsFaults = false
 
         let user = try context.fetch(userFetchRequest).first ?? {
             let user = User(context: context)
@@ -47,6 +50,7 @@ extension UserDetail {
         newUserDetail.blockingUserIDs = blockingUserIDs
         newUserDetail.followingUserIDs = followingUserIDs
         newUserDetail.followerUserIDs = followerUserIDs
+        newUserDetail.mutingUserIDs = mutingUserIDs
 
         newUserDetail.followerUsersCount = Int32(twitterUser.publicMetrics.followersCount)
         newUserDetail.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
@@ -55,6 +59,7 @@ extension UserDetail {
         newUserDetail.listedCount = Int32(twitterUser.publicMetrics.listedCount)
         newUserDetail.location = twitterUser.location
         newUserDetail.name = twitterUser.name
+        newUserDetail.profileHeaderImageURL = profileHeaderImageURL
         newUserDetail.profileImageURL = twitterUser.profileImageOriginalURL
         newUserDetail.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
         newUserDetail.url = twitterUser.expandedURL
@@ -86,22 +91,15 @@ extension UserDetail {
 
 extension UserDetail {
     static func ~= (lhs: UserDetail, rhs: UserDetail) -> Bool {
+        lhs.isProfileEqual(to: rhs) &&
         lhs.blockingUserIDs == rhs.blockingUserIDs &&
         lhs.followingUserIDs == rhs.followingUserIDs &&
         lhs.followerUserIDs == rhs.followerUserIDs &&
         lhs.followerUsersCount == rhs.followerUsersCount &&
         lhs.followingUsersCount == rhs.followingUsersCount &&
-        lhs.isProtected == rhs.isProtected &&
-        lhs.isVerified == rhs.isVerified &&
         lhs.listedCount == rhs.listedCount &&
-        lhs.location == rhs.location &&
-        lhs.name == rhs.name &&
-        lhs.profileImageURL == rhs.profileImageURL &&
-        lhs.tweetsCount == rhs.tweetsCount &&
-        lhs.url == rhs.url &&
-        lhs.userCreationDate == rhs.userCreationDate &&
-        lhs.userAttributedDescription == rhs.userAttributedDescription &&
-        lhs.username == rhs.username
+        lhs.mutingUserIDs == rhs.mutingUserIDs &&
+        lhs.tweetsCount == rhs.tweetsCount
     }
 }
 
@@ -119,6 +117,35 @@ extension Optional where Wrapped == UserDetail {
 }
 
 extension UserDetail {
+    func isProfileEqual(to userDetail: UserDetail) -> Bool {
+        isProtected == userDetail.isProtected &&
+        isVerified == userDetail.isVerified &&
+        location == userDetail.location &&
+        name == userDetail.name &&
+        profileHeaderImageURL == userDetail.profileHeaderImageURL &&
+        profileImageURL == userDetail.profileImageURL &&
+        url == userDetail.url &&
+        userCreationDate == userDetail.userCreationDate &&
+        userAttributedDescription == userDetail.userAttributedDescription &&
+        username == userDetail.username
+    }
+}
+
+extension UserDetail {
+    func userIDsChanges(from oldUserDetail: UserDetail?, for keyPath: KeyPath<UserDetail, [String]?>) -> (addedUserIDsCount: Int, removedUserIDsCount: Int)? {
+        let previousUserIDs = oldUserDetail == nil ? [] : oldUserDetail?[keyPath: keyPath].flatMap { Set($0) }
+        let latestUserIDs = self[keyPath: keyPath].flatMap { Set($0) }
+
+        guard let previousUserIDs = previousUserIDs, let latestUserIDs = latestUserIDs else {
+            return nil
+        }
+
+        let addedUserIDsCount = latestUserIDs.subtracting(previousUserIDs).count
+        let removedUserIDsCount = previousUserIDs.subtracting(latestUserIDs).count
+
+        return (addedUserIDsCount, removedUserIDsCount)
+    }
+
     func followingUserChanges(from oldUserDetail: UserDetail?) -> (followingUsersCount: Int, unfollowingUsersCount: Int) {
         let previousFollowingUserIDs = oldUserDetail == nil ? [] : oldUserDetail?.followingUserIDs.flatMap { Set($0) }
         let latestFollowingUserIDs = followingUserIDs.flatMap { Set($0) }

@@ -6,8 +6,8 @@
   
 */
 
-/* background-refresh notification. */
-"New Data Available" = "New Data Available";
+/* background-refresh notification body. */
+"New Profile" = "New Profile";
 
 /* background-refresh notification title. */
 "Background Refresh" = "Background Refresh";

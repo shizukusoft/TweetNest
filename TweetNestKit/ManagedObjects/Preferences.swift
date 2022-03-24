@@ -11,8 +11,7 @@ import CoreData
 
 @dynamicMemberLookup
 public class ManagedPreferences: NSManagedObject {
-
-    subscript<T>(dynamicMember keyPath: WritableKeyPath<Preferences, T>) -> T {
+    public subscript<T>(dynamicMember keyPath: WritableKeyPath<Preferences, T>) -> T {
         get {
             preferences[keyPath: keyPath]
         }
@@ -25,10 +24,29 @@ public class ManagedPreferences: NSManagedObject {
 extension ManagedPreferences {
     public struct Preferences {
         public var lastCleansed: Date = .distantPast
+        public var fetchProfileHeaderImages: Bool = false
+        public var notifyProfileChanges: Bool = true
+        public var notifyFollowingChanges: Bool = true
+        public var notifyFollowerChanges: Bool = true
+        public var notifyBlockingChanges: Bool = false
+        public var notifyMutingChanges: Bool = false
     }
 }
 
-extension ManagedPreferences.Preferences: Codable { }
+extension ManagedPreferences.Preferences: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let defaultPreferences = ManagedPreferences.Preferences()
+
+        self.lastCleansed = try container.decodeIfPresent(Date.self, forKey: .lastCleansed) ?? defaultPreferences.lastCleansed
+        self.fetchProfileHeaderImages = try container.decodeIfPresent(Bool.self, forKey: .fetchProfileHeaderImages) ?? defaultPreferences.fetchProfileHeaderImages
+        self.notifyProfileChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyProfileChanges) ?? defaultPreferences.notifyProfileChanges
+        self.notifyFollowingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowingChanges) ?? defaultPreferences.notifyFollowingChanges
+        self.notifyFollowerChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowerChanges) ?? defaultPreferences.notifyFollowerChanges
+        self.notifyBlockingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyBlockingChanges) ?? defaultPreferences.notifyBlockingChanges
+        self.notifyMutingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyMutingChanges) ?? defaultPreferences.notifyMutingChanges
+    }
+}
 
 extension ManagedPreferences.Preferences {
     @objc(TWNKManagedPreferencesTransformer)
@@ -65,6 +83,7 @@ extension ManagedPreferences.Preferences {
 extension ManagedPreferences {
     struct Key {
         static let preferences = "preferences"
+        static let modificationDate = "modificationDate"
     }
 
     public dynamic var preferences: Preferences {
@@ -86,6 +105,11 @@ extension ManagedPreferences {
             defer { didChangeValue(forKey: Key.preferences) }
 
             setPrimitiveValue(newValue, forKey: Key.preferences)
+
+            willChangeValue(forKey: Key.modificationDate)
+            defer { didChangeValue(forKey: Key.modificationDate) }
+
+            setPrimitiveValue(Date(), forKey: Key.modificationDate)
         }
     }
 }

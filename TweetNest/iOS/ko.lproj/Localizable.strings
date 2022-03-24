@@ -80,6 +80,12 @@
 "Fetch Blocking Users" = "차단한 계정 목록 가져오기";
 
 /* No comment provided by engineer. */
+"Fetch Muting Users" = "뮤트한 계정 목록 가져오기";
+
+/* No comment provided by engineer. */
+"Fetch Profile Headers" = "프로필 헤더 가져오기";
+
+/* No comment provided by engineer. */
 "Followers" = "팔로워";
 
 /* No comment provided by engineer. */
@@ -128,6 +134,30 @@
 "More" = "더 보기";
 
 /* No comment provided by engineer. */
+"Mutes History" = "뮤트 기록";
+
+/* Navigation link for mutes history, grouped by username. */
+"Mutes History for %@" = "%@의 뮤트 기록";
+
+/* No comment provided by engineer. */
+"Notifications" = "알림";
+
+/* No comment provided by engineer. */
+"Notify Blocking Changes" = "차단 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Follower Changes" = "팔로워 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Following Changes" = "팔로잉 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Muting Changes" = "뮤트 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Profile Changes" = "프로필 변화 알림";
+
+/* No comment provided by engineer. */
 "Open Folder" = "폴더 열기";
 
 /* No comment provided by engineer. */
@@ -156,6 +186,9 @@
 
 /* No comment provided by engineer. */
 "Retweets" = "리트윗";
+
+/* No comment provided by engineer. */
+"Save" = "저장";
 
 /* No comment provided by engineer. */
 "Settings" = "설정";

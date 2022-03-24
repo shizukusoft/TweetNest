@@ -26,7 +26,7 @@ extension BackgroundTaskScheduler {
                     expirationHandler()
                 }
 
-                backgroundTask.setTaskCompletedWithSnapshot(await backgroundRefresh())
+                backgroundTask.setTaskCompletedWithSnapshot(await self.backgroundRefresh())
             }
         }
 

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import TweetNestKit
 import UnifiedLogging
 
@@ -46,10 +47,8 @@ struct UserView: View {
     @State var shareSheetURL: URL?
     #endif
 
-    var userProfileURL: URL? {
-        user?.id.flatMap {
-            URL(string: "https://twitter.com/intent/user?user_id=\($0)")!
-        }
+    var userProfileURL: URL {
+        URL(string: "https://twitter.com/intent/user?user_id=\(userID)")!
     }
 
     @State var showBulkDeleteRecentTweets: Bool = false
@@ -92,26 +91,32 @@ struct UserView: View {
         #endif
     }
 
+    @ViewBuilder private var userFootnotes: some View {
+        VStack(alignment: .leading) {
+            Text(verbatim: "#\(Int64(userID)?.twnk_formatted() ?? userID)")
+            if let user = user, let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
+                Group {
+                    if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
+                        Text("Updating…")
+                    } else {
+                        Text("Updated \(lastUpdateEndDate, style: .relative) ago")
+                    }
+                }
+                .accessibilityAddTraits(.updatesFrequently)
+            }
+        }
+        #if os(macOS)
+        .font(.footnote)
+        .foregroundColor(.secondary)
+        #endif
+    }
+
     @ViewBuilder private var userView: some View {
         #if os(macOS)
         VStack(alignment: .leading, spacing: 8) {
             VStack(alignment: .leading, spacing: 8) {
                 ProfileView(user: user)
-                VStack(alignment: .leading) {
-                    user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                    if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
-                        Group {
-                            if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                Text("Updating…")
-                            } else {
-                                Text("Updated \(lastUpdateEndDate, style: .relative) ago")
-                            }
-                        }
-                        .accessibilityAddTraits(.updatesFrequently)
-                    }
-                }
-                .font(.footnote)
-                .foregroundColor(.secondary)
+                userFootnotes
             }
             .padding()
 
@@ -124,20 +129,9 @@ struct UserView: View {
             } header: {
                 Text("Latest Profile")
             } footer: {
-                VStack(alignment: .leading) {
-                    user?.id.flatMap { Text(verbatim: "#\(Int64($0)?.twnk_formatted() ?? $0)") }
-                    if let lastUpdateStartDate = user?.lastUpdateStartDate, let lastUpdateEndDate = user?.lastUpdateEndDate {
-                        Group {
-                            if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
-                                Text("Updating…")
-                            } else {
-                                Text("Updated \(lastUpdateEndDate, style: .relative) ago")
-                            }
-                        }
-                        .accessibilityAddTraits(.updatesFrequently)
-                    }
-                }
+                userFootnotes
             }
+
             #if os(watchOS)
             if let account = account, user?.accounts?.contains(account) == true {
                 Section {
@@ -145,7 +139,10 @@ struct UserView: View {
                 }
             }
             #endif
-            AllDataView(user: user)
+
+            Section(String(localized: "All Data")) {
+                AllDataView(user: user)
+            }
         }
         #endif
     }
@@ -173,19 +170,17 @@ struct UserView: View {
                 ToolbarItemGroup(placement: .automatic) {
                     if shouldCompactToolbar {
                         Menu {
-                            if let userProfileURL = userProfileURL {
-                                Link(destination: userProfileURL) {
-                                    Label("Open Profile", systemImage: "safari")
-                                }
-
-                                #if os(iOS)
-                                Button {
-                                    safariSheetURL = userProfileURL
-                                } label: {
-                                    Label("Open Profile in Safari", systemImage: "safari")
-                                }
-                                #endif
+                            Link(destination: userProfileURL) {
+                                Label("Open Profile", systemImage: "safari")
                             }
+
+                            #if os(iOS)
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label("Open Profile in Safari", systemImage: "safari")
+                            }
+                            #endif
 
                             #if os(iOS)
                             Divider()
@@ -213,32 +208,30 @@ struct UserView: View {
                             deleteMenu
                         }
 
-                        if let userProfileURL = userProfileURL {
-                            #if os(iOS)
-                            Button {
-                                shareSheetURL = userProfileURL
-                            } label: {
-                                Label("Share", systemImage: "square.and.arrow.up")
-                            }
-                            #endif
+                        #if os(iOS)
+                        Button {
+                            shareSheetURL = userProfileURL
+                        } label: {
+                            Label("Share", systemImage: "square.and.arrow.up")
+                        }
+                        #endif
 
+                        Link(destination: userProfileURL) {
+                            Label("Open Profile", systemImage: "safari")
+                        }
+                        #if os(iOS)
+                        .contextMenu {
                             Link(destination: userProfileURL) {
                                 Label("Open Profile", systemImage: "safari")
                             }
-                            #if os(iOS)
-                            .contextMenu {
-                                Link(destination: userProfileURL) {
-                                    Label("Open Profile", systemImage: "safari")
-                                }
 
-                                Button {
-                                    safariSheetURL = userProfileURL
-                                } label: {
-                                    Label("Open Profile in Safari", systemImage: "safari")
-                                }
+                            Button {
+                                safariSheetURL = userProfileURL
+                            } label: {
+                                Label("Open Profile in Safari", systemImage: "safari")
                             }
-                            #endif
                         }
+                        #endif
 
                         #if os(macOS)
                         refreshButton
@@ -307,6 +300,33 @@ struct UserView: View {
             return fetchRequest
         }())
     }
+}
+
+extension UserView {
+    @MainActor
+    private var accountObjectID: NSManagedObjectID? {
+        account?.objectID
+    }
+
+    @MainActor
+    private var isUserContainsAccount: Bool {
+        guard let account = account else { return false }
+
+        return user?.accounts?.contains(account) == true
+    }
+
+    private func startRefreshing() {
+        isRefreshing = true
+    }
+
+    private func endRefreshing() {
+        isRefreshing = false
+    }
+
+    private func presentError(error: TweetNestError) {
+        self.error = error
+        showErrorAlert = true
+    }
 
     @Sendable
     private func refresh() async {
@@ -315,21 +335,26 @@ struct UserView: View {
                 return
             }
 
-            isRefreshing = true
+            startRefreshing()
             defer {
-                isRefreshing = false
+                Task {
+                    await endRefreshing()
+                }
             }
 
             do {
-                if let account = user?.accounts?.last, account == self.account {
-                    try await session.updateAccount(account.objectID)
-                } else if let account = account {
-                    try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: account.objectID)
+                guard let accountObjectID = accountObjectID else {
+                    return
+                }
+
+                if isUserContainsAccount {
+                    try await session.updateAccount(accountObjectID)
+                } else {
+                    _ = try await session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                self.error = TweetNestError(error)
-                showErrorAlert = true
+                presentError(error: TweetNestError(error))
             }
         }
     }

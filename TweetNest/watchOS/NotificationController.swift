@@ -14,7 +14,22 @@ class NotificationController: WKUserNotificationHostingController<NotificationVi
     private var notifications: OrderedDictionary<String, (date: Date, request: UNNotificationRequest)> = [:]
 
     override var body: NotificationView {
-        return NotificationView(notifications: Array(notifications.values))
+        let notificationsByTitle: OrderedDictionary<String, [(date: Date, request: UNNotificationRequest)]> = OrderedDictionary(
+            grouping: notifications.values
+        ) {
+            $0.request.content.title
+        }
+
+        return NotificationView(
+            notifications: notificationsByTitle
+                .mapValues {
+                    OrderedDictionary(
+                        grouping: $0
+                    ) {
+                        $0.request.content.subtitle
+                    }
+                }
+        )
     }
 
     override func willActivate() {

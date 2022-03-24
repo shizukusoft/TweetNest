@@ -13,15 +13,22 @@ struct UserDetailProfileView: View {
 
     @Environment(\.openURL) private var openURL
 
-    #if os(iOS)
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-    #endif
-
     var body: some View {
         Group {
+            #if os(iOS) || os(macOS)
+            if let profileHeaderImageURL = userDetail.profileHeaderImageURL {
+                DataAssetImage(url: profileHeaderImageURL, isExportable: true)
+                    .aspectRatio(3, contentMode: .fill)
+                    #if os(iOS)
+                    .listRowSeparator(.hidden)
+                    #endif
+                    .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
+            }
+            #endif
+
             VStack(alignment: .leading, spacing: 16) {
                 HStack(spacing: 8) {
-                    ProfileImage(profileImageURL: userDetail.profileImageURL)
+                    ProfileImage(profileImageURL: userDetail.profileImageURL, isExportable: true)
                         #if !os(watchOS)
                         .frame(width: 48, height: 48)
                         #else
@@ -96,14 +103,6 @@ struct UserDetailProfileView: View {
             }
 
             if let userCreationDate = userDetail.userCreationDate {
-                #if os(iOS)
-                let joinedDateText = userCreationDate.twnk_formatted(compact: horizontalSizeClass == .compact)
-                #elseif os(watchOS)
-                let joinedDateText = userCreationDate.twnk_formatted(compact: true)
-                #else
-                let joinedDateText = userCreationDate.twnk_formatted(compact: false)
-                #endif
-
                 Label {
                     TweetNestStack {
                         Text("Joined")
@@ -113,7 +112,7 @@ struct UserDetailProfileView: View {
                         Spacer()
                         #endif
                         Group {
-                            Text(verbatim: joinedDateText)
+                            DateText(date: userCreationDate)
                         }
                         .foregroundColor(.secondary)
                         .lineLimit(1)
@@ -124,7 +123,7 @@ struct UserDetailProfileView: View {
                 }
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
-                .accessibilityValue(joinedDateText)
+                .accessibilityValue(userCreationDate.twnk_formatted(shouldCompact: false))
             }
 
             if userDetail.isProtected {

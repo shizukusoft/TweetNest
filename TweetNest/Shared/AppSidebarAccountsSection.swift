@@ -40,7 +40,7 @@ struct AppSidebarAccountsSection: View {
             tag: .followings(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(user: user, diffKeyPath: \.followingUserIDs, title: Text("Followings History"))
+            UsersDiffList("Followings History", user: user, diffKeyPath: \.followingUserIDs)
                 .environment(\.account, account)
         } label: {
             Label("Followings History", systemImage: "person.2")
@@ -53,7 +53,7 @@ struct AppSidebarAccountsSection: View {
             tag: .followers(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(user: user, diffKeyPath: \.followerUserIDs, title: Text("Followers History"))
+            UsersDiffList("Followers History", user: user, diffKeyPath: \.followerUserIDs)
                 .environment(\.account, account)
         } label: {
             Label("Followers History", systemImage: "person.2")
@@ -66,10 +66,23 @@ struct AppSidebarAccountsSection: View {
             tag: .blockings(account),
             selection: $navigationItemSelection
         ) {
-            UsersDiffList(user: user, diffKeyPath: \.blockingUserIDs, title: Text("Blocks History"))
+            UsersDiffList("Blocks History", user: user, diffKeyPath: \.blockingUserIDs)
                 .environment(\.account, account)
         } label: {
             Label("Blocks History", systemImage: "nosign")
+        }
+    }
+
+    @ViewBuilder
+    var mutingsNavigationLink: some View {
+        NavigationLink(
+            tag: .mutings(account),
+            selection: $navigationItemSelection
+        ) {
+            UsersDiffList("Mutes History", user: user, diffKeyPath: \.mutingUserIDs)
+                .environment(\.account, account)
+        } label: {
+            Label("Mutes History", systemImage: "speaker.slash")
         }
     }
 
@@ -105,6 +118,15 @@ struct AppSidebarAccountsSection: View {
                         .accessibilityElement(children: .ignore)
                         .accessibilityLabel(blockingTitle)
                         .accessibilityIdentifier("\(displayAccountName):BlocksHistory")
+                        .accessibilityAddTraits(.isButton)
+                }
+
+                if account.preferences.fetchMutingUsers {
+                    let mutingsTitle = String(localized: "Mutes History for \(displayAccountName)", comment: "Navigation link for mutes history, grouped by username.")
+                    mutingsNavigationLink
+                        .accessibilityElement(children: .ignore)
+                        .accessibilityLabel(mutingsTitle)
+                        .accessibilityIdentifier("\(displayAccountName):MutesHistory")
                         .accessibilityAddTraits(.isButton)
                 }
             }

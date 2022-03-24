@@ -8,14 +8,14 @@
 import Foundation
 
 actor AsyncLazy<Value> {
-    enum Status<Value> {
+    enum Status {
         case uninitialized
         case initializing
         case initialized(Value)
     }
 
     private let initializer: () async throws -> Value
-    private var value: Status<Value> = .uninitialized
+    private var value: Status = .uninitialized
 
     var wrappedValue: Value {
         get async throws {

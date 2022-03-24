@@ -14,7 +14,7 @@ extension UserView {
 
         @FetchRequest
         private var userDetails: FetchedResults<UserDetail>
-
+        
         var body: some View {
             #if os(macOS)
             Table(userDetails) {
@@ -29,7 +29,7 @@ extension UserView {
                     Text(userDetail.name ?? "")
                 }
                 TableColumn("Username") { userDetail in
-                    Text(userDetail.username ?? "")
+                    Text(verbatim: userDetail.username.flatMap { "@\($0)" } ?? "")
                 }
                 TableColumn("Location") { userDetail in
                     Text(userDetail.location ?? "")
@@ -56,19 +56,16 @@ extension UserView {
                 }
             }
             #else
-            Section(String(localized: "All Data")) {
-                ForEach(userDetails) { userDetail in
-                    NavigationLink(
-                        userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ??
-                        userDetail.objectID.description
-                    ) {
-                        UserDetailView(userDetail: userDetail)
-                            .navigationTitle(
-                                Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
-                                .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
-                            )
-                            .environment(\.account, account)
-                    }
+            ForEach(userDetails) { userDetail in
+                NavigationLink(
+                    userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
+                ) {
+                    UserDetailView(userDetail: userDetail)
+                        .navigationTitle(
+                            Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
+                            .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
+                        )
+                        .environment(\.account, account)
                 }
             }
             #endif
@@ -93,7 +90,7 @@ extension UserView {
     }
 }
 
-struct UserView_AllDataView_Previews: PreviewProvider {
+struct UserViewAllDataView_Previews: PreviewProvider {
     static var previews: some View {
         UserView.AllDataView(user: nil)
     }

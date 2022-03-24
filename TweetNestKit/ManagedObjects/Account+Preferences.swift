@@ -10,10 +10,19 @@ import Foundation
 extension Account {
     public struct Preferences {
         public var fetchBlockingUsers: Bool = false
+        public var fetchMutingUsers: Bool = false
     }
 }
 
-extension Account.Preferences: Codable { }
+extension Account.Preferences: Codable {
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let defaultPreferences = Account.Preferences()
+
+        self.fetchBlockingUsers = try container.decodeIfPresent(Bool.self, forKey: .fetchBlockingUsers) ?? defaultPreferences.fetchBlockingUsers
+        self.fetchMutingUsers = try container.decodeIfPresent(Bool.self, forKey: .fetchMutingUsers) ?? defaultPreferences.fetchMutingUsers
+    }
+}
 
 extension Account.Preferences {
     @objc(TWNKAccountPreferencesTransformer)

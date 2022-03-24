@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/apple/swift-collections",
         "state": {
           "branch": null,
-          "revision": "9d8719c8bebdc79740b6969c912ac706eb721d7a",
-          "version": "0.0.7"
+          "revision": "48254824bb4248676bf7ce56014ff57b142b77eb",
+          "version": "1.0.2"
         }
       },
       {
@@ -24,7 +24,7 @@
         "repositoryURL": "https://github.com/tweetnest/swift-twitter",
         "state": {
           "branch": "develop",
-          "revision": "b7ef228d56d055c435f2afde7d5677c35b6d6475",
+          "revision": "2206f7e8a472fcc6c0d9cdef8cd9206c3cd1984c",
           "version": null
         }
       },

@@ -54,10 +54,12 @@ extension Task where Success == Never, Failure == Never {
 }
 
 @inlinable
+@Sendable
 public func withExtendedBackgroundExecution<T>(function: String = #function, fileID: String = #fileID, line: Int = #line, body: @escaping () async throws -> T) async throws -> T {
     try await withExtendedBackgroundExecution(identifier: "\(function) (\(fileID):\(line))", body: body)
 }
 
+@Sendable
 public func withExtendedBackgroundExecution<T>(identifier: String, body: @escaping () async throws -> T) async throws -> T {
     guard Task.isInExtendedBackgroundExecution == false else {
         return try await body()
@@ -69,10 +71,12 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: @escapi
 }
 
 @inlinable
+@Sendable
 public func withExtendedBackgroundExecution<T>(function: String = #function, fileID: String = #fileID, line: Int = #line, body: @escaping () async -> T) async -> T {
     await withExtendedBackgroundExecution(identifier: "\(function) (\(fileID):\(line))", body: body)
 }
 
+@Sendable
 public func withExtendedBackgroundExecution<T>(identifier: String, body: @escaping () async -> T) async -> T {
     guard Task.isInExtendedBackgroundExecution == false else {
         return await body()
@@ -83,6 +87,7 @@ public func withExtendedBackgroundExecution<T>(identifier: String, body: @escapi
     }
 }
 
+@Sendable
 private func handleExtendedBackgroundExecution<T>(identifier: String, expirationHandler: @escaping @Sendable () -> Void, body: @escaping () async throws -> T) async rethrows -> T {
     try await Task.$isInExtendedBackgroundExecution.withValue(true) {
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "extended-background-execution")
