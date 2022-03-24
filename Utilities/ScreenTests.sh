@@ -1,9 +1,12 @@
 #!/bin/bash
 
+set -e -x
+
 IOS_DEVICES=(
     'iPhone 13 Pro Max' # 6.5 Inch
     'iPhone 13' # 5.8 Inch
     'iPhone 8 Plus' # 5.5 Inch
+    'iPhone SE (3rd generation)' # 4.7 Inch
     'iPad Pro (12.9-inch) (5th generation)' # 12.9 Inch, iPad Pro (3rd generation)
     'iPad Pro (11-inch) (3rd generation)' # 11 Inch
     'iPad Pro (12.9-inch) (2nd generation)' # 12.9 Inch, iPad Pro (2nd generation)
@@ -15,10 +18,14 @@ WATCHOS_DEVICES=(
 
 #######################################################################################################################
 
+xcodebuild -scheme "TweetNest (macOS)" -only-testing "TweetNest Tests (macOS)/TweetNestScreenTests" -resultBundlePath 'ScreenTests (macOS).xcresult' test
+
+#######################################################################################################################
+
 ios_destinations=()
 for ios_device in "${IOS_DEVICES[@]}"
 do
-    xcrun simctl shutdown "$ios_device" >/dev/null 2>/dev/null
+    xcrun simctl shutdown "$ios_device" >/dev/null 2>/dev/null || true
     xcrun simctl boot "$ios_device"
     xcrun simctl status_bar "$ios_device" override\
         --time '9:41 AM'\

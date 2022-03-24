@@ -39,6 +39,7 @@ struct UsersDiffList: View {
         #if os(macOS)
         NavigationView {
             usersDiffList
+                .frame(minWidth: 254)
                 .listStyle(.plain)
                 .navigationTitle(title)
         }
