@@ -40,7 +40,7 @@ struct TweetNestApp: App {
                     .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
                     #if os(macOS) && DEBUG
-                    .frame(width: Self.isPreview ? 1440 : nil, height: Self.isPreview ? 900 : nil)
+                    .frame(width: Self.isPreview ? 1440 : nil, height: Self.isPreview ? (900 - 52) : nil)
                     #endif
             }
             #if os(iOS) || os(macOS)

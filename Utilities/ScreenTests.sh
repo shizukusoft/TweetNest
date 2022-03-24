@@ -18,10 +18,14 @@ WATCHOS_DEVICES=(
 
 #######################################################################################################################
 
+xcodebuild -scheme "TweetNest (macOS)" -only-testing "TweetNest Tests (macOS)/TweetNestScreenTests" -resultBundlePath 'ScreenTests (macOS).xcresult' test
+
+#######################################################################################################################
+
 ios_destinations=()
 for ios_device in "${IOS_DEVICES[@]}"
 do
-    xcrun simctl shutdown "$ios_device" >/dev/null 2>/dev/null
+    xcrun simctl shutdown "$ios_device" >/dev/null 2>/dev/null || true
     xcrun simctl boot "$ios_device"
     xcrun simctl status_bar "$ios_device" override\
         --time '9:41 AM'\
@@ -55,7 +59,3 @@ done
 xcodebuild -scheme "TweetNest (watchOS)" -only-testing "TweetNest Tests (watchOS)/TweetNestScreenTests" -testLanguage en -testRegion US -resultBundlePath 'ScreenTests (watchOS)(en-US).xcresult' "${watchos_destinations[@]}" test
 xcodebuild -scheme "TweetNest (watchOS)" -only-testing "TweetNest Tests (watchOS)/TweetNestScreenTests" -testLanguage ja -testRegion JP -resultBundlePath 'ScreenTests (watchOS)(ja-JP).xcresult' "${watchos_destinations[@]}" test
 xcodebuild -scheme "TweetNest (watchOS)" -only-testing "TweetNest Tests (watchOS)/TweetNestScreenTests" -testLanguage ko -testRegion KR -resultBundlePath 'ScreenTests (watchOS)(ko-KR).xcresult' "${watchos_destinations[@]}" test
-
-#######################################################################################################################
-
-# xcodebuild -scheme "TweetNest (macOS)" -only-testing "TweetNest Tests (macOS)/TweetNestScreenTests" -resultBundlePath 'ScreenTests (macOS).xcresult' test

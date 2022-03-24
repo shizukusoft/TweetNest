@@ -63,10 +63,7 @@ class TweetNestScreenTests: XCTestCase {
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
 
-        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
-        attachment.name = "Launch Screen"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        takeScreenshot(name: "Launch Screen")
     }
 
     func testAccount() throws {
@@ -87,10 +84,7 @@ class TweetNestScreenTests: XCTestCase {
         ], timeout: 5.0)
         #endif
 
-        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
-        attachment.name = "Account Screen"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        takeScreenshot(name: "Account Screen")
     }
 
     func testFollowingsHistory() throws {
@@ -111,10 +105,7 @@ class TweetNestScreenTests: XCTestCase {
         ], timeout: 5.0)
         #endif
 
-        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
-        attachment.name = "Followings History Screen"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        takeScreenshot(name: "Followings History Screen")
     }
 
     #if !os(watchOS)
@@ -157,11 +148,8 @@ class TweetNestScreenTests: XCTestCase {
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
         #endif
-
-        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
-        attachment.name = "Batch Delete Tweets Form Screen"
-        attachment.lifetime = .keepAlways
-        add(attachment)
+        
+        takeScreenshot(name: "Batch Delete Tweets Form Screen")
     }
 
     private func scrollDown() {
@@ -170,4 +158,11 @@ class TweetNestScreenTests: XCTestCase {
         relativeTouchPoint.press(forDuration: 0, thenDragTo: relativeOffset)
     }
     #endif
+
+    private func takeScreenshot(name: String) {
+        let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
+        attachment.name = name
+        attachment.lifetime = .keepAlways
+        add(attachment)
+    }
 }
