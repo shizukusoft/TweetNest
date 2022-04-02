@@ -20,33 +20,28 @@ extension BackgroundTaskScheduler {
     }
 
     nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
-        Task.detached { [self] in
-            await withTaskExpirationHandler { expirationHandler in
-                let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
+        ExpiringTask.detached { expire in
+            let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
-                backgroundTask.expirationHandler = {
-                    logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
-                    expirationHandler()
-                }
-
-                backgroundTask.setTaskCompleted(success: await self.backgroundRefresh())
+            backgroundTask.expirationHandler = {
+                logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
+                expire()
             }
+
+            backgroundTask.setTaskCompleted(success: await self.backgroundRefresh())
         }
     }
 
     nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
-        Task.detached { [self] in
-            await withTaskExpirationHandler { expirationHandler in
-                let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "data-cleansing")
+        ExpiringTask.detached { expire in
+            let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "data-cleansing")
 
-                backgroundTask.expirationHandler = {
-                    logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
-                    expirationHandler()
-                }
-
-                backgroundTask.setTaskCompleted(success: await self.backgroundDataCleansing())
+            backgroundTask.expirationHandler = {
+                logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
+                expire()
             }
 
+            backgroundTask.setTaskCompleted(success: await self.backgroundDataCleansing())
         }
     }
 }

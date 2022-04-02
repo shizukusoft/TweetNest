@@ -17,17 +17,15 @@ extension BackgroundTaskScheduler {
             return []
         }
 
-        Task.detached { [self] in
-            await withTaskExpirationHandler { expirationHandler in
-                let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
+        ExpiringTask.detached { expire in
+            let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
-                backgroundTask.expirationHandler = {
-                    logger.notice("Background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
-                    expirationHandler()
-                }
-
-                backgroundTask.setTaskCompletedWithSnapshot(await self.backgroundRefresh())
+            backgroundTask.expirationHandler = {
+                logger.notice("Background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
+                expire()
             }
+
+            backgroundTask.setTaskCompletedWithSnapshot(await self.backgroundRefresh())
         }
 
         return [backgroundTask]

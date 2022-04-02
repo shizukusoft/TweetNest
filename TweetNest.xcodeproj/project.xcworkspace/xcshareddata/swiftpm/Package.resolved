@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tweetnest/swift-background-task",
       "state" : {
-        "revision" : "aba107549bc05d9857e6ee975d010cf99a3f3f42",
-        "version" : "0.0.6"
+        "revision" : "c1511a4d36502289c35e35713e7c26aefac2d934",
+        "version" : "0.0.9"
       }
     },
     {
