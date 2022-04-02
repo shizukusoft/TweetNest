@@ -17,7 +17,7 @@ extension BackgroundTaskScheduler {
             return []
         }
 
-        ExpiringTask.detached { expire in
+        Task.expiringDetached { expire in
             let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
             backgroundTask.expirationHandler = {

@@ -20,7 +20,7 @@ extension BackgroundTaskScheduler {
     }
 
     nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
-        ExpiringTask.detached { expire in
+        Task.expiringDetached { expire in
             let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
             backgroundTask.expirationHandler = {
@@ -33,7 +33,7 @@ extension BackgroundTaskScheduler {
     }
 
     nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
-        ExpiringTask.detached { expire in
+        Task.expiringDetached { expire in
             let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "data-cleansing")
 
             backgroundTask.expirationHandler = {

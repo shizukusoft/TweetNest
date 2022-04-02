@@ -2717,7 +2717,7 @@
 			repositoryURL = "https://github.com/tweetnest/swift-background-task";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.2;
+				minimumVersion = 0.0.13;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
