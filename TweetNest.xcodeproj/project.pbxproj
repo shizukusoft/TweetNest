@@ -51,6 +51,9 @@
 		1912A79326B7E1AF00A191E4 /* popup in Resources */ = {isa = PBXBuildFile; fileRef = 1912A78926B7E1AF00A191E4 /* popup */; };
 		1912A79526B7E1FB00A191E4 /* bundled in Resources */ = {isa = PBXBuildFile; fileRef = 1912A79426B7E1FB00A191E4 /* bundled */; };
 		1912A79626B7E1FB00A191E4 /* bundled in Resources */ = {isa = PBXBuildFile; fileRef = 1912A79426B7E1FB00A191E4 /* bundled */; };
+		1920D59727F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
+		1920D59827F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
+		1920D59927F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
 		1923216B26DF998A00E140C5 /* Session+RemoteChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */; };
 		1924170826F2F25200DFEF34 /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */; };
 		1924170926F2F25200DFEF34 /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */; };
@@ -392,6 +395,7 @@
 		1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestAppDelegate.swift; sourceTree = "<group>"; };
 		1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
 		1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
+		1920D59627F82CAE0083C23A /* AppStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusView.swift; sourceTree = "<group>"; };
 		1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+RemoteChanges.swift"; sourceTree = "<group>"; };
 		1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestScreenTests.swift; sourceTree = "<group>"; };
 		1924170F26F2F2C400DFEF34 /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
@@ -820,6 +824,7 @@
 				19933EB925E90ECD006AB4C0 /* MainView.swift */,
 				19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */,
 				194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */,
+				1920D59627F82CAE0083C23A /* AppStatusView.swift */,
 				1970663E26E709FE00D7F21D /* AccountLabel.swift */,
 				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
 				192F008326FC2596000EC734 /* UserView+ProfileView.swift */,
@@ -1497,6 +1502,7 @@
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
 				1908FC0926F6F1D90095AF77 /* BatchDeleteTweetsFormView.swift in Sources */,
 				19FB868227E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
+				1920D59727F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				193659AF260978F900865D40 /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1534,6 +1540,7 @@
 				193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
 				19FB868727E5D10C00AAC5CB /* SectionedFetchedResultsController.swift in Sources */,
 				19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
+				1920D59827F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				192F008526FC2596000EC734 /* UserView+ProfileView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
@@ -1600,6 +1607,7 @@
 				19EABBE026D6878400D3B003 /* Session.swift in Sources */,
 				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
 				19EABBC926D6877600D3B003 /* UsersList.swift in Sources */,
+				1920D59927F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				19EABBC826D6877600D3B003 /* UserDetailProfileView.swift in Sources */,
 				19BE3E96270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */,
 				19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */,
