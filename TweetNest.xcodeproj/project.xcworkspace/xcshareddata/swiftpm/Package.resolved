@@ -1,52 +1,59 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "swift-collections",
-        "repositoryURL": "https://github.com/apple/swift-collections",
-        "state": {
-          "branch": null,
-          "revision": "48254824bb4248676bf7ce56014ff57b142b77eb",
-          "version": "1.0.2"
-        }
-      },
-      {
-        "package": "swift-log",
-        "repositoryURL": "https://github.com/apple/swift-log.git",
-        "state": {
-          "branch": null,
-          "revision": "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
-          "version": "1.4.2"
-        }
-      },
-      {
-        "package": "swift-twitter",
-        "repositoryURL": "https://github.com/tweetnest/swift-twitter",
-        "state": {
-          "branch": "develop",
-          "revision": "2206f7e8a472fcc6c0d9cdef8cd9206c3cd1984c",
-          "version": null
-        }
-      },
-      {
-        "package": "swift-unified-log",
-        "repositoryURL": "https://github.com/sinoru/swift-unified-log",
-        "state": {
-          "branch": null,
-          "revision": "08fbd351e4370c4b0008bc9dfa8c24a9135c059d",
-          "version": "1.0.0"
-        }
-      },
-      {
-        "package": "swift-zip",
-        "repositoryURL": "https://github.com/sinoru/swift-zip.git",
-        "state": {
-          "branch": null,
-          "revision": "f0fc65ac6a4e7efb21e802f2b431f3fb38dbdd4f",
-          "version": "0.0.1"
-        }
+  "pins" : [
+    {
+      "identity" : "swift-background-task",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tweetnest/swift-background-task",
+      "state" : {
+        "revision" : "15e9ad638ba6a7cc586331b8bdae1e5cfef51c1d",
+        "version" : "0.0.2"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "swift-collections",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-collections",
+      "state" : {
+        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
+        "version" : "1.0.2"
+      }
+    },
+    {
+      "identity" : "swift-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-log.git",
+      "state" : {
+        "revision" : "5d66f7ba25daf4f94100e7022febf3c75e37a6c7",
+        "version" : "1.4.2"
+      }
+    },
+    {
+      "identity" : "swift-twitter",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/tweetnest/swift-twitter",
+      "state" : {
+        "branch" : "develop",
+        "revision" : "2206f7e8a472fcc6c0d9cdef8cd9206c3cd1984c"
+      }
+    },
+    {
+      "identity" : "swift-unified-log",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sinoru/swift-unified-log",
+      "state" : {
+        "revision" : "08fbd351e4370c4b0008bc9dfa8c24a9135c059d",
+        "version" : "1.0.0"
+      }
+    },
+    {
+      "identity" : "swift-zip",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sinoru/swift-zip.git",
+      "state" : {
+        "revision" : "f0fc65ac6a4e7efb21e802f2b431f3fb38dbdd4f",
+        "version" : "0.0.1"
+      }
+    }
+  ],
+  "version" : 2
 }
