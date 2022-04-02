@@ -1974,7 +1974,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -2006,7 +2005,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -2086,7 +2084,6 @@
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2117,7 +2114,6 @@
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2227,6 +2223,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
@@ -2293,6 +2290,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LLVM_LTO = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
