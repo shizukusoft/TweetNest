@@ -2327,6 +2327,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = TweetNest_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = TweetNest;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
@@ -2348,6 +2349,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				IBSC_MODULE = TweetNest_Extension;
 				INFOPLIST_KEY_CFBundleDisplayName = TweetNest;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
@@ -2373,6 +2375,7 @@
 				INFOPLIST_FILE = TweetNest/watchOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2401,6 +2404,7 @@
 				INFOPLIST_FILE = TweetNest/watchOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_CLKComplicationPrincipalClass = "$(PRODUCT_MODULE_NAME).ComplicationController";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INFOPLIST_KEY_WKRunsIndependentlyOfCompanionApp = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
