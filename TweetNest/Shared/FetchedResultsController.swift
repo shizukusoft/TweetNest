@@ -11,7 +11,11 @@ import OrderedCollections
 import UnifiedLogging
 
 class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDelegate where Element: NSManagedObject {
-    private lazy var fetchedResultsController: NSFetchedResultsController<Element> = newFetchedResultsController()
+    private lazy var fetchedResultsController: NSFetchedResultsController<Element> = newFetchedResultsController() {
+        didSet {
+            managedObjectContext.perform(fetch)
+        }
+    }
 
     private let errorHandler: (@Sendable (Error) -> Void)?
 
@@ -30,13 +34,9 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     var fetchedObjects: OrderedSet<Element> {
         if fetchedResultsController.fetchedObjects == nil {
             managedObjectContext.performAndWait {
-                do {
-                    self.objectWillChange.send()
-                    try self.fetchedResultsController.performFetch()
-                } catch {
-                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-                    self.errorHandler?(error)
-                }
+                guard fetchedResultsController.fetchedObjects == nil else { return }
+
+                fetch()
             }
         }
 
@@ -73,10 +73,19 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
             sectionNameKeyPath: nil,
             cacheName: cacheName
         )
-
         fetchedResultsController.delegate = self
 
         return fetchedResultsController
+    }
+
+    private func fetch() {
+        do {
+            self.objectWillChange.send()
+            try fetchedResultsController.performFetch()
+        } catch {
+            Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+            self.errorHandler?(error)
+        }
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
