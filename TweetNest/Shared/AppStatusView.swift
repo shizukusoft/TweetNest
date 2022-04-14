@@ -7,17 +7,15 @@
 
 import SwiftUI
 import Combine
+import OrderedCollections
 import TweetNestKit
 
 struct AppStatusView: View {
     let isPersistentContainerLoaded: Bool
 
-    @State private var disposables = Set<AnyCancellable>()
-    @State private var persistentContainerCloudKitEvents: [PersistentContainer.CloudKitEvent] = []
+    @State private var inProgressPersistentContainerCloudKitEvent = TweetNestApp.session.persistentContainer.cloudKitEvents.values.last { $0.endDate == nil }
 
     private var loadingText: Text? {
-        let inProgressPersistentContainerCloudKitEvent = persistentContainerCloudKitEvents.first { $0.endDate == nil }
-
         switch (isPersistentContainerLoaded, inProgressPersistentContainerCloudKitEvent?.type) {
         case (false, _):
             return Text("Loading…")
@@ -52,12 +50,10 @@ struct AppStatusView: View {
                 .accessibilityAddTraits(.updatesFrequently)
             }
         }
-        .onAppear {
+        .onReceive(
             TweetNestApp.session.persistentContainer.$cloudKitEvents
-                .map { $0.map { $0.value } }
-                .receive(on: DispatchQueue.main)
-                .assign(to: \.persistentContainerCloudKitEvents, on: self)
-                .store(in: &disposables)
+        ) {
+            self.inProgressPersistentContainerCloudKitEvent = $0.values.last { $0.endDate == nil }
         }
     }
 }

@@ -87,10 +87,9 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     private nonisolated lazy var persistentContainerEventDidChanges = NotificationCenter.default
         .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: self)
         .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
+        .receive(on: DispatchQueue.main)
         .sink { [weak self] event in
-            self?.persistentStoreCoordinator.perform {  [weak self] in
-                self?.cloudKitEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
-            }
+            self?.cloudKitEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
         }
 
     init(inMemory: Bool = false) {
