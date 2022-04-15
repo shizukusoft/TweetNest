@@ -11,11 +11,7 @@ import OrderedCollections
 import UnifiedLogging
 
 class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDelegate where Element: NSManagedObject {
-    private lazy var fetchedResultsController: NSFetchedResultsController<Element> = newFetchedResultsController() {
-        didSet {
-            managedObjectContext.perform(fetch)
-        }
-    }
+    private lazy var fetchedResultsController: NSFetchedResultsController<Element> = newFetchedResultsController()
 
     private let errorHandler: (@Sendable (Error) -> Void)?
 
@@ -36,7 +32,13 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
             managedObjectContext.performAndWait {
                 guard fetchedResultsController.fetchedObjects == nil else { return }
 
-                fetch()
+                do {
+                    self.objectWillChange.send()
+                    try fetchedResultsController.performFetch()
+                } catch {
+                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+                    self.errorHandler?(error)
+                }
             }
         }
 
@@ -75,20 +77,27 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         )
         fetchedResultsController.delegate = self
 
+        Task.detached(priority: .utility) {
+            self.managedObjectContext.perform {
+                do {
+                    if fetchedResultsController === self.fetchedResultsController {
+                        self.objectWillChange.send()
+                    }
+
+                    try fetchedResultsController.performFetch()
+                } catch {
+                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+                    self.errorHandler?(error)
+                }
+            }
+        }
+
         return fetchedResultsController
     }
 
-    private func fetch() {
-        do {
-            self.objectWillChange.send()
-            try fetchedResultsController.performFetch()
-        } catch {
-            Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-            self.errorHandler?(error)
-        }
-    }
-
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard controller === self.fetchedResultsController else { return }
+
         objectWillChange.send()
     }
 }
