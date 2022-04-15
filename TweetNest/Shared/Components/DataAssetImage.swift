@@ -24,10 +24,6 @@ struct DataAssetImage: View {
     }
     @State private var imageData: ImageData?
 
-    @State private var dispatchQueue = DispatchQueue(
-        label: String(reflecting: Self.self),
-        qos: .userInitiated
-    )
     @State private var cgImage: CGImage?
     @State private var cgImageScale: CGFloat?
 
@@ -167,7 +163,7 @@ struct DataAssetImage: View {
     }
 
     private func updateImage(from imageData: ImageData?) {
-        dispatchQueue.async {
+        Task.detached(priority: .utility) {
             let cgImageAndImageScale: (cgImage: CGImage, imageScale: CGFloat?)? = {
                 guard let imageData = imageData else {
                     return nil
@@ -200,7 +196,7 @@ struct DataAssetImage: View {
                 return (cgImage: image, imageScale: imageDPI.flatMap { $0 / 72 })
             }()
 
-            Task {
+            await MainActor.run {
                 self.imageData = imageData
                 self.cgImage = cgImageAndImageScale?.cgImage
                 self.cgImageScale = cgImageAndImageScale?.imageScale

@@ -43,7 +43,7 @@ struct UserRows<Icon: View>: View {
             let searchQuery = newValue
             let userIDs = self.userIDs
 
-            self.managedObjectContext.perform {
+            Task.detached(priority: .userInitiated) {
                 let filteredUserIDsByUserID = userIDs.filter { $0.localizedCaseInsensitiveContains(searchQuery) || $0.displayUserID.localizedCaseInsensitiveContains(searchQuery) }
 
                 let fetchRequest = NSFetchRequest<NSDictionary>()
@@ -58,14 +58,15 @@ struct UserRows<Icon: View>: View {
                 ])
                 fetchRequest.propertiesToFetch = ["id"]
 
-                let fetchResults = try? managedObjectContext.fetch(fetchRequest)
-                let filteredUserIDsByNames = fetchResults?.compactMap { $0["id"] as? String }
+                let filteredUserIDsByNames: [String] = await self.managedObjectContext.perform(schedule: .enqueued) {
+                    let fetchResults = try? managedObjectContext.fetch(fetchRequest)
 
-                let filteredUserIDs = userIDs.intersection(filteredUserIDsByUserID + (filteredUserIDsByNames ?? []))
+                    return fetchResults?.compactMap { $0["id"] as? String }
+                } ?? []
 
-                Task {
-                    self.filteredUserIDs = filteredUserIDs
-                }
+                let filteredUserIDs = userIDs.intersection(filteredUserIDsByUserID + filteredUserIDsByNames)
+
+                self.filteredUserIDs = filteredUserIDs
             }
         }
     }

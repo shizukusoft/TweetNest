@@ -78,7 +78,7 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         fetchedResultsController.delegate = self
 
         Task.detached(priority: .utility) {
-            self.managedObjectContext.perform {
+            await self.managedObjectContext.perform(schedule: .enqueued) {
                 do {
                     if fetchedResultsController === self.fetchedResultsController {
                         self.objectWillChange.send()
