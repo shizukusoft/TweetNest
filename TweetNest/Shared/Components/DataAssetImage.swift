@@ -39,32 +39,37 @@ struct DataAssetImage: View {
             if isExportable, let url = url, let cgImage = cgImage, let imageData = imageData, let utType = UTType(mimeType: imageData.dataMIMEType, conformingTo: .image) {
                 let filename = url.pathExtension.isEmpty ? url.appendingPathExtension(for: utType).lastPathComponent : url.lastPathComponent
 
-                Menu {
-                    Button(
-                        action: {
-                            #if canImport(AppKit)
-                            NSPasteboard.general.setData(imageData.data, forType: .fileContents)
-                            #elseif canImport(UIKit)
-                            UIPasteboard.general.image = UIImage(data: imageData.data)
-                            #endif
-                        },
-                        label: {
-                            Label("Copy", systemImage: "doc.on.doc")
-                        }
-                    )
-                } label: {
+                Group {
+                    #if os(macOS)
                     resizableImage(cgImage, scale: cgImageScale)
-                } primaryAction: {
-                    isDetailProfileImagePresented = true
+                        .onTapGesture {
+                            isDetailProfileImagePresented = true
+                        }
+                        .contextMenu {
+                            menuItems(imageData: imageData.data)
+                        }
+                    #else
+                    Menu {
+                        menuItems(imageData: imageData.data)
+                    } label: {
+                        resizableImage(cgImage, scale: cgImageScale)
+                    } primaryAction: {
+                        isDetailProfileImagePresented = true
+                    }
+                    .menuStyle(.borderlessButton)
+                    #endif
                 }
-                .menuStyle(.borderlessButton)
                 .onDrag {
-                    let itemProvider = NSItemProvider(item: imageData.data as NSSecureCoding?, typeIdentifier: utType.identifier)
+                    let itemProvider = NSItemProvider()
+                    itemProvider.registerDataRepresentation(forTypeIdentifier: utType.identifier, visibility: .all) { loadHandler in
+                        loadHandler(imageData.data, nil)
+                        return nil
+                    }
                     itemProvider.suggestedName = filename
 
                     return itemProvider
                 } preview: {
-                    resizableImage(cgImage, scale: cgImageScale)
+                    Image(decorative: cgImage, scale: cgImageScale ?? 1.0)
                 }
                 .sheet(isPresented: $isDetailProfileImagePresented) {
                     #if os(macOS)
@@ -143,6 +148,22 @@ struct DataAssetImage: View {
         } else {
             Color.gray
         }
+    }
+
+    @ViewBuilder
+    private func menuItems(imageData: Data) -> some View {
+        Button(
+            action: {
+                #if canImport(AppKit)
+                NSPasteboard.general.setData(imageData, forType: .fileContents)
+                #elseif canImport(UIKit) && !os(watchOS)
+                UIPasteboard.general.image = UIImage(data: imageData)
+                #endif
+            },
+            label: {
+                Label("Copy", systemImage: "doc.on.doc")
+            }
+        )
     }
 
     private func updateImage(from imageData: ImageData?) {
