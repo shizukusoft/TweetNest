@@ -61,7 +61,11 @@ struct UserRows<Icon: View>: View {
                 let fetchResults = try? managedObjectContext.fetch(fetchRequest)
                 let filteredUserIDsByNames = fetchResults?.compactMap { $0["id"] as? String }
 
-                self.filteredUserIDs = userIDs.intersection(filteredUserIDsByUserID + (filteredUserIDsByNames ?? []))
+                let filteredUserIDs = userIDs.intersection(filteredUserIDsByUserID + (filteredUserIDsByNames ?? []))
+
+                Task {
+                    self.filteredUserIDs = filteredUserIDs
+                }
             }
         }
     }

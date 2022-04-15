@@ -168,7 +168,6 @@ struct DataAssetImage: View {
 
     private func updateImage(from imageData: ImageData?) {
         dispatchQueue.async {
-            let imageData = imageData
             let cgImageAndImageScale: (cgImage: CGImage, imageScale: CGFloat?)? = {
                 guard let imageData = imageData else {
                     return nil
@@ -201,9 +200,11 @@ struct DataAssetImage: View {
                 return (cgImage: image, imageScale: imageDPI.flatMap { $0 / 72 })
             }()
 
-            self.imageData = imageData
-            self.cgImage = cgImageAndImageScale?.cgImage
-            self.cgImageScale = cgImageAndImageScale?.imageScale
+            Task {
+                self.imageData = imageData
+                self.cgImage = cgImageAndImageScale?.cgImage
+                self.cgImageScale = cgImageAndImageScale?.imageScale
+            }
         }
     }
 }
