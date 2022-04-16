@@ -7,7 +7,6 @@
 
 import SwiftUI
 import CoreData
-import OrderedCollections
 import UnifiedLogging
 
 class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDelegate where Element: NSManagedObject {
@@ -27,16 +26,14 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         }
     }
 
-    var fetchedObjects: OrderedSet<Element> {
-        Task.detached(priority: .userInitiated) { [managedObjectContext, fetchedResultsController] in
-            await managedObjectContext.perform(schedule: .immediate) {
-                if fetchedResultsController.fetchedObjects == nil {
-                    self.fetch(fetchedResultsController)
-                }
+    var fetchedObjects: [Element] {
+        managedObjectContext.performAndWait {
+            if fetchedResultsController.fetchedObjects == nil {
+                self.fetch(fetchedResultsController)
             }
-        }
 
-        return OrderedSet<Element>(fetchedResultsController.fetchedObjects ?? [])
+            return fetchedResultsController.fetchedObjects ?? []
+        }
     }
 
     init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
@@ -71,7 +68,7 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         )
         fetchedResultsController.delegate = self
 
-        Task.detached(priority: .utility) {
+        Task.detached {
             await self.managedObjectContext.perform(schedule: .enqueued) {
                 self.fetch(fetchedResultsController)
             }
