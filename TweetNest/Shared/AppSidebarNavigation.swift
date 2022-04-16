@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 import AuthenticationServices
 import TweetNestKit
 import UnifiedLogging
@@ -20,13 +19,6 @@ enum AppSidebarNavigationItem: Hashable {
 }
 
 struct AppSidebarNavigation: View {
-    @State private var disposables = Set<AnyCancellable>()
-
-    @State private var persistentContainerCloudKitEvents: [PersistentContainer.CloudKitEvent] = []
-    private var inProgressPersistentContainerCloudKitEvent: PersistentContainer.CloudKitEvent? {
-        persistentContainerCloudKitEvents.first { $0.endDate == nil }
-    }
-
     @Binding var isPersistentContainerLoaded: Bool
 
     #if os(iOS)
@@ -114,7 +106,7 @@ struct AppSidebarNavigation: View {
                         }
                     } footer: {
                         #if os(watchOS)
-                        statusView
+                        AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
                         #endif
                     }
                     #endif
@@ -128,13 +120,6 @@ struct AppSidebarNavigation: View {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
                         .zIndex(-1)
                 }
-            }
-            .onAppear {
-                TweetNestApp.session.persistentContainer.$cloudKitEvents
-                    .map { $0.map { $0.value } }
-                    .receive(on: DispatchQueue.main)
-                    .assign(to: \.persistentContainerCloudKitEvents, on: self)
-                    .store(in: &disposables)
             }
             #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
@@ -167,7 +152,7 @@ struct AppSidebarNavigation: View {
                 }
 
                 ToolbarItemGroup(placement: .status) {
-                    statusView
+                    AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
                 }
                 #endif
             }
@@ -186,53 +171,6 @@ struct AppSidebarNavigation: View {
                 }
             }
             #endif
-        }
-    }
-
-    @ViewBuilder
-    var statusView: some View {
-        if isPersistentContainerLoaded == false {
-            HStack(spacing: 4) {
-                #if !os(watchOS)
-                ProgressView()
-                .accessibilityHidden(true)
-                #endif
-
-                Text("Loading…")
-                    #if !os(watchOS)
-                    .font(.system(.callout))
-                    .foregroundColor(.secondary)
-                    #endif
-                    #if os(iOS)
-                    .fixedSize()
-                    #endif
-            }
-            .accessibilityElement(children: .combine)
-        } else if let inProgressPersistentContainerCloudKitEvent = inProgressPersistentContainerCloudKitEvent {
-            HStack(spacing: 4) {
-                #if !os(watchOS)
-                ProgressView()
-                .accessibilityHidden(true)
-                #endif
-
-                Group {
-                    switch inProgressPersistentContainerCloudKitEvent.type {
-                    case .setup:
-                        Text("Preparing to Sync…")
-                    case .import, .export, .unknown:
-                        Text("Syncing…")
-                    }
-                }
-                #if !os(watchOS)
-                .font(.system(.callout))
-                .foregroundColor(.secondary)
-                #endif
-                #if os(iOS)
-                .fixedSize()
-                #endif
-            }
-            .accessibilityElement(children: .combine)
-            .accessibilityAddTraits(.updatesFrequently)
         }
     }
 

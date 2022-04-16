@@ -10,7 +10,7 @@ import CoreData
 import UnifiedLogging
 
 class SectionedFetchedResultsController<Result>: NSObject, NSFetchedResultsControllerDelegate where Result: NSManagedObject {
-    class Section {
+    struct Section {
         private var fetchedResultsSectionInfo: NSFetchedResultsSectionInfo
 
         init(fetchedResultsSectionInfo: NSFetchedResultsSectionInfo) {
@@ -19,8 +19,8 @@ class SectionedFetchedResultsController<Result>: NSObject, NSFetchedResultsContr
     }
 
     private lazy var fetchedResultsController: NSFetchedResultsController<Result> = newFetchedResultsController() {
-        willSet {
-            objectWillChange.send()
+        didSet {
+            managedObjectContext.perform(fetch)
         }
     }
 
@@ -44,7 +44,15 @@ class SectionedFetchedResultsController<Result>: NSObject, NSFetchedResultsContr
     }
 
     var sections: [Section]? {
-        fetchedResultsController.sections.flatMap {
+        if fetchedResultsController.fetchedObjects == nil {
+            managedObjectContext.performAndWait {
+                guard fetchedResultsController.fetchedObjects == nil else { return }
+
+                fetch()
+            }
+        }
+
+        return fetchedResultsController.sections.flatMap {
             $0.map {
                 Section(fetchedResultsSectionInfo: $0)
             }
@@ -86,16 +94,17 @@ class SectionedFetchedResultsController<Result>: NSObject, NSFetchedResultsContr
 
         fetchedResultsController.delegate = self
 
+        return fetchedResultsController
+    }
+
+    private func fetch() {
         do {
-            if fetchedResultsController.fetchedObjects == nil {
-                try fetchedResultsController.performFetch()
-            }
+            self.objectWillChange.send()
+            try fetchedResultsController.performFetch()
         } catch {
             Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
             self.errorHandler?(error)
         }
-
-        return fetchedResultsController
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
@@ -103,47 +112,4 @@ class SectionedFetchedResultsController<Result>: NSObject, NSFetchedResultsContr
     }
 }
 
-extension SectionedFetchedResultsController: RandomAccessCollection {
-    typealias Index = Int
-    typealias Element = Section
-
-    var startIndex: Index { (sections ?? []).startIndex }
-    var endIndex: Index { (sections ?? []).endIndex }
-
-    subscript(position: Index) -> Element {
-        get {
-            (sections ?? [])[position]
-        }
-    }
-
-    func index(after i: Index) -> Index {
-        (sections ?? []).index(after: i)
-    }
-}
-
-extension SectionedFetchedResultsController.Section: RandomAccessCollection {
-    typealias Index = Int
-    typealias Element = Result
-
-    var startIndex: Index { (fetchedResultsSectionInfo.objects as? [Result] ?? []).startIndex }
-    var endIndex: Index { (fetchedResultsSectionInfo.objects as? [Result] ?? []).endIndex }
-
-    subscript(position: Index) -> Element {
-        get {
-            (fetchedResultsSectionInfo.objects as? [Result] ?? [])[position]
-        }
-    }
-
-    func index(after i: Index) -> Index {
-        (fetchedResultsSectionInfo.objects as? [Result] ?? []).index(after: i)
-    }
-
-}
-
 extension SectionedFetchedResultsController: ObservableObject { }
-
-extension SectionedFetchedResultsController.Section: Identifiable {
-    var id: String {
-        fetchedResultsSectionInfo.name
-    }
-}

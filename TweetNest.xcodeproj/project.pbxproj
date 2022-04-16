@@ -51,6 +51,9 @@
 		1912A79326B7E1AF00A191E4 /* popup in Resources */ = {isa = PBXBuildFile; fileRef = 1912A78926B7E1AF00A191E4 /* popup */; };
 		1912A79526B7E1FB00A191E4 /* bundled in Resources */ = {isa = PBXBuildFile; fileRef = 1912A79426B7E1FB00A191E4 /* bundled */; };
 		1912A79626B7E1FB00A191E4 /* bundled in Resources */ = {isa = PBXBuildFile; fileRef = 1912A79426B7E1FB00A191E4 /* bundled */; };
+		1920D59727F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
+		1920D59827F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
+		1920D59927F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
 		1923216B26DF998A00E140C5 /* Session+RemoteChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */; };
 		1924170826F2F25200DFEF34 /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */; };
 		1924170926F2F25200DFEF34 /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */; };
@@ -129,7 +132,6 @@
 		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
-		199C8F4F26E0B04D000F218D /* TaskExpirationHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199C8F4E26E0B04D000F218D /* TaskExpirationHandler.swift */; };
 		199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		19A1F1B926F38D4300A28A49 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
@@ -223,6 +225,8 @@
 		19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */; };
 		19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117826DD28A1004D6DE3 /* Session+Credential.swift */; };
 		19F1117B26DD28DB004D6DE3 /* Session+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117A26DD28DB004D6DE3 /* Session+URL.swift */; };
+		19F7914327F8A361008F9FC0 /* TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F7914227F8A361008F9FC0 /* TweetNestKit.swift */; };
+		19F7914627F8A472008F9FC0 /* BackgroundTask in Frameworks */ = {isa = PBXBuildFile; productRef = 19F7914527F8A472008F9FC0 /* BackgroundTask */; };
 		19FB868227E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
 		19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
 		19FB868427E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
@@ -392,6 +396,7 @@
 		1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestAppDelegate.swift; sourceTree = "<group>"; };
 		1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
 		1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
+		1920D59627F82CAE0083C23A /* AppStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusView.swift; sourceTree = "<group>"; };
 		1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+RemoteChanges.swift"; sourceTree = "<group>"; };
 		1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestScreenTests.swift; sourceTree = "<group>"; };
 		1924170F26F2F2C400DFEF34 /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
@@ -447,7 +452,6 @@
 		19933EF025E91277006AB4C0 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		1995B92B26B6F1ED00AFCC9E /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
-		199C8F4E26E0B04D000F218D /* TaskExpirationHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskExpirationHandler.swift; sourceTree = "<group>"; };
 		199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestError.swift; sourceTree = "<group>"; };
 		19A6FF1526D6835F00AB7B7E /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -503,6 +507,7 @@
 		19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		19F1117826DD28A1004D6DE3 /* Session+Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
 		19F1117A26DD28DB004D6DE3 /* Session+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+URL.swift"; sourceTree = "<group>"; };
+		19F7914227F8A361008F9FC0 /* TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.swift; sourceTree = "<group>"; };
 		19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
 		19FB868527E5D10C00AAC5CB /* SectionedFetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionedFetchedResultsController.swift; sourceTree = "<group>"; };
 		66002D6D26BF896F00B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -593,6 +598,7 @@
 			files = (
 				19C5A2CB26BC205000AB1122 /* OrderedCollections in Frameworks */,
 				19C5A2C426BC1FD600AB1122 /* Twitter in Frameworks */,
+				19F7914627F8A472008F9FC0 /* BackgroundTask in Frameworks */,
 				19B4862E26D1E4A900A80D85 /* ZIP in Frameworks */,
 				19C5A2D026BC208700AB1122 /* UnifiedLogging in Frameworks */,
 			);
@@ -820,6 +826,7 @@
 				19933EB925E90ECD006AB4C0 /* MainView.swift */,
 				19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */,
 				194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */,
+				1920D59627F82CAE0083C23A /* AppStatusView.swift */,
 				1970663E26E709FE00D7F21D /* AccountLabel.swift */,
 				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
 				192F008326FC2596000EC734 /* UserView+ProfileView.swift */,
@@ -957,8 +964,8 @@
 				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
 				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
 				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
-				199C8F4E26E0B04D000F218D /* TaskExpirationHandler.swift */,
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
+				19F7914227F8A361008F9FC0 /* TweetNestKit.swift */,
 				195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */,
 				19C5A2D126BC217900AB1122 /* Extensions */,
 				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
@@ -1213,6 +1220,7 @@
 				19C5A2CA26BC205000AB1122 /* OrderedCollections */,
 				19C5A2CF26BC208700AB1122 /* UnifiedLogging */,
 				19B4862D26D1E4A900A80D85 /* ZIP */,
+				19F7914527F8A472008F9FC0 /* BackgroundTask */,
 			);
 			productName = TweetNestKit;
 			productReference = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */;
@@ -1299,6 +1307,7 @@
 				19C5A2C926BC204300AB1122 /* XCRemoteSwiftPackageReference "swift-collections" */,
 				19C5A2CC26BC207D00AB1122 /* XCRemoteSwiftPackageReference "swift-unified-log" */,
 				19B4862C26D1E4A900A80D85 /* XCRemoteSwiftPackageReference "swift-zip" */,
+				19F7914427F8A472008F9FC0 /* XCRemoteSwiftPackageReference "swift-background-task" */,
 			);
 			productRefGroup = 19933D3425E901F4006AB4C0 /* Products */;
 			projectDirPath = "";
@@ -1497,6 +1506,7 @@
 				66EE523826BF560200B721AC /* ShareView.swift in Sources */,
 				1908FC0926F6F1D90095AF77 /* BatchDeleteTweetsFormView.swift in Sources */,
 				19FB868227E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
+				1920D59727F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				193659AF260978F900865D40 /* Session.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1534,6 +1544,7 @@
 				193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
 				19FB868727E5D10C00AAC5CB /* SectionedFetchedResultsController.swift in Sources */,
 				19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
+				1920D59827F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				192F008526FC2596000EC734 /* UserView+ProfileView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
@@ -1600,6 +1611,7 @@
 				19EABBE026D6878400D3B003 /* Session.swift in Sources */,
 				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
 				19EABBC926D6877600D3B003 /* UsersList.swift in Sources */,
+				1920D59927F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				19EABBC826D6877600D3B003 /* UserDetailProfileView.swift in Sources */,
 				19BE3E96270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */,
 				19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */,
@@ -1657,7 +1669,6 @@
 				193AFB6626CA310E008BFF67 /* Session+UpdateAccount.swift in Sources */,
 				19C5A2B726BC1F8A00AB1122 /* SessionError.swift in Sources */,
 				197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */,
-				199C8F4F26E0B04D000F218D /* TaskExpirationHandler.swift in Sources */,
 				19C5A2B626BC1F8A00AB1122 /* User+CoreDataProperties.swift in Sources */,
 				19C5A2B126BC1F8A00AB1122 /* Account.swift in Sources */,
 				1985B42926E497B5000C6126 /* Session+Preferences.swift in Sources */,
@@ -1672,6 +1683,7 @@
 				19861E3B26C8F82400073431 /* Session+TweetNestKit.swift in Sources */,
 				19C5A2D626BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */,
 				1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */,
+				19F7914327F8A361008F9FC0 /* TweetNestKit.swift in Sources */,
 				193AFB5C26CA043A008BFF67 /* Account+Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1966,7 +1978,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -1998,7 +2010,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -2025,6 +2037,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2046,6 +2059,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2072,13 +2086,14 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2103,13 +2118,14 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
+				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2131,6 +2147,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2152,6 +2169,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2169,14 +2187,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_GCD_PERFORMANCE = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_INTEGER = YES;
+				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2199,14 +2218,13 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.8.7;
+				CURRENT_PROJECT_VERSION = 1.8.18;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
-				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -2226,6 +2244,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				STRIP_STYLE = "non-global";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -2241,14 +2260,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_GCD_PERFORMANCE = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
-				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_INTEGER = YES;
+				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
@@ -2271,13 +2291,13 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.8.7;
+				CURRENT_PROJECT_VERSION = 1.8.18;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
@@ -2292,10 +2312,10 @@
 				MARKETING_VERSION = 1.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				RUN_CLANG_STATIC_ANALYZER = YES;
 				STRIP_STYLE = "non-global";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_OPTIMIZE_OBJECT_LIFETIME = YES;
 				TVOS_DEPLOYMENT_TARGET = 15.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -2308,7 +2328,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2330,7 +2349,6 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2352,7 +2370,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
@@ -2381,7 +2398,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
@@ -2414,6 +2430,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2435,6 +2452,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2457,14 +2475,13 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 9;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2487,14 +2504,13 @@
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
 				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 9;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2520,6 +2536,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2543,6 +2560,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2702,6 +2720,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		19F7914427F8A472008F9FC0 /* XCRemoteSwiftPackageReference "swift-background-task" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tweetnest/swift-background-task";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.0.13;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2724,6 +2750,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 19C5A2CC26BC207D00AB1122 /* XCRemoteSwiftPackageReference "swift-unified-log" */;
 			productName = UnifiedLogging;
+		};
+		19F7914527F8A472008F9FC0 /* BackgroundTask */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19F7914427F8A472008F9FC0 /* XCRemoteSwiftPackageReference "swift-background-task" */;
+			productName = BackgroundTask;
 		};
 /* End XCSwiftPackageProductDependency section */
 
