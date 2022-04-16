@@ -80,6 +80,8 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
 
         Task.detached {
             await self.managedObjectContext.perform(schedule: .enqueued) {
+                guard self.fetchedResultsController.fetchedObjects == nil else { return }
+
                 self.fetch(fetchedResultsController)
             }
         }
