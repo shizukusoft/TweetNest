@@ -27,13 +27,15 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     }
 
     var fetchedObjects: [Element] {
-        managedObjectContext.performAndWait {
-            if fetchedResultsController.fetchedObjects == nil {
+        if fetchedResultsController.fetchedObjects == nil {
+            managedObjectContext.performAndWait {
+                guard self.fetchedResultsController.fetchedObjects == nil else { return }
+
                 self.fetch(fetchedResultsController)
             }
-
-            return fetchedResultsController.fetchedObjects ?? []
         }
+
+        return fetchedResultsController.fetchedObjects ?? []
     }
 
     init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
