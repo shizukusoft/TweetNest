@@ -41,6 +41,14 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         self.managedObjectContext = managedObjectContext
         self.cacheName = cacheName
         self.errorHandler = errorHandler
+
+        super.init()
+
+        Task.detached(priority: .utility) {
+            await MainActor.run {
+                _ = self.fetchedResultsController
+            }
+        }
     }
 
     convenience init(sortDescriptors: [SortDescriptor<Element>], predicate: NSPredicate? = nil, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
