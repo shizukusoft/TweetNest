@@ -11,6 +11,7 @@ import TweetNestKit
 
 struct UsersDiffListSection: View {
     let diffKeyPath: KeyPath<UserDetail, [String]?>
+    let filteredUserIDsByNames: OrderedSet<String>?
     let searchQuery: String
 
     var previousUserDetail: UserDetail?
@@ -23,14 +24,17 @@ struct UsersDiffListSection: View {
         let appendedUserIDs = userIDs.subtracting(previousUserIDs)
         let removedUserIDs = previousUserIDs.subtracting(userIDs)
 
+        let filteredAppendedUserIDs = searchQuery.isEmpty ? nil : OrderedSet(appendedUserIDs.filter { $0.localizedCaseInsensitiveContains(searchQuery) || $0.displayUserID.localizedCaseInsensitiveContains(searchQuery) || (filteredUserIDsByNames?.contains($0) ?? true) })
+        let filteredRemovedUserIDs = searchQuery.isEmpty ? nil : OrderedSet(removedUserIDs.filter { $0.localizedCaseInsensitiveContains(searchQuery) || $0.displayUserID.localizedCaseInsensitiveContains(searchQuery) || (filteredUserIDsByNames?.contains($0) ?? true) })
+
         if appendedUserIDs.isEmpty == false || removedUserIDs.isEmpty == false {
             Section {
-                UserRows(userIDs: appendedUserIDs, searchQuery: searchQuery) {
+                UserRows(userIDs: filteredAppendedUserIDs ?? appendedUserIDs) {
                     Image(systemName: "person.badge.plus")
                         .foregroundColor(.green)
                 }
 
-                UserRows(userIDs: removedUserIDs, searchQuery: searchQuery) {
+                UserRows(userIDs: filteredRemovedUserIDs ?? removedUserIDs) {
                     Image(systemName: "person.badge.minus")
                         .foregroundColor(.red)
                 }

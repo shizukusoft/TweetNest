@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CoreData
 import TweetNestKit
 import OrderedCollections
 
@@ -16,6 +17,7 @@ struct UsersDiffList: View {
     let diffKeyPath: KeyPath<UserDetail, [String]?>
 
     @State private var searchQuery: String = ""
+    @State private var filteredUserIDsByNames: OrderedSet<String>?
 
     @ViewBuilder private var usersDiffList: some View {
         let userDetails = userDetailsFetchedResultsController.fetchedObjects
@@ -27,12 +29,45 @@ struct UsersDiffList: View {
 
             UsersDiffListSection(
                 diffKeyPath: diffKeyPath,
+                filteredUserIDsByNames: filteredUserIDsByNames,
                 searchQuery: searchQuery,
                 previousUserDetail: previousUserDetail,
                 userDetail: userDetail
             )
         }
         .searchable(text: $searchQuery)
+        .onChange(of: searchQuery) { newValue in
+            let searchQuery = newValue
+
+            guard searchQuery.isEmpty == false else {
+                self.filteredUserIDsByNames = nil
+                return
+            }
+
+            Task.detached(priority: .userInitiated) {
+                let fetchRequest = NSFetchRequest<NSDictionary>()
+                fetchRequest.entity = User.entity()
+                fetchRequest.resultType = .dictionaryResultType
+                fetchRequest.predicate = NSCompoundPredicate(orPredicateWithSubpredicates: [
+                    NSPredicate(format: "userDetails.username CONTAINS[cd] %@", searchQuery),
+                    NSPredicate(format: "userDetails.name CONTAINS[cd] %@", searchQuery),
+                ])
+                fetchRequest.propertiesToFetch = ["id"]
+                fetchRequest.returnsObjectsAsFaults = false
+
+                let filteredUserIDsByNames: OrderedSet<String> = OrderedSet(
+                    await TweetNestApp.session.persistentContainer.performBackgroundTask { managedObjectContext in
+                        let fetchResults = try? managedObjectContext.fetch(fetchRequest)
+
+                        return fetchResults?.compactMap { $0["id"] as? String }
+                    } ?? []
+                )
+
+                await MainActor.run {
+                    self.filteredUserIDsByNames = filteredUserIDsByNames
+                }
+            }
+        }
     }
 
     var body: some View {
