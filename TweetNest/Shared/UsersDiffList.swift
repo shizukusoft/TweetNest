@@ -20,7 +20,7 @@ struct UsersDiffList: View {
     @State private var filteredUserIDsByNames: OrderedSet<String>?
 
     @ViewBuilder private var usersDiffList: some View {
-        let userDetails = userDetailsFetchedResultsController.fetchedObjects
+        let userDetails = OrderedSet(userDetailsFetchedResultsController.fetchedObjects)
 
         List(userDetails) { userDetail in
             let userDetailIndex = userDetails.firstIndex(of: userDetail)
