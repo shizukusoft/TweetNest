@@ -28,16 +28,10 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     }
 
     var fetchedObjects: OrderedSet<Element> {
-        if fetchedResultsController.fetchedObjects == nil {
-            managedObjectContext.performAndWait {
-                guard fetchedResultsController.fetchedObjects == nil else { return }
-
-                do {
-                    self.objectWillChange.send()
-                    try fetchedResultsController.performFetch()
-                } catch {
-                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-                    self.errorHandler?(error)
+        Task.detached(priority: .userInitiated) { [managedObjectContext, fetchedResultsController] in
+            await managedObjectContext.perform(schedule: .immediate) {
+                if fetchedResultsController.fetchedObjects == nil {
+                    self.fetch(fetchedResultsController)
                 }
             }
         }
@@ -79,20 +73,24 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
 
         Task.detached(priority: .utility) {
             await self.managedObjectContext.perform(schedule: .enqueued) {
-                do {
-                    if fetchedResultsController === self.fetchedResultsController {
-                        self.objectWillChange.send()
-                    }
-
-                    try fetchedResultsController.performFetch()
-                } catch {
-                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-                    self.errorHandler?(error)
-                }
+                self.fetch(fetchedResultsController)
             }
         }
 
         return fetchedResultsController
+    }
+
+    private func fetch(_ fetchedResultsController: NSFetchedResultsController<Element>) {
+        do {
+            if fetchedResultsController === self.fetchedResultsController {
+                self.objectWillChange.send()
+            }
+
+            try fetchedResultsController.performFetch()
+        } catch {
+            Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+            self.errorHandler?(error)
+        }
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
