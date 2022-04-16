@@ -13,25 +13,28 @@ struct AppSidebarAccountsSection: View {
     @ObservedObject var account: Account
     @Binding var navigationItemSelection: AppSidebarNavigationItem?
 
-    @StateObject private var usersFetchedResultsController: FetchedResultsController<User>
+    @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<UserDetail>
 
     var body: some View {
         Section {
             sectionRows
         } header: {
-            AccountLabel(account: account)
+            UserDetailLabel(userDetail: userDetailsFetchedResultsController.fetchedObjects.first, account: account)
                 #if os(watchOS)
                 .padding([.bottom], 2)
                 #endif
         }
         .onChange(of: account.userID) { newValue in
-            self.usersFetchedResultsController.fetchRequest = Self.newFetchRequest(userID: newValue)
+            self.userDetailsFetchedResultsController.fetchRequest = Self.newFetchRequest(userID: newValue)
         }
     }
 
     @ViewBuilder var sectionRows: some View {
-        if let user = usersFetchedResultsController.fetchedObjects.first {
-            let displayAccountName = user.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description
+        if
+            let latestUserDetail = userDetailsFetchedResultsController.fetchedObjects.first,
+            let user = latestUserDetail.user
+        {
+            let displayAccountName = latestUserDetail.displayUsername ?? account.displayUserID ?? account.objectID.description
 
             NavigationLink(
                 tag: .profile(account),
@@ -109,18 +112,21 @@ struct AppSidebarAccountsSection: View {
         }
     }
 
-    static private func newFetchRequest(userID: String?) -> NSFetchRequest<User> {
-        let fetchRequest = User.fetchRequest()
+    static private func newFetchRequest(userID: String?) -> NSFetchRequest<UserDetail> {
+        let fetchRequest = UserDetail.fetchRequest()
         if let userID = userID {
-            fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
+            fetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
         } else {
             fetchRequest.predicate = NSPredicate(value: false)
         }
         fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-            NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
+            NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
+            NSSortDescriptor(keyPath: \UserDetail.user?.creationDate, ascending: false),
+            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)
         ]
-        fetchRequest.propertiesToFetch = ["id"]
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.relationshipKeyPathsForPrefetching = ["user", "user.id"]
+        fetchRequest.propertiesToFetch = ["username", "user"]
         fetchRequest.fetchLimit = 1
 
         return fetchRequest
@@ -130,7 +136,7 @@ struct AppSidebarAccountsSection: View {
         self.account = account
         self._navigationItemSelection = navigationItemSelection
 
-        self._usersFetchedResultsController = StateObject(
+        self._userDetailsFetchedResultsController = StateObject(
             wrappedValue: FetchedResultsController(
                 fetchRequest: Self.newFetchRequest(userID: account.userID),
                 managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
