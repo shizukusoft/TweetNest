@@ -6,166 +6,141 @@
 //
 
 import SwiftUI
+import CoreData
 import TweetNestKit
 
 struct AppSidebarAccountsSection: View {
     @ObservedObject var account: Account
     @Binding var navigationItemSelection: AppSidebarNavigationItem?
 
-    @FetchRequest
-    private var users: FetchedResults<User>
-
-    private var user: User? {
-        users.first
-    }
-
-    @ViewBuilder
-    var accountNavigationLink: some View {
-        NavigationLink(
-            tag: .profile(account),
-            selection: $navigationItemSelection
-        ) {
-            if let userID = user?.id {
-                UserView(userID: userID)
-                    .environment(\.account, account)
-            }
-        } label: {
-            Label("Account", systemImage: "person")
-        }
-    }
-
-    @ViewBuilder
-    var followingsNavigationLink: some View {
-        NavigationLink(
-            tag: .followings(account),
-            selection: $navigationItemSelection
-        ) {
-            UsersDiffList("Followings History", user: user, diffKeyPath: \.followingUserIDs)
-                .environment(\.account, account)
-        } label: {
-            Label("Followings History", systemImage: "person.2")
-        }
-    }
-
-    @ViewBuilder
-    var followersNavigationLink: some View {
-        NavigationLink(
-            tag: .followers(account),
-            selection: $navigationItemSelection
-        ) {
-            UsersDiffList("Followers History", user: user, diffKeyPath: \.followerUserIDs)
-                .environment(\.account, account)
-        } label: {
-            Label("Followers History", systemImage: "person.2")
-        }
-    }
-
-    @ViewBuilder
-    var blockingsNavigationLink: some View {
-        NavigationLink(
-            tag: .blockings(account),
-            selection: $navigationItemSelection
-        ) {
-            UsersDiffList("Blocks History", user: user, diffKeyPath: \.blockingUserIDs)
-                .environment(\.account, account)
-        } label: {
-            Label("Blocks History", systemImage: "nosign")
-        }
-    }
-
-    @ViewBuilder
-    var mutingsNavigationLink: some View {
-        NavigationLink(
-            tag: .mutings(account),
-            selection: $navigationItemSelection
-        ) {
-            UsersDiffList("Mutes History", user: user, diffKeyPath: \.mutingUserIDs)
-                .environment(\.account, account)
-        } label: {
-            Label("Mutes History", systemImage: "speaker.slash")
-        }
-    }
+    @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<UserDetail>
 
     var body: some View {
         Section {
-            Group {
-                let displayAccountName = user?.sortedUserDetails?.last?.displayUsername ?? account.displayUserID ?? account.objectID.description
-
-                let accountTitle = String(localized: "Account for \(displayAccountName)", comment: "Navigation link for account, grouped by username.")
-                accountNavigationLink
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(accountTitle)
-                    .accessibilityIdentifier("\(displayAccountName):Account")
-                    .accessibilityAddTraits(.isButton)
-
-                let followingsTitle = String(localized: "Followings History for \(displayAccountName)", comment: "Navigation link for followings history, grouped by username.")
-                followingsNavigationLink
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(followingsTitle)
-                    .accessibilityIdentifier("\(displayAccountName):FollowingsHistory")
-                    .accessibilityAddTraits(.isButton)
-
-                let followersTitle = String(localized: "Followers History for \(displayAccountName)", comment: "Navigation link for followers history, grouped by username.")
-                followersNavigationLink
-                    .accessibilityElement(children: .ignore)
-                    .accessibilityLabel(followersTitle)
-                    .accessibilityIdentifier("\(displayAccountName):FollowersHistory")
-                    .accessibilityAddTraits(.isButton)
-
-                if account.preferences.fetchBlockingUsers {
-                    let blockingTitle = String(localized: "Blocks History for \(displayAccountName)", comment: "Navigation link for blocks history, grouped by username.")
-                    blockingsNavigationLink
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(blockingTitle)
-                        .accessibilityIdentifier("\(displayAccountName):BlocksHistory")
-                        .accessibilityAddTraits(.isButton)
-                }
-
-                if account.preferences.fetchMutingUsers {
-                    let mutingsTitle = String(localized: "Mutes History for \(displayAccountName)", comment: "Navigation link for mutes history, grouped by username.")
-                    mutingsNavigationLink
-                        .accessibilityElement(children: .ignore)
-                        .accessibilityLabel(mutingsTitle)
-                        .accessibilityIdentifier("\(displayAccountName):MutesHistory")
-                        .accessibilityAddTraits(.isButton)
-                }
-            }
-            .onChange(of: account.userID) { newValue in
-                if let newValue = newValue {
-                    users.nsPredicate = NSPredicate(format: "id == %@", newValue)
-                } else {
-                    users.nsPredicate = NSPredicate(value: false)
-                }
-            }
+            sectionRows
         } header: {
-            AccountLabel(account: account)
+            UserDetailLabel(userDetail: userDetailsFetchedResultsController.fetchedObjects.first, account: account)
                 #if os(watchOS)
                 .padding([.bottom], 2)
                 #endif
         }
+        .onChange(of: account.userID) { newValue in
+            self.userDetailsFetchedResultsController.fetchRequest = Self.newFetchRequest(userID: newValue)
+        }
+    }
+
+    @ViewBuilder var sectionRows: some View {
+        if
+            let latestUserDetail = userDetailsFetchedResultsController.fetchedObjects.first,
+            let user = latestUserDetail.user
+        {
+            let displayAccountName = latestUserDetail.displayUsername ?? account.userID?.displayUserID ?? account.objectID.description
+
+            NavigationLink(
+                tag: .profile(account),
+                selection: $navigationItemSelection
+            ) {
+                UserView(userID: user.id!)
+                    .environment(\.account, account)
+            } label: {
+                Label("Account", systemImage: "person")
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Account for \(displayAccountName)")
+            .accessibilityIdentifier("\(displayAccountName):Account")
+            .accessibilityAddTraits(.isButton)
+
+            NavigationLink(
+                tag: .followings(account),
+                selection: $navigationItemSelection
+            ) {
+                UsersDiffList("Followings History", user: user, diffKeyPath: \.followingUserIDs)
+                    .environment(\.account, account)
+            } label: {
+                Label("Followings History", systemImage: "person.2")
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Followings History for \(displayAccountName)")
+            .accessibilityIdentifier("\(displayAccountName):FollowingsHistory")
+            .accessibilityAddTraits(.isButton)
+
+            NavigationLink(
+                tag: .followers(account),
+                selection: $navigationItemSelection
+            ) {
+                UsersDiffList("Followers History", user: user, diffKeyPath: \.followerUserIDs)
+                    .environment(\.account, account)
+            } label: {
+                Label("Followers History", systemImage: "person.2")
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Followers History for \(displayAccountName)")
+            .accessibilityIdentifier("\(displayAccountName):FollowersHistory")
+            .accessibilityAddTraits(.isButton)
+
+            if account.preferences.fetchBlockingUsers {
+                NavigationLink(
+                    tag: .blockings(account),
+                    selection: $navigationItemSelection
+                ) {
+                    UsersDiffList("Blocks History", user: user, diffKeyPath: \.blockingUserIDs)
+                        .environment(\.account, account)
+                } label: {
+                    Label("Blocks History", systemImage: "nosign")
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Blocks History for \(displayAccountName)")
+                .accessibilityIdentifier("\(displayAccountName):BlocksHistory")
+                .accessibilityAddTraits(.isButton)
+            }
+
+            if account.preferences.fetchMutingUsers {
+                NavigationLink(
+                    tag: .mutings(account),
+                    selection: $navigationItemSelection
+                ) {
+                    UsersDiffList("Mutes History", user: user, diffKeyPath: \.mutingUserIDs)
+                        .environment(\.account, account)
+                } label: {
+                    Label("Mutes History", systemImage: "speaker.slash")
+                }
+                .accessibilityElement(children: .ignore)
+                .accessibilityLabel("Mutes History for \(displayAccountName)")
+                .accessibilityIdentifier("\(displayAccountName):MutesHistory")
+                .accessibilityAddTraits(.isButton)
+            }
+        }
+    }
+
+    static private func newFetchRequest(userID: String?) -> NSFetchRequest<UserDetail> {
+        let fetchRequest = UserDetail.fetchRequest()
+        if let userID = userID {
+            fetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
+        } else {
+            fetchRequest.predicate = NSPredicate(value: false)
+        }
+        fetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
+            NSSortDescriptor(keyPath: \UserDetail.user?.creationDate, ascending: false),
+            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)
+        ]
+        fetchRequest.returnsObjectsAsFaults = false
+        fetchRequest.relationshipKeyPathsForPrefetching = ["user", "user.id"]
+        fetchRequest.propertiesToFetch = ["username", "user"]
+        fetchRequest.fetchLimit = 1
+
+        return fetchRequest
     }
 
     init(account: Account, navigationItemSelection: Binding<AppSidebarNavigationItem?>) {
         self.account = account
         self._navigationItemSelection = navigationItemSelection
 
-        self._users = FetchRequest(
-            fetchRequest: {
-                let fetchRequest = User.fetchRequest()
-                if let userID = account.userID {
-                    fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
-                } else {
-                    fetchRequest.predicate = NSPredicate(value: false)
-                }
-                fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-                    NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
-                ]
-                fetchRequest.propertiesToFetch = ["id"]
-                fetchRequest.fetchLimit = 1
-
-                return fetchRequest
-            }()
+        self._userDetailsFetchedResultsController = StateObject(
+            wrappedValue: FetchedResultsController(
+                fetchRequest: Self.newFetchRequest(userID: account.userID),
+                managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
+            )
         )
     }
 }

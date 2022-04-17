@@ -20,10 +20,22 @@ typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 @main
 struct TweetNestApp: App {
     #if DEBUG
-    static var isPreview: Bool {
+    static nonisolated var isPreview: Bool {
         CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
     }
     #endif
+
+    static nonisolated var session: Session {
+        #if DEBUG
+        if isPreview {
+            return Session.preview
+        } else {
+            return Session.shared
+        }
+        #else
+        return Session.shared
+        #endif
+    }
 
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
@@ -37,7 +49,6 @@ struct TweetNestApp: App {
             WindowGroup {
                 MainView()
                     .environmentObject(delegate)
-                    .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
                     #if os(macOS) && DEBUG
                     .frame(width: Self.isPreview ? 1440 : nil, height: Self.isPreview ? (900 - 52) : nil)
@@ -52,7 +63,6 @@ struct TweetNestApp: App {
             #if os(macOS)
             Settings {
                 SettingsMainView()
-                    .environment(\.session, session)
                     .environment(\.managedObjectContext, session.persistentContainer.viewContext)
             }
             #elseif os(watchOS)

@@ -36,7 +36,7 @@ struct UserDetailProfileView: View {
                         #endif
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(verbatim: userDetail.name ?? userDetail.user?.id.flatMap({"#\($0)"}) ?? "")
+                        Text(verbatim: userDetail.name ?? userDetail.user?.id?.displayUserID ?? "")
                         if let username = userDetail.username {
                             Text(verbatim: "@\(username)")
                                 .foregroundColor(.secondary)

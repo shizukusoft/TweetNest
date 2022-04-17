@@ -57,9 +57,3 @@ extension Account {
         }
     }
 }
-
-extension Account {
-    public var displayUserID: String? {
-        return userID.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" }
-    }
-}
