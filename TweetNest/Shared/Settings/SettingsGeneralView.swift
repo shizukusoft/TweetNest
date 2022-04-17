@@ -39,6 +39,14 @@ struct SettingsGeneralView: View {
     var body: some View {
         Form {
             Section {
+                NavigationLink {
+                    SettingsAboutView()
+                } label: {
+                    Text("About")
+                }
+            }
+
+            Section {
                 Toggle("Background Update", isOn: $backgroundUpdate)
             } footer: {
                 Text("Update accounts in background on this device.")

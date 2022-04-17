@@ -75,39 +75,10 @@ struct SettingsMainView: View {
                 } label: {
                     Label("Notifications", systemImage: "bell")
                 }
-            }
-
-            Section {
-                let marketingVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String
-                let buildVersionString = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String).flatMap({String("(\($0))")})
-                let versionString = [marketingVersionString, buildVersionString].compactMap({$0}).joined(separator: " ")
-
-                TweetNestStack {
-                    Text("App Version")
-                    #if !os(watchOS)
-                    Spacer()
-                    #endif
-                    Text(versionString)
-                    .foregroundColor(.secondary)
+            } footer: {
+                if let marketingVersionString = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String {
+                    Text("App Version: \(marketingVersionString)")
                 }
-                #if !os(watchOS)
-                .contextMenu {
-                    Button(
-                        action: {
-                            #if canImport(AppKit)
-                            NSPasteboard.general.setString(versionString, forType: .string)
-                            #elseif canImport(UIKit)
-                            UIPasteboard.general.string = versionString
-                            #endif
-                        },
-                        label: {
-                            Label("Copy", systemImage: "doc.on.doc")
-                        }
-                    )
-                }
-                #endif
-            } header: {
-                Text("About")
             }
         }
         .navigationTitle(Text("Settings"))
