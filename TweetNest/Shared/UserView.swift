@@ -13,10 +13,6 @@ import UnifiedLogging
 struct UserView: View {
     let userID: String
 
-    var displayUserID: String {
-        return Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
-    }
-
     @Environment(\.account) var account: Account?
 
     @FetchRequest private var users: FetchedResults<User>
@@ -92,7 +88,7 @@ struct UserView: View {
 
     @ViewBuilder private var userFootnotes: some View {
         VStack(alignment: .leading) {
-            Text(verbatim: "#\(Int64(userID)?.twnk_formatted() ?? userID)")
+            Text(userID.displayUserID)
             if let user = user, let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
                 Group {
                     if lastUpdateStartDate > lastUpdateEndDate && lastUpdateStartDate.addingTimeInterval(60) >= Date() {
@@ -162,7 +158,7 @@ struct UserView: View {
             #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             #endif
-            .navigationTitle(Text(verbatim: user?.sortedUserDetails?.last?.displayUsername ?? displayUserID))
+            .navigationTitle(Text(verbatim: user?.sortedUserDetails?.last?.displayUsername ?? userID.displayUserID))
             .refreshable(action: refresh)
             #if os(iOS) || os(macOS)
             .toolbar {

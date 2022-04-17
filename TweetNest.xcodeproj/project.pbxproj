@@ -129,6 +129,7 @@
 		19861E3E26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */; };
 		1989B75626BA537900755B1E /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
 		1989B75726BA537900755B1E /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
+		198E9D16280BF9210064CBD8 /* UserID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198E9D15280BF9210064CBD8 /* UserID.swift */; };
 		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
@@ -444,6 +445,7 @@
 		19861E3A26C8F82400073431 /* Session+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountEnvironmentKey.swift; sourceTree = "<group>"; };
 		1989B75526BA537900755B1E /* UserDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailView.swift; sourceTree = "<group>"; };
+		198E9D15280BF9210064CBD8 /* UserID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserID.swift; sourceTree = "<group>"; };
 		19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestApp.swift; sourceTree = "<group>"; };
 		19933D2E25E901F4006AB4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		19933D3625E901F4006AB4C0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -972,6 +974,7 @@
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
 				19F7914227F8A361008F9FC0 /* TweetNestKit.swift */,
 				195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */,
+				198E9D15280BF9210064CBD8 /* UserID.swift */,
 				19C5A2D126BC217900AB1122 /* Extensions */,
 				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
 				195D1EC726EB171F00999EB7 /* Session */,
@@ -1661,6 +1664,7 @@
 				190DF4C126BCF1B700E1F062 /* Session+UpdateUser.swift in Sources */,
 				19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */,
 				19C5A2BE26BC1F8A00AB1122 /* UserDetail.swift in Sources */,
+				198E9D16280BF9210064CBD8 /* UserID.swift in Sources */,
 				19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */,
 				195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */,
 				19F1117526DD216C004D6DE3 /* BackgroundTasks.swift in Sources */,

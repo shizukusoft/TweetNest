@@ -67,7 +67,7 @@ struct UserDetailLabel: View {
 
     init(userDetail: UserDetail?, account: Account) {
         self.userDetail = userDetail
-        self.placeholder = account.displayUserID ?? account.objectID.uriRepresentation().absoluteString
+        self.placeholder = account.userID?.displayUserID ?? account.objectID.uriRepresentation().absoluteString
         self.showsUsernameOnly = true
     }
 }

@@ -34,7 +34,7 @@ struct AppSidebarAccountsSection: View {
             let latestUserDetail = userDetailsFetchedResultsController.fetchedObjects.first,
             let user = latestUserDetail.user
         {
-            let displayAccountName = latestUserDetail.displayUsername ?? account.displayUserID ?? account.objectID.description
+            let displayAccountName = latestUserDetail.displayUsername ?? account.userID?.displayUserID ?? account.objectID.description
 
             NavigationLink(
                 tag: .profile(account),

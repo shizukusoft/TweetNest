@@ -35,9 +35,3 @@ public class User: NSManagedObject {
 extension User {
     @NSManaged public private(set) var accounts: [Account]? // The accessor of the accounts property.
 }
-
-extension User {
-    public var displayID: String? {
-        return id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" }
-    }
-}
