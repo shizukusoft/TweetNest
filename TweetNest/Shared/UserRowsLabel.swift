@@ -16,30 +16,10 @@ struct UserRowsLabel: View {
     var body: some View {
         let latestUserDetail = latestUserDetailsFetchedResultsController.fetchedObjects.first
 
-        let name = latestUserDetail?.name ?? userID.displayUserID
-
-        Label {
-            TweetNestStack {
-                Text(verbatim: name)
-                    .lineLimit(1)
-
-                if latestUserDetail?.name != nil, let username = latestUserDetail?.username {
-                    Text(verbatim: "@\(username)")
-                        .lineLimit(1)
-                        .layoutPriority(1)
-                        .foregroundColor(Color.gray)
-                }
-            }
-        } icon: {
-            if let profileImageURL = latestUserDetail?.profileImageURL {
-                ProfileImage(profileImageURL: profileImageURL)
-                    .frame(width: 24, height: 24)
-            }
-        }
-        #if os(watchOS)
-        .labelStyle(.titleOnly)
-        #endif
-        .accessibilityLabel(Text(verbatim: name))
+        UserDetailLabel(userDetail: latestUserDetail, placeholder: userID.displayUserID)
+            #if os(watchOS)
+            .labelStyle(.titleOnly)
+            #endif
     }
 
     init(userID: String) {
@@ -54,6 +34,7 @@ struct UserRowsLabel: View {
                         NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
                     ]
                     fetchRequest.fetchLimit = 1
+                    fetchRequest.propertiesToFetch = ["name", "username", "profileImageURL"]
                     fetchRequest.returnsObjectsAsFaults = false
 
                     return fetchRequest

@@ -8,12 +8,6 @@
 import SwiftUI
 import TweetNestKit
 
-extension String {
-    var displayUserID: String {
-        Int64(self).flatMap { "#\($0.twnk_formatted())" } ?? "#\(self)"
-    }
-}
-
 struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs.Element == String {
     @Environment(\.account) private var account: Account?
 

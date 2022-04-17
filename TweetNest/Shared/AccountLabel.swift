@@ -17,19 +17,10 @@ struct AccountLabel: View {
     var body: some View {
         let userDetail = userDetails.first
 
-        HStack(alignment: .center, spacing: 6) {
-            ProfileImage(profileImageURL: userDetail?.profileImageURL)
-                #if os(watchOS)
-                .frame(width: 16, height: 16)
-                #else
-                .frame(width: 24, height: 24)
-                #endif
-
-            Text(verbatim: userDetail?.displayUsername ?? account.displayUserID ?? account.objectID.uriRepresentation().absoluteString)
-        }
-        .onChange(of: account.userID) { newValue in
-            userDetails.nsPredicate = NSPredicate(format: "user.id == %@", newValue ?? "")
-        }
+        UserDetailLabel(userDetail: userDetail, account: account)
+            .onChange(of: account.userID) { newValue in
+                userDetails.nsPredicate = NSPredicate(format: "user.id == %@", newValue ?? "")
+            }
     }
 
     init(account: Account) {
@@ -45,6 +36,7 @@ struct AccountLabel: View {
                 ]
                 fetchRequest.fetchLimit = 1
                 fetchRequest.propertiesToFetch = ["username", "profileImageURL"]
+                fetchRequest.returnsObjectsAsFaults = false
 
                 return fetchRequest
             }()

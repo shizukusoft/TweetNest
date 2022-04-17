@@ -7,7 +7,6 @@
 
 import SwiftUI
 import CoreData
-import OrderedCollections
 import UnifiedLogging
 
 class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDelegate where Element: NSManagedObject {
@@ -27,22 +26,16 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         }
     }
 
-    var fetchedObjects: OrderedSet<Element> {
+    var fetchedObjects: [Element] {
         if fetchedResultsController.fetchedObjects == nil {
             managedObjectContext.performAndWait {
-                guard fetchedResultsController.fetchedObjects == nil else { return }
+                guard self.fetchedResultsController.fetchedObjects == nil else { return }
 
-                do {
-                    self.objectWillChange.send()
-                    try fetchedResultsController.performFetch()
-                } catch {
-                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-                    self.errorHandler?(error)
-                }
+                self.fetch(fetchedResultsController)
             }
         }
 
-        return OrderedSet<Element>(fetchedResultsController.fetchedObjects ?? [])
+        return fetchedResultsController.fetchedObjects ?? []
     }
 
     init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
@@ -50,6 +43,14 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         self.managedObjectContext = managedObjectContext
         self.cacheName = cacheName
         self.errorHandler = errorHandler
+
+        super.init()
+
+        Task.detached(priority: .utility) {
+            await MainActor.run {
+                _ = self.fetchedResultsController
+            }
+        }
     }
 
     convenience init(sortDescriptors: [SortDescriptor<Element>], predicate: NSPredicate? = nil, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
@@ -77,22 +78,28 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         )
         fetchedResultsController.delegate = self
 
-        Task.detached(priority: .utility) {
+        Task.detached {
             await self.managedObjectContext.perform(schedule: .enqueued) {
-                do {
-                    if fetchedResultsController === self.fetchedResultsController {
-                        self.objectWillChange.send()
-                    }
+                guard self.fetchedResultsController.fetchedObjects == nil else { return }
 
-                    try fetchedResultsController.performFetch()
-                } catch {
-                    Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
-                    self.errorHandler?(error)
-                }
+                self.fetch(fetchedResultsController)
             }
         }
 
         return fetchedResultsController
+    }
+
+    private func fetch(_ fetchedResultsController: NSFetchedResultsController<Element>) {
+        do {
+            if fetchedResultsController === self.fetchedResultsController {
+                self.objectWillChange.send()
+            }
+
+            try fetchedResultsController.performFetch()
+        } catch {
+            Logger().error("Error occured on FetchedResultsController:\n\(error as NSError)")
+            self.errorHandler?(error)
+        }
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {

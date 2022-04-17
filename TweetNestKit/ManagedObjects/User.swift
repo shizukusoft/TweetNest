@@ -12,12 +12,12 @@ import Twitter
 
 public class User: NSManagedObject {
     public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
-        userDetails.flatMap {
-            OrderedSet(
-                $0.lazy
-                    .compactMap { $0 as? UserDetail }
-                    .sorted { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
-            )
+        (userDetails as? Set<UserDetail>).flatMap {
+            var userDetails = OrderedSet($0)
+
+            userDetails.sort { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
+
+            return userDetails
         }
     }
 
@@ -34,10 +34,4 @@ public class User: NSManagedObject {
 
 extension User {
     @NSManaged public private(set) var accounts: [Account]? // The accessor of the accounts property.
-}
-
-extension User {
-    public var displayID: String? {
-        return id.flatMap { "#\(Int64($0)?.twnk_formatted() ?? $0)" }
-    }
 }

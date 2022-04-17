@@ -12,8 +12,7 @@ extension UserView {
     struct AllDataView: View {
         @Environment(\.account) var account: Account?
 
-        @FetchRequest
-        private var userDetails: FetchedResults<UserDetail>
+        let userDetails: [UserDetail]
         
         var body: some View {
             #if os(macOS)
@@ -70,28 +69,11 @@ extension UserView {
             }
             #endif
         }
-
-        init(user: User?) {
-            self._userDetails = FetchRequest(fetchRequest: {
-                let fetchRequest = UserDetail.fetchRequest()
-                if let user = user {
-                    fetchRequest.predicate = NSPredicate(format: "user == %@", user)
-                } else {
-                    fetchRequest.predicate = NSPredicate(value: false)
-                }
-                fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
-                ]
-                fetchRequest.returnsObjectsAsFaults = true
-
-                return fetchRequest
-            }())
-        }
     }
 }
 
 struct UserViewAllDataView_Previews: PreviewProvider {
     static var previews: some View {
-        UserView.AllDataView(user: nil)
+        UserView.AllDataView(userDetails: [])
     }
 }

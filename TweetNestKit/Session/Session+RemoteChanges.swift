@@ -269,7 +269,7 @@ extension Session {
                     if let displayUsername = newUserDetail.displayUsername {
                         notificationContent.subtitle = displayUsername
                     } else if let userID = account.userID {
-                        notificationContent.subtitle = Int64(userID).flatMap { "#\($0.twnk_formatted())" } ?? "#\(userID)"
+                        notificationContent.subtitle = userID.displayUserID
                     }
                     notificationContent.categoryIdentifier = "NewAccountData"
                     notificationContent.interruptionLevel = .passive
