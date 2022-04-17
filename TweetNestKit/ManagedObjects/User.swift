@@ -12,12 +12,12 @@ import Twitter
 
 public class User: NSManagedObject {
     public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
-        userDetails.flatMap {
-            OrderedSet(
-                $0.lazy
-                    .compactMap { $0 as? UserDetail }
-                    .sorted { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
-            )
+        (userDetails as? Set<UserDetail>).flatMap {
+            var userDetails = OrderedSet($0)
+
+            userDetails.sort { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
+
+            return userDetails
         }
     }
 
