@@ -13,6 +13,7 @@
 		190007F227E6EB4E005CFED3 /* UserRowsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190007F127E6EB4E005CFED3 /* UserRowsLabel.swift */; };
 		190007F327E6EB4E005CFED3 /* UserRowsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190007F127E6EB4E005CFED3 /* UserRowsLabel.swift */; };
 		190007F427E6EB4E005CFED3 /* UserRowsLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190007F127E6EB4E005CFED3 /* UserRowsLabel.swift */; };
+		19030007280D86A20071A89A /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 19030006280D86A20071A89A /* Algorithms */; };
 		1908FBFD26F6EE0E0095AF77 /* BatchDeleteTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1908FBFC26F6EE0E0095AF77 /* BatchDeleteTweetsView.swift */; };
 		1908FBFE26F6EE140095AF77 /* BatchDeleteTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1908FBFC26F6EE0E0095AF77 /* BatchDeleteTweetsView.swift */; };
 		1908FBFF26F6EE150095AF77 /* BatchDeleteTweetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1908FBFC26F6EE0E0095AF77 /* BatchDeleteTweetsView.swift */; };
@@ -604,6 +605,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19030007280D86A20071A89A /* Algorithms in Frameworks */,
 				19C5A2CB26BC205000AB1122 /* OrderedCollections in Frameworks */,
 				19C5A2C426BC1FD600AB1122 /* Twitter in Frameworks */,
 				19F7914627F8A472008F9FC0 /* BackgroundTask in Frameworks */,
@@ -1232,6 +1234,7 @@
 				19C5A2CF26BC208700AB1122 /* UnifiedLogging */,
 				19B4862D26D1E4A900A80D85 /* ZIP */,
 				19F7914527F8A472008F9FC0 /* BackgroundTask */,
+				19030006280D86A20071A89A /* Algorithms */,
 			);
 			productName = TweetNestKit;
 			productReference = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */;
@@ -1319,6 +1322,7 @@
 				19C5A2CC26BC207D00AB1122 /* XCRemoteSwiftPackageReference "swift-unified-log" */,
 				19B4862C26D1E4A900A80D85 /* XCRemoteSwiftPackageReference "swift-zip" */,
 				19F7914427F8A472008F9FC0 /* XCRemoteSwiftPackageReference "swift-background-task" */,
+				19030005280D86A20071A89A /* XCRemoteSwiftPackageReference "swift-algorithms" */,
 			);
 			productRefGroup = 19933D3425E901F4006AB4C0 /* Products */;
 			projectDirPath = "";
@@ -2704,6 +2708,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		19030005280D86A20071A89A /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		19B4862C26D1E4A900A80D85 /* XCRemoteSwiftPackageReference "swift-zip" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sinoru/swift-zip.git";
@@ -2747,6 +2759,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		19030006280D86A20071A89A /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 19030005280D86A20071A89A /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
 		19B4862D26D1E4A900A80D85 /* ZIP */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 19B4862C26D1E4A900A80D85 /* XCRemoteSwiftPackageReference "swift-zip" */;
