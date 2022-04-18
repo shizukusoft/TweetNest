@@ -12,6 +12,7 @@ import OrderedCollections
 
 struct UsersDiffList: View {
     @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<UserDetail>
+    @State @Lazy private var searchManagedObjectContext =  TweetNestApp.session.persistentContainer.newBackgroundContext()
 
     let title: LocalizedStringKey
     let diffKeyPath: KeyPath<UserDetail, [String]?>
@@ -38,6 +39,7 @@ struct UsersDiffList: View {
         .searchable(text: $searchQuery)
         .onChange(of: searchQuery) { newValue in
             let searchQuery = newValue
+            let searchManagedObjectContext = searchManagedObjectContext
 
             guard searchQuery.isEmpty == false else {
                 self.filteredUserIDsByNames = nil
@@ -56,8 +58,8 @@ struct UsersDiffList: View {
                 fetchRequest.returnsObjectsAsFaults = false
 
                 let filteredUserIDsByNames: OrderedSet<String> = OrderedSet(
-                    await TweetNestApp.session.persistentContainer.performBackgroundTask { managedObjectContext in
-                        let fetchResults = try? managedObjectContext.fetch(fetchRequest)
+                    await searchManagedObjectContext.perform(schedule: .enqueued) {
+                        let fetchResults = try? searchManagedObjectContext.fetch(fetchRequest)
 
                         return fetchResults?.compactMap { $0["id"] as? String }
                     } ?? []
