@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Algorithms
 import CoreData
 import OrderedCollections
 import UnifiedLogging
@@ -52,7 +53,7 @@ extension Session {
             return try await withThrowingTaskGroup(of: (Date, (users: [Twitter.User], errors: [TwitterServerError])).self) { chunkedUsersTaskGroup in
                 let preupdateContext = self.persistentContainer.newBackgroundContext()
 
-                for chunkedUserIDs in userIDs.chunked(into: 100) {
+                for chunkedUserIDs in userIDs.chunks(ofCount: 100) {
                     try Task.checkCancellation()
 
                     chunkedUsersTaskGroup.addTask {
@@ -60,7 +61,7 @@ extension Session {
 
                         let userIDs: [Twitter.User.ID] = try await preupdateContext.perform {
                             let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-                            userFetchRequest.predicate = NSPredicate(format: "id IN %@", chunkedUserIDs)
+                            userFetchRequest.predicate = NSPredicate(format: "id IN %@", Array(chunkedUserIDs))
                             userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
                             userFetchRequest.returnsObjectsAsFaults = false
 
