@@ -28,11 +28,7 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
 
     var fetchedObjects: [Element] {
         if fetchedResultsController.fetchedObjects == nil {
-            managedObjectContext.performAndWait {
-                guard self.fetchedResultsController.fetchedObjects == nil else { return }
-
-                self.fetch(fetchedResultsController)
-            }
+            self.fetch(fetchedResultsController)
         }
 
         return fetchedResultsController.fetchedObjects ?? []
