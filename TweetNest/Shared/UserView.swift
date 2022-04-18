@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import TweetNestKit
+import BackgroundTask
 import UnifiedLogging
 
 struct UserView: View {

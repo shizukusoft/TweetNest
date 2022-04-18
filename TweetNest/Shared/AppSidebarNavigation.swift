@@ -8,6 +8,7 @@
 import SwiftUI
 import AuthenticationServices
 import TweetNestKit
+import BackgroundTask
 import UnifiedLogging
 
 enum AppSidebarNavigationItem: Hashable {

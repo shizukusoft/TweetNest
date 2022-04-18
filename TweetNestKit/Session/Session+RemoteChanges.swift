@@ -10,6 +10,7 @@ import Twitter
 import CoreData
 import UserNotifications
 import OrderedCollections
+import BackgroundTask
 import UnifiedLogging
 
 extension Session {

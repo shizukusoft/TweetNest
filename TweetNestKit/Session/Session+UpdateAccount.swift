@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import UserNotifications
 import UnifiedLogging
+import BackgroundTask
 import Twitter
 import OrderedCollections
 

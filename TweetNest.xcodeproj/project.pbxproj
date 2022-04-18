@@ -230,7 +230,6 @@
 		19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */; };
 		19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117826DD28A1004D6DE3 /* Session+Credential.swift */; };
 		19F1117B26DD28DB004D6DE3 /* Session+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117A26DD28DB004D6DE3 /* Session+URL.swift */; };
-		19F7914327F8A361008F9FC0 /* TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F7914227F8A361008F9FC0 /* TweetNestKit.swift */; };
 		19F7914627F8A472008F9FC0 /* BackgroundTask in Frameworks */ = {isa = PBXBuildFile; productRef = 19F7914527F8A472008F9FC0 /* BackgroundTask */; };
 		19FB868227E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
 		19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
@@ -514,7 +513,6 @@
 		19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		19F1117826DD28A1004D6DE3 /* Session+Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
 		19F1117A26DD28DB004D6DE3 /* Session+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+URL.swift"; sourceTree = "<group>"; };
-		19F7914227F8A361008F9FC0 /* TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKit.swift; sourceTree = "<group>"; };
 		19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
 		19FB868527E5D10C00AAC5CB /* SectionedFetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionedFetchedResultsController.swift; sourceTree = "<group>"; };
 		66002D6D26BF896F00B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -974,7 +972,6 @@
 				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
 				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
-				19F7914227F8A361008F9FC0 /* TweetNestKit.swift */,
 				195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */,
 				198E9D15280BF9210064CBD8 /* UserID.swift */,
 				19C5A2D126BC217900AB1122 /* Extensions */,
@@ -1699,7 +1696,6 @@
 				19861E3B26C8F82400073431 /* Session+TweetNestKit.swift in Sources */,
 				19C5A2D626BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */,
 				1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */,
-				19F7914327F8A361008F9FC0 /* TweetNestKit.swift in Sources */,
 				193AFB5C26CA043A008BFF67 /* Account+Preferences.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

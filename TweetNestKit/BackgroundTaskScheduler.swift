@@ -8,6 +8,7 @@
 import Foundation
 import UserNotifications
 import UnifiedLogging
+import BackgroundTask
 #if canImport(BackgroundTasks) && !os(macOS)
 import BackgroundTasks
 #endif

@@ -7,6 +7,7 @@
 
 import Foundation
 import Algorithms
+import BackgroundTask
 import CoreData
 import OrderedCollections
 import UnifiedLogging
