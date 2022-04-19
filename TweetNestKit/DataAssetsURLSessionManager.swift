@@ -101,15 +101,15 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
         do {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
-            DispatchQueue.global(qos: .utility).async(group: dispatchGroup) {
-                self.managedObjectContext.performAndWait {
-                    do {
-                        try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: self.managedObjectContext)
+            self.managedObjectContext.perform {
+                do {
+                    try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: self.managedObjectContext)
 
+                    if self.managedObjectContext.hasChanges {
                         try self.managedObjectContext.save()
-                    } catch {
-                        self.logger.error("\(error as NSError, privacy: .public)")
                     }
+                } catch {
+                    self.logger.error("\(error as NSError, privacy: .public)")
                 }
             }
         } catch {
