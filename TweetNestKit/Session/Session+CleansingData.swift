@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 import OrderedCollections
+import BackgroundTask
 
 extension Session {
     private nonisolated var persistentContainerNewBackgroundContext: NSManagedObjectContext {
@@ -19,14 +20,16 @@ extension Session {
     }
 
     public nonisolated func cleansingAllData() async throws {
-        let context = persistentContainerNewBackgroundContext
+        try await withExtendedBackgroundExecution {
+            let context = self.persistentContainerNewBackgroundContext
 
-        try await cleansingAllAccounts(context: context)
-        try await cleansingAllUsersAndUserDetails(context: context)
-        try await cleansingAllDataAssets(context: context)
+            try await self.cleansingAllAccounts(context: context)
+            try await self.cleansingAllUsersAndUserDetails(context: context)
+            try await self.cleansingAllDataAssets(context: context)
 
-        await context.perform {
-            self.preferences(for: context).lastCleansed = Date()
+            await context.perform {
+                self.preferences(for: context).lastCleansed = Date()
+            }
         }
     }
 

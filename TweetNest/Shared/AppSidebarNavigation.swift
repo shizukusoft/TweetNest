@@ -235,7 +235,6 @@ struct AppSidebarNavigation: View {
 
             do {
                 let hasChanges = try await TweetNestApp.session.updateAllAccounts()
-                try await TweetNestApp.session.cleansingAllData()
 
                 for hasChanges in hasChanges {
                     _ = try hasChanges.1.get()
@@ -244,6 +243,10 @@ struct AppSidebarNavigation: View {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
                 self.error = TweetNestError(error)
                 showErrorAlert = true
+            }
+
+            Task.detached(priority: .utility) {
+                try await TweetNestApp.session.cleansingAllData()
             }
         }
     }
