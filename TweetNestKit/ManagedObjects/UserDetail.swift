@@ -26,16 +26,10 @@ extension UserDetail {
         userUpdateStartDate: Date = Date(),
         userUpdateEndDate: Date = Date(),
         userDetailCreationDate: Date = Date(),
+        previousUserDetail: UserDetail? = nil,
         context: NSManagedObjectContext
     ) throws -> UserDetail {
-        let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-        userFetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
-        userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
-        userFetchRequest.fetchLimit = 1
-        userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
-        userFetchRequest.returnsObjectsAsFaults = false
-
-        let user = try context.fetch(userFetchRequest).first ?? {
+        let user = previousUserDetail?.user ?? {
             let user = User(context: context)
             user.id = twitterUser.id
             user.creationDate = userDetailCreationDate
@@ -67,10 +61,10 @@ extension UserDetail {
         newUserDetail.userAttributedDescription = twitterUser.attributedDescription.flatMap({ NSAttributedString($0) })
         newUserDetail.username = twitterUser.username
 
-        if let lastUserDetail = user.sortedUserDetails?.last, lastUserDetail ~= newUserDetail {
+        if let previousUserDetail = previousUserDetail, previousUserDetail ~= newUserDetail {
             context.delete(newUserDetail)
 
-            return lastUserDetail
+            return previousUserDetail
         } else {
             newUserDetail.creationDate = userDetailCreationDate
             newUserDetail.user = user

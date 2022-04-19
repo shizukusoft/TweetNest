@@ -49,69 +49,54 @@ extension Session {
 
             let twitterSession = try await self.twitterSession(for: accountObjectID)
 
-            let userIDs = OrderedSet(userIDs)
+            let userIDs: [Twitter.User.ID] = try await context.perform(schedule: .immediate) { [userIDs = Set(userIDs)] in
+                let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                userFetchRequest.predicate = NSPredicate(format: "id IN %@", userIDs)
+                userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                userFetchRequest.returnsObjectsAsFaults = false
+
+                let users = Dictionary(
+                    try context.fetch(userFetchRequest).map { ($0.id, $0) },
+                    uniquingKeysWith: {
+                        if ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast) {
+                            return $1
+                        } else {
+                            return $0
+                        }
+                    }
+                )
+
+                let refinedUserIDs: [Twitter.User.ID] = userIDs.compactMap {
+                    let user = users[$0]
+                    let lastUpdateStartDate = user?.lastUpdateStartDate ?? .distantPast
+
+                    guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
+                        return nil
+                    }
+
+                    // Don't update user data if user has account. (Might overwrite followings/followers list)
+                    guard $0 == accountUserID || user?.accounts?.isEmpty != false else {
+                        return nil
+                    }
+
+                    user?.lastUpdateStartDate = Date()
+
+                    return $0
+                }
+
+                try context.save()
+
+                return refinedUserIDs
+            }
 
             return try await withThrowingTaskGroup(of: (Date, (users: [Twitter.User], errors: [TwitterServerError])).self) { chunkedUsersTaskGroup in
-                let preupdateContext = self.persistentContainer.newBackgroundContext()
-
                 for chunkedUserIDs in userIDs.chunks(ofCount: 100) {
-                    try Task.checkCancellation()
-
                     chunkedUsersTaskGroup.addTask {
-                        let updateStartDate = Date()
-
-                        let userIDs: [Twitter.User.ID] = try await preupdateContext.perform {
-                            let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-                            userFetchRequest.predicate = NSPredicate(format: "id IN %@", Array(chunkedUserIDs))
-                            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-                            userFetchRequest.returnsObjectsAsFaults = false
-
-                            let users = Dictionary(
-                                try preupdateContext.fetch(userFetchRequest).map { ($0.id, $0) },
-                                uniquingKeysWith: {
-                                    if ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast) {
-                                        return $1
-                                    } else {
-                                        return $0
-                                    }
-                                }
-                            )
-
-                            let userIDs: [Twitter.User.ID] = chunkedUserIDs.compactMap {
-                                guard let user = users[$0], let lastUpdateStartDate = user.lastUpdateStartDate else {
-                                    return $0
-                                }
-
-                                guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
-                                    return nil
-                                }
-
-                                // Don't update user data if user has account. (Might overwrite followings/followers list)
-                                guard $0 == accountUserID || user.accounts?.isEmpty != false else {
-                                    return nil
-                                }
-
-                                user.lastUpdateStartDate = updateStartDate
-
-                                return $0
-                            }
-
-                            try preupdateContext.save()
-
-                            return userIDs
-                        }
-
-                        guard userIDs.isEmpty == false else {
-                            return (updateStartDate, (users: [], errors: []))
-                        }
-
-                        return try await (updateStartDate, Twitter.User.users(ids: userIDs, session: twitterSession))
+                        try await (Date(), Twitter.User.users(ids: Array(chunkedUserIDs), session: twitterSession))
                     }
                 }
 
                 return try await withThrowingTaskGroup(of: (Twitter.User.ID, Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>).self) { taskGroup in
-                    let dataAssetsURLSessionManager = self.dataAssetsURLSessionManager
-
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         for twitterUser in chunkedUsers.1.users {
                             try Task.checkCancellation()
@@ -124,7 +109,6 @@ extension Session {
                                 async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
                                 async let _myMutingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchMutingUsers ? Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
 
-                                let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
                                 let followingUserIDs = try await _followingUserIDs
                                 let followerIDs = try await _followerIDs
                                 let myBlockingUserIDs = try await _myBlockingUserIDs
@@ -136,20 +120,26 @@ extension Session {
                                 let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs, myMutingUserIDs].flatMap { $0 ?? [] })
                                 async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
 
+                                try Task.checkCancellation()
+
+                                let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
+
                                 let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID?) = try await context.perform(schedule: .enqueued) {
-                                    let fetchRequest = User.fetchRequest()
-                                    fetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
-                                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                                    let fetchRequest = UserDetail.fetchRequest()
+                                    fetchRequest.predicate = NSPredicate(format: "user.id == %@", twitterUser.id)
+                                    fetchRequest.sortDescriptors = [
+                                        NSSortDescriptor(key: "user.modificationDate", ascending: false),
+                                        NSSortDescriptor(key: "user.creationDate", ascending: false),
+                                        NSSortDescriptor(key: "creationDate", ascending: false),
+                                    ]
                                     fetchRequest.fetchLimit = 1
                                     fetchRequest.returnsObjectsAsFaults = false
-                                    fetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
+                                    fetchRequest.relationshipKeyPathsForPrefetching = ["user", "user.accounts"]
 
-                                    let user = try context.fetch(fetchRequest).first
-
-                                    let previousUserDetail = user?.sortedUserDetails?.last
+                                    let previousUserDetail = try context.fetch(fetchRequest).first
 
                                     // Don't update user data if user has account. (Might overwrite followings/followers list)
-                                    guard twitterUser.id == accountUserID || user?.accounts?.isEmpty != false else {
+                                    guard twitterUser.id == accountUserID || previousUserDetail?.user?.accounts?.isEmpty != false else {
                                         return (previousUserDetail?.objectID, nil)
                                     }
 
@@ -162,22 +152,23 @@ extension Session {
                                         mutingUserIDs: myMutingUserIDs,
                                         userUpdateStartDate: chunkedUsers.0,
                                         userDetailCreationDate: twitterUserFetchDate,
+                                        previousUserDetail: previousUserDetail,
                                         context: context
                                     )
 
                                     return (previousUserDetail?.objectID, userDetail.objectID)
                                 }
 
-                                try Task.checkCancellation()
-                                try await _ = _updatingUsers
-
                                 if let profileImageOriginalURL = twitterUser.profileImageOriginalURL {
-                                    dataAssetsURLSessionManager.download(profileImageOriginalURL)
+                                    self.dataAssetsURLSessionManager.download(profileImageOriginalURL)
                                 }
 
                                 if let profileHeaderImageURL = profileHeaderImageURL {
-                                    dataAssetsURLSessionManager.download(profileHeaderImageURL)
+                                    self.dataAssetsURLSessionManager.download(profileHeaderImageURL)
                                 }
+
+                                try Task.checkCancellation()
+                                try await _ = _updatingUsers
 
                                 return (twitterUser.id, .success(userDetailObjectIDs))
                             }
