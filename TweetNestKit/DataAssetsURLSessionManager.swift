@@ -12,7 +12,9 @@ import UnifiedLogging
 class DataAssetsURLSessionManager: NSObject {
     static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".data-assets"
 
+    @MainActor
     private var _backgroundURLSessionEventsCompletionHandler: (() -> Void)?
+    @MainActor
     private var backgroundURLSessionEventsCompletionHandler: (() -> Void)? {
         let backgroundURLSessionEventsCompletionHandler = _backgroundURLSessionEventsCompletionHandler
 
@@ -47,6 +49,7 @@ class DataAssetsURLSessionManager: NSObject {
         urlSession.invalidateAndCancel()
     }
 
+    @MainActor
     func handleBackgroundURLSessionEvents(completionHandler: @escaping () -> Void) {
         _backgroundURLSessionEventsCompletionHandler = completionHandler
     }
@@ -67,8 +70,12 @@ extension DataAssetsURLSessionManager {
 
 extension DataAssetsURLSessionManager: URLSessionDelegate {
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        dispatchGroup.notify(queue: .main) { [backgroundURLSessionEventsCompletionHandler] in
-            backgroundURLSessionEventsCompletionHandler?()
+        dispatchGroup.notify(queue: .global(qos: .default)) {
+            Task {
+                await MainActor.run {
+                    self.backgroundURLSessionEventsCompletionHandler?()
+                }
+            }
         }
     }
 
