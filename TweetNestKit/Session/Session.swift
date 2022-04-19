@@ -26,12 +26,11 @@ public actor Session {
         }
     }
 
-    private(set) nonisolated lazy var urlSession = URLSession(configuration: .twnk_default)
-
     private let inMemory: Bool
 
     public private(set) nonisolated lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
     public private(set) nonisolated lazy var backgroundTaskScheduler = BackgroundTaskScheduler(session: self)
+    private(set) nonisolated lazy var dataAssetsURLSessionManager = DataAssetsURLSessionManager(session: self)
 
     private nonisolated lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
@@ -50,8 +49,6 @@ public actor Session {
         Task {
             await backgroundTaskScheduler.invalidate()
         }
-
-        urlSession.invalidateAndCancel()
     }
 }
 
@@ -160,5 +157,20 @@ extension Session {
         }
 
         twitterSessions[accountObjectID.uriRepresentation()] = twitterSession
+    }
+}
+
+extension Session {
+    @discardableResult
+    public static func handleEventsForBackgroundURLSession(_ identifier: String, completionHandler: @escaping () -> Void) -> Bool {
+        switch identifier {
+        case DataAssetsURLSessionManager.backgroundURLSessionIdentifier:
+            Task {
+                await Session.shared.dataAssetsURLSessionManager.handleBackgroundURLSessionEvents(completionHandler: completionHandler)
+            }
+            return true
+        default:
+            return false
+        }
     }
 }

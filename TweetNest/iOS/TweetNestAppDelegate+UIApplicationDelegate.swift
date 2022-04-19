@@ -20,4 +20,8 @@ extension TweetNestAppDelegate: UIApplicationDelegate {
 
         return true
     }
+
+    func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+        Session.handleEventsForBackgroundURLSession(identifier, completionHandler: completionHandler)
+    }
 }

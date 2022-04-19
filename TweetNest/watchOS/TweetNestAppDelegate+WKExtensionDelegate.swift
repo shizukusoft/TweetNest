@@ -23,6 +23,10 @@ extension TweetNestAppDelegate: WKExtensionDelegate {
                 DispatchQueue.main.async {
                     backgroundTask.setTaskCompleted(restoredDefaultState: false, estimatedSnapshotExpiration: .distantFuture, userInfo: nil)
                 }
+            case let backgroundTask as WKURLSessionRefreshBackgroundTask:
+                Session.handleEventsForBackgroundURLSession(backgroundTask.sessionIdentifier) {
+                    backgroundTask.setTaskCompletedWithSnapshot(true)
+                }
             default:
                 break
             }

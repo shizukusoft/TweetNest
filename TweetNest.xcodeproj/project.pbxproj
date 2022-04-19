@@ -88,6 +88,7 @@
 		193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
 		193AFB6F26CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
+		193B995C280E585E00A59984 /* DataAssetsURLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */; };
 		194360FF280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436100280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436101280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
@@ -229,7 +230,6 @@
 		19F1117526DD216C004D6DE3 /* BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */; };
 		19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */; };
 		19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117826DD28A1004D6DE3 /* Session+Credential.swift */; };
-		19F1117B26DD28DB004D6DE3 /* Session+URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117A26DD28DB004D6DE3 /* Session+URL.swift */; };
 		19F7914627F8A472008F9FC0 /* BackgroundTask in Frameworks */ = {isa = PBXBuildFile; productRef = 19F7914527F8A472008F9FC0 /* BackgroundTask */; };
 		19FB868227E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
 		19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */; };
@@ -418,6 +418,7 @@
 		193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+UpdateAccount.swift"; sourceTree = "<group>"; };
 		193AFB6826CA3411008BFF67 /* SettingsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMainView.swift; sourceTree = "<group>"; };
 		193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountView.swift; sourceTree = "<group>"; };
+		193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
 		194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserView+FootnotesView.swift"; sourceTree = "<group>"; };
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1945F84126F0D3D900CE4EFB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -512,7 +513,6 @@
 		19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasks.swift; sourceTree = "<group>"; };
 		19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		19F1117826DD28A1004D6DE3 /* Session+Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
-		19F1117A26DD28DB004D6DE3 /* Session+URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+URL.swift"; sourceTree = "<group>"; };
 		19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
 		19FB868527E5D10C00AAC5CB /* SectionedFetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionedFetchedResultsController.swift; sourceTree = "<group>"; };
 		66002D6D26BF896F00B52E30 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -786,7 +786,6 @@
 				19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */,
 				190DF4C026BCF1B700E1F062 /* Session+UpdateUser.swift */,
 				193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */,
-				19F1117A26DD28DB004D6DE3 /* Session+URL.swift */,
 				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
 			);
 			path = Session;
@@ -967,6 +966,7 @@
 				19AFA14226E847B800764D79 /* BackgroundTaskScheduler+BackgroundTask.swift */,
 				19C3C82226E84E0D001FA25D /* BackgroundTaskScheduler+WatchKit.swift */,
 				19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */,
+				193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */,
 				19EE519D280D110B0068CBCB /* Lazy.swift */,
 				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
 				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
@@ -1674,7 +1674,6 @@
 				19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */,
 				19C5A28A26BC1F3500AB1122 /* TweetNestKit.docc in Sources */,
 				19C3C82326E84E0D001FA25D /* BackgroundTaskScheduler+WatchKit.swift in Sources */,
-				19F1117B26DD28DB004D6DE3 /* Session+URL.swift in Sources */,
 				19C5A2BB26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift in Sources */,
 				197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */,
 				1923216B26DF998A00E140C5 /* Session+RemoteChanges.swift in Sources */,
@@ -1690,6 +1689,7 @@
 				19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */,
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
 				19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */,
+				193B995C280E585E00A59984 /* DataAssetsURLSessionManager.swift in Sources */,
 				1985B42D26E49A01000C6126 /* Preferences+CoreDataProperties.swift in Sources */,
 				19AFA14126E837B800764D79 /* BackgroundTaskScheduler.swift in Sources */,
 				19C5A2B526BC1F8A00AB1122 /* PersistentContainer.swift in Sources */,

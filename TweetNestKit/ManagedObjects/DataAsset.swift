@@ -50,18 +50,3 @@ extension DataAsset {
         }
     }
 }
-
-extension DataAsset {
-    @discardableResult
-    static func dataAsset<T>(for url: URL, session: Session, context: NSManagedObjectContext, _ block: @escaping (DataAsset) throws -> T) async throws -> T {
-        var urlRequest = URLRequest(url: url)
-        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
-
-        let (data, response) = try await session.data(for: urlRequest)
-
-        try Task.checkCancellation()
-        return try await context.perform(schedule: .enqueued) {
-            try block(.dataAsset(data: data, dataMIMEType: response.mimeType, url: url, context: context))
-        }
-    }
-}

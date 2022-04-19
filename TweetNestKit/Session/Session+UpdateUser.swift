@@ -110,7 +110,7 @@ extension Session {
                 }
 
                 return try await withThrowingTaskGroup(of: (Twitter.User.ID, Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>).self) { taskGroup in
-                    let dataAssetContext = self.persistentContainer.newBackgroundContext()
+                    let dataAssetsURLSessionManager = self.dataAssetsURLSessionManager
 
                     for try await chunkedUsers in chunkedUsersTaskGroup {
                         for twitterUser in chunkedUsers.1.users {
@@ -172,41 +172,11 @@ extension Session {
                                 try await _ = _updatingUsers
 
                                 if let profileImageOriginalURL = twitterUser.profileImageOriginalURL {
-                                    Task.detached(priority: .utility) {
-                                        await withExtendedBackgroundExecution {
-                                            do {
-                                                try Task.checkCancellation()
-
-                                                try await DataAsset.dataAsset(for: profileImageOriginalURL, session: self, context: dataAssetContext) { _ in
-                                                    if dataAssetContext.hasChanges {
-                                                        try dataAssetContext.save()
-                                                    }
-                                                }
-                                            } catch {
-                                                Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-image")
-                                                    .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
-                                            }
-                                        }
-                                    }
+                                    dataAssetsURLSessionManager.download(profileImageOriginalURL)
                                 }
 
                                 if let profileHeaderImageURL = profileHeaderImageURL {
-                                    Task.detached(priority: .utility) {
-                                        await withExtendedBackgroundExecution {
-                                            do {
-                                                try Task.checkCancellation()
-
-                                                try await DataAsset.dataAsset(for: profileHeaderImageURL, session: self, context: dataAssetContext) { _ in
-                                                    if dataAssetContext.hasChanges {
-                                                        try dataAssetContext.save()
-                                                    }
-                                                }
-                                            } catch {
-                                                Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-profile-header-image")
-                                                    .error("Error occurred while downloading image: \(String(reflecting: error), privacy: .public)")
-                                            }
-                                        }
-                                    }
+                                    dataAssetsURLSessionManager.download(profileHeaderImageURL)
                                 }
 
                                 return (twitterUser.id, .success(userDetailObjectIDs))
