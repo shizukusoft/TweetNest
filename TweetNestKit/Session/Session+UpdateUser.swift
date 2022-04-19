@@ -89,6 +89,10 @@ extension Session {
                     return refinedUserIDs
                 }
 
+                async let _preferences = context.perform(schedule: .enqueued) {
+                    self.preferences(for: context).preferences
+                }
+
                 async let _accountPreferences = context.perform(schedule: .enqueued) { () -> Account.Preferences in
                     guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
                         throw SessionError.unknown
@@ -105,6 +109,7 @@ extension Session {
                     }
                 }
 
+                let preferences = await _preferences
                 let accountPreferences = try await _accountPreferences
 
                 return try await withThrowingTaskGroup(of: (Twitter.User.ID, Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>).self) { taskGroup in
@@ -113,7 +118,7 @@ extension Session {
                             try Task.checkCancellation()
 
                             taskGroup.addTask {
-                                async let _profileBanner = context.performAndWait { self.preferences(for: context).fetchProfileHeaderImages == true } ? twitterUser.profileBanner(session: twitterSession) : nil
+                                async let _profileBanner = preferences.fetchProfileHeaderImages == true ? twitterUser.profileBanner(session: twitterSession) : nil
 
                                 async let _followingUserIDs = twitterUser.id == accountUserID ? Twitter.User.followingUserIDs(forUserID: twitterUser.id, session: twitterSession).userIDs : nil
                                 async let _followerIDs = twitterUser.id == accountUserID ? Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession).userIDs : nil
@@ -207,7 +212,7 @@ extension Session {
                         $0[$1.0] = $1.1
                     }
 
-                    try await context.perform {
+                    try await context.perform(schedule: .enqueued) {
                         if context.hasChanges {
                             try context.save()
                         }
