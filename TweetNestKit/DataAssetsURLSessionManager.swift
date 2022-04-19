@@ -45,10 +45,6 @@ class DataAssetsURLSessionManager: NSObject {
         _ = urlSession
     }
 
-    deinit {
-        urlSession.invalidateAndCancel()
-    }
-
     @MainActor
     func handleBackgroundURLSessionEvents(completionHandler: @escaping () -> Void) {
         _backgroundURLSessionEventsCompletionHandler = completionHandler
