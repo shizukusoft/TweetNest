@@ -231,7 +231,7 @@ extension Session {
                         return nil
                     }
 
-                    let preferences = self.preferences(for: context)
+                    let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
                     let notificationContent = UNMutableNotificationContent()
                     notificationContent.title = newUserDetail.name ?? account.objectID.description

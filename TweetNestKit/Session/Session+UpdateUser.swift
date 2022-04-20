@@ -89,9 +89,7 @@ extension Session {
                     return refinedUserIDs
                 }
 
-                async let _preferences = context.perform(schedule: .enqueued) {
-                    self.preferences(for: context).preferences
-                }
+                async let _preferences = ManagedPreferences.Preferences(for: context)
 
                 async let _accountPreferences = context.perform(schedule: .enqueued) { () -> Account.Preferences in
                     guard let account = try? context.existingObject(with: accountObjectID) as? Account else {

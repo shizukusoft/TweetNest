@@ -28,7 +28,7 @@ extension Session {
             try await self.cleansingAllDataAssets(context: context)
 
             await context.perform {
-                self.preferences(for: context).lastCleansed = Date()
+                ManagedPreferences.managedPreferences(for: context).lastCleansed = Date()
             }
         }
     }

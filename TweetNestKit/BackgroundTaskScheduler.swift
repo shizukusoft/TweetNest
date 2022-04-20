@@ -127,9 +127,7 @@ extension BackgroundTaskScheduler {
 
             try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
 
-            let lastCleanseDate: Date = await session.persistentContainer.performBackgroundTask { context in
-                self.session.preferences(for: context).lastCleansed
-            }
+            let lastCleanseDate: Date = await ManagedPreferences.Preferences(for: session.persistentContainer.newBackgroundContext()).lastCleansed
 
             let now = Date()
             let twoDay = TimeInterval(2 * 24 * 60 * 60)
