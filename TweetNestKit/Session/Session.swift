@@ -48,31 +48,6 @@ public class Session {
             self?.persistentCloudKitContainerEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
         }
 
-    @MainActor
-    private var isAutomaticallyFetchNewDataPaused: Bool = false {
-        didSet {
-            if isAutomaticallyFetchNewDataPaused {
-                fetchNewDataTimer = nil
-            } else {
-                fetchNewDataTimer = newFetchNewDataTimer(for: TweetNestKitUserDefaults.standard.fetchNewDataInterval)
-            }
-        }
-    }
-
-    @MainActor
-    private var fetchNewDataTimer: DispatchSourceTimer? = nil {
-        willSet {
-            guard fetchNewDataTimer !== newValue else { return }
-
-            fetchNewDataTimer?.cancel()
-        }
-        didSet {
-            guard fetchNewDataTimer !== oldValue else { return }
-
-            fetchNewDataTimer?.activate()
-        }
-    }
-
     private lazy var fetchNewDataIntervalObserver = TweetNestKitUserDefaults.standard
         .observe(\.fetchNewDataInterval, options: [.new]) { [weak self] userDefaults, changes in
             self?.fetchNewDataIntervalDidChange(changes.newValue ?? userDefaults.fetchNewDataInterval)
@@ -159,39 +134,24 @@ extension Session {
 extension Session {
     private func fetchNewDataIntervalDidChange(_ newValue: TimeInterval) {
         Task {
-            await MainActor.run {
-                self.fetchNewDataTimer = isAutomaticallyFetchNewDataPaused ? nil : newFetchNewDataTimer(for: newValue)
-            }
+            await sessionActor.updateFetchNewDataTimer(interval: newValue)
         }
     }
 
-    private func newFetchNewDataTimer(for interval: TimeInterval) -> DispatchSourceTimer {
-        let newFetchNewDataTimer = DispatchSource.makeTimerSource(queue: .global(qos: .utility))
-        newFetchNewDataTimer.setEventHandler {
-            Task {
-                do {
-                    try await self.fetchNewData()
-                } catch {
-                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                        .error("Error occurred fetch new data: \(error as NSError, privacy: .public)")
-                }
-            }
-        }
-        newFetchNewDataTimer.schedule(deadline: .now() + interval, repeating: interval, leeway: .seconds(30))
-
-        return newFetchNewDataTimer
-    }
-
-    @MainActor
     public func pauseAutomaticallyFetchNewData() {
-        isAutomaticallyFetchNewDataPaused = true
+        Task {
+            await sessionActor.destroyFetchNewDataTimer()
+        }
     }
 
-    @MainActor
     public func resumeAutomaticallyFetchNewData() {
-        isAutomaticallyFetchNewDataPaused = false
+        Task {
+            await sessionActor.initializeFetchNewDataTimer(interval: TweetNestKitUserDefaults.standard.fetchNewDataInterval)
+        }
     }
+}
 
+extension Session {
     @discardableResult
     public func fetchNewData(cleansingData: Bool = true, force: Bool = false) async throws -> Bool {
         try await withExtendedBackgroundExecution { [self] in
