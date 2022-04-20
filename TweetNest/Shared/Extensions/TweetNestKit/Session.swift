@@ -5,7 +5,6 @@
 //  Created by Jaehong Kang on 2021/02/23.
 //
 
-#if DEBUG
 import Foundation
 #if canImport(UIKit)
 import UIKit
@@ -20,12 +19,15 @@ extension TweetNestKit.Session {
     public static let preview: Session = {
         let session = Session(inMemory: true)
 
+        #if DEBUG
         try? session.insertPreviewDataToPersistentContainer()
+        #endif
 
         return session
     }()
 }
 
+#if DEBUG
 extension TweetNestKit.Session {
     nonisolated func insertPreviewDataToPersistentContainer() throws {
         let viewContext = persistentContainer.viewContext
@@ -175,6 +177,7 @@ extension TweetNestKit.Session {
         appleProfileImageDataAsset.data = NSDataAsset(name: "AppleProfileImageData")?.data
     }
 }
+#endif
 
 extension TweetNestKit.Account {
     public static var preview: Account {
@@ -188,4 +191,3 @@ extension TweetNestKit.Account {
         }
     }
 }
-#endif
