@@ -19,7 +19,7 @@ extension Session {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
 
-        let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
@@ -63,6 +63,7 @@ extension Session {
             let twitterAccount = try await Twitter.Account.me(session: twitterSession)
 
             let userID = String(twitterAccount.id)
+            async let updateUsersResults = self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)
 
             try await context.perform(schedule: .enqueued) {
                 guard let account = context.object(with: accountObjectID) as? Account else {
@@ -76,7 +77,7 @@ extension Session {
                 }
             }
 
-            return try await self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)[userID]?.get()
+            return try await updateUsersResults[userID]?.get()
         }
     }
 }
