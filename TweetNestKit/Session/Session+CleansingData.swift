@@ -129,7 +129,9 @@ extension Session {
                 context.delete(account)
             }
 
-            try context.save()
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
 
@@ -190,7 +192,9 @@ extension Session {
                 context.delete(user)
             }
 
-            try context.save()
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
 
@@ -216,7 +220,9 @@ extension Session {
                 }
             }
 
-            try context.save()
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
 
@@ -268,7 +274,9 @@ extension Session {
                 context.delete(dataAsset)
             }
 
-            try context.save()
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
 }
