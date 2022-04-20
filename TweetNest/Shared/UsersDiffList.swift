@@ -12,7 +12,7 @@ import OrderedCollections
 
 struct UsersDiffList: View {
     @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<UserDetail>
-    @State @Lazy private var searchManagedObjectContext =  TweetNestApp.session.persistentContainer.newBackgroundContext()
+    @State @Lazy private var searchManagedObjectContext = TweetNestApp.session.persistentContainer.newBackgroundContext()
 
     let title: LocalizedStringKey
     let diffKeyPath: KeyPath<UserDetail, [String]?>
