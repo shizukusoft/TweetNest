@@ -9,6 +9,7 @@
 
 import CoreData
 import CoreSpotlight
+import Algorithms
 
 extension PersistentContainer {
     class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
@@ -32,15 +33,16 @@ extension PersistentContainer {
                 attributeSet.thumbnailData = try? sortedUserDetails?.last?.profileImageURL.flatMap {
                     let fetchRequest = DataAsset.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "url == %@", $0 as NSURL)
-                    fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(key: "modificationDate", ascending: false),
-                        NSSortDescriptor(key: "creationDate", ascending: false)
+                    fetchRequest.sortDescriptors =  [
+                        NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: false),
                     ]
                     fetchRequest.fetchLimit = 1
 
                     return try user.managedObjectContext?.fetch(fetchRequest).first?.data
                 }
-                attributeSet.keywords = (sortedUserDetails?.compactMap(\.name) ?? []) + (sortedUserDetails?.compactMap(\.username) ?? [])
+                attributeSet.keywords = sortedUserDetails?.flatMap {
+                    [$0.name, $0.username].compacted()
+                }
 
                 return attributeSet
             }
