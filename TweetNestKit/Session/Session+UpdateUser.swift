@@ -43,22 +43,19 @@ extension Session {
                 async let userIDs: [Twitter.User.ID] = context.perform { [userIDs = Set(userIDs)] in
                     let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                     userFetchRequest.predicate = NSPredicate(format: "id IN %@", userIDs)
-                    userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                    userFetchRequest.sortDescriptors = [
+                        NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
+                    ]
+                    userFetchRequest.propertiesToFetch = ["id", "lastUpdateStartDate"]
+                    userFetchRequest.relationshipKeyPathsForPrefetching = ["accounts"]
                     userFetchRequest.returnsObjectsAsFaults = false
 
-                    let users = Dictionary(
-                        try context.fetch(userFetchRequest).map { ($0.id, $0) },
-                        uniquingKeysWith: {
-                            if ($0.creationDate ?? .distantPast) < ($1.creationDate ?? .distantPast) {
-                                return $1
-                            } else {
-                                return $0
-                            }
-                        }
-                    )
+                    let users = try context.fetch(userFetchRequest)
+                    let usersByID = Dictionary(uniqueKeysWithValues: users.lazy.uniqued(on: \.id).map { ($0.id, $0) })
 
                     let refinedUserIDs: [Twitter.User.ID] = userIDs.compactMap {
-                        let user = users[$0]
+                        let user = usersByID[$0]
                         let lastUpdateStartDate = user?.lastUpdateStartDate ?? .distantPast
 
                         guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
@@ -70,19 +67,29 @@ extension Session {
                             return nil
                         }
 
-                        user?.lastUpdateStartDate = Date()
-
                         return $0
                     }
 
                     context.perform {
-                        if context.hasChanges {
-                            do {
-                                try context.save()
-                            } catch {
-                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                    .error("\(error as NSError, privacy: .public)")
-                            }
+                        let batchUpdateRequest = NSBatchUpdateRequest(entity: User.entity())
+                        batchUpdateRequest.predicate = NSPredicate(format: "id IN %@", refinedUserIDs)
+                        batchUpdateRequest.propertiesToUpdate = [
+                            "lastUpdateStartDate": Date()
+                        ]
+                        batchUpdateRequest.resultType = .updatedObjectIDsResultType
+
+                        do {
+                            let updateResult = try context.execute(batchUpdateRequest) as? NSBatchUpdateResult
+                            let objectIDs = updateResult?.result as? [NSManagedObjectID]
+                            let changes = [NSUpdatedObjectsKey: objectIDs].compactMapValues { $0 }
+
+                            NSManagedObjectContext.mergeChanges(
+                                fromRemoteContextSave: changes,
+                                into: [context]
+                            )
+                        } catch {
+                            Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                                .error("\(error as NSError, privacy: .public)")
                         }
                     }
 
@@ -106,6 +113,8 @@ extension Session {
                         try await (Date(), Twitter.User.users(ids: Array(chunkedUserIDs), session: twitterSession))
                     }
                 }
+
+                try Task.checkCancellation()
 
                 let preferences = await _preferences
                 let accountPreferences = try await _accountPreferences
