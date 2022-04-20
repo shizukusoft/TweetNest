@@ -15,17 +15,22 @@ public class User: NSManagedObject {
         (userDetails as? Set<UserDetail>).flatMap {
             var userDetails = OrderedSet($0)
 
-            let fetchRequest = NSFetchRequest<NSManagedObjectID>()
-            fetchRequest.entity = UserDetail.entity()
-            fetchRequest.predicate = NSPredicate(format: "user == %@", self)
-            fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
-            ]
-            fetchRequest.resultType = .managedObjectIDResultType
+            let sortedManagedObjectID: OrderedSet<NSManagedObjectID>? = managedObjectContext
+                .flatMap { context in
+                    let fetchRequest = NSFetchRequest<NSManagedObjectID>()
+                    fetchRequest.entity = UserDetail.entity()
+                    fetchRequest.predicate = NSPredicate(format: "user == %@", self)
+                    fetchRequest.sortDescriptors = [
+                        NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+                    ]
+                    fetchRequest.resultType = .managedObjectIDResultType
 
-            let sortedManagedObjectID = try? managedObjectContext?.fetch(fetchRequest)
+                    let sortedManagedObjectID = try? context.fetch(fetchRequest)
 
-            if let sortedManagedObjectID = sortedManagedObjectID.flatMap({ OrderedSet($0) }) {
+                    return sortedManagedObjectID.flatMap { OrderedSet($0) }
+                }
+
+            if let sortedManagedObjectID = sortedManagedObjectID {
                 userDetails.sort { (sortedManagedObjectID.firstIndex(of: $0.objectID) ?? -1) < (sortedManagedObjectID.firstIndex(of: $1.objectID) ?? -1) }
             } else {
                 userDetails.sort { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
