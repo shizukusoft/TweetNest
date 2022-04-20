@@ -24,11 +24,17 @@ class DataAssetsURLSessionManager: NSObject {
     }
 
     private var urlSessionConfiguration: URLSessionConfiguration {
+        var urlSessionConfiguration: URLSessionConfiguration
+
         if session === Session.shared {
-            return .twnk_background(withIdentifier: Self.backgroundURLSessionIdentifier)
+            urlSessionConfiguration = .twnk_background(withIdentifier: Self.backgroundURLSessionIdentifier)
         } else {
-            return .twnk_default
+            urlSessionConfiguration = .twnk_default
         }
+
+        urlSessionConfiguration.waitsForConnectivity = true
+
+        return urlSessionConfiguration
     }
 
     private unowned let session: Session
