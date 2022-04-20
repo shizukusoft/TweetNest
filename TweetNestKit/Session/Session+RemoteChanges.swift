@@ -9,6 +9,7 @@ import Foundation
 import Twitter
 import CoreData
 import UserNotifications
+import Algorithms
 import OrderedCollections
 import BackgroundTask
 import UnifiedLogging
@@ -206,7 +207,7 @@ extension Session {
                 }
 
                 let threadIdentifier = user.id ?? user.objectID.uriRepresentation().absoluteString
-                let notificationIdentifier = [threadIdentifier, userDetail.creationDate.flatMap { String($0.timeIntervalSince1970) }].compactMap { $0 }.joined(separator: "\t")
+                let notificationIdentifier = [threadIdentifier, userDetail.creationDate.flatMap { String($0.timeIntervalSince1970) }].compacted().joined(separator: "\t")
 
                 return (threadIdentifier, notificationIdentifier.isEmpty ? userDetailObjectID.uriRepresentation().absoluteString : notificationIdentifier)
             }

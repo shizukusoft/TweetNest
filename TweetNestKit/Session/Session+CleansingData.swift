@@ -8,6 +8,7 @@
 import Foundation
 import UserNotifications
 import CoreData
+import Algorithms
 import OrderedCollections
 import UnifiedLogging
 import BackgroundTask
@@ -155,10 +156,10 @@ extension Session {
             for user in users {
                 guard user != targetUser else { continue }
 
-                targetUser.creationDate = [targetUser.creationDate, user.creationDate].lazy.compactMap({$0}).min()
-                targetUser.lastUpdateEndDate = [targetUser.lastUpdateEndDate, user.lastUpdateEndDate].lazy.compactMap({$0}).max()
-                targetUser.lastUpdateStartDate = [targetUser.lastUpdateStartDate, user.lastUpdateStartDate].lazy.compactMap({$0}).max()
-                targetUser.modificationDate = [targetUser.modificationDate, user.modificationDate].lazy.compactMap({$0}).max()
+                targetUser.creationDate = [targetUser.creationDate, user.creationDate].lazy.compacted().min()
+                targetUser.lastUpdateEndDate = [targetUser.lastUpdateEndDate, user.lastUpdateEndDate].lazy.compacted().max()
+                targetUser.lastUpdateStartDate = [targetUser.lastUpdateStartDate, user.lastUpdateStartDate].lazy.compacted().max()
+                targetUser.modificationDate = [targetUser.modificationDate, user.modificationDate].lazy.compacted().max()
 
                 targetUser.addToUserDetails(user.userDetails ?? [])
 
