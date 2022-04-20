@@ -32,7 +32,10 @@ extension PersistentContainer {
                 attributeSet.thumbnailData = try? sortedUserDetails?.last?.profileImageURL.flatMap {
                     let fetchRequest = DataAsset.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "url == %@", $0 as NSURL)
-                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                    fetchRequest.sortDescriptors = [
+                        NSSortDescriptor(key: "modificationDate", ascending: false),
+                        NSSortDescriptor(key: "creationDate", ascending: false)
+                    ]
                     fetchRequest.fetchLimit = 1
 
                     return try user.managedObjectContext?.fetch(fetchRequest).first?.data

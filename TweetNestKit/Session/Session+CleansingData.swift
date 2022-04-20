@@ -81,7 +81,11 @@ extension Session {
                     NSPredicate(format: "tokenSecret == %@", accountTokenSecret),
                 ]
             )
-            accountFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            accountFetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \Account.creationDate, ascending: true),
+            ]
+            accountFetchRequest.propertiesToFetch = ["creationDate", "preferringSortOrder", "userID", "preferences"]
+            accountFetchRequest.returnsObjectsAsFaults = false
 
             let accounts = try context.fetch(accountFetchRequest)
 
@@ -113,7 +117,9 @@ extension Session {
         let userObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let userFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: User.entity().name!)
             userFetchRequest.resultType = .managedObjectIDResultType
-            userFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            userFetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \User.creationDate, ascending: true),
+            ]
 
             return try context.fetch(userFetchRequest)
         }
@@ -143,9 +149,11 @@ extension Session {
                 ]
             )
             userFetchRequest.sortDescriptors = [
-                NSSortDescriptor(key: "creationDate", ascending: true),
-                NSSortDescriptor(key: "lastUpdateEndDate", ascending: true),
+                NSSortDescriptor(keyPath: \User.creationDate, ascending: true),
             ]
+            userFetchRequest.propertiesToFetch = ["creationDate", "lastUpdateEndDate", "lastUpdateStartDate", "modificationDate"]
+            userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
+            userFetchRequest.returnsObjectsAsFaults = false
 
             let users = try context.fetch(userFetchRequest)
 
@@ -182,7 +190,7 @@ extension Session {
                 return
             }
 
-            var userDetails = OrderedSet(user.sortedUserDetails ?? [])
+            var userDetails = user.sortedUserDetails ?? OrderedSet()
 
             for (index, userDetail) in userDetails.enumerated() {
                 let previousUserIndex = index - 1
@@ -234,7 +242,9 @@ extension Session {
                     NSPredicate(format: "dataSHA512Hash == %@", dataAssetDataSHA512Hash as NSData),
                 ]
             )
-            dataAssetsFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+            dataAssetsFetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: true),
+            ]
 
             let dataAssets = try context.fetch(dataAssetsFetchRequest)
 

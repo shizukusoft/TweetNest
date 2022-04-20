@@ -125,8 +125,8 @@ struct AppSidebarAccountsSection: View {
             NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)
         ]
         fetchRequest.returnsObjectsAsFaults = false
-        fetchRequest.relationshipKeyPathsForPrefetching = ["user", "user.id"]
-        fetchRequest.propertiesToFetch = ["username", "user"]
+        fetchRequest.relationshipKeyPathsForPrefetching = ["user"]
+        fetchRequest.propertiesToFetch = ["username", "profileImageURL"]
         fetchRequest.fetchLimit = 1
 
         return fetchRequest
