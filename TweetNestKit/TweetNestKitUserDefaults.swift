@@ -10,11 +10,13 @@ import Foundation
 final public class TweetNestKitUserDefaults: UserDefaults {
     public enum DefaultsKeys: String {
         case isBackgroundUpdateEnabled = "TWNKBackgroundUpdateEnabled"
-        case lastBackgroundUpdate = "TWNKLastBackgroundUpdate"
         case downloadsDataAssetsUsingExpensiveNetworkAccess = "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess"
         case lastPersistentHistoryTransactionTimestamp = "TWNKLastPersistentHistoryTransactionTimestamp"
         case fetchNewDataInterval = "TWNKFetchNewDataInterval"
         case lastFetchNewDataDate = "TWNKLastFetchNewData"
+
+        @available(*, deprecated, renamed: "lastFetchNewDataDate")
+        case lastBackgroundUpdate = "TWNKLastBackgroundUpdate"
     }
 
     private static let _standard = TweetNestKitUserDefaults(suiteName: Session.applicationGroupIdentifier)!
@@ -51,8 +53,6 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         switch key {
         case "isBackgroundUpdateEnabled":
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.isBackgroundUpdateEnabled.rawValue])
-        case "lastBackgroundUpdate":
-            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastBackgroundUpdate.rawValue])
         case "downloadsDataAssetsUsingExpensiveNetworkAccess":
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue])
         case "lastPersistentHistoryTransactionTimestamp":
