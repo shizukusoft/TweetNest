@@ -27,9 +27,6 @@ struct SettingsGeneralView: View {
         _managedPreferences.first ?? ManagedPreferences(context: viewContext)
     }
 
-    @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.isBackgroundUpdateEnabled)
-    var backgroundUpdate: Bool = true
-
     @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess)
     var downloadsImagesUsingExpensiveNetworkAccess: Bool = true
 
@@ -39,13 +36,7 @@ struct SettingsGeneralView: View {
     var body: some View {
         Form {
             Section {
-                Toggle("Background Update", isOn: $backgroundUpdate)
-            } footer: {
-                Text("Update accounts in background on this device.")
-                    #if os(macOS)
-                    .foregroundColor(.secondary)
-                    .font(.footnote)
-                    #endif
+                SettingsFetchNewDataView()
             }
 
             #if os(iOS) || os(watchOS)

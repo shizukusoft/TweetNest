@@ -70,22 +70,22 @@ struct TweetNestApp: App {
             #endif
         }
         .onChange(of: scenePhase) { phase in
-            Task {
-                do {
-                    switch phase {
-                    case .active:
-                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .active)
-                    case .inactive:
-                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .inactive)
-                    case .background:
-                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .background)
-                    @unknown default:
-                        break
+            switch phase {
+            case .active, .inactive:
+                session.resumeAutomaticallyFetchNewData()
+            case .background:
+                session.pauseAutomaticallyFetchNewData()
+                #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
+                Task {
+                    do {
+                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
+                    } catch {
+                        Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
                     }
-
-                } catch {
-                    Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
                 }
+                #endif
+            @unknown default:
+                break
             }
         }
     }

@@ -6,11 +6,15 @@
 //
 
 import Foundation
+import UserNotifications
 import CoreData
 import OrderedCollections
+import UnifiedLogging
 import BackgroundTask
 
 extension Session {
+    static let cleansingDataInterval: TimeInterval = 1 * 24 * 60 * 60
+
     private var persistentContainerNewBackgroundContext: NSManagedObjectContext {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
@@ -19,16 +23,48 @@ extension Session {
         return context
     }
 
-    public func cleansingAllData() async throws {
+    public func cleansingAllData(force: Bool = false) async throws {
         try await withExtendedBackgroundExecution {
-            let context = self.persistentContainerNewBackgroundContext
+            let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "cleansing-all-data")
 
-            try await self.cleansingAllAccounts(context: context)
-            try await self.cleansingAllUsersAndUserDetails(context: context)
-            try await self.cleansingAllDataAssets(context: context)
+            do {
+                let context = self.persistentContainerNewBackgroundContext
 
-            await context.perform {
-                ManagedPreferences.managedPreferences(for: context).lastCleansed = Date()
+                let lastCleanseDate: Date = await ManagedPreferences.Preferences(for: self.persistentContainer.newBackgroundContext()).lastCleansed
+                guard force || lastCleanseDate.addingTimeInterval(Self.cleansingDataInterval) < Date() else {
+                    return
+                }
+                
+                await context.perform {
+                    ManagedPreferences.managedPreferences(for: context).lastCleansed = Date()
+                }
+
+                try await self.cleansingAllAccounts(context: context)
+                try await self.cleansingAllUsersAndUserDetails(context: context)
+                try await self.cleansingAllDataAssets(context: context)
+            } catch {
+                logger.error("Error occurred while data cleansing: \(String(describing: error))")
+
+                switch error {
+                case is CancellationError, URLError.cancelled:
+                    break
+                default:
+                    let notificationContent = UNMutableNotificationContent()
+                    notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
+                    notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
+                    notificationContent.body = error.localizedDescription
+                    notificationContent.sound = .default
+
+                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+
+                    do {
+                        try await UNUserNotificationCenter.current().add(notificationRequest)
+                    } catch {
+                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+
+                        throw error
+                    }
+                }
             }
         }
     }

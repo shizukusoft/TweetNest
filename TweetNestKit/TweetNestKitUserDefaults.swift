@@ -13,6 +13,8 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         case lastBackgroundUpdate = "TWNKLastBackgroundUpdate"
         case downloadsDataAssetsUsingExpensiveNetworkAccess = "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess"
         case lastPersistentHistoryTransactionTimestamp = "TWNKLastPersistentHistoryTransactionTimestamp"
+        case fetchNewDataInterval = "TWNKFetchNewDataInterval"
+        case lastFetchNewDataDate = "TWNKLastFetchNewData"
     }
 
     private static let _standard = TweetNestKitUserDefaults(suiteName: Session.applicationGroupIdentifier)!
@@ -25,11 +27,6 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         set { setValue(newValue, forKey: DefaultsKeys.isBackgroundUpdateEnabled.rawValue) }
     }
 
-    @objc public dynamic var lastBackgroundUpdate: Date {
-        get { object(forKey: DefaultsKeys.lastBackgroundUpdate.rawValue) as? Date ?? .distantPast }
-        set { setValue(newValue, forKey: DefaultsKeys.lastBackgroundUpdate.rawValue) }
-    }
-
     @objc public dynamic var downloadsDataAssetsUsingExpensiveNetworkAccess: Bool {
         get { object(forKey: DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue) as? Bool != false }
         set { setValue(newValue, forKey: DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue) }
@@ -38,6 +35,16 @@ final public class TweetNestKitUserDefaults: UserDefaults {
     @objc public dynamic var lastPersistentHistoryTransactionTimestamp: Date? {
         get { object(forKey: DefaultsKeys.lastPersistentHistoryTransactionTimestamp.rawValue) as? Date }
         set { setValue(newValue, forKey: DefaultsKeys.lastPersistentHistoryTransactionTimestamp.rawValue) }
+    }
+
+    @objc public dynamic var fetchNewDataInterval: TimeInterval {
+        get { object(forKey: DefaultsKeys.fetchNewDataInterval.rawValue) as? TimeInterval ?? 10 * 60 }
+        set { setValue(newValue, forKey: DefaultsKeys.fetchNewDataInterval.rawValue) }
+    }
+
+    @objc public dynamic var lastFetchNewDataDate: Date {
+        get { object(forKey: DefaultsKeys.fetchNewDataInterval.rawValue) as? Date ?? .distantPast }
+        set { setValue(newValue, forKey: DefaultsKeys.fetchNewDataInterval.rawValue) }
     }
 
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
@@ -49,7 +56,11 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         case "downloadsDataAssetsUsingExpensiveNetworkAccess":
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue])
         case "lastPersistentHistoryTransactionTimestamp":
-                    return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastPersistentHistoryTransactionTimestamp.rawValue])
+            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastPersistentHistoryTransactionTimestamp.rawValue])
+        case "fetchNewDataInterval":
+            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.fetchNewDataInterval.rawValue])
+        case "lastFetchNewDataDate":
+            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastFetchNewDataDate.rawValue])
         default:
             return super.keyPathsForValuesAffectingValue(forKey: key)
         }
@@ -61,6 +72,10 @@ import SwiftUI
 
 extension AppStorage {
     public init(wrappedValue: Value, _ key: TweetNestKitUserDefaults.DefaultsKeys) where Value == Bool {
+        self.init(wrappedValue: wrappedValue, key.rawValue, store: TweetNestKitUserDefaults.standard)
+    }
+
+    public init(wrappedValue: Value, _ key: TweetNestKitUserDefaults.DefaultsKeys) where Value == Double {
         self.init(wrappedValue: wrappedValue, key.rawValue, store: TweetNestKitUserDefaults.standard)
     }
 }

@@ -23,19 +23,6 @@ class TweetNestAppDelegate: NSObject, ObservableObject {
     #else
     let session = Session.shared
     #endif
-
-    override init() {
-        super.init()
-
-        Task(priority: .utility) { [self] in
-            do {
-                try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .active)
-
-            } catch {
-                Logger().error("Error occurred while schedule refresh: \(error as NSError, privacy: .public)")
-            }
-        }
-    }
 }
 
 extension TweetNestAppDelegate: UNUserNotificationCenterDelegate {
