@@ -102,7 +102,7 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
             dispatchGroup.enter()
-            Task(priority: .utility) {
+            Task.detached {
                 await withExtendedBackgroundExecution {
                     await self.managedObjectContext.perform(schedule: .enqueued) {
                         defer {
