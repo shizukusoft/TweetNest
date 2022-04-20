@@ -240,10 +240,6 @@ struct AppSidebarNavigation: View {
                 self.error = TweetNestError(error)
                 showErrorAlert = true
             }
-
-            Task.detached(priority: .utility) {
-                try await TweetNestApp.session.cleansingAllData()
-            }
         }
     }
 }
