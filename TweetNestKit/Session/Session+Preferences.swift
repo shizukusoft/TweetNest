@@ -9,7 +9,7 @@ import Foundation
 import CoreData
 
 extension Session {
-    public nonisolated func preferences(for context: NSManagedObjectContext) -> ManagedPreferences {
+    public func preferences(for context: NSManagedObjectContext) -> ManagedPreferences {
         context.performAndWait {
             let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
             fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]

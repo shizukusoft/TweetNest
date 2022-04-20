@@ -16,7 +16,7 @@ import SwiftUI
 
 extension Session {
     @discardableResult
-    public nonisolated func updateUsers<C>(
+    public func updateUsers<C>(
         ids userIDs: C,
         accountObjectID: NSManagedObjectID,
         context: NSManagedObjectContext? = nil
@@ -25,7 +25,7 @@ extension Session {
     }
 
     @discardableResult
-    nonisolated func updateUsers<C>(
+    func updateUsers<C>(
         ids userIDs: C,
         accountObjectID: NSManagedObjectID,
         accountUserID: String? = nil,

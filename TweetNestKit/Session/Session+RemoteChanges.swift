@@ -14,47 +14,15 @@ import BackgroundTask
 import UnifiedLogging
 
 extension Session {
-    private nonisolated var logger: Logger {
+    private var logger: Logger {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
-
-    @discardableResult
-    private func updateLastPersistentHistoryTransactionTimestamp(_ newValue: Date?) throws -> Date? {
-        let oldValue = TweetNestKitUserDefaults.standard.lastPersistentHistoryTransactionTimestamp
-
-        TweetNestKitUserDefaults.standard.lastPersistentHistoryTransactionTimestamp = newValue
-
-        return oldValue
-    }
-
-    private var persistentHistoryTransactions: (transactions: [NSPersistentHistoryTransaction], lastPersistentHistoryTransactionDate: Date?, context: NSManagedObjectContext)? {
-        get throws {
-            let lastPersistentHistoryTransactionDate = try updateLastPersistentHistoryTransactionTimestamp(Date())
-            let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
-                after: lastPersistentHistoryTransactionDate ?? .distantPast
-            )
-
-            let context = persistentContainer.newBackgroundContext()
-            context.undoManager = nil
-
-            guard
-                let persistentHistoryResult = try context.performAndWait({ try context.execute(fetchHistoryRequest) }) as? NSPersistentHistoryResult,
-                let transactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
-            else {
-                return nil
-            }
-
-            try updateLastPersistentHistoryTransactionTimestamp(transactions.last?.timestamp ?? lastPersistentHistoryTransactionDate)
-
-            return (transactions, lastPersistentHistoryTransactionDate, context)
-        }
-    }
-
-    nonisolated func handlePersistentStoreRemoteChanges() {
+    
+    func handlePersistentStoreRemoteChanges() {
         Task.detached { [self] in
             do {
                 guard
-                    let transactions = try await persistentHistoryTransactions,
+                    let transactions = try await sessionActor.persistentHistoryTransactions,
                     let lastPersistentHistoryTransactionDate = transactions.lastPersistentHistoryTransactionDate
                 else {
                     return
@@ -75,7 +43,7 @@ extension Session {
                     } catch {
                         if error is CancellationError {
                             do {
-                                try await self.updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
+                                try await self.sessionActor.updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
                             } catch {
                                 self.logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
                             }
@@ -90,7 +58,7 @@ extension Session {
         }
     }
 
-    private nonisolated func handleAccountChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
+    private func handleAccountChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
         let accountChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
             Array(
                 transactions
@@ -114,7 +82,7 @@ extension Session {
                     return account.credential
                 }
 
-                guard let twitterSession = await twitterSessions[accountObjectID.uriRepresentation()] else {
+                guard let twitterSession = await sessionActor.twitterSessions[accountObjectID.uriRepresentation()] else {
                     return
                 }
 
@@ -142,7 +110,7 @@ extension Session {
         }
     }
 
-    private nonisolated func handleUserChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
+    private func handleUserChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
         let userChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
             Array(
                 transactions
@@ -178,7 +146,7 @@ extension Session {
         }
     }
 
-    private nonisolated func handleDataAssetsChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
+    private func handleDataAssetsChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
         let dataAssetChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
             Array(
                 transactions
@@ -214,7 +182,7 @@ extension Session {
         }
     }
 
-    private nonisolated func handleUserDetailChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
+    private func handleUserDetailChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
         let userDetailChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
             Array(
                 transactions

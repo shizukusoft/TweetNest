@@ -11,7 +11,7 @@ import CoreData
 import Twitter
 
 extension Session {
-    public nonisolated func authorizeNewAccount(
+    public func authorizeNewAccount(
         webAuthenticationSessionHandler: @escaping (ASWebAuthenticationSession) -> Void
     ) async throws {
         let twitterSession = try await twitterSession()
@@ -41,12 +41,12 @@ extension Session {
 
         let accountObjectID = try await self.createNewAccount(tokenResponse: accessToken)
 
-        await updateTwitterSession(twitterSession, for: accountObjectID)
+        await sessionActor.updateTwitterSession(twitterSession, for: accountObjectID)
 
         try await updateAccount(accountObjectID)
     }
 
-    private nonisolated func createNewAccount(tokenResponse: Twitter.Session.TokenResponse) async throws -> NSManagedObjectID {
+    private func createNewAccount(tokenResponse: Twitter.Session.TokenResponse) async throws -> NSManagedObjectID {
         let context = persistentContainer.newBackgroundContext()
 
         return try await context.perform(schedule: .enqueued) {

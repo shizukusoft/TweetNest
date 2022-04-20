@@ -54,24 +54,31 @@ struct MainView: View {
                     self.showErrorAlert = true
                 }
             }
-            .onReceive(appDelegate.$sessionPersistentContainerStoresLoadingResult) { result in
-                guard let result = result else {
-                    isPersistentContainerLoaded = false
-                    return
-                }
-
-                do {
-                    try result.get()
-
-                    isPersistentContainerLoaded = true
-                } catch {
-                    self.error = TweetNestError(error)
-                    showErrorAlert = true
-                }
+            .onAppear {
+                updatePersistentContainerLoadingResult(TweetNestApp.session.persistentContainerLoadingResult)
+            }
+            .onReceive(TweetNestApp.session.$persistentContainerLoadingResult) { result in
+                updatePersistentContainerLoadingResult(result)
             }
             #if canImport(CoreSpotlight)
             .onContinueUserActivity(CSSearchableItemActionType, perform: handleSpotlightUserActivity(_:))
             #endif
+    }
+
+    func updatePersistentContainerLoadingResult(_ result: Result<Void, Error>?) {
+        guard let result = result else {
+            isPersistentContainerLoaded = false
+            return
+        }
+
+        do {
+            try result.get()
+
+            isPersistentContainerLoaded = true
+        } catch {
+            self.error = TweetNestError(error)
+            showErrorAlert = true
+        }
     }
 
     #if canImport(CoreSpotlight)

@@ -5,21 +5,16 @@
 //  Created by Jaehong Kang on 2021/02/23.
 //
 
+import Foundation
 import CoreData
-import CloudKit
 import OrderedCollections
 import UnifiedLogging
 import Twitter
 
-public actor Session {
+public class Session {
     public static let shared = Session()
 
-    static let cloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!)"
-    static let accountsCloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!).accounts"
-    static let dataAssetsCloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!).dataAssets"
-    static let applicationGroupIdentifier = "group.\(Bundle.tweetNestKit.bundleIdentifier!)"
-
-    private var _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
+    private let _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
         get async throws {
             try await _twitterAPIConfiguration.wrappedValue
@@ -27,22 +22,62 @@ public actor Session {
     }
 
     private let inMemory: Bool
+    private(set) lazy var sessionActor = SessionActor(session: self)
 
-    public private(set) nonisolated lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
-    public private(set) nonisolated lazy var backgroundTaskScheduler = BackgroundTaskScheduler(session: self)
-    private(set) nonisolated lazy var dataAssetsURLSessionManager = DataAssetsURLSessionManager(session: self)
+    public private(set) lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
+    public private(set) lazy var backgroundTaskScheduler = BackgroundTaskScheduler(session: self)
+    private(set) lazy var dataAssetsURLSessionManager = DataAssetsURLSessionManager(session: self)
 
-    private nonisolated lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
+    private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
         .sink { [weak self] _ in
             self?.handlePersistentStoreRemoteChanges()
         }
 
-    private(set) var twitterSessions = [URL: Twitter.Session]()
+    @Published
+    public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?
 
-    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) {
-        _twitterAPIConfiguration = .init({ try await twitterAPIConfiguration() })
+    @Published
+    public private(set) var persistentCloudKitContainerEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
+    private lazy var persistentCloudKitContainerEventDidChanges = NotificationCenter.default
+        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: persistentContainer)
+        .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] event in
+            self?.persistentCloudKitContainerEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
+        }
+
+    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool) {
+        _twitterAPIConfiguration = .init(twitterAPIConfiguration)
         self.inMemory = inMemory
+
+        Task.detached {
+            if inMemory == false {
+                _ = self.persistentStoreRemoteChangeNotification
+                _ = self.persistentCloudKitContainerEventDidChanges
+            }
+
+            Task(priority: .utility) {
+                do {
+                    try await self.persistentContainer.loadPersistentStores()
+
+                    await MainActor.run {
+                        self.persistentContainerLoadingResult = .success(())
+                    }
+                } catch {
+                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                        .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
+
+                    await MainActor.run {
+                        self.persistentContainerLoadingResult = .failure(error)
+                    }
+                }
+            }
+
+            Task(priority: .utility) {
+                _ = try? await self.twitterAPIConfiguration
+            }
+        }
     }
 
     deinit {
@@ -53,110 +88,27 @@ public actor Session {
 }
 
 extension Session {
-    static let isSandbox: Bool = {
-        CKContainer.default().value(forKeyPath: "containerID.environment") as? CLongLong == 2
-    }()
-    
-    static var containerURL: URL {
-        FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: Session.applicationGroupIdentifier)!
-    }
-
-    static var containerLibraryURL: URL {
-        containerURL.appendingPathComponent("Library")
-    }
-
-    static var containerCacheURL: URL {
-        containerLibraryURL
-            .appendingPathComponent("Caches")
-            .appendingPathComponent(Bundle.tweetNestKit.bundleIdentifier!)
-    }
-
-    static var containerApplicationSupportURL: URL {
-        let containerApplicationSupportURL = containerLibraryURL
-            .appendingPathComponent("Application Support")
-            .appendingPathComponent(Bundle.tweetNestKit.bundleIdentifier!)
-        
-        if isSandbox {
-            return containerApplicationSupportURL.appendingPathExtension("sandbox")
-        } else {
-            // Migration START
-            let oldURL = Session.containerURL
-                .appendingPathComponent("Application Support")
-                .appendingPathComponent(Bundle.tweetNestKit.name!)
-            let newURL = containerApplicationSupportURL
-            if FileManager.default.fileExists(atPath: oldURL.path) {
-                do {
-                    try FileManager.default.createDirectory(
-                        at: newURL.deletingLastPathComponent(),
-                        withIntermediateDirectories: true,
-                        attributes: nil
-                    )
-                    try FileManager.default.moveItem(at: oldURL, to: newURL)
-                    try FileManager.default.removeItem(at: oldURL.deletingLastPathComponent())
-                } catch {
-                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                        .error("\(error as NSError, privacy: .public)")
+    public convenience init(twitterAPIConfiguration: @autoclosure @escaping () throws -> TwitterAPIConfiguration? = nil, inMemory: Bool = false) {
+        self.init(
+            twitterAPIConfiguration: {
+                if let twitterAPIConfiguration = try twitterAPIConfiguration() {
+                    return twitterAPIConfiguration
+                } else {
+                    return try await .iCloud
                 }
-            }
-            // Migration END
-
-            return containerApplicationSupportURL
-        }
-    }
-}
-
-extension Session {
-    public convenience init(inMemory: Bool = false) {
-        self.init(twitterAPIConfiguration: { try await .iCloud }, inMemory: inMemory)
-
-        if inMemory == false {
-            _ = persistentStoreRemoteChangeNotification
-        }
+            },
+            inMemory: inMemory
+        )
     }
 
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
         self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
-
-        if inMemory == false {
-            _ = persistentStoreRemoteChangeNotification
-        }
-    }
-
-    public convenience init(twitterAPIConfiguration: TwitterAPIConfiguration, inMemory: Bool = false) {
-        self.init(twitterAPIConfiguration: { twitterAPIConfiguration }, inMemory: inMemory)
-
-        if inMemory == false {
-            _ = persistentStoreRemoteChangeNotification
-        }
     }
 }
 
 extension Session {
     public func twitterSession(for accountObjectID: NSManagedObjectID? = nil) async throws -> Twitter.Session {
-        let twitterAPIConfiguration = try await twitterAPIConfiguration
-
-        guard let accountObjectID = accountObjectID, accountObjectID.isTemporaryID == false else {
-            return Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
-        }
-
-        guard let twitterSession: Twitter.Session = twitterSessions[accountObjectID.uriRepresentation()] else {
-            let twitterSession = Twitter.Session(twitterAPIConfiguration: twitterAPIConfiguration)
-            updateTwitterSession(twitterSession, for: accountObjectID)
-
-            try await twitterSession.updateCredential(credential(for: accountObjectID))
-
-            return twitterSession
-        }
-
-        return twitterSession
-    }
-
-    func updateTwitterSession(_ twitterSession: Twitter.Session?, for accountObjectID: NSManagedObjectID) {
-        guard accountObjectID.isTemporaryID == false else {
-            return
-        }
-
-        twitterSessions[accountObjectID.uriRepresentation()] = twitterSession
+        try await sessionActor.twitterSession(for: accountObjectID)
     }
 }
 

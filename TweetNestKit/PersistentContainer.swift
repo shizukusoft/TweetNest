@@ -8,6 +8,7 @@
 import CloudKit
 import CoreData
 import OrderedCollections
+import UnifiedLogging
 
 public enum PersistentContainerError: Error {
     case persistentStoresLoadingFailure([NSPersistentStoreDescription: Error])
@@ -18,7 +19,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         Session.containerApplicationSupportURL
     }
 
-    private static let _managedObjectModel: NSManagedObjectModel = {
+    public static let managedObjectModel: NSManagedObjectModel = {
         let managedObjectModel = NSManagedObjectModel(contentsOf: Bundle.tweetNestKit.url(forResource: Bundle.tweetNestKit.name!, withExtension: "momd")!)!
 
         guard let accountEntity = managedObjectModel.entitiesByName["Account"] else {
@@ -49,10 +50,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         return managedObjectModel
     }()
 
-    public class var managedObjectModel: NSManagedObjectModel {
-        _managedObjectModel
-    }
-
     class var defaultPersistentStoreURL: URL {
         Self.defaultDirectoryURL().appendingPathComponent("TweetNestKit.sqlite")
     }
@@ -82,20 +79,8 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     var usersSpotlightDelegate: UsersSpotlightDelegate?
     #endif
 
-    @Published
-    public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
-    private nonisolated lazy var persistentContainerEventDidChanges = NotificationCenter.default
-        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: self)
-        .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
-        .receive(on: DispatchQueue.main)
-        .sink { [weak self] event in
-            self?.cloudKitEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
-        }
-
     init(inMemory: Bool = false) {
         super.init(name: Bundle.tweetNestKit.name!, managedObjectModel: Self.managedObjectModel)
-
-        _ = persistentContainerEventDidChanges
 
         if inMemory == false {
             let accountsPersistentStoreDescription = NSPersistentStoreDescription(url: Self.accountsPersistentStoreURL)
@@ -136,41 +121,37 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         }
     }
 
-    @available(*, unavailable)
     public override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> Void) {
-        fatalError()
-    }
+        persistentStoreCoordinator.perform {
+            do {
+                try self.migrationIfNeeded()
 
-    public func loadPersistentStores() async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            persistentStoreCoordinator.perform {
-                do {
-                    try self.migrationIfNeeded()
+                #if canImport(CoreSpotlight)
+                let dispatchGroup = DispatchGroup()
+                dispatchGroup.notify(queue: .global(qos: .default)) {
 
-                    var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
-
-                    super.loadPersistentStores { (storeDescription, error) in
-                        loadedPersistentStores[storeDescription] = error
-
-                        if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
-                            let errors = loadedPersistentStores.compactMapValues { $0 }
-
-                            guard errors.isEmpty else {
-                                continuation.resume(throwing: PersistentContainerError.persistentStoresLoadingFailure(errors))
-                                return
-                            }
-
-                            #if canImport(CoreSpotlight)
-                            if let usersSpotlightDelegate = self.usersSpotlightDelegate {
-                                usersSpotlightDelegate.startSpotlightIndexing()
-                            }
-                            #endif
-
-                            continuation.resume()
+                    self.persistentStoreCoordinator.perform {
+                        if let usersSpotlightDelegate = self.usersSpotlightDelegate {
+                            usersSpotlightDelegate.startSpotlightIndexing()
                         }
                     }
-                } catch {
-                    continuation.resume(throwing: error)
+                }
+
+                for _ in self.persistentStoreDescriptions.indices {
+                    dispatchGroup.enter()
+                }
+                #endif
+
+                super.loadPersistentStores { storeDescription, error in
+                    #if canImport(CoreSpotlight)
+                    dispatchGroup.leave()
+                    #endif
+
+                    block(storeDescription, error)
+                }
+            } catch {
+                self.persistentStoreDescriptions.forEach {
+                    block($0, error)
                 }
             }
         }
@@ -181,6 +162,29 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         backgroundContext.automaticallyMergesChangesFromParent = true
         backgroundContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
         return backgroundContext
+    }
+}
+
+extension PersistentContainer {
+    public func loadPersistentStores() async throws {
+        return try await withCheckedThrowingContinuation { continuation in
+            var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
+
+            self.loadPersistentStores { (storeDescription, error) in
+                loadedPersistentStores[storeDescription] = error
+
+                if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
+                    let errors = loadedPersistentStores.compactMapValues { $0 }
+
+                    guard errors.isEmpty else {
+                        continuation.resume(throwing: PersistentContainerError.persistentStoresLoadingFailure(errors))
+                        return
+                    }
+
+                    continuation.resume()
+                }
+            }
+        }
     }
 }
 

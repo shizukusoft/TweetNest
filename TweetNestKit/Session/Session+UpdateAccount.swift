@@ -15,7 +15,7 @@ import OrderedCollections
 
 extension Session {
     @discardableResult
-    public nonisolated func updateAllAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
+    public func updateAllAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
 
@@ -47,7 +47,7 @@ extension Session {
     }
 
     @discardableResult
-    public nonisolated func updateAccount(
+    public func updateAccount(
         _ accountObjectID: NSManagedObjectID,
         context _context: NSManagedObjectContext? = nil
     ) async throws -> (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?)? {

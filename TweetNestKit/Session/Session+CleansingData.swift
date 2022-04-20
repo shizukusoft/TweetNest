@@ -11,7 +11,7 @@ import OrderedCollections
 import BackgroundTask
 
 extension Session {
-    private nonisolated var persistentContainerNewBackgroundContext: NSManagedObjectContext {
+    private var persistentContainerNewBackgroundContext: NSManagedObjectContext {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
         context.automaticallyMergesChangesFromParent = false
@@ -19,7 +19,7 @@ extension Session {
         return context
     }
 
-    public nonisolated func cleansingAllData() async throws {
+    public func cleansingAllData() async throws {
         try await withExtendedBackgroundExecution {
             let context = self.persistentContainerNewBackgroundContext
 
@@ -33,7 +33,7 @@ extension Session {
         }
     }
 
-    public nonisolated func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
+    public func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
@@ -52,7 +52,7 @@ extension Session {
         }
     }
 
-    public nonisolated func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+    public func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
@@ -97,7 +97,7 @@ extension Session {
         }
     }
 
-    nonisolated func cleansingAllUsersAndUserDetails(context: NSManagedObjectContext) async throws {
+    func cleansingAllUsersAndUserDetails(context: NSManagedObjectContext) async throws {
         let userObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let userFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: User.entity().name!)
             userFetchRequest.resultType = .managedObjectIDResultType
@@ -113,7 +113,7 @@ extension Session {
         }
     }
 
-    public nonisolated func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+    public func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
@@ -158,7 +158,7 @@ extension Session {
         }
     }
 
-    nonisolated func cleansingUserDetails(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+    func cleansingUserDetails(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
@@ -184,7 +184,7 @@ extension Session {
         }
     }
 
-    nonisolated func cleansingAllDataAssets(context: NSManagedObjectContext) async throws {
+    func cleansingAllDataAssets(context: NSManagedObjectContext) async throws {
         let dataAssetObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
             let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: DataAsset.entity().name!)
             dataAssetsFetchRequest.resultType = .managedObjectIDResultType
@@ -199,7 +199,7 @@ extension Session {
         }
     }
 
-    public nonisolated func cleansingDataAsset(for dataAssetObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+    public func cleansingDataAsset(for dataAssetObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {

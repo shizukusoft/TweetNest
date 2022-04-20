@@ -39,7 +39,7 @@ actor AsyncLazy<Value> {
         }
     }
 
-    init(_ initializer: @escaping @Sendable () async throws -> Value) {
+    init(_ initializer: @escaping () async throws -> Value) {
         self.initializer = initializer
     }
 }
