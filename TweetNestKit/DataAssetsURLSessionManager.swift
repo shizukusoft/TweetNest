@@ -73,10 +73,8 @@ extension DataAssetsURLSessionManager {
 extension DataAssetsURLSessionManager: URLSessionDelegate {
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         dispatchGroup.notify(queue: .global(qos: .default)) {
-            Task {
-                await MainActor.run {
-                    self.backgroundURLSessionEventsCompletionHandler?()
-                }
+            DispatchQueue.main.async {
+                self.backgroundURLSessionEventsCompletionHandler?()
             }
         }
     }
@@ -103,9 +101,14 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
         do {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
+            dispatchGroup.enter()
             Task(priority: .utility) {
                 await withExtendedBackgroundExecution {
                     await self.managedObjectContext.perform(schedule: .enqueued) {
+                        defer {
+                            self.dispatchGroup.leave()
+                        }
+
                         do {
                             try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: self.managedObjectContext)
 
