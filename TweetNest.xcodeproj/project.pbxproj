@@ -404,6 +404,7 @@
 		1918DE612608031A009FD0D8 /* TweetNestAppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
 		1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
 		1920D59627F82CAE0083C23A /* AppStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusView.swift; sourceTree = "<group>"; };
+		1920F6A328111392001D9528 /* TweetNestKit 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 4.xcdatamodel"; sourceTree = "<group>"; };
 		1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+RemoteChanges.swift"; sourceTree = "<group>"; };
 		1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestScreenTests.swift; sourceTree = "<group>"; };
 		1924170F26F2F2C400DFEF34 /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
@@ -2799,11 +2800,12 @@
 		19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				1920F6A328111392001D9528 /* TweetNestKit 4.xcdatamodel */,
 				19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */,
 				19131AB726F0332C0063984B /* TweetNestKit 2.xcdatamodel */,
 				19C5A2C026BC1F9800AB1122 /* TweetNestKit.xcdatamodel */,
 			);
-			currentVersion = 19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */;
+			currentVersion = 1920F6A328111392001D9528 /* TweetNestKit 4.xcdatamodel */;
 			path = TweetNestKit.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
