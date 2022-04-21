@@ -99,26 +99,24 @@ extension BackgroundTaskScheduler {
     func backgroundRefresh(dataCleansing: Bool = false) async -> Bool {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
 
-        return await withExtendedBackgroundExecution { [self] in
-            let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
+        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
 
-            do {
-                try await scheduleBackgroundTasks()
-            } catch {
-                logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
-            }
+        do {
+            try await scheduleBackgroundTasks()
+        } catch {
+            logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
+        }
 
-            logger.notice("Start background refresh")
-            defer {
-                logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
-            }
+        logger.notice("Start background refresh")
+        defer {
+            logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
+        }
 
-            do {
-                return try await session.fetchNewData(cleansingData: dataCleansing)
-            } catch {
-                logger.error("Error occurred while update accounts: \(String(describing: error))")
-                return false
-            }
+        do {
+            return try await session.fetchNewData(cleansingData: dataCleansing)
+        } catch {
+            logger.error("Error occurred while update accounts: \(String(describing: error))")
+            return false
         }
     }
 
@@ -126,28 +124,26 @@ extension BackgroundTaskScheduler {
     func backgroundDataCleansing() async -> Bool {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
 
-        return await withExtendedBackgroundExecution { [self] in
-            let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-data-cleansing")
+        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-data-cleansing")
 
-            do {
-                try await scheduleBackgroundTasks()
-            } catch {
-                logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
-            }
+        do {
+            try await scheduleBackgroundTasks()
+        } catch {
+            logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
+        }
 
-            logger.notice("Start background data cleansing")
-            defer {
-                logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
-            }
+        logger.notice("Start background data cleansing")
+        defer {
+            logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
+        }
 
-            do {
-                try await session.cleansingAllData()
+        do {
+            try await session.cleansingAllData()
 
-                return true
-            } catch {
-                logger.error("Error occurred while data cleansing: \(String(describing: error))")
-                return false
-            }
+            return true
+        } catch {
+            logger.error("Error occurred while data cleansing: \(String(describing: error))")
+            return false
         }
     }
 }

@@ -51,33 +51,33 @@ extension Session {
         _ accountObjectID: NSManagedObjectID,
         context _context: NSManagedObjectContext? = nil
     ) async throws -> (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?)? {
-        try await withExtendedBackgroundExecution {
-            let context = _context ?? {
-                let context = self.persistentContainer.newBackgroundContext()
-                context.undoManager = nil
+        let context = _context ?? {
+            let context = self.persistentContainer.newBackgroundContext()
+            context.undoManager = nil
 
-                return context
-            }()
+            return context
+        }()
 
-            let twitterSession = try await self.twitterSession(for: accountObjectID)
-            let twitterAccount = try await Twitter.Account.me(session: twitterSession)
+        let twitterSession = try await self.twitterSession(for: accountObjectID)
+        let twitterAccount = try await Twitter.Account.me(session: twitterSession)
 
-            let userID = String(twitterAccount.id)
-            async let updateUsersResults = self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)
+        let userID = String(twitterAccount.id)
+        async let updateUsersResults = self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)
 
-            try await context.perform(schedule: .enqueued) {
-                guard let account = context.object(with: accountObjectID) as? Account else {
-                    return
-                }
+        try await context.perform(schedule: .enqueued) {
+            guard let account = context.object(with: accountObjectID) as? Account else {
+                return
+            }
 
-                account.userID = userID
+            account.userID = userID
 
-                if account.hasChanges {
+            if account.hasChanges {
+                try withExtendedBackgroundExecution {
                     try context.save()
                 }
             }
-
-            return try await updateUsersResults[userID]?.get()
         }
+
+        return try await updateUsersResults[userID]?.get()
     }
 }

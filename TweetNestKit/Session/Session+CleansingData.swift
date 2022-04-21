@@ -25,22 +25,20 @@ extension Session {
     }
 
     public func cleansingAllData(force: Bool = false) async throws {
-        try await withExtendedBackgroundExecution {
-            let context = self.persistentContainerNewBackgroundContext
+        let context = self.persistentContainerNewBackgroundContext
 
-            let lastCleanseDate: Date = await ManagedPreferences.Preferences(for: self.persistentContainer.newBackgroundContext()).lastCleansed
-            guard force || lastCleanseDate.addingTimeInterval(Self.cleansingDataInterval) < Date() else {
-                return
-            }
-
-            await context.perform {
-                ManagedPreferences.managedPreferences(for: context).lastCleansed = Date()
-            }
-
-            try await self.cleansingAllAccounts(context: context)
-            try await self.cleansingAllUsersAndUserDetails(context: context)
-            try await self.cleansingAllDataAssets(context: context)
+        let lastCleanseDate: Date = await ManagedPreferences.Preferences(for: self.persistentContainer.newBackgroundContext()).lastCleansed
+        guard force || lastCleanseDate.addingTimeInterval(Self.cleansingDataInterval) < Date() else {
+            return
         }
+
+        await context.perform {
+            ManagedPreferences.managedPreferences(for: context).lastCleansed = Date()
+        }
+
+        try await self.cleansingAllAccounts(context: context)
+        try await self.cleansingAllUsersAndUserDetails(context: context)
+        try await self.cleansingAllDataAssets(context: context)
     }
 
     public func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
@@ -108,7 +106,9 @@ extension Session {
             }
 
             if context.hasChanges {
-                try context.save()
+                try withExtendedBackgroundExecution {
+                    try context.save()
+                }
             }
         }
     }
@@ -175,7 +175,9 @@ extension Session {
             }
 
             if context.hasChanges {
-                try context.save()
+                try withExtendedBackgroundExecution {
+                    try context.save()
+                }
             }
         }
     }
@@ -203,7 +205,9 @@ extension Session {
             }
 
             if context.hasChanges {
-                try context.save()
+                try withExtendedBackgroundExecution {
+                    try context.save()
+                }
             }
         }
     }
@@ -259,7 +263,9 @@ extension Session {
             }
 
             if context.hasChanges {
-                try context.save()
+                try withExtendedBackgroundExecution {
+                    try context.save()
+                }
             }
         }
     }

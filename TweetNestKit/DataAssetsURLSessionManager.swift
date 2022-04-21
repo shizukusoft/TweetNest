@@ -107,17 +107,16 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
                     dispatchGroup.leave()
                 }
 
-                withExtendedBackgroundExecution {
-                    do {
-                        try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
+                do {
+                    try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
 
-
-                        if managedObjectContext.hasChanges {
+                    if managedObjectContext.hasChanges {
+                        try withExtendedBackgroundExecution {
                             try managedObjectContext.save()
                         }
-                    } catch {
-                        self?.logger.error("\(error as NSError, privacy: .public)")
                     }
+                } catch {
+                    self?.logger.error("\(error as NSError, privacy: .public)")
                 }
             }
         } catch {

@@ -154,62 +154,60 @@ extension Session {
 extension Session {
     @discardableResult
     public func fetchNewData(cleansingData: Bool = true, force: Bool = false) async throws -> Bool {
-        try await withExtendedBackgroundExecution { [self] in
-            let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-new-data")
+        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-new-data")
 
-            guard force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date() else {
-                return false
-            }
+        guard force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date() else {
+            return false
+        }
 
-            TweetNestKitUserDefaults.standard.lastFetchNewDataDate = Date()
+        TweetNestKitUserDefaults.standard.lastFetchNewDataDate = Date()
 
-            do {
-                defer {
-                    if cleansingData {
-                        Task.detached(priority: .utility) {
-                            do {
-                                try await self.cleansingAllData(force: force)
-                            } catch {
-                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                    .error("Error occurred while cleansing data: \(error as NSError, privacy: .public)")
-                            }
+        do {
+            defer {
+                if cleansingData {
+                    Task.detached(priority: .utility) {
+                        do {
+                            try await self.cleansingAllData(force: force)
+                        } catch {
+                            Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                                .error("Error occurred while cleansing data: \(error as NSError, privacy: .public)")
                         }
                     }
                 }
-
-                let hasChanges = try await updateAllAccounts()
-
-                for hasChanges in hasChanges {
-                    _ = try hasChanges.1.get()
-                }
-
-                return try await updateAllAccounts().reduce(false, { try $1.1.get() || $0 })
-            } catch {
-                logger.error("Error occurred while update accounts: \(String(describing: error))")
-
-                switch error {
-                case is CancellationError, URLError.cancelled:
-                    break
-                default:
-                    let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
-                    notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
-                    notificationContent.body = error.localizedDescription
-                    notificationContent.sound = .default
-
-                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-
-                    do {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } catch {
-                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
-
-                        throw error
-                    }
-                }
-
-                return false
             }
+
+            let hasChanges = try await updateAllAccounts()
+
+            for hasChanges in hasChanges {
+                _ = try hasChanges.1.get()
+            }
+
+            return try await updateAllAccounts().reduce(false, { try $1.1.get() || $0 })
+        } catch {
+            logger.error("Error occurred while update accounts: \(String(describing: error))")
+
+            switch error {
+            case is CancellationError, URLError.cancelled:
+                break
+            default:
+                let notificationContent = UNMutableNotificationContent()
+                notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
+                notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
+                notificationContent.body = error.localizedDescription
+                notificationContent.sound = .default
+
+                let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+
+                do {
+                    try await UNUserNotificationCenter.current().add(notificationRequest)
+                } catch {
+                    logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+
+                    throw error
+                }
+            }
+
+            return false
         }
     }
 }
