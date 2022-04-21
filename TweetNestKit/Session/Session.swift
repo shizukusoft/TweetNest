@@ -191,8 +191,8 @@ extension Session {
                 break
             default:
                 let notificationContent = UNMutableNotificationContent()
-                notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
-                notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
+                notificationContent.title = String(localized: "Fetch New Data", bundle: .tweetNestKit, comment: "fetch-new-data notification title.")
+                notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "fetch-new-data notification subtitle.")
                 notificationContent.body = error.localizedDescription
                 notificationContent.sound = .default
 
