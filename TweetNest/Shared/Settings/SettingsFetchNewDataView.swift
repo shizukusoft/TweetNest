@@ -31,6 +31,13 @@ struct SettingsFetchNewDataView: View {
 
             Text("Every hour")
                 .tag(TimeInterval(60 * 60))
+
+            #if os(macOS)
+            Divider()
+            #endif
+
+            Text("Manually")
+                .tag(TimeInterval(0))
         } label: {
 
         }

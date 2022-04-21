@@ -64,6 +64,11 @@ extension SessionActor {
 
 extension SessionActor {
     func initializeFetchNewDataTimer(interval: TimeInterval) {
+        guard interval > 0 else {
+            self.fetchNewDataTimer = nil
+            return
+        }
+
         let newFetchNewDataTimer = DispatchSource.makeTimerSource(queue: .global(qos: .utility))
         newFetchNewDataTimer.setEventHandler { [session] in
             Task {
