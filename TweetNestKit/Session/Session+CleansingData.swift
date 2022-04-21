@@ -25,16 +25,13 @@ extension Session {
     }
 
     public func cleansingAllData(force: Bool = false) async throws {
-        let context = self.persistentContainerNewBackgroundContext
-
-        let lastCleanseDate: Date = await ManagedPreferences.Preferences(for: self.persistentContainer.newBackgroundContext()).lastCleansed
-        guard force || lastCleanseDate.addingTimeInterval(Self.cleansingDataInterval) < Date() else {
+        guard force || TweetNestKitUserDefaults.standard.lastCleansedDate.addingTimeInterval(Self.cleansingDataInterval) < Date() else {
             return
         }
 
-        await context.perform {
-            ManagedPreferences.managedPreferences(for: context).lastCleansed = Date()
-        }
+        TweetNestKitUserDefaults.standard.lastCleansedDate = Date()
+
+        let context = self.persistentContainerNewBackgroundContext
 
         try await self.cleansingAllAccounts(context: context)
         try await self.cleansingAllUsersAndUserDetails(context: context)

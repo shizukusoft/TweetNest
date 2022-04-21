@@ -14,6 +14,7 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         case lastPersistentHistoryTransactionTimestamp = "TWNKLastPersistentHistoryTransactionTimestamp"
         case fetchNewDataInterval = "TWNKFetchNewDataInterval"
         case lastFetchNewDataDate = "TWNKLastFetchNewData"
+        case lastCleansedDate = "TWNKLastCleansed"
 
         @available(*, deprecated, renamed: "lastFetchNewDataDate")
         case lastBackgroundUpdate = "TWNKLastBackgroundUpdate"
@@ -49,6 +50,11 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         set { setValue(newValue, forKey: DefaultsKeys.fetchNewDataInterval.rawValue) }
     }
 
+    @objc public dynamic var lastCleansedDate: Date {
+        get { object(forKey: DefaultsKeys.lastCleansedDate.rawValue) as? Date ?? .distantPast }
+        set { setValue(newValue, forKey: DefaultsKeys.lastCleansedDate.rawValue) }
+    }
+
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
         switch key {
         case "isBackgroundUpdateEnabled":
@@ -61,6 +67,8 @@ final public class TweetNestKitUserDefaults: UserDefaults {
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.fetchNewDataInterval.rawValue])
         case "lastFetchNewDataDate":
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastFetchNewDataDate.rawValue])
+        case "lastCleansedDate":
+            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastCleansedDate.rawValue])
         default:
             return super.keyPathsForValuesAffectingValue(forKey: key)
         }
