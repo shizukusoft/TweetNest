@@ -46,8 +46,8 @@ final public class TweetNestKitUserDefaults: UserDefaults {
     }
 
     @objc public dynamic var lastFetchNewDataDate: Date {
-        get { object(forKey: DefaultsKeys.fetchNewDataInterval.rawValue) as? Date ?? .distantPast }
-        set { setValue(newValue, forKey: DefaultsKeys.fetchNewDataInterval.rawValue) }
+        get { object(forKey: DefaultsKeys.lastFetchNewDataDate.rawValue) as? Date ?? .distantPast }
+        set { setValue(newValue, forKey: DefaultsKeys.lastFetchNewDataDate.rawValue) }
     }
 
     @objc public dynamic var lastCleansedDate: Date {
