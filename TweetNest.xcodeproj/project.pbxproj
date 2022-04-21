@@ -95,11 +95,15 @@
 		194360FF280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436100280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436101280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
+		1944554128116D4600128A22 /* PersistentContainer+Supports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554028116D4600128A22 /* PersistentContainer+Supports.swift */; };
+		1944554428116F0900128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
+		1944554528116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
+		1944554628116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
 		1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */; };
 		1945F84226F0D3D900CE4EFB /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1945F84126F0D3D900CE4EFB /* CloudKit.framework */; };
 		1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1946203C26D68F0E003DB010 /* CloudKit.framework */; };
-		194EF57E26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
-		194EF57F26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
+		194EF57E26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
+		194EF57F26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
 		1951EBEC270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
 		1951EBED270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
@@ -215,7 +219,7 @@
 		19EABBCE26D6877600D3B003 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */; };
 		19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
-		19EABBD126D6877600D3B003 /* AppSidebarAccountsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */; };
+		19EABBD126D6877600D3B003 /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
 		19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */; };
 		19EABBD626D6877600D3B003 /* DataAssetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */; };
@@ -424,10 +428,12 @@
 		193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
 		193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFetchNewDataView.swift; sourceTree = "<group>"; };
 		194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserView+FootnotesView.swift"; sourceTree = "<group>"; };
+		1944554028116D4600128A22 /* PersistentContainer+Supports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+Supports.swift"; sourceTree = "<group>"; };
+		1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSections.swift; sourceTree = "<group>"; };
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1945F84126F0D3D900CE4EFB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1946203C26D68F0E003DB010 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
-		194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSection.swift; sourceTree = "<group>"; };
+		194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppSidebarAccountsSections+Section.swift"; sourceTree = "<group>"; };
 		1951EBEA270850FC00311B3C /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
 		195392C027E636130042B1CA /* UserRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRows.swift; sourceTree = "<group>"; };
 		195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKitUserDefaults.swift; sourceTree = "<group>"; };
@@ -837,7 +843,8 @@
 				1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */,
 				19933EB925E90ECD006AB4C0 /* MainView.swift */,
 				19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */,
-				194EF57D26BBFD190020939F /* AppSidebarAccountsSection.swift */,
+				1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */,
+				194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */,
 				1920D59627F82CAE0083C23A /* AppStatusView.swift */,
 				1970663E26E709FE00D7F21D /* AccountLabel.swift */,
 				1995B92B26B6F1ED00AFCC9E /* UserView.swift */,
@@ -976,6 +983,7 @@
 				193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */,
 				19EE519D280D110B0068CBCB /* Lazy.swift */,
 				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
+				1944554028116D4600128A22 /* PersistentContainer+Supports.swift */,
 				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
 				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
@@ -1494,6 +1502,7 @@
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
 				199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */,
+				1944554628116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				190007F227E6EB4E005CFED3 /* UserRowsLabel.swift in Sources */,
 				193659B1260978F900865D40 /* WebAuthenticationView.swift in Sources */,
@@ -1515,7 +1524,7 @@
 				195DD4BF26BEF6B2008F0309 /* DataAssetImage.swift in Sources */,
 				19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				1989B75626BA537900755B1E /* UserDetailView.swift in Sources */,
-				194EF57E26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */,
+				194EF57E26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */,
 				1908FBFD26F6EE0E0095AF77 /* BatchDeleteTweetsView.swift in Sources */,
 				1970663B26E7043500D7F21D /* SettingsGeneralView.swift in Sources */,
 				193B995E280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */,
@@ -1552,7 +1561,7 @@
 				192F008926FC270B000EC734 /* UserView+AllDataView.swift in Sources */,
 				190007EF27E6E4C8005CFED3 /* UsersDiffListSection.swift in Sources */,
 				193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */,
-				194EF57F26BBFD190020939F /* AppSidebarAccountsSection.swift in Sources */,
+				194EF57F26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */,
 				19BE3E95270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */,
 				1908FBFE26F6EE140095AF77 /* BatchDeleteTweetsView.swift in Sources */,
 				19861E3E26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */,
@@ -1579,6 +1588,7 @@
 				1908FC0E26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift in Sources */,
 				195392C227E636130042B1CA /* UserRows.swift in Sources */,
 				19B3130526E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
+				1944554528116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				1970664026E709FE00D7F21D /* AccountLabel.swift in Sources */,
 				1997BF6A280B501A009ABA72 /* UserDetailLabel.swift in Sources */,
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
@@ -1624,6 +1634,7 @@
 				1908FC0326F6EF280095AF77 /* BatchDeleteTweetsLoadingRecentTweetsView.swift in Sources */,
 				19EABBCC26D6877600D3B003 /* TweetNestAppDelegate.swift in Sources */,
 				19B3130626E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
+				1944554428116F0900128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				19EABBCD26D6877600D3B003 /* MainView.swift in Sources */,
 				19EABBDF26D6878400D3B003 /* URL.swift in Sources */,
 				19EABBE026D6878400D3B003 /* Session.swift in Sources */,
@@ -1640,7 +1651,7 @@
 				19EABBD826D6877A00D3B003 /* SettingsMainView.swift in Sources */,
 				190007F027E6E4C8005CFED3 /* UsersDiffListSection.swift in Sources */,
 				19D60703270BECCB0070125E /* DateText.swift in Sources */,
-				19EABBD126D6877600D3B003 /* AppSidebarAccountsSection.swift in Sources */,
+				19EABBD126D6877600D3B003 /* AppSidebarAccountsSections+Section.swift in Sources */,
 				19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */,
 				19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */,
 				1970664126E709FE00D7F21D /* AccountLabel.swift in Sources */,
@@ -1690,6 +1701,7 @@
 				19C5A2B726BC1F8A00AB1122 /* SessionError.swift in Sources */,
 				197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */,
 				19C5A2B626BC1F8A00AB1122 /* User+CoreDataProperties.swift in Sources */,
+				1944554128116D4600128A22 /* PersistentContainer+Supports.swift in Sources */,
 				19C5A2B126BC1F8A00AB1122 /* Account.swift in Sources */,
 				19C5A2B226BC1F8A00AB1122 /* User.swift in Sources */,
 				19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */,
