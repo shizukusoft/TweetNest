@@ -230,7 +230,6 @@
 		19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
 		19EE473326C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
 		19EE519E280D110B0068CBCB /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE519D280D110B0068CBCB /* Lazy.swift */; };
-		19F1117526DD216C004D6DE3 /* BackgroundTasks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */; };
 		19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */; };
 		19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117826DD28A1004D6DE3 /* Session+Credential.swift */; };
 		19F7914627F8A472008F9FC0 /* BackgroundTask in Frameworks */ = {isa = PBXBuildFile; productRef = 19F7914527F8A472008F9FC0 /* BackgroundTask */; };
@@ -517,7 +516,6 @@
 		19EE473B26C15439007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19EE473C26C1543E007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19EE519D280D110B0068CBCB /* Lazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
-		19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTasks.swift; sourceTree = "<group>"; };
 		19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		19F1117826DD28A1004D6DE3 /* Session+Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
 		19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
@@ -975,7 +973,6 @@
 				19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */,
 				19AFA14226E847B800764D79 /* BackgroundTaskScheduler+BackgroundTask.swift */,
 				19C3C82226E84E0D001FA25D /* BackgroundTaskScheduler+WatchKit.swift */,
-				19F1117426DD216C004D6DE3 /* BackgroundTasks.swift */,
 				193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */,
 				19EE519D280D110B0068CBCB /* Lazy.swift */,
 				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
@@ -1679,7 +1676,6 @@
 				198E9D16280BF9210064CBD8 /* UserID.swift in Sources */,
 				19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */,
 				195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */,
-				19F1117526DD216C004D6DE3 /* BackgroundTasks.swift in Sources */,
 				1985B42C26E49A01000C6126 /* ManagedPreferences.swift in Sources */,
 				1978AF1B280FEFEE0081D481 /* ManagedPreferences+Preferences.swift in Sources */,
 				19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */,

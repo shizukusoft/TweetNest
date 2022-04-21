@@ -8,6 +8,7 @@
 import CloudKit
 import CoreData
 import OrderedCollections
+import BackgroundTask
 import UnifiedLogging
 
 public enum PersistentContainerError: Error {
