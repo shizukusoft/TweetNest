@@ -26,11 +26,11 @@ public class BackgroundTaskScheduler {
     public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).data-cleansing"
 
     private static var preferredBackgroundRefreshDate: Date {
-        Date(timeIntervalSinceNow: TweetNestKitUserDefaults.standard.fetchNewDataInterval)
+        TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval)
     }
 
     private static var preferredBackgroundDataCleansingDate: Date {
-        Date(timeIntervalSinceNow: Session.cleansingDataInterval)
+        TweetNestKitUserDefaults.standard.lastCleansedDate.addingTimeInterval(Session.cleansingDataInterval)
     }
 
     private var session: Session {
