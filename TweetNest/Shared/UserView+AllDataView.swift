@@ -69,7 +69,7 @@ extension UserView {
                         Spacer()
 
                         if let creationDate = userDetail.creationDate {
-                            Text(creationDate.formatted(date: .abbreviated, time: .shortened))
+                            Text(creationDate.formatted(date: .numeric, time: .shortened))
                                 .foregroundColor(.secondary)
                         }
                     }
