@@ -39,62 +39,49 @@ extension Session {
                 return context
             }()
 
-            async let userIDs: [Twitter.User.ID] = context.perform { [userIDs = Set(userIDs)] in
+            async let _refinedUsersByID: [Twitter.User.ID: User?] = context.perform { [userIDs = Set(userIDs)] in
                 let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                 userFetchRequest.predicate = NSPredicate(format: "id IN %@", userIDs)
                 userFetchRequest.sortDescriptors = [
                     NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
                     NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
                 ]
-                userFetchRequest.propertiesToFetch = ["id", "lastUpdateStartDate"]
-                userFetchRequest.relationshipKeyPathsForPrefetching = ["accounts"]
                 userFetchRequest.returnsObjectsAsFaults = false
 
                 let users = try context.fetch(userFetchRequest)
                 let usersByID = Dictionary(uniqueKeysWithValues: users.lazy.uniqued(on: \.id).map { ($0.id, $0) })
 
-                let refinedUserIDs: [Twitter.User.ID] = userIDs.compactMap {
-                    let user = usersByID[$0]
-                    let lastUpdateStartDate = user?.lastUpdateStartDate ?? .distantPast
+                let refinedUsersByID: [Twitter.User.ID: User?] = Dictionary(
+                    uniqueKeysWithValues: userIDs
+                        .lazy
+                        .compactMap {
+                            let user = usersByID[$0]
+                            let lastUpdateStartDate = user?.lastUpdateStartDate ?? .distantPast
 
-                    guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
-                        return nil
-                    }
+                            guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
+                                return nil
+                            }
 
-                    // Don't update user data if user has account. (Might overwrite followings/followers list)
-                    guard $0 == accountUserID || user?.accounts?.isEmpty != false else {
-                        return nil
-                    }
+                            user?.lastUpdateStartDate = Date()
 
-                    return $0
-                }
+                            return ($0, user)
+                        }
+                )
 
-                context.perform {
-                    withExtendedBackgroundExecution {
-                        let batchUpdateRequest = NSBatchUpdateRequest(entity: User.entity())
-                        batchUpdateRequest.predicate = NSPredicate(format: "id IN %@", refinedUserIDs)
-                        batchUpdateRequest.propertiesToUpdate = [
-                            "lastUpdateStartDate": Date()
-                        ]
-                        batchUpdateRequest.resultType = .updatedObjectIDsResultType
-
-                        do {
-                            let updateResult = try context.execute(batchUpdateRequest) as? NSBatchUpdateResult
-                            let objectIDs = updateResult?.result as? [NSManagedObjectID]
-                            let changes = [NSUpdatedObjectsKey: objectIDs].compactMapValues { $0 }
-
-                            NSManagedObjectContext.mergeChanges(
-                                fromRemoteContextSave: changes,
-                                into: [context]
-                            )
-                        } catch {
-                            Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                .error("\(error as NSError, privacy: .public)")
+                if context.hasChanges {
+                    context.perform {
+                        withExtendedBackgroundExecution {
+                            do {
+                                try context.save()
+                            } catch {
+                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                                    .error("\(error as NSError, privacy: .public)")
+                            }
                         }
                     }
                 }
 
-                return refinedUserIDs
+                return refinedUsersByID
             }
 
             async let _preferences = ManagedPreferences.Preferences(for: context)
@@ -107,12 +94,17 @@ extension Session {
                 return account.preferences
             }
 
-            let twitterSession = try await self.twitterSession(for: accountObjectID)
+            try Task.checkCancellation()
 
-            for chunkedUserIDs in try await userIDs.chunks(ofCount: 100) {
+            let twitterSession = try await self.twitterSession(for: accountObjectID)
+            let refinedUsersByID = try await _refinedUsersByID
+
+            try Task.checkCancellation()
+
+            for chunkecUserIDs in refinedUsersByID.keys.chunks(ofCount: 100) {
                 chunkedUsersTaskGroup.addTask {
                     try await withExtendedBackgroundExecution {
-                        try await (Date(), Twitter.User.users(ids: Array(chunkedUserIDs), session: twitterSession))
+                        try await (Date(), Twitter.User.users(ids: Array(chunkecUserIDs), session: twitterSession))
                     }
                 }
             }
@@ -151,21 +143,11 @@ extension Session {
                             let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
 
                             let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID?) = try await context.perform(schedule: .enqueued) {
-                                let fetchRequest = UserDetail.fetchRequest()
-                                fetchRequest.predicate = NSPredicate(format: "user.id == %@", twitterUser.id)
-                                fetchRequest.sortDescriptors = [
-                                    NSSortDescriptor(key: "user.modificationDate", ascending: false),
-                                    NSSortDescriptor(key: "user.creationDate", ascending: false),
-                                    NSSortDescriptor(key: "creationDate", ascending: false),
-                                ]
-                                fetchRequest.fetchLimit = 1
-                                fetchRequest.returnsObjectsAsFaults = false
-                                fetchRequest.relationshipKeyPathsForPrefetching = ["user", "user.accounts"]
-
-                                let previousUserDetail = try context.fetch(fetchRequest).first
+                                let user = refinedUsersByID[twitterUser.id] as? User
+                                let previousUserDetail = user?.sortedUserDetails?.last
 
                                 // Don't update user data if user has account. (Might overwrite followings/followers list)
-                                guard twitterUser.id == accountUserID || previousUserDetail?.user?.accounts?.isEmpty != false else {
+                                guard twitterUser.id == accountUserID || user?.accounts?.isEmpty != false else {
                                     return (previousUserDetail?.objectID, nil)
                                 }
 
