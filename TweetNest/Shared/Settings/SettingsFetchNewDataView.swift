@@ -43,15 +43,15 @@ struct SettingsFetchNewDataView: View {
         }
     }
 
+    #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
     @ViewBuilder var backgroundUpdateToggle: some View {
         Toggle("Background Update", isOn: $backgroundUpdate)
     }
+    #endif
 
     var body: some View {
         #if os(macOS)
         fetchNewDataIntervalPicker
-
-        backgroundUpdateToggle
         #else
         NavigationLink {
             Form {
@@ -60,9 +60,11 @@ struct SettingsFetchNewDataView: View {
                         .pickerStyle(.inline)
                 }
 
+                #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 Section {
                     backgroundUpdateToggle
                 }
+                #endif
             }
             .navigationTitle("Fetch New Data")
         } label: {

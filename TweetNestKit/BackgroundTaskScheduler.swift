@@ -37,28 +37,7 @@ public class BackgroundTaskScheduler {
         .shared
     }
 
-    private lazy var isBackgroundUpdateEnabledObserver = TweetNestKitUserDefaults.standard
-        .observe(\.isBackgroundUpdateEnabled) { [weak self] _, _ in
-            Task { [weak self] in
-                await self?.isBackgroundUpdateEnabledDidChanges()
-            }
-        }
-
-    private init() {
-        _ = isBackgroundUpdateEnabledObserver
-    }
-}
-
-extension BackgroundTaskScheduler {
-    private func isBackgroundUpdateEnabledDidChanges() async {
-        if TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled {
-            try? await scheduleBackgroundTasks()
-        } else {
-            #if canImport(BackgroundTasks) && !os(macOS)
-            BGTaskScheduler.shared.cancelAllTaskRequests()
-            #endif
-        }
-    }
+    private init() { }
 }
 
 extension BackgroundTaskScheduler {
@@ -90,6 +69,13 @@ extension BackgroundTaskScheduler {
                 }
             }
         }
+        #endif
+    }
+
+    public func cancelBackgroundTasks() {
+        #if canImport(BackgroundTasks) && !os(macOS)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier)
         #endif
     }
 }
