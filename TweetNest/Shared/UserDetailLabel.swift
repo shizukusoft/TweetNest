@@ -12,18 +12,34 @@ struct UserDetailLabel: View {
     private struct UserDetailLabel: View {
         @ObservedObject var userDetail: UserDetail
         let placeholder: String
-        let showsUsernameOnly: Bool
+
+        let showsName: Bool
+        let showsUsername: Bool
+
+        private var names: [String] {
+            var names = [String]()
+
+            if showsName, let name = userDetail.name {
+                names.append(name)
+            }
+
+            if showsUsername, let displayUsername = userDetail.displayUsername {
+                names.append(displayUsername)
+            }
+
+            return names
+        }
 
         var body: some View {
-            let name = (showsUsernameOnly ? userDetail.displayUsername : userDetail.name) ?? placeholder
+            let primaryName = names.first ?? placeholder
 
             Label {
                 TweetNestStack {
-                    Text(verbatim: name)
+                    Text(verbatim: primaryName)
                         .lineLimit(1)
 
-                    if showsUsernameOnly == false, let username = userDetail.username {
-                        Text(verbatim: "@\(username)")
+                    if names.count > 1 {
+                        Text(verbatim: names[1])
                             .lineLimit(1)
                             .layoutPriority(1)
                             .foregroundColor(Color.gray)
@@ -37,17 +53,18 @@ struct UserDetailLabel: View {
                     .frame(width: 24, height: 24)
                     #endif
             }
-            .accessibilityLabel(Text(verbatim: name))
+            .accessibilityLabel(Text(verbatim: primaryName))
         }
     }
 
     let userDetail: UserDetail?
     let placeholder: String
-    let showsUsernameOnly: Bool
+    let showsName: Bool
+    let showsUsername: Bool
 
     var body: some View {
         if let userDetail = userDetail {
-            UserDetailLabel(userDetail: userDetail, placeholder: placeholder, showsUsernameOnly: showsUsernameOnly)
+            UserDetailLabel(userDetail: userDetail, placeholder: placeholder, showsName: showsName, showsUsername: showsUsername)
         } else {
             Label {
                 Text(verbatim: placeholder)
@@ -59,16 +76,20 @@ struct UserDetailLabel: View {
         }
     }
 
-    init(userDetail: UserDetail?, placeholder: String, showsUsernameOnly: Bool = false) {
+    init(userDetail: UserDetail?, placeholder: String, showsName: Bool = true, showsUsername: Bool = true) {
         self.userDetail = userDetail
         self.placeholder = placeholder
-        self.showsUsernameOnly = showsUsernameOnly
+        self.showsName = showsName
+        self.showsUsername = showsUsername
     }
 
     init(userDetail: UserDetail?, account: Account) {
-        self.userDetail = userDetail
-        self.placeholder = account.userID?.displayUserID ?? account.objectID.uriRepresentation().absoluteString
-        self.showsUsernameOnly = true
+        self.init(
+            userDetail: userDetail,
+            placeholder: account.userID?.displayUserID ?? account.objectID.uriRepresentation().absoluteString,
+            showsName: false,
+            showsUsername: true
+        )
     }
 }
 

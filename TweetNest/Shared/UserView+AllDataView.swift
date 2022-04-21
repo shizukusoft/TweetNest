@@ -56,16 +56,25 @@ extension UserView {
             }
             #else
             ForEach(userDetails) { userDetail in
-                NavigationLink(
-                    userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
-                ) {
+                let title = userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
+
+                NavigationLink {
                     UserDetailView(userDetail: userDetail)
-                        .navigationTitle(
-                            Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
-                            .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
-                        )
+                        .navigationTitle(title)
                         .environment(\.account, account)
+                } label: {
+                    TweetNestStack {
+                        UserDetailLabel(userDetail: userDetail, placeholder: userDetail.objectID.description, showsUsername: false)
+
+                        Spacer()
+
+                        if let creationDate = userDetail.creationDate {
+                            Text(creationDate.formatted(date: .abbreviated, time: .shortened))
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 }
+                .accessibilityLabel(title)
             }
             #endif
         }
