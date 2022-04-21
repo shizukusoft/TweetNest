@@ -13,30 +13,38 @@ import Twitter
 public class User: NSManagedObject {
     public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
         (userDetails as? Set<UserDetail>).flatMap {
-            var userDetails = OrderedSet($0)
+            var sortedUserDetails = OrderedSet($0)
 
             let sortedManagedObjectID: OrderedSet<NSManagedObjectID>? = managedObjectContext
                 .flatMap { context in
+                    let userDetailsObjectIDs = Set(sortedUserDetails.map(\.objectID))
+
                     let fetchRequest = NSFetchRequest<NSManagedObjectID>()
                     fetchRequest.entity = UserDetail.entity()
-                    fetchRequest.predicate = NSPredicate(format: "user == %@", self)
+                    fetchRequest.predicate = NSPredicate(format: "user == %@", objectID)
                     fetchRequest.sortDescriptors = [
                         NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
                     ]
                     fetchRequest.resultType = .managedObjectIDResultType
 
-                    let sortedManagedObjectID = try? context.fetch(fetchRequest)
+                    guard let sortedManagedObjectID = (try? context.fetch(fetchRequest)).flatMap({ OrderedSet($0) }) else {
+                        return nil
+                    }
 
-                    return sortedManagedObjectID.flatMap { OrderedSet($0) }
+                    guard sortedManagedObjectID.isSuperset(of: userDetailsObjectIDs) else {
+                        return nil
+                    }
+
+                    return sortedManagedObjectID
                 }
 
             if let sortedManagedObjectID = sortedManagedObjectID {
-                userDetails.sort { (sortedManagedObjectID.firstIndex(of: $0.objectID) ?? -1) < (sortedManagedObjectID.firstIndex(of: $1.objectID) ?? -1) }
+                sortedUserDetails.sort { (sortedManagedObjectID.firstIndex(of: $0.objectID) ?? .min) < (sortedManagedObjectID.firstIndex(of: $1.objectID) ?? .min) }
             } else {
-                userDetails.sort { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
+                sortedUserDetails.sort { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
             }
 
-            return userDetails
+            return sortedUserDetails
         }
     }
 
