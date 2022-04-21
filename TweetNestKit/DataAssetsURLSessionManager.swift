@@ -102,22 +102,21 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
             dispatchGroup.enter()
-            Task.detached {
-                await withExtendedBackgroundExecution {
-                    await self.managedObjectContext.perform(schedule: .enqueued) {
-                        defer {
-                            self.dispatchGroup.leave()
-                        }
+            managedObjectContext.perform { [dispatchGroup, managedObjectContext, weak self] in
+                defer {
+                    dispatchGroup.leave()
+                }
 
-                        do {
-                            try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: self.managedObjectContext)
+                withExtendedBackgroundExecution {
+                    do {
+                        try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
 
-                            if self.managedObjectContext.hasChanges {
-                                try self.managedObjectContext.save()
-                            }
-                        } catch {
-                            self.logger.error("\(error as NSError, privacy: .public)")
+
+                        if managedObjectContext.hasChanges {
+                            try managedObjectContext.save()
                         }
+                    } catch {
+                        self?.logger.error("\(error as NSError, privacy: .public)")
                     }
                 }
             }
