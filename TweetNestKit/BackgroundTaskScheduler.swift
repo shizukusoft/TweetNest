@@ -82,7 +82,7 @@ extension BackgroundTaskScheduler {
 
 extension BackgroundTaskScheduler {
     @discardableResult
-    func backgroundRefresh(dataCleansing: Bool = false) async -> Bool {
+    func backgroundRefresh() async -> Bool {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
 
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
@@ -99,7 +99,7 @@ extension BackgroundTaskScheduler {
         }
 
         do {
-            return try await session.fetchNewData(cleansingData: dataCleansing)
+            return try await session.fetchNewData(cleansingData: false)
         } catch {
             logger.error("Error occurred while update accounts: \(String(describing: error))")
             return false
