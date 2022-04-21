@@ -73,7 +73,9 @@ struct TweetNestApp: App {
             switch phase {
             case .active, .inactive:
                 session.resumeAutomaticallyFetchNewData()
+                #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 BackgroundTaskScheduler.shared.cancelBackgroundTasks()
+                #endif
             case .background:
                 session.pauseAutomaticallyFetchNewData()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
