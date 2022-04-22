@@ -11,7 +11,7 @@ import Twitter
 
 extension URLSessionConfiguration {
     public static var twnk_default: URLSessionConfiguration {
-        let urlSessionConfiguration = URLSessionConfiguration.twt_default
+        let urlSessionConfiguration = URLSessionConfiguration.default
 
         urlSessionConfiguration.reset()
 
