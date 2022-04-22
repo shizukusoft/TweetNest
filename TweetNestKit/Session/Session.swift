@@ -34,6 +34,12 @@ public class Session {
         .sink { [weak self] _ in
             self?.handlePersistentStoreRemoteChanges()
         }
+    private(set) lazy var persistentStoreRemoteChangeContext: NSManagedObjectContext = {
+        let persistentStoreRemoteChangeContext = persistentContainer.newBackgroundContext()
+        persistentStoreRemoteChangeContext.undoManager = nil
+
+        return persistentStoreRemoteChangeContext
+    }()
 
     @Published
     public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?

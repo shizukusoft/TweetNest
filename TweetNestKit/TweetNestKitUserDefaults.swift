@@ -11,13 +11,16 @@ final public class TweetNestKitUserDefaults: UserDefaults {
     public enum DefaultsKeys: String {
         case isBackgroundUpdateEnabled = "TWNKBackgroundUpdateEnabled"
         case downloadsDataAssetsUsingExpensiveNetworkAccess = "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess"
-        case lastPersistentHistoryTransactionTimestamp = "TWNKLastPersistentHistoryTransactionTimestamp"
+        case lastPersistentHistoryTokenData = "TWNKLastPersistentHistoryTokenData"
         case fetchNewDataInterval = "TWNKFetchNewDataInterval"
         case lastFetchNewDataDate = "TWNKLastFetchNewData"
         case lastCleansedDate = "TWNKLastCleansed"
 
         @available(*, deprecated, renamed: "lastFetchNewDataDate")
         case lastBackgroundUpdate = "TWNKLastBackgroundUpdate"
+
+        @available(*, deprecated, renamed: "lastPersistentHistoryToken")
+        case lastPersistentHistoryTransactionTimestamp = "TWNKLastPersistentHistoryTransactionTimestamp"
     }
 
     private static let _standard = TweetNestKitUserDefaults(suiteName: Session.applicationGroupIdentifier)!
@@ -35,9 +38,9 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         set { setValue(newValue, forKey: DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue) }
     }
 
-    @objc public dynamic var lastPersistentHistoryTransactionTimestamp: Date? {
-        get { object(forKey: DefaultsKeys.lastPersistentHistoryTransactionTimestamp.rawValue) as? Date }
-        set { setValue(newValue, forKey: DefaultsKeys.lastPersistentHistoryTransactionTimestamp.rawValue) }
+    @objc public dynamic var lastPersistentHistoryTokenData: Data? {
+        get { object(forKey: DefaultsKeys.lastPersistentHistoryTokenData.rawValue) as? Data }
+        set { setValue(newValue, forKey: DefaultsKeys.lastPersistentHistoryTokenData.rawValue) }
     }
 
     @objc public dynamic var fetchNewDataInterval: TimeInterval {
@@ -61,8 +64,8 @@ final public class TweetNestKitUserDefaults: UserDefaults {
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.isBackgroundUpdateEnabled.rawValue])
         case "downloadsDataAssetsUsingExpensiveNetworkAccess":
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue])
-        case "lastPersistentHistoryTransactionTimestamp":
-            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastPersistentHistoryTransactionTimestamp.rawValue])
+        case "lastPersistentHistoryTokenData":
+            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastPersistentHistoryTokenData.rawValue])
         case "fetchNewDataInterval":
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.fetchNewDataInterval.rawValue])
         case "lastFetchNewDataDate":

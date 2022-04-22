@@ -131,7 +131,6 @@
 		197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */; };
 		1978AF0F280FC9C80081D481 /* Session+Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1978AF0E280FC9C80081D481 /* Session+Support.swift */; };
 		1978AF13280FE1A90081D481 /* SessionActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1978AF12280FE1A90081D481 /* SessionActor.swift */; };
-		1978AF15280FE3380081D481 /* SessionActor+RemoteChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1978AF14280FE3380081D481 /* SessionActor+RemoteChanges.swift */; };
 		1978AF1B280FEFEE0081D481 /* ManagedPreferences+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1978AF1A280FEFEE0081D481 /* ManagedPreferences+Preferences.swift */; };
 		1985B42C26E49A01000C6126 /* ManagedPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1985B42A26E49A01000C6126 /* ManagedPreferences.swift */; };
 		1985B42D26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1985B42B26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift */; };
@@ -449,7 +448,6 @@
 		197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+CleansingData.swift"; sourceTree = "<group>"; };
 		1978AF0E280FC9C80081D481 /* Session+Support.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Support.swift"; sourceTree = "<group>"; };
 		1978AF12280FE1A90081D481 /* SessionActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionActor.swift; sourceTree = "<group>"; };
-		1978AF14280FE3380081D481 /* SessionActor+RemoteChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SessionActor+RemoteChanges.swift"; sourceTree = "<group>"; };
 		1978AF1A280FEFEE0081D481 /* ManagedPreferences+Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+Preferences.swift"; sourceTree = "<group>"; };
 		1985B42A26E49A01000C6126 /* ManagedPreferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedPreferences.swift; sourceTree = "<group>"; };
 		1985B42B26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+CoreDataProperties.swift"; sourceTree = "<group>"; };
@@ -797,7 +795,6 @@
 				193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */,
 				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
 				1978AF12280FE1A90081D481 /* SessionActor.swift */,
-				1978AF14280FE3380081D481 /* SessionActor+RemoteChanges.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -1672,7 +1669,6 @@
 				19C5A2B326BC1F8A00AB1122 /* SecureUnarchiveFromDataTransformer.swift in Sources */,
 				195DD4BB26BEF09D008F0309 /* DataAsset+CoreDataProperties.swift in Sources */,
 				19EE519E280D110B0068CBCB /* Lazy.swift in Sources */,
-				1978AF15280FE3380081D481 /* SessionActor+RemoteChanges.swift in Sources */,
 				19C5A2BA26BC1F8A00AB1122 /* Account+CoreDataProperties.swift in Sources */,
 				190DF4C126BCF1B700E1F062 /* Session+UpdateUser.swift in Sources */,
 				19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */,
