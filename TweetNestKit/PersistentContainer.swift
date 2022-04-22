@@ -75,6 +75,10 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     public override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> Void) {
+        #if DEBUG
+        try! initializeCloudKitSchema(options: [])
+        #endif
+
         persistentStoreCoordinator.perform {
             do {
                 try self.migrationIfNeeded()
