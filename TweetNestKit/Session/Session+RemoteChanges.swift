@@ -198,23 +198,11 @@ extension Session {
         for (userDetailObjectID, change) in userDetailChangesByObjectID {
             try Task.checkCancellation()
 
-            let (threadIdentifier, notificationIdentifier): (String?, String) = await context.perform(schedule: .enqueued) {
-                guard
-                    let userDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
-                    let user = userDetail.user
-                else {
-                    return (nil, userDetailObjectID.uriRepresentation().absoluteString)
-                }
-
-                let threadIdentifier = user.id ?? user.objectID.uriRepresentation().absoluteString
-                let notificationIdentifier = [threadIdentifier, userDetail.creationDate.flatMap { String($0.timeIntervalSince1970) }].compacted().joined(separator: "\t")
-
-                return (threadIdentifier, notificationIdentifier.isEmpty ? userDetailObjectID.uriRepresentation().absoluteString : notificationIdentifier)
-            }
+            let notificationIdentifier = persistentContainer.recordID(for: userDetailObjectID)?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString
 
             switch change.changeType {
             case .insert, .update:
-                let notificationContent: UNNotificationContent? = await context.perform(schedule: .enqueued) {
+                let notificationContent: UNNotificationContent? = await context.perform(schedule: .enqueued) { [persistentContainer] in
                     guard
                         let newUserDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
                         Date(timeIntervalSinceNow: -(10 * 60)) <= (newUserDetail.creationDate ?? .distantPast),
@@ -243,10 +231,7 @@ extension Session {
                     }
                     notificationContent.categoryIdentifier = "NewAccountData"
                     notificationContent.interruptionLevel = .passive
-
-                    if let threadIdentifier = threadIdentifier {
-                        notificationContent.threadIdentifier = threadIdentifier
-                    }
+                    notificationContent.threadIdentifier = persistentContainer.recordID(for: account.objectID)?.recordName ?? account.objectID.uriRepresentation().absoluteString
 
                     var changes: [String] = []
 
