@@ -18,6 +18,8 @@ extension TweetNestAppDelegate: UIApplicationDelegate {
             Logger().error("Failed to register background tasks")
         }
 
+        application.registerForRemoteNotifications()
+
         return true
     }
 
