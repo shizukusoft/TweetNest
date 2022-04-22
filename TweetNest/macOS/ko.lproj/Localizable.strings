@@ -20,9 +20,6 @@
 "Add Account" = "계정 추가";
 
 /* No comment provided by engineer. */
-"Background Update" = "백그라운드 업데이트";
-
-/* No comment provided by engineer. */
 "Blocked Accounts" = "차단한 계정";
 
 /* No comment provided by engineer. */
@@ -62,10 +59,16 @@
 "Done" = "완료";
 
 /* No comment provided by engineer. */
+"Every %@" = "%@마다";
+
+/* No comment provided by engineer. */
 "Fetch Blocking Users" = "블락한 유저 가져오기";
 
 /* No comment provided by engineer. */
 "Fetch Muting Users" = "뮤트한 계정 목록 가져오기";
+
+/* No comment provided by engineer. */
+"Fetch new data" = "데이터 업데이트";
 
 /* No comment provided by engineer. */
 "Fetch Profile Headers" = "프로필 헤더 가져오기";
@@ -111,6 +114,9 @@
 
 /* No comment provided by engineer. */
 "Location" = "위치";
+
+/* No comment provided by engineer. */
+"Manually" = "수동";
 
 /* No comment provided by engineer. */
 "More" = "더 보기";
@@ -195,9 +201,6 @@
 
 /* No comment provided by engineer. */
 "Until" = "종료";
-
-/* No comment provided by engineer. */
-"Update accounts in background on this device." = "이 기기에서 백그라운드로 계정 정보를 업데이트합니다.";
 
 /* No comment provided by engineer. */
 "Updated %@ ago" = "%@ 전에 업데이트됨";

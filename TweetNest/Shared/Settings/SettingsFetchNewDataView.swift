@@ -12,18 +12,24 @@ struct SettingsFetchNewDataView: View {
     @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.fetchNewDataInterval)
     var fetchNewDataInterval: TimeInterval = TweetNestKitUserDefaults.standard.fetchNewDataInterval
 
+    static var fetchNewDataIntervalOptions: Set<TimeInterval> {
+        [
+            5 * 60,
+            10 * 60,
+            15 * 60,
+            30 * 60,
+            60 * 60
+        ]
+    }
+
     @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.isBackgroundUpdateEnabled)
     var backgroundUpdate: Bool = true
 
     @ViewBuilder var fetchNewDataIntervalPicker: some View {
         Picker(selection: $fetchNewDataInterval) {
-            ForEach([5, 10, 15, 30], id: \.self) { minutes in
-                Text("Every \(minutes) minutes")
-                    .tag(TimeInterval(minutes * 60))
+            ForEach(Self.fetchNewDataIntervalOptions.sorted(), id: \.self) { timeInterval in
+                Text("Every \(Date(timeIntervalSinceReferenceDate: 0)..<Date(timeIntervalSinceReferenceDate: timeInterval), format: .components(style: .narrow))")
             }
-
-            Text("Every hour")
-                .tag(TimeInterval(60 * 60))
 
             #if os(macOS)
             Divider()
@@ -32,7 +38,9 @@ struct SettingsFetchNewDataView: View {
             Text("Manually")
                 .tag(TimeInterval(0))
         } label: {
-
+            #if os(macOS)
+            Text("Fetch new data")
+            #endif
         }
     }
 
