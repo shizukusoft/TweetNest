@@ -40,9 +40,16 @@ extension PersistentContainer {
 
                     return try user.managedObjectContext?.fetch(fetchRequest).first?.data
                 }
-                attributeSet.keywords = sortedUserDetails?.flatMap {
-                    [$0.name, $0.username].compacted()
+
+                var keywords = [String]()
+                if let displayUserID = user.id?.displayUserID {
+                    keywords.append(displayUserID)
                 }
+                if let names = sortedUserDetails?.lazy.flatMap({ [$0.name, $0.username] }).compacted() {
+                    keywords.append(contentsOf: Set(names))
+                }
+
+                attributeSet.keywords = keywords
 
                 return attributeSet
             }
