@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OrderedCollections
 import Twitter
 
 extension URLSessionConfiguration {
@@ -29,9 +30,20 @@ extension URLSessionConfiguration {
     }
 
     private func reset() {
-        httpCookieStorage = nil
-        httpShouldSetCookies = false
+        httpAdditionalHeaders = {
+            var httpAdditionalHeaders = [AnyHashable : Any]()
+
+            let preferredLanguages = OrderedSet(Locale.preferredLanguages.flatMap { [$0, $0.components(separatedBy: "-")[0]] } + ["*"])
+            httpAdditionalHeaders["Accept-Language"] = preferredLanguages.qualityJoined
+
+            return httpAdditionalHeaders
+        }()
+
+        timeoutIntervalForRequest = 15
+
         httpCookieAcceptPolicy = .never
+        httpShouldSetCookies = false
+        httpCookieStorage = nil
 
         urlCredentialStorage = nil
 
@@ -40,11 +52,16 @@ extension URLSessionConfiguration {
         sharedContainerIdentifier = Session.applicationGroupIdentifier
 
         shouldUseExtendedBackgroundIdleMode = true
+    }
+}
 
-        #if os(iOS)
-        multipathServiceType = .handover
-        #endif
-
-        timeoutIntervalForRequest = 15
+extension Collection where Element == String {
+    fileprivate var qualityJoined: String {
+        enumerated()
+            .map { offset, value in
+                let quality = 1.0 - ((Decimal(offset + 1)) / Decimal(count + 1))
+                return "\(value);q=\(quality)"
+            }
+            .joined(separator: ", ")
     }
 }

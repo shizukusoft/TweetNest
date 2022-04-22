@@ -32,7 +32,10 @@ class DataAssetsURLSessionManager: NSObject {
             urlSessionConfiguration = .twnk_default
         }
 
+        urlSessionConfiguration.httpAdditionalHeaders = nil
+        urlSessionConfiguration.isDiscretionary = true
         urlSessionConfiguration.waitsForConnectivity = true
+        urlSessionConfiguration.allowsConstrainedNetworkAccess = false
 
         return urlSessionConfiguration
     }
