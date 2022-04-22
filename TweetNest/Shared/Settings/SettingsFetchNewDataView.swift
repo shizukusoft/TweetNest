@@ -17,17 +17,10 @@ struct SettingsFetchNewDataView: View {
 
     @ViewBuilder var fetchNewDataIntervalPicker: some View {
         Picker(selection: $fetchNewDataInterval) {
-            Text("Every 5 minutes")
-                .tag(TimeInterval(5 * 60))
-
-            Text("Every 10 minutes")
-                .tag(TimeInterval(10 * 60))
-
-            Text("Every 15 minutes")
-                .tag(TimeInterval(15 * 60))
-
-            Text("Every 30 minutes")
-                .tag(TimeInterval(30 * 60))
+            ForEach([5, 10, 15, 30], id: \.self) { minutes in
+                Text("Every \(minutes) minutes")
+                    .tag(TimeInterval(minutes * 60))
+            }
 
             Text("Every hour")
                 .tag(TimeInterval(60 * 60))
