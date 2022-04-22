@@ -63,6 +63,8 @@ struct SettingsFetchNewDataView: View {
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 Section {
                     backgroundUpdateToggle
+                } footer: {
+                    Text("Update accounts in background on this device.")
                 }
                 #endif
             }
