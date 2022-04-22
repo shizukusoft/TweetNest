@@ -20,47 +20,51 @@ extension Session {
     }
     
     func handlePersistentStoreRemoteChanges() {
-        persistentStoreRemoteChangeContext.perform { [persistentStoreRemoteChangeContext, logger] in
-            withExtendedBackgroundExecution {
-                do {
-                    let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
-                        try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: $0)
-                    }
-
-                    let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
-                        after: lastPersistentHistoryToken
-                    )
-
-                    guard
-                        let persistentHistoryResult = try persistentStoreRemoteChangeContext.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
-                        let transactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
-                    else {
-                        return
-                    }
-
-                    if let newLastPersistentHistoryToken = transactions.last?.token {
-                        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(withRootObject: newLastPersistentHistoryToken, requiringSecureCoding: true)
-                    }
-
-                    Task.detached(priority: .utility) {
-                        await self.handleAccountChanges(transactions: transactions)
-                    }
-
-                    Task.detached(priority: .utility) {
-                        await self.handleUserChanges(transactions: transactions)
-                    }
-
-                    Task.detached(priority: .medium) {
-                        await self.handleUserDetailChanges(transactions: transactions)
-                    }
-
-                    Task.detached(priority: .utility) {
-                        await self.handleDataAssetsChanges(transactions: transactions)
-                    }
-                } catch {
-                    logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+        do {
+            let persistentHistoryTransaction: [NSPersistentHistoryTransaction]? = try persistentStoreRemoteChangeContext.performAndWait {
+                let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
+                    try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: $0)
                 }
+
+                let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
+                    after: lastPersistentHistoryToken
+                )
+
+                guard
+                    let persistentHistoryResult = try persistentStoreRemoteChangeContext.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
+                    let transactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
+                else {
+                    return nil
+                }
+
+                if let newLastPersistentHistoryToken = transactions.last?.token {
+                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(withRootObject: newLastPersistentHistoryToken, requiringSecureCoding: true)
+                }
+
+                return transactions
             }
+
+            guard let persistentHistoryTransaction = persistentHistoryTransaction else {
+                return
+            }
+
+            Task.detached(priority: .utility) {
+                await self.handleAccountChanges(transactions: persistentHistoryTransaction)
+            }
+
+            Task.detached(priority: .utility) {
+                await self.handleUserChanges(transactions: persistentHistoryTransaction)
+            }
+
+            Task.detached(priority: .medium) {
+                await self.handleUserDetailChanges(transactions: persistentHistoryTransaction)
+            }
+
+            Task.detached(priority: .utility) {
+                await self.handleDataAssetsChanges(transactions: persistentHistoryTransaction)
+            }
+        } catch {
+            logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
         }
     }
 
@@ -82,7 +86,7 @@ extension Session {
         for (accountObjectID, change) in accountChangesByObjectID {
             func updateCredential() async {
                 let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
-                    guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
+                    guard let account = context.object(with: accountObjectID) as? Account else {
                         return nil
                     }
 
@@ -214,7 +218,7 @@ extension Session {
                 case .insert, .update:
                     let notificationContent: UNNotificationContent? = await context.perform(schedule: .enqueued) {
                         guard
-                            let newUserDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
+                            let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
                             Date(timeIntervalSinceNow: -(10 * 60)) <= (newUserDetail.creationDate ?? .distantPast),
                             let user = newUserDetail.user,
                             let sortedUserDetails = user.sortedUserDetails,
