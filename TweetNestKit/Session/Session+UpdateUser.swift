@@ -16,21 +16,21 @@ import SwiftUI
 
 extension Session {
     @discardableResult
-    public func updateUsers<C>(
-        ids userIDs: C,
+    public func updateUsers<S>(
+        ids userIDs: S,
         accountObjectID: NSManagedObjectID,
         context: NSManagedObjectContext? = nil
-    ) async throws -> [Twitter.User.ID: Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>] where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
+    ) async throws -> [Twitter.User.ID: Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>] where S: Sequence, S.Element == Twitter.User.ID {
         try await updateUsers(ids: userIDs, accountObjectID: accountObjectID, accountUserID: nil, context: context)
     }
 
     @discardableResult
-    func updateUsers<C>(
-        ids userIDs: C,
+    func updateUsers<S>(
+        ids userIDs: S,
         accountObjectID: NSManagedObjectID,
         accountUserID: String? = nil,
         context _context: NSManagedObjectContext? = nil
-    ) async throws -> [Twitter.User.ID: Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>] where C: Collection, C.Index == Int, C.Element == Twitter.User.ID {
+    ) async throws -> [Twitter.User.ID: Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>] where S: Sequence, S.Element == Twitter.User.ID {
         try await withThrowingTaskGroup(of: (Date, (users: [Twitter.User], errors: [TwitterServerError])).self) { chunkedUsersTaskGroup in
             let context = _context ?? {
                 let context = self.persistentContainer.newBackgroundContext()
@@ -117,30 +117,29 @@ extension Session {
             return try await withThrowingTaskGroup(of: (Twitter.User.ID, Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>).self) { taskGroup in
                 for try await chunkedUsers in chunkedUsersTaskGroup {
                     for twitterUser in chunkedUsers.1.users {
-                        try Task.checkCancellation()
-
                         taskGroup.addTask {
-                            async let _profileBanner = preferences.fetchProfileHeaderImages == true ? withExtendedBackgroundExecution { try await twitterUser.profileBanner(session: twitterSession) } : nil
-
                             async let _followingUserIDs = twitterUser.id == accountUserID ? withExtendedBackgroundExecution { try await Twitter.User.followingUserIDs(forUserID: twitterUser.id, session: twitterSession).userIDs } : nil
                             async let _followerIDs = twitterUser.id == accountUserID ? withExtendedBackgroundExecution { try await Twitter.User.followerIDs(forUserID: twitterUser.id, session: twitterSession).userIDs } : nil
                             async let _myBlockingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchBlockingUsers ? withExtendedBackgroundExecution { try await Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs } : nil
                             async let _myMutingUserIDs = twitterUser.id == accountUserID && accountPreferences.fetchMutingUsers ? withExtendedBackgroundExecution { try await Twitter.User.myMutingUserIDs(session: twitterSession).userIDs } : nil
+                            async let _profileBanner = preferences.fetchProfileHeaderImages == true ? withExtendedBackgroundExecution { try await twitterUser.profileBanner(session: twitterSession) } : nil
 
+                            try Task.checkCancellation()
+                            
                             let followingUserIDs = try await _followingUserIDs
                             let followerIDs = try await _followerIDs
                             let myBlockingUserIDs = try await _myBlockingUserIDs
                             let myMutingUserIDs = try await _myMutingUserIDs
+                            let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
                             let twitterUserFetchDate = Date()
 
+                            async let _updatingUsers = self.updateUsers(
+                                ids: Set<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs, myMutingUserIDs].compacted().joined()),
+                                accountObjectID: accountObjectID,
+                                context: context
+                            )
+
                             try Task.checkCancellation()
-
-                            let userIDs = OrderedSet<Twitter.User.ID>([followingUserIDs, followerIDs, myBlockingUserIDs, myMutingUserIDs].flatMap { $0 ?? [] })
-                            async let _updatingUsers = self.updateUsers(ids: userIDs, accountObjectID: accountObjectID, context: context)
-
-                            try Task.checkCancellation()
-
-                            let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
 
                             let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID?) = try await context.perform(schedule: .enqueued) {
                                 let user = refinedUsersByID[twitterUser.id] as? User
@@ -183,12 +182,10 @@ extension Session {
                     }
 
                     for twitterError in chunkedUsers.1.errors {
-                        try Task.checkCancellation()
-
-                        Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-user")
-                            .error("Error occurred while fetch user: \(twitterError as NSError, privacy: .public)")
-
                         taskGroup.addTask {
+                            Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-user")
+                                .error("Error occurred while fetch user: \(twitterError as NSError, privacy: .public)")
+
                             guard let value = twitterError.value else {
                                 throw twitterError
                             }
@@ -199,8 +196,6 @@ extension Session {
                 }
 
                 let userDetailObjectIDs: [Twitter.User.ID: Result<(oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?), TwitterServerError>] = try await taskGroup.reduce(into: [:]) {
-                    try Task.checkCancellation()
-
                     $0[$1.0] = $1.1
                 }
 
