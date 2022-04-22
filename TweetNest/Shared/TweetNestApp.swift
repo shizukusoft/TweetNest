@@ -79,13 +79,7 @@ struct TweetNestApp: App {
             case .background:
                 session.pauseAutomaticallyFetchNewData()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
-                Task {
-                    do {
-                        try await BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
-                    } catch {
-                        Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
-                    }
-                }
+                BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
                 #endif
             @unknown default:
                 break

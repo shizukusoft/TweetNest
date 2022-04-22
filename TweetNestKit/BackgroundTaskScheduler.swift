@@ -18,8 +18,7 @@ import BackgroundTasks
 import WatchKit
 #endif
 
-@MainActor
-public class BackgroundTaskScheduler {
+public actor BackgroundTaskScheduler {
     public static let shared = BackgroundTaskScheduler()
 
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).background-refresh"
@@ -37,42 +36,49 @@ public class BackgroundTaskScheduler {
         .shared
     }
 
+    private lazy var logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+
     private init() { }
 }
 
 extension BackgroundTaskScheduler {
-    public func scheduleBackgroundTasks() async throws {
+    @MainActor
+    public func scheduleBackgroundTasks() {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return }
 
         #if canImport(BackgroundTasks) && !os(macOS)
-        let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
-        backgroundRefreshRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate
+        do {
+            let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
+            backgroundRefreshRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate
 
-        try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
+            try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
 
-        let backgroundDataCleansingRequest = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
-        backgroundDataCleansingRequest.requiresNetworkConnectivity = true
-        backgroundDataCleansingRequest.requiresExternalPower = false
-        backgroundDataCleansingRequest.earliestBeginDate = Self.preferredBackgroundDataCleansingDate
+            let backgroundDataCleansingRequest = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
+            backgroundDataCleansingRequest.requiresNetworkConnectivity = true
+            backgroundDataCleansingRequest.requiresExternalPower = false
+            backgroundDataCleansingRequest.earliestBeginDate = Self.preferredBackgroundDataCleansingDate
 
-        try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
+            try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
+        } catch {
+            Task(priority: .high) {
+                await self.logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
+            }
+        }
         #elseif canImport(WatchKit)
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-            WKExtension.shared().scheduleBackgroundRefresh(
-                withPreferredDate: Self.preferredBackgroundRefreshDate,
-                userInfo: Self.backgroundRefreshBackgroundTaskIdentifier as NSString
-            ) { error in
-                if let error = error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume()
+        WKExtension.shared().scheduleBackgroundRefresh(
+            withPreferredDate: Self.preferredBackgroundRefreshDate,
+            userInfo: Self.backgroundRefreshBackgroundTaskIdentifier as NSString
+        ) { error in
+            if let error = error {
+                Task(priority: .high) {
+                    await self.logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
                 }
             }
         }
         #endif
     }
 
-    public func cancelBackgroundTasks() {
+    public nonisolated func cancelBackgroundTasks() {
         #if canImport(BackgroundTasks) && !os(macOS)
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier)
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier)
@@ -82,56 +88,108 @@ extension BackgroundTaskScheduler {
 
 extension BackgroundTaskScheduler {
     @discardableResult
-    func backgroundRefresh() async -> Bool {
+    private func backgroundRefresh() async -> Bool {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
-
-        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
-
-        do {
-            try await scheduleBackgroundTasks()
-        } catch {
-            logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
-        }
 
         logger.notice("Start background refresh")
         defer {
             logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
         }
 
+        Task.detached {
+            await self.scheduleBackgroundTasks()
+        }
+
         do {
-            return try await session.fetchNewData(cleansingData: false)
+            try await session.fetchNewData(cleansingData: false)
+            return true
         } catch {
-            logger.error("Error occurred while update accounts: \(String(describing: error))")
+            logger.error("Error occurred while background refresh: \(error as NSError, privacy: .public)")
             return false
         }
     }
 
     @discardableResult
-    func backgroundDataCleansing() async -> Bool {
+    private func backgroundDataCleansing() async -> Bool {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
-
-        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-data-cleansing")
-
-        do {
-            try await scheduleBackgroundTasks()
-        } catch {
-            logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
-        }
 
         logger.notice("Start background data cleansing")
         defer {
             logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
         }
 
+        Task.detached {
+            await self.scheduleBackgroundTasks()
+        }
+
         do {
             try await session.cleansingAllData()
-
             return true
         } catch {
-            logger.error("Error occurred while data cleansing: \(String(describing: error))")
+            logger.error("Error occurred while background data cleansing: \(error as NSError, privacy: .public)")
             return false
         }
     }
 }
 
+#endif
+
+#if canImport(BackgroundTasks) && !os(macOS)
+extension BackgroundTaskScheduler {
+    @available(iOSApplicationExtension, unavailable)
+    @available(tvOSApplicationExtension, unavailable)
+    @discardableResult
+    public nonisolated func registerBackgroundTasks() -> Bool {
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier, using: nil, launchHandler: handleBackgroundRefreshBackgroundTask(_:)) &&
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier, using: nil, launchHandler: handleDataCleansingBackgroundTask(_:))
+    }
+
+    nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
+        Task.expiring { expire in
+            let logger = await self.logger
+
+            backgroundTask.expirationHandler = {
+                logger.notice("Background refresh task expired for: \(backgroundTask.identifier, privacy: .public)")
+                expire()
+            }
+
+            backgroundTask.setTaskCompleted(success: await self.backgroundRefresh())
+        }
+    }
+
+    nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
+        Task.expiring { expire in
+            let logger = await self.logger
+
+            backgroundTask.expirationHandler = {
+                logger.notice("Background data cleansing task expired for: \(backgroundTask.identifier, privacy: .public)")
+                expire()
+            }
+
+            backgroundTask.setTaskCompleted(success: await self.backgroundDataCleansing())
+        }
+    }
+}
+#elseif canImport(WatchKit)
+extension BackgroundTaskScheduler {
+    @discardableResult
+    public nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
+        guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString }) else {
+            return []
+        }
+
+        Task.expiring { expire in
+            let logger = await self.logger
+
+            backgroundTask.expirationHandler = {
+                logger.notice("Background refresh task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
+                expire()
+            }
+
+            backgroundTask.setTaskCompletedWithSnapshot(await self.backgroundRefresh())
+        }
+
+        return [backgroundTask]
+    }
+}
 #endif
