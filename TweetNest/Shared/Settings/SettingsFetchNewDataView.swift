@@ -43,12 +43,6 @@ struct SettingsFetchNewDataView: View {
         }
     }
 
-    #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
-    @ViewBuilder var backgroundUpdateToggle: some View {
-        Toggle("Background Update", isOn: $backgroundUpdate)
-    }
-    #endif
-
     var body: some View {
         #if os(macOS)
         fetchNewDataIntervalPicker
@@ -62,7 +56,7 @@ struct SettingsFetchNewDataView: View {
 
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 Section {
-                    backgroundUpdateToggle
+                    Toggle("Background Update", isOn: $backgroundUpdate)
                 } footer: {
                     Text("Update accounts in background on this device.")
                 }
