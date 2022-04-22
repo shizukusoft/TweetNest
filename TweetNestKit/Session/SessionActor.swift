@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import CoreData
 import Twitter
 import UnifiedLogging
 
@@ -34,31 +33,18 @@ actor SessionActor {
 }
 
 extension SessionActor {
-    func twitterSession(for accountObjectID: NSManagedObjectID? = nil) async throws -> Twitter.Session {
-        let twitterAPIConfiguration = try await session.twitterAPIConfiguration
+    func run<T>(resultType: T.Type = T.self, body: @Sendable (isolated SessionActor) async throws -> T) async rethrows -> T where T : Sendable {
+        try await body(self)
+    }
+}
 
-        guard let accountObjectID = accountObjectID, accountObjectID.isTemporaryID == false else {
-            return Twitter.Session(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret)
-        }
-
-        guard let twitterSession: Twitter.Session = twitterSessions[accountObjectID.uriRepresentation()] else {
-            let twitterSession = Twitter.Session(twitterAPIConfiguration: twitterAPIConfiguration)
-            updateTwitterSession(twitterSession, for: accountObjectID)
-
-            try await twitterSession.updateCredential(session.credential(for: accountObjectID))
-
-            return twitterSession
-        }
-
-        return twitterSession
+extension SessionActor {
+    func twitterSession(for url: URL) -> Twitter.Session? {
+        twitterSessions[url]
     }
 
-    func updateTwitterSession(_ twitterSession: Twitter.Session?, for accountObjectID: NSManagedObjectID) {
-        guard accountObjectID.isTemporaryID == false else {
-            return
-        }
-
-        twitterSessions[accountObjectID.uriRepresentation()] = twitterSession
+    func updateTwitterSession(_ twitterSession: Twitter.Session?, for url: URL) {
+        twitterSessions[url] = twitterSession
     }
 }
 

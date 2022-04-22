@@ -41,7 +41,9 @@ extension Session {
 
         let accountObjectID = try await self.createNewAccount(tokenResponse: accessToken)
 
-        await sessionActor.updateTwitterSession(twitterSession, for: accountObjectID)
+        if accountObjectID.isTemporaryID == false {
+            await sessionActor.updateTwitterSession(twitterSession, for: accountObjectID.uriRepresentation())
+        }
 
         try await updateAccount(accountObjectID)
     }

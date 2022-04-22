@@ -112,7 +112,27 @@ extension Session {
 
 extension Session {
     public func twitterSession(for accountObjectID: NSManagedObjectID? = nil) async throws -> Twitter.Session {
-        try await sessionActor.twitterSession(for: accountObjectID)
+        let twitterAPIConfiguration = try await twitterAPIConfiguration
+
+        guard let accountObjectID = accountObjectID, accountObjectID.isTemporaryID == false else {
+            return Twitter.Session(twitterAPIConfiguration: twitterAPIConfiguration)
+        }
+
+        return try await sessionActor.run { sessionActor in
+            guard let twitterSession = sessionActor.twitterSession(for: accountObjectID.uriRepresentation()) else {
+                let twitterSession = Twitter.Session(twitterAPIConfiguration: twitterAPIConfiguration)
+
+                if accountObjectID.isTemporaryID == false {
+                    sessionActor.updateTwitterSession(twitterSession, for: accountObjectID.uriRepresentation())
+                }
+
+                try await twitterSession.updateCredential(credential(for: accountObjectID))
+
+                return twitterSession
+            }
+
+            return twitterSession
+        }
     }
 }
 
