@@ -210,8 +210,6 @@ extension Session {
             for (userDetailObjectID, change) in userDetailChangesByObjectID {
                 guard Task.isCancelled == false else { return }
 
-                let notificationIdentifier = self.persistentContainer.recordID(for: userDetailObjectID)?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString
-
                 switch change.changeType {
                 case .insert, .update:
                     let notificationContent: UNNotificationContent? = await context.perform(schedule: .enqueued) {
@@ -319,7 +317,7 @@ extension Session {
                     do {
                         try await UNUserNotificationCenter.current().add(
                             UNNotificationRequest(
-                                identifier: notificationIdentifier,
+                                identifier: self.persistentContainer.recordID(for: userDetailObjectID)?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString,
                                 content: notificationContent,
                                 trigger: nil
                             )
@@ -328,8 +326,10 @@ extension Session {
                         self.logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
                     }
                 case .delete:
-                    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
-                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
+                    let notificationIdentifiers = Array([self.persistentContainer.recordID(for: userDetailObjectID)?.recordName, userDetailObjectID.uriRepresentation().absoluteString].compacted())
+
+                    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: notificationIdentifiers)
+                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: notificationIdentifiers)
                 @unknown default:
                     break
                 }
