@@ -75,33 +75,31 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     public override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> Void) {
-        #if DEBUG
-        try! initializeCloudKitSchema(options: [])
-        #endif
-
         persistentStoreCoordinator.perform {
             do {
                 try self.migrationIfNeeded()
 
-                #if canImport(CoreSpotlight)
                 let dispatchGroup = DispatchGroup()
+                for _ in self.persistentStoreDescriptions.indices {
+                    dispatchGroup.enter()
+                }
+
                 dispatchGroup.notify(queue: .global(qos: .default)) {
+                    #if canImport(CoreSpotlight)
                     self.persistentStoreCoordinator.perform {
                         if let usersSpotlightDelegate = self.usersSpotlightDelegate {
                             usersSpotlightDelegate.startSpotlightIndexing()
                         }
                     }
-                }
+                    #endif
 
-                for _ in self.persistentStoreDescriptions.indices {
-                    dispatchGroup.enter()
+                    #if DEBUG
+                    try! self.initializeCloudKitSchema(options: [])
+                    #endif
                 }
-                #endif
 
                 super.loadPersistentStores { storeDescription, error in
-                    #if canImport(CoreSpotlight)
                     dispatchGroup.leave()
-                    #endif
 
                     block(storeDescription, error)
                 }
