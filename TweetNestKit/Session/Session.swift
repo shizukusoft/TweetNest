@@ -73,6 +73,14 @@ public class Session {
                 do {
                     try await self.persistentContainer.loadPersistentStores()
 
+                    #if canImport(CoreSpotlight)
+                    self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                    #endif
+
+                    #if DEBUG
+                    try! self.persistentContainer.initializeCloudKitSchema(options: [])
+                    #endif
+
                     await MainActor.run {
                         self.persistentContainerLoadingResult = .success(())
                     }

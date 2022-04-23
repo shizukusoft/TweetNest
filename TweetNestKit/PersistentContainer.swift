@@ -28,49 +28,67 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     #if canImport(CoreSpotlight)
-    var usersSpotlightDelegate: UsersSpotlightDelegate?
+    private(set) lazy var usersSpotlightDelegate: UsersSpotlightDelegate? = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[1], coordinator: self.persistentStoreCoordinator)
     #endif
 
-    init(inMemory: Bool = false) {
+    init(inMemory: Bool = false, cloudKit: Bool = true, persistentStoreOptions: [String: Any]? = nil) {
         super.init(name: Bundle.tweetNestKit.name!, managedObjectModel: Self.managedObjectModel)
 
         if inMemory == false {
             let accountsPersistentStoreDescription = NSPersistentStoreDescription(url: Self.accountsPersistentStoreURL)
-            accountsPersistentStoreDescription.type = NSSQLiteStoreType
             accountsPersistentStoreDescription.configuration = Self.accountsPersistentStoreConfiguration
-            accountsPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.accountsCloudKitIdentifier)
-            accountsPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-            accountsPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+            if cloudKit {
+                accountsPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.accountsCloudKitIdentifier)
+            }
 
             let tweetNestKitPersistentStoreDescription = NSPersistentStoreDescription(url: Self.defaultPersistentStoreURL)
-            tweetNestKitPersistentStoreDescription.type = NSSQLiteStoreType
             tweetNestKitPersistentStoreDescription.configuration = Self.defaultPersistentStoreConfiguration
-            tweetNestKitPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
-            tweetNestKitPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-            tweetNestKitPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+            if cloudKit {
+                tweetNestKitPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
+            }
 
             let dataAssetsPersistentStoreDescription = NSPersistentStoreDescription(url: Self.dataAssetsPersistentStoreURL)
-            dataAssetsPersistentStoreDescription.type = NSSQLiteStoreType
             dataAssetsPersistentStoreDescription.configuration = Self.dataAssetsPersistentStoreConfiguration
-            dataAssetsPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.dataAssetsCloudKitIdentifier)
-            dataAssetsPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-            dataAssetsPersistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+            if cloudKit {
+                dataAssetsPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.dataAssetsCloudKitIdentifier)
+            }
 
             persistentStoreDescriptions = [
                 accountsPersistentStoreDescription,
                 tweetNestKitPersistentStoreDescription,
                 dataAssetsPersistentStoreDescription,
-            ]
+            ].lazy.map { persistentStoreDescription in
+                persistentStoreDescription.type = NSSQLiteStoreType
+                persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+                persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
 
-            #if canImport(CoreSpotlight)
-            self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: tweetNestKitPersistentStoreDescription, coordinator: self.persistentStoreCoordinator)
-            #endif
+                if let persistentStoreOptions = persistentStoreOptions {
+                    for (key, option) in persistentStoreOptions {
+                        if let option = option as? NSObject {
+                            persistentStoreDescription.setOption(option, forKey: key)
+                        }
+                    }
+                }
+
+                return persistentStoreDescription
+            }
         } else {
             persistentStoreDescriptions.forEach {
                 $0.url = nil
                 $0.type = NSInMemoryStoreType
                 $0.cloudKitContainerOptions = nil
+                if let persistentStoreOptions = persistentStoreOptions {
+                    for (key, option) in persistentStoreOptions {
+                        if let option = option as? NSObject {
+                            $0.setOption(option, forKey: key)
+                        }
+                    }
+                }
             }
+
+            #if canImport(CoreSpotlight)
+            self.usersSpotlightDelegate = nil
+            #endif
         }
     }
 
@@ -79,30 +97,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             do {
                 try self.migrationIfNeeded()
 
-                let dispatchGroup = DispatchGroup()
-                for _ in self.persistentStoreDescriptions.indices {
-                    dispatchGroup.enter()
-                }
-
-                dispatchGroup.notify(queue: .global(qos: .default)) {
-                    #if canImport(CoreSpotlight)
-                    self.persistentStoreCoordinator.perform {
-                        if let usersSpotlightDelegate = self.usersSpotlightDelegate {
-                            usersSpotlightDelegate.startSpotlightIndexing()
-                        }
-                    }
-                    #endif
-
-                    #if DEBUG
-                    try! self.initializeCloudKitSchema(options: [])
-                    #endif
-                }
-
-                super.loadPersistentStores { storeDescription, error in
-                    dispatchGroup.leave()
-
-                    block(storeDescription, error)
-                }
+                super.loadPersistentStores(completionHandler: block)
             } catch {
                 self.persistentStoreDescriptions.forEach {
                     block($0, error)
