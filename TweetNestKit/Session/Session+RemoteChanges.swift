@@ -55,24 +55,24 @@ extension Session {
             }
 
             Task.detached {
-                await self.updateNotifications(transactions: persistentHistoryTransactions)
-            }
-
-            Task.detached {
-                await self.updateAccountCredential(transactions: persistentHistoryTransactions)
-            }
-
-            Task.detached(priority: .utility) {
                 await withTaskGroup(of: Void.self) { taskGroup in
-                    taskGroup.addTask {
+                    taskGroup.addTask(priority: .high) {
+                        await self.updateNotifications(transactions: persistentHistoryTransactions)
+                    }
+
+                    taskGroup.addTask(priority: .medium) {
+                        await self.updateAccountCredential(transactions: persistentHistoryTransactions)
+                    }
+
+                    taskGroup.addTask(priority: .utility) {
                         await self.cleansingAccount(transactions: persistentHistoryTransactions)
                     }
 
-                    taskGroup.addTask {
+                    taskGroup.addTask(priority: .utility) {
                         await self.cleansingUser(transactions: persistentHistoryTransactions)
                     }
 
-                    taskGroup.addTask {
+                    taskGroup.addTask(priority: .utility) {
                         await self.cleansingDataAssets(transactions: persistentHistoryTransactions)
                     }
 
