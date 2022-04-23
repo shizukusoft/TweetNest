@@ -179,15 +179,17 @@ extension Session {
         }
     }
 
-    public func pauseAutomaticallyFetchNewData() {
+    public func pauseBackgroundTaskTimers() {
         Task {
             await sessionActor.destroyFetchNewDataTimer()
+            await sessionActor.destroyDataCleansingTimer()
         }
     }
 
-    public func resumeAutomaticallyFetchNewData() {
+    public func resumeBackgroundTaskTimers() {
         Task {
             await sessionActor.initializeFetchNewDataTimer(interval: TweetNestKitUserDefaults.standard.fetchNewDataInterval, session: self)
+            await sessionActor.initializeDataCleansingTimer(interval: Self.cleansingDataInterval, session: self)
         }
     }
 }

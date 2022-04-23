@@ -72,12 +72,12 @@ struct TweetNestApp: App {
         .onChange(of: scenePhase) { phase in
             switch phase {
             case .active, .inactive:
-                session.resumeAutomaticallyFetchNewData()
+                session.resumeBackgroundTaskTimers()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 BackgroundTaskScheduler.shared.cancelBackgroundTasks()
                 #endif
             case .background:
-                session.pauseAutomaticallyFetchNewData()
+                session.pauseBackgroundTaskTimers()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
                 #endif
