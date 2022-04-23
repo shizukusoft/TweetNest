@@ -30,6 +30,7 @@ extension DataAsset {
         dataAssetFetchRequest.predicate = NSPredicate(format: "url == %@", url as NSURL)
         dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         dataAssetFetchRequest.propertiesToFetch = ["dataMIMEType", "dataSHA512Hash"]
+        dataAssetFetchRequest.returnsObjectsAsFaults = false
         dataAssetFetchRequest.fetchLimit = 1
 
         let lastDataAsset = try context.fetch(dataAssetFetchRequest).first

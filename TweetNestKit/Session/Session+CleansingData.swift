@@ -267,6 +267,7 @@ extension Session {
             dataAssetsFetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: true),
             ]
+            dataAssetsFetchRequest.returnsObjectsAsFaults = false
 
             let dataAssets = try context.fetch(dataAssetsFetchRequest)
 

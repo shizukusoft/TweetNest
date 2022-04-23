@@ -92,6 +92,7 @@ extension ManagedPreferences{
         let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
         fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
         fetchReuqest.fetchLimit = 1
+        fetchReuqest.returnsObjectsAsFaults = false
 
         return (try? context.fetch(fetchReuqest).first) ?? ManagedPreferences(context: context)
     }
