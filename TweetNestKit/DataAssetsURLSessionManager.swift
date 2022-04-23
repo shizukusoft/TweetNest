@@ -84,7 +84,7 @@ extension DataAssetsURLSessionManager: URLSessionDelegate {
 
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         if let error = error {
-            self.logger.error("\(error as NSError, privacy: .public)")
+            logger.error("\(error as NSError, privacy: .public)")
         }
     }
 }
@@ -92,7 +92,7 @@ extension DataAssetsURLSessionManager: URLSessionDelegate {
 extension DataAssetsURLSessionManager: URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
-            self.logger.error("\(error as NSError, privacy: .public)")
+            logger.error("\(error as NSError, privacy: .public)")
         }
     }
 }
@@ -105,7 +105,7 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
             dispatchGroup.enter()
-            managedObjectContext.perform { [dispatchGroup, managedObjectContext, weak self] in
+            managedObjectContext.perform { [dispatchGroup, managedObjectContext, logger] in
                 defer {
                     dispatchGroup.leave()
                 }
@@ -119,11 +119,11 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
                         }
                     }
                 } catch {
-                    self?.logger.error("\(error as NSError, privacy: .public)")
+                    logger.error("\(error as NSError, privacy: .public)")
                 }
             }
         } catch {
-            self.logger.error("\(error as NSError, privacy: .public)")
+            logger.error("\(error as NSError, privacy: .public)")
         }
     }
 }
