@@ -61,6 +61,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 persistentStoreDescription.type = NSSQLiteStoreType
                 persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
                 persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+                persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteAnalyzeOption)
 
                 if let persistentStoreOptions = persistentStoreOptions {
                     for (key, option) in persistentStoreOptions {
@@ -115,23 +116,29 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
 }
 
 extension PersistentContainer {
+    public func loadPersistentStores(completionHandler block: @escaping (Result<Void, PersistentContainerError>) -> Void) {
+        var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
+
+        self.loadPersistentStores { (storeDescription, error) in
+            loadedPersistentStores[storeDescription] = error
+
+            if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
+                let errors = loadedPersistentStores.compactMapValues { $0 }
+
+                guard errors.isEmpty else {
+                    block(.failure(PersistentContainerError.persistentStoresLoadingFailure(errors)))
+                    return
+                }
+
+                block(.success(()))
+            }
+        }
+    }
+
     public func loadPersistentStores() async throws {
         return try await withCheckedThrowingContinuation { continuation in
-            var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
-
-            self.loadPersistentStores { (storeDescription, error) in
-                loadedPersistentStores[storeDescription] = error
-
-                if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
-                    let errors = loadedPersistentStores.compactMapValues { $0 }
-
-                    guard errors.isEmpty else {
-                        continuation.resume(throwing: PersistentContainerError.persistentStoresLoadingFailure(errors))
-                        return
-                    }
-
-                    continuation.resume()
-                }
+            self.loadPersistentStores { result in
+                continuation.resume(with: result)
             }
         }
     }

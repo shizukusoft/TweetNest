@@ -31,11 +31,47 @@ extension Session {
 
         TweetNestKitUserDefaults.standard.lastCleansedDate = Date()
 
-        let context = self.persistentContainerNewBackgroundContext
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            taskGroup.addTask {
+                try await self.cleansingAllAccounts(context: self.persistentContainerNewBackgroundContext)
+            }
 
-        try await self.cleansingAllAccounts(context: context)
-        try await self.cleansingAllUsersAndUserDetails(context: context)
-        try await self.cleansingAllDataAssets(context: context)
+            taskGroup.addTask {
+                try await self.cleansingAllUsersAndUserDetails(context: self.persistentContainerNewBackgroundContext)
+            }
+
+            taskGroup.addTask {
+                try await self.cleansingAllDataAssets(context: self.persistentContainerNewBackgroundContext)
+            }
+
+            try await taskGroup.waitForAll()
+        }
+
+        try await withExtendedBackgroundExecution {
+            try await self.persistentContainer.persistentStoreCoordinator.perform {
+                let semaphore = DispatchSemaphore(value: 0)
+                var error: Error?
+
+                PersistentContainer(
+                    cloudKit: false,
+                    persistentStoreOptions: [
+                        NSSQLiteManualVacuumOption: true
+                    ]
+                ).loadPersistentStores { result in
+                    if case .failure(let _error) = result {
+                        error = _error
+                    }
+
+                    semaphore.signal()
+                }
+
+                semaphore.wait()
+
+                if let error = error {
+                    throw error
+                }
+            }
+        }
     }
 
     public func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
