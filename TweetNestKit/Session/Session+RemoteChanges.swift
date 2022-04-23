@@ -20,8 +20,8 @@ extension Session {
     }
     
     func handlePersistentStoreRemoteChanges() async {
-        await persistentStoreRemoteChangeContext.perform { [persistentStoreRemoteChangeContext, logger] in
-            withExtendedBackgroundExecution {
+        await withExtendedBackgroundExecution {
+            let persistentHistoryTransactions: [NSPersistentHistoryTransaction]? = await self.persistentStoreRemoteChangeContext.perform {
                 do {
                     let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
                         try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: $0)
@@ -32,43 +32,51 @@ extension Session {
                     )
 
                     guard
-                        let persistentHistoryResult = try persistentStoreRemoteChangeContext.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
+                        let persistentHistoryResult = try self.persistentStoreRemoteChangeContext.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
                         let persistentHistoryTransactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
                     else {
-                        return
-                    }
-
-                    Task.detached {
-                        await self.updateNotifications(transactions: persistentHistoryTransactions)
-                    }
-
-                    Task.detached {
-                        await self.updateAccountCredential(transactions: persistentHistoryTransactions)
-                    }
-
-                    Task.detached(priority: .utility) {
-                        await withTaskGroup(of: Void.self) { taskGroup in
-                            taskGroup.addTask {
-                                await self.cleansingAccount(transactions: persistentHistoryTransactions)
-                            }
-
-                            taskGroup.addTask {
-                                await self.cleansingUser(transactions: persistentHistoryTransactions)
-                            }
-
-                            taskGroup.addTask {
-                                await self.cleansingDataAssets(transactions: persistentHistoryTransactions)
-                            }
-
-                            await taskGroup.waitForAll()
-                        }
+                        return nil
                     }
 
                     if let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token {
                         TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(withRootObject: newLastPersistentHistoryToken, requiringSecureCoding: true)
                     }
+
+                    return persistentHistoryTransactions
                 } catch {
-                    logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+                    self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+
+                    return nil
+                }
+            }
+
+            guard let persistentHistoryTransactions = persistentHistoryTransactions, persistentHistoryTransactions.isEmpty == false else {
+                return
+            }
+
+            Task.detached {
+                await self.updateNotifications(transactions: persistentHistoryTransactions)
+            }
+
+            Task.detached {
+                await self.updateAccountCredential(transactions: persistentHistoryTransactions)
+            }
+
+            Task.detached(priority: .utility) {
+                await withTaskGroup(of: Void.self) { taskGroup in
+                    taskGroup.addTask {
+                        await self.cleansingAccount(transactions: persistentHistoryTransactions)
+                    }
+
+                    taskGroup.addTask {
+                        await self.cleansingUser(transactions: persistentHistoryTransactions)
+                    }
+
+                    taskGroup.addTask {
+                        await self.cleansingDataAssets(transactions: persistentHistoryTransactions)
+                    }
+
+                    await taskGroup.waitForAll()
                 }
             }
         }
