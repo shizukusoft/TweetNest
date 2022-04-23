@@ -257,7 +257,9 @@ extension Session {
                 return
             }
 
-            let dataAssetsFetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
+            let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
+            dataAssetsFetchRequest.entity = DataAsset.entity()
+            dataAssetsFetchRequest.resultType = .managedObjectIDResultType
             dataAssetsFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
                     NSPredicate(format: "url == %@", dataAssetURL as NSURL),
@@ -267,25 +269,16 @@ extension Session {
             dataAssetsFetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: true),
             ]
-            dataAssetsFetchRequest.returnsObjectsAsFaults = false
 
-            let dataAssets = try context.fetch(dataAssetsFetchRequest)
+            let dataAssetObjectIDs = OrderedSet(try context.fetch(dataAssetsFetchRequest))
 
-            guard dataAssets.count > 1 else { return }
+            guard dataAssetObjectIDs.count > 1 else { return }
 
-            let targetDataAsset = dataAssets.first ?? dataAsset
+            let targetDataAssetObjectID = dataAssetObjectIDs.first ?? dataAsset.objectID
 
-            for dataAsset in dataAssets {
-                guard dataAsset != targetDataAsset else { continue }
+            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(dataAssetObjectIDs.subtracting([targetDataAssetObjectID])))
 
-                context.delete(dataAsset)
-            }
-
-            if context.hasChanges {
-                try withExtendedBackgroundExecution {
-                    try context.save()
-                }
-            }
+            try context.execute(batchDeleteRequest)
         }
     }
 
