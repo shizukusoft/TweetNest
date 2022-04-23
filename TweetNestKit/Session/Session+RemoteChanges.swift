@@ -180,9 +180,8 @@ extension Session {
                 let newUserDetailCreationDate = newUserDetail.creationDate,
                 Date(timeIntervalSinceNow: -(60 * 60)) <= newUserDetailCreationDate,
                 let user = newUserDetail.user,
-                let accountObjectID = user.accounts?.last?.objectID,
-                let sortedUserDetails = user.sortedUserDetails,
-                sortedUserDetails.count > 1
+                let account = user.accounts?.last,
+                let sortedUserDetails = user.sortedUserDetails
             else {
                 return nil
             }
@@ -196,16 +195,14 @@ extension Session {
             let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
             let notificationContent = UNMutableNotificationContent()
-            notificationContent.title = newUserDetail.name ?? accountObjectID.description
-            if let displayUsername = newUserDetail.displayUsername {
-                notificationContent.subtitle = displayUsername
-            } else if let userID = user.id {
-                notificationContent.subtitle = userID.displayUserID
+            notificationContent.title = newUserDetail.name ?? account.objectID.description
+            if let subtitle = newUserDetail.displayUsername ?? user.id?.displayUserID ?? account.userID?.displayUserID {
+                notificationContent.subtitle = subtitle
             }
+            notificationContent.threadIdentifier = self.persistentContainer.recordID(for: account.objectID)?.recordName ?? account.objectID.uriRepresentation().absoluteString
             notificationContent.categoryIdentifier = "NewAccountData"
             notificationContent.sound = .default
             notificationContent.interruptionLevel = .timeSensitive
-            notificationContent.threadIdentifier = self.persistentContainer.recordID(for: accountObjectID)?.recordName ?? accountObjectID.uriRepresentation().absoluteString
 
             var changes: [String] = []
 
