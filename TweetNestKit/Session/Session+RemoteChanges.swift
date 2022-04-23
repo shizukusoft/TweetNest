@@ -37,10 +37,6 @@ extension Session {
                     return
                 }
 
-                if let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token {
-                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(withRootObject: newLastPersistentHistoryToken, requiringSecureCoding: true)
-                }
-
                 Task.detached {
                     await self.handleUserDetailChanges(transactions: persistentHistoryTransactions)
                 }
@@ -55,6 +51,10 @@ extension Session {
 
                 Task.detached(priority: .utility) {
                     await self.handleDataAssetsChanges(transactions: persistentHistoryTransactions)
+                }
+
+                if let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token {
+                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(withRootObject: newLastPersistentHistoryToken, requiringSecureCoding: true)
                 }
             } catch {
                 logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
