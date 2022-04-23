@@ -31,7 +31,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     private(set) lazy var usersSpotlightDelegate: UsersSpotlightDelegate? = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[1], coordinator: self.persistentStoreCoordinator)
     #endif
 
-    init(inMemory: Bool = false, cloudKit: Bool = true, persistentStoreOptions: [String: Any]? = nil) {
+    init(inMemory: Bool = false, cloudKit: Bool = true, persistentStoreOptions: [String: Any?]? = nil) {
         super.init(name: Bundle.tweetNestKit.name!, managedObjectModel: Self.managedObjectModel)
 
         if inMemory == false {
@@ -64,9 +64,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
 
                 if let persistentStoreOptions = persistentStoreOptions {
                     for (key, option) in persistentStoreOptions {
-                        if let option = option as? NSObject {
-                            persistentStoreDescription.setOption(option, forKey: key)
-                        }
+                        persistentStoreDescription.setOption(option == nil ? nil : option as? NSObject, forKey: key)
                     }
                 }
 
@@ -79,9 +77,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 $0.cloudKitContainerOptions = nil
                 if let persistentStoreOptions = persistentStoreOptions {
                     for (key, option) in persistentStoreOptions {
-                        if let option = option as? NSObject {
-                            $0.setOption(option, forKey: key)
-                        }
+                        $0.setOption(option == nil ? nil : option as? NSObject, forKey: key)
                     }
                 }
             }

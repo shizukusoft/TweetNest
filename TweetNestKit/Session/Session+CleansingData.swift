@@ -47,32 +47,7 @@ extension Session {
             try await taskGroup.waitForAll()
         }
 
-        try await withExtendedBackgroundExecution {
-            try await self.persistentContainer.persistentStoreCoordinator.perform {
-                let semaphore = DispatchSemaphore(value: 0)
-                var error: Error?
-
-                PersistentContainer(
-                    cloudKit: false,
-                    persistentStoreOptions: [
-                        NSSQLiteManualVacuumOption: true,
-                        NSSQLiteAnalyzeOption: true
-                    ]
-                ).loadPersistentStores { result in
-                    if case .failure(let _error) = result {
-                        error = _error
-                    }
-
-                    semaphore.signal()
-                }
-
-                semaphore.wait()
-
-                if let error = error {
-                    throw error
-                }
-            }
-        }
+        try await cleansingAllPersistentStores()
     }
 
     public func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
@@ -299,6 +274,40 @@ extension Session {
             if context.hasChanges {
                 try withExtendedBackgroundExecution {
                     try context.save()
+                }
+            }
+        }
+    }
+
+    public func cleansingAllPersistentStores() async throws {
+        let temporalPersistentContainer = PersistentContainer(
+            cloudKit: false,
+            persistentStoreOptions: [
+                NSPersistentStoreRemoteChangeNotificationPostOptionKey: false,
+                NSSQLiteManualVacuumOption: true,
+                NSSQLiteAnalyzeOption: true
+            ]
+        )
+
+        for persistentStoreDescription in temporalPersistentContainer.persistentStoreDescriptions {
+            try await withExtendedBackgroundExecution {
+                try await self.persistentContainer.persistentStoreCoordinator.perform {
+                    let semaphore = DispatchSemaphore(value: 0)
+                    var error: Error?
+
+                    temporalPersistentContainer.persistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in
+                        if let _error = _error {
+                            error = _error
+                        }
+
+                        semaphore.signal()
+                    }
+
+                    semaphore.wait()
+
+                    if let error = error {
+                        throw error
+                    }
                 }
             }
         }

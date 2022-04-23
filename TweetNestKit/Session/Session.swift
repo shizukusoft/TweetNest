@@ -219,21 +219,7 @@ extension Session {
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-new-data")
 
         do {
-            defer {
-                if cleansingData {
-                    Task.detached(priority: .utility) {
-                        do {
-                            try await self.cleansingAllData(force: force)
-                        } catch {
-                            logger.error("Error occurred while cleansing data: \(error as NSError, privacy: .public)")
-                        }
-                    }
-                }
-            }
-
-            let hasChanges = try await updateAllAccounts()
-
-            return hasChanges.reduce(false) { partialResult, hasChanges in
+            let hasChanges = try await updateAllAccounts().reduce(false) { partialResult, hasChanges in
                 let accountObjectID = hasChanges.0
 
                 do {
@@ -254,6 +240,12 @@ extension Session {
                     return false
                 }
             }
+
+            if cleansingData {
+                try await self.cleansingAllData(force: force)
+            }
+
+            return hasChanges
         } catch {
             logger.error("Error occurred while update accounts: \(error as NSError, privacy: .public)")
 
