@@ -177,6 +177,8 @@ extension Session {
         let notificationRequest: UNNotificationRequest? = await context.perform {
             guard
                 let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
+                let newUserDetailCreationDate = newUserDetail.creationDate,
+                Date(timeIntervalSinceNow: -(60 * 60)) <= newUserDetailCreationDate,
                 let user = newUserDetail.user,
                 let accountObjectID = user.accounts?.last?.objectID,
                 let sortedUserDetails = user.sortedUserDetails,
@@ -285,7 +287,6 @@ extension Session {
     private func updateNotifications(transactions: [NSPersistentHistoryTransaction]) async {
         await withExtendedBackgroundExecution {
             let changes = transactions.lazy
-                .filter { Date(timeIntervalSinceNow: -(60 * 60)) <= $0.timestamp }
                 .compactMap(\.changes)
                 .joined()
                 .filter { $0.changedObjectID.entity == UserDetail.entity() }
