@@ -178,9 +178,9 @@ extension Session {
             guard
                 let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
                 let user = newUserDetail.user,
+                let accountObjectID = user.accounts?.last?.objectID,
                 let sortedUserDetails = user.sortedUserDetails,
-                sortedUserDetails.count > 1,
-                let accountObjectID = user.accounts?.last?.objectID
+                sortedUserDetails.count > 1
             else {
                 return nil
             }
