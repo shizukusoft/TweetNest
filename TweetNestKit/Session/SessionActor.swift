@@ -10,8 +10,6 @@ import Twitter
 import UnifiedLogging
 
 actor SessionActor {
-    unowned let session: Session
-
     var twitterSessions = [URL: Twitter.Session]()
 
     var fetchNewDataTimer: DispatchSourceTimer? = nil {
@@ -27,9 +25,7 @@ actor SessionActor {
         }
     }
 
-    init(session: Session) {
-        self.session = session
-    }
+    init() { }
 }
 
 extension SessionActor {
@@ -49,7 +45,7 @@ extension SessionActor {
 }
 
 extension SessionActor {
-    func initializeFetchNewDataTimer(interval: TimeInterval) {
+    func initializeFetchNewDataTimer(interval: TimeInterval, session: Session) {
         guard interval > 0 else {
             self.fetchNewDataTimer = nil
             return
@@ -76,11 +72,11 @@ extension SessionActor {
         self.fetchNewDataTimer = nil
     }
 
-    func updateFetchNewDataTimer(interval: TimeInterval) {
+    func updateFetchNewDataTimer(interval: TimeInterval, session: Session) {
         guard fetchNewDataTimer != nil else {
             return
         }
 
-        initializeFetchNewDataTimer(interval: interval)
+        initializeFetchNewDataTimer(interval: interval, session: session)
     }
 }

@@ -24,7 +24,7 @@ public class Session {
     }
 
     private let inMemory: Bool
-    private(set) lazy var sessionActor = SessionActor(session: self)
+    let sessionActor = SessionActor()
 
     public private(set) lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
     private(set) lazy var dataAssetsURLSessionManager = DataAssetsURLSessionManager(session: self)
@@ -175,7 +175,7 @@ extension Session {
 extension Session {
     private func fetchNewDataIntervalDidChange(_ newValue: TimeInterval) {
         Task {
-            await sessionActor.updateFetchNewDataTimer(interval: newValue)
+            await sessionActor.updateFetchNewDataTimer(interval: newValue, session: self)
         }
     }
 
@@ -187,7 +187,7 @@ extension Session {
 
     public func resumeAutomaticallyFetchNewData() {
         Task {
-            await sessionActor.initializeFetchNewDataTimer(interval: TweetNestKitUserDefaults.standard.fetchNewDataInterval)
+            await sessionActor.initializeFetchNewDataTimer(interval: TweetNestKitUserDefaults.standard.fetchNewDataInterval, session: self)
         }
     }
 }
