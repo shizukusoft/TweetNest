@@ -55,7 +55,8 @@ extension Session {
                 PersistentContainer(
                     cloudKit: false,
                     persistentStoreOptions: [
-                        NSSQLiteManualVacuumOption: true
+                        NSSQLiteManualVacuumOption: true,
+                        NSSQLiteAnalyzeOption: true
                     ]
                 ).loadPersistentStores { result in
                     if case .failure(let _error) = result {

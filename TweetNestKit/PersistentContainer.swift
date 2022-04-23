@@ -61,7 +61,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 persistentStoreDescription.type = NSSQLiteStoreType
                 persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
                 persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
-                persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteAnalyzeOption)
 
                 if let persistentStoreOptions = persistentStoreOptions {
                     for (key, option) in persistentStoreOptions {
