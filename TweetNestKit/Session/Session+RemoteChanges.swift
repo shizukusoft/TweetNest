@@ -206,6 +206,13 @@ extension Session {
             )
 
             await withTaskGroup(of: Void.self) { addNotificationRequestTaskGroup in
+                func deleteNotifications(for userDetailObjectID: NSManagedObjectID) {
+                    let notificationIdentifiers = Array([self.persistentContainer.recordID(for: userDetailObjectID)?.recordName, userDetailObjectID.uriRepresentation().absoluteString].compacted())
+
+                    UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: notificationIdentifiers)
+                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: notificationIdentifiers)
+                }
+
                 for (userDetailObjectID, change) in userDetailChangesByObjectID {
                     guard Task.isCancelled == false else { return }
 
@@ -288,6 +295,8 @@ extension Session {
                             }
 
                             guard changes.isEmpty == false else {
+                                deleteNotifications(for: userDetailObjectID)
+
                                 return nil
                             }
 
@@ -300,7 +309,9 @@ extension Session {
                             )
                         }
 
-                        guard let notificationRequest = notificationRequest else { return }
+                        guard let notificationRequest = notificationRequest else {
+                            return
+                        }
 
                         addNotificationRequestTaskGroup.addTask {
                             do {
@@ -310,10 +321,7 @@ extension Session {
                             }
                         }
                     case .delete:
-                        let notificationIdentifiers = Array([self.persistentContainer.recordID(for: userDetailObjectID)?.recordName, userDetailObjectID.uriRepresentation().absoluteString].compacted())
-
-                        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: notificationIdentifiers)
-                        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: notificationIdentifiers)
+                        deleteNotifications(for: userDetailObjectID)
                     @unknown default:
                         break
                     }
