@@ -86,7 +86,7 @@ extension Session {
 
             async let _preferences = ManagedPreferences.Preferences(for: context)
 
-            async let _accountPreferences = context.perform(schedule: .enqueued) { () -> Account.Preferences in
+            async let _accountPreferences = context.perform { () -> Account.Preferences in
                 guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
                     throw SessionError.unknown
                 }

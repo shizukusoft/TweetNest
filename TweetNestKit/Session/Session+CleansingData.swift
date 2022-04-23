@@ -53,7 +53,7 @@ extension Session {
     public func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
-        let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Account.creationDate, ascending: false),
@@ -123,7 +123,7 @@ extension Session {
     }
 
     func cleansingAllUsersAndUserDetails(context: NSManagedObjectContext) async throws {
-        let userObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let userObjectIDs: [NSManagedObjectID] = try await context.perform {
             let userFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: User.entity().name!)
             userFetchRequest.resultType = .managedObjectIDResultType
             userFetchRequest.sortDescriptors = [
@@ -231,7 +231,7 @@ extension Session {
     }
 
     func cleansingAllDataAssets(context: NSManagedObjectContext) async throws {
-        let dataAssetObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let dataAssetObjectIDs: [NSManagedObjectID] = try await context.perform {
             let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: DataAsset.entity().name!)
             dataAssetsFetchRequest.resultType = .managedObjectIDResultType
             dataAssetsFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]

@@ -19,8 +19,8 @@ extension Session {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
     
-    func handlePersistentStoreRemoteChanges() {
-        persistentStoreRemoteChangeContext.perform { [persistentStoreRemoteChangeContext, logger] in
+    func handlePersistentStoreRemoteChanges() async {
+        await persistentStoreRemoteChangeContext.perform { [persistentStoreRemoteChangeContext, logger] in
             do {
                 let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
                     try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: $0)
@@ -79,7 +79,7 @@ extension Session {
 
         for (accountObjectID, change) in accountChangesByObjectID {
             func updateCredential() async {
-                let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
+                let credential: Twitter.Session.Credential? = await context.perform {
                     guard let account = context.object(with: accountObjectID) as? Account else {
                         return nil
                     }
@@ -218,19 +218,19 @@ extension Session {
 
                     switch change.changeType {
                     case .insert, .update:
-                        let notificationRequest: UNNotificationRequest? = await context.perform(schedule: .enqueued) {
+                        let notificationRequest: UNNotificationRequest? = await context.perform {
                             guard
                                 let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
-                                Date(timeIntervalSinceNow: -(10 * 60)) <= (newUserDetail.creationDate ?? .distantPast),
+                                Date(timeIntervalSinceNow: -(60 * 60)) <= (newUserDetail.creationDate ?? .distantPast),
                                 let user = newUserDetail.user,
                                 let sortedUserDetails = user.sortedUserDetails,
                                 sortedUserDetails.count > 1,
-                                let account = user.accounts?.max(by: { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast })
+                                let accountObjectID = user.accounts?.last?.objectID
                             else {
                                 return nil
                             }
 
-                            let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
+                            let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap { sortedUserDetails.index(before: $0) }
 
                             guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
                                 return nil
@@ -239,16 +239,16 @@ extension Session {
                             let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
                             let notificationContent = UNMutableNotificationContent()
-                            notificationContent.title = newUserDetail.name ?? account.objectID.description
+                            notificationContent.title = newUserDetail.name ?? accountObjectID.description
                             if let displayUsername = newUserDetail.displayUsername {
                                 notificationContent.subtitle = displayUsername
-                            } else if let userID = account.userID {
+                            } else if let userID = user.id {
                                 notificationContent.subtitle = userID.displayUserID
                             }
                             notificationContent.categoryIdentifier = "NewAccountData"
                             notificationContent.sound = .default
                             notificationContent.interruptionLevel = .timeSensitive
-                            notificationContent.threadIdentifier = self.persistentContainer.recordID(for: account.objectID)?.recordName ?? account.objectID.uriRepresentation().absoluteString
+                            notificationContent.threadIdentifier = self.persistentContainer.recordID(for: accountObjectID)?.recordName ?? accountObjectID.uriRepresentation().absoluteString
 
                             var changes: [String] = []
 

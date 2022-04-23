@@ -63,7 +63,7 @@ struct UsersDiffList: View {
                 fetchRequest.returnsObjectsAsFaults = false
 
                 let filteredUserIDsByNames: OrderedSet<String> = OrderedSet(
-                    await searchManagedObjectContext.perform(schedule: .enqueued) {
+                    await searchManagedObjectContext.perform {
                         let fetchResults = try? searchManagedObjectContext.fetch(fetchRequest)
 
                         return fetchResults?.compactMap { $0["id"] as? String }

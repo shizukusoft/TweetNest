@@ -32,8 +32,13 @@ public class Session {
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
         .sink { [weak self] _ in
-            self?.handlePersistentStoreRemoteChanges()
+            guard let self = self else { return }
+
+            Task.detached(priority: .medium) {
+                await self.handlePersistentStoreRemoteChanges()
+            }
         }
+
     private(set) lazy var persistentStoreRemoteChangeContext: NSManagedObjectContext = {
         let persistentStoreRemoteChangeContext = persistentContainer.newBackgroundContext()
         persistentStoreRemoteChangeContext.undoManager = nil

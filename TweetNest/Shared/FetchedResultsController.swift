@@ -74,8 +74,8 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         )
         fetchedResultsController.delegate = self
 
-        Task.detached {
-            await self.managedObjectContext.perform(schedule: .enqueued) {
+        Task(priority: .utility) {
+            await self.managedObjectContext.perform {
                 guard self.fetchedResultsController.fetchedObjects == nil else { return }
 
                 self.fetch(fetchedResultsController)
