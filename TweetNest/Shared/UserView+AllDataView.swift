@@ -9,10 +9,10 @@ import SwiftUI
 import TweetNestKit
 
 extension UserView {
-    struct AllDataView: View {
+    struct AllDataView<UserDetails: RandomAccessCollection>: View where UserDetails.Element == UserDetail {
         @Environment(\.account) var account: Account?
 
-        let userDetails: [UserDetail]
+        let userDetails: UserDetails
         
         var body: some View {
             #if os(macOS)
