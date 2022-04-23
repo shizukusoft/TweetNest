@@ -280,30 +280,40 @@ extension Session {
     }
 
     public func cleansingAllPersistentStores() async throws {
-        let temporalPersistentContainer = PersistentContainer(
-            cloudKit: false,
-            persistentStoreOptions: [
-                NSPersistentStoreRemoteChangeNotificationPostOptionKey: false,
-                NSSQLiteManualVacuumOption: true,
-                NSSQLiteAnalyzeOption: true
-            ]
-        )
+        let persistentContainer = persistentContainer
+        let temporalPersistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistentContainer.managedObjectModel)
 
-        for persistentStoreDescription in temporalPersistentContainer.persistentStoreDescriptions {
-            try await withExtendedBackgroundExecution {
-                try await self.persistentContainer.persistentStoreCoordinator.perform {
-                    let semaphore = DispatchSemaphore(value: 0)
+        for persistentStoreDescription in persistentContainer.persistentStoreDescriptions.lazy.compactMap({ $0.copy() as? NSPersistentStoreDescription }) {
+            guard persistentStoreDescription.type == NSSQLiteStoreType else { return }
+
+            persistentStoreDescription.cloudKitContainerOptions = nil
+            persistentStoreDescription.setOption(nil, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+            persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteManualVacuumOption)
+            persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteAnalyzeOption)
+
+            try await persistentContainer.persistentStoreCoordinator.perform {
+                try temporalPersistentStoreCoordinator.performAndWait {
                     var error: Error?
 
-                    temporalPersistentContainer.persistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in
-                        if let _error = _error {
-                            error = _error
+                    withExtendedBackgroundExecution {
+                        let dispatchSemaphore = DispatchSemaphore(value: 0)
+
+                        temporalPersistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in
+                            temporalPersistentStoreCoordinator.perform {
+                                temporalPersistentStoreCoordinator.persistentStores.forEach {
+                                    try? temporalPersistentStoreCoordinator.remove($0)
+                                }
+                            }
+
+                            if let _error = _error {
+                                error = _error
+                            }
+
+                            dispatchSemaphore.signal()
                         }
 
-                        semaphore.signal()
+                        dispatchSemaphore.wait()
                     }
-
-                    semaphore.wait()
 
                     if let error = error {
                         throw error
