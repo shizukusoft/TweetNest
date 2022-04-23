@@ -73,16 +73,18 @@ public class Session {
                 do {
                     try await self.persistentContainer.loadPersistentStores()
 
-                    #if canImport(CoreSpotlight)
-                    self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
-                    #endif
+                    Task.detached {
+                        await MainActor.run {
+                            self.persistentContainerLoadingResult = .success(())
+                        }
 
-                    #if DEBUG
-                    try! self.persistentContainer.initializeCloudKitSchema(options: [])
-                    #endif
+                        #if canImport(CoreSpotlight)
+                        self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                        #endif
 
-                    await MainActor.run {
-                        self.persistentContainerLoadingResult = .success(())
+                        #if DEBUG
+                        try! self.persistentContainer.initializeCloudKitSchema(options: [])
+                        #endif
                     }
                 } catch {
                     Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
