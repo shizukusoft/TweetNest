@@ -133,10 +133,17 @@ extension Session {
             return try context.fetch(userFetchRequest)
         }
 
-        for userObjectID in userObjectIDs {
-            try Task.checkCancellation()
-            try await self.cleansingUser(for: userObjectID, context: context)
-            try await self.cleansingUserDetails(for: userObjectID, context: context)
+        try await withThrowingTaskGroup(of: Void.self) { cleansingUserDetailsTaskGroup in
+            for userObjectID in userObjectIDs {
+                try Task.checkCancellation()
+                try await self.cleansingUser(for: userObjectID, context: context)
+
+                cleansingUserDetailsTaskGroup.addTask {
+                    try await self.cleansingUserDetails(for: userObjectID)
+                }
+            }
+
+            try await cleansingUserDetailsTaskGroup.waitForAll()
         }
     }
 
@@ -191,24 +198,26 @@ extension Session {
         }
     }
 
-    func cleansingUserDetails(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
-        let context = context ?? persistentContainerNewBackgroundContext
+    func cleansingUserDetails(for userObjectID: NSManagedObjectID) async throws {
+        let context = persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
-            guard
-                let user = try? context.existingObject(with: userObjectID) as? User
-            else {
-                return
-            }
+            let fetchRequest = UserDetail.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "user == %@", userObjectID)
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+            ]
+            fetchRequest.returnsObjectsAsFaults = false
 
-            var userDetails = user.sortedUserDetails ?? OrderedSet()
+            var userDetails = OrderedSet(try context.fetch(fetchRequest))
 
-            for (index, userDetail) in userDetails.enumerated() {
-                let previousUserIndex = index - 1
+            for userDetail in userDetails {
+                let previousUserIndex = (userDetails.firstIndex(of: userDetail) ?? 0) - 1
                 let previousUserDetail = userDetails.indices.contains(previousUserIndex) ? userDetails[previousUserIndex] : nil
 
                 if previousUserDetail ~= userDetail {
                     userDetails.remove(userDetail)
+                    userDetail.user = nil
                     context.delete(userDetail)
                 }
             }
