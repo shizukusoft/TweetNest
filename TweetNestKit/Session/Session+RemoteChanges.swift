@@ -20,8 +20,8 @@ extension Session {
     }
     
     func handlePersistentStoreRemoteChanges() {
-        do {
-            let persistentHistoryTransaction: [NSPersistentHistoryTransaction]? = try persistentStoreRemoteChangeContext.performAndWait {
+        persistentStoreRemoteChangeContext.perform { [persistentStoreRemoteChangeContext, logger] in
+            do {
                 let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
                     try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: $0)
                 }
@@ -32,39 +32,33 @@ extension Session {
 
                 guard
                     let persistentHistoryResult = try persistentStoreRemoteChangeContext.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
-                    let transactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
+                    let persistentHistoryTransactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
                 else {
-                    return nil
+                    return
                 }
 
-                if let newLastPersistentHistoryToken = transactions.last?.token {
+                if let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token {
                     TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(withRootObject: newLastPersistentHistoryToken, requiringSecureCoding: true)
                 }
 
-                return transactions
-            }
+                Task.detached {
+                    await self.handleUserDetailChanges(transactions: persistentHistoryTransactions)
+                }
 
-            guard let persistentHistoryTransaction = persistentHistoryTransaction else {
-                return
-            }
+                Task.detached(priority: .utility) {
+                    await self.handleAccountChanges(transactions: persistentHistoryTransactions)
+                }
 
-            Task.detached(priority: .utility) {
-                await self.handleAccountChanges(transactions: persistentHistoryTransaction)
-            }
+                Task.detached(priority: .utility) {
+                    await self.handleUserChanges(transactions: persistentHistoryTransactions)
+                }
 
-            Task.detached(priority: .utility) {
-                await self.handleUserChanges(transactions: persistentHistoryTransaction)
+                Task.detached(priority: .utility) {
+                    await self.handleDataAssetsChanges(transactions: persistentHistoryTransactions)
+                }
+            } catch {
+                logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
             }
-
-            Task.detached(priority: .medium) {
-                await self.handleUserDetailChanges(transactions: persistentHistoryTransaction)
-            }
-
-            Task.detached(priority: .utility) {
-                await self.handleDataAssetsChanges(transactions: persistentHistoryTransaction)
-            }
-        } catch {
-            logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
         }
     }
 
