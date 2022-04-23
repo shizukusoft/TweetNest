@@ -101,7 +101,7 @@ extension BackgroundTaskScheduler {
         }
 
         do {
-            try await session.fetchNewData(cleansingData: false)
+            try await session.fetchNewData()
             return true
         } catch {
             logger.error("Error occurred while background refresh: \(error as NSError, privacy: .public)")

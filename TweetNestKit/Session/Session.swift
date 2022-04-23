@@ -214,7 +214,7 @@ extension Session {
     }
 
     @discardableResult
-    public func fetchNewData(cleansingData: Bool = true, force: Bool = false) async throws -> Bool {
+    public func fetchNewData(force: Bool = false) async throws -> Bool {
         guard force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date() else {
             return false
         }
@@ -244,10 +244,6 @@ extension Session {
 
                     return false
                 }
-            }
-
-            if cleansingData {
-                try await self.cleansingAllData(force: force)
             }
 
             return hasChanges

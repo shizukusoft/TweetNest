@@ -60,6 +60,7 @@ extension SessionActor {
             Task {
                 do {
                     try await session.fetchNewData()
+                    try await session.cleansingAllData()
                 } catch {
                     Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
                         .error("Error occurred fetch new data: \(error as NSError, privacy: .public)")
