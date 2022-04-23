@@ -199,6 +199,8 @@ extension PersistentContainer {
                     try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: Self.defaultPersistentStoreURL.appendingPathExtension("temp"), type: .sqlite, options: nil)
                 }
             }
+
+            // TODO: Remove orphaned CloudKit records (e.g. DataAssets from main container)
         }
     }
 }
