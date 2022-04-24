@@ -31,6 +31,9 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     private(set) lazy var usersSpotlightDelegate: UsersSpotlightDelegate? = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[1], coordinator: self.persistentStoreCoordinator)
     #endif
 
+    @Published
+    public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
+
     init(inMemory: Bool = false, cloudKit: Bool = true, persistentStoreOptions: [String: Any?]? = nil) {
         super.init(name: Bundle.tweetNestKit.name!, managedObjectModel: Self.managedObjectModel)
 
@@ -86,6 +89,18 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             self.usersSpotlightDelegate = nil
             #endif
         }
+
+        NotificationCenter.default
+            .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: self)
+            .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
+            .scan(OrderedDictionary<UUID, PersistentContainer.CloudKitEvent>()) {
+                var cloudKitEvents = $0
+
+                cloudKitEvents[$1.identifier] = CloudKitEvent($1)
+
+                return cloudKitEvents
+            }
+            .assign(to: &$cloudKitEvents)
     }
 
     public override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> Void) {

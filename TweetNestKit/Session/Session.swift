@@ -49,16 +49,6 @@ public class Session {
     @Published
     public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?
 
-    @Published
-    public private(set) var persistentCloudKitContainerEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
-    private lazy var persistentCloudKitContainerEventDidChanges = NotificationCenter.default
-        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: persistentContainer)
-        .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
-        .receive(on: DispatchQueue.main)
-        .sink { [weak self] event in
-            self?.persistentCloudKitContainerEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
-        }
-
     private lazy var fetchNewDataIntervalObserver = TweetNestKitUserDefaults.standard
         .observe(\.fetchNewDataInterval, options: [.new]) { [weak self] userDefaults, changes in
             self?.fetchNewDataIntervalDidChange(changes.newValue ?? userDefaults.fetchNewDataInterval)
@@ -68,12 +58,10 @@ public class Session {
         _twitterAPIConfiguration = .init(twitterAPIConfiguration)
         self.inMemory = inMemory
 
-        Task.detached {
-            if inMemory == false {
-                _ = self.persistentStoreRemoteChangeNotification
-                _ = self.persistentCloudKitContainerEventDidChanges
-            }
+        _ = self.persistentStoreRemoteChangeNotification
+        _ = self.fetchNewDataIntervalObserver
 
+        Task.detached {
             Task(priority: .utility) {
                 do {
                     try await self.persistentContainer.loadPersistentStores()
@@ -103,10 +91,6 @@ public class Session {
 
             Task(priority: .utility) {
                 _ = try? await self.twitterAPIConfiguration
-            }
-
-            Task(priority: .utility) {
-                _ = self.fetchNewDataIntervalObserver
             }
         }
     }
