@@ -152,7 +152,6 @@ extension Session {
                     NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
                     NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
                 ]
-                userFetchRequest.relationshipKeyPathsForPrefetching = ["accounts"]
                 userFetchRequest.returnsObjectsAsFaults = false
 
                 let users = try context.fetch(userFetchRequest)
