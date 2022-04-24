@@ -207,6 +207,8 @@ extension Session {
                 of: [(Twitter.User.ID, UserUpdateResult)].self
             ) { chunkedUsersProcessingTaskGroup in
                 for try await chunkedUsers in chunkedUsersFetchTaskGroup {
+                    let chunkedUsersFetchedDate = Date()
+
                     chunkedUsersProcessingTaskGroup.addTask {
                         let chunkedUsersProcessingContext = NSManagedObjectContext(.privateQueue)
                         chunkedUsersProcessingContext.parent = context
@@ -248,6 +250,7 @@ extension Session {
                                             blockingUserIDs: myBlockingUserIDs,
                                             mutingUserIDs: myMutingUserIDs,
                                             userUpdateStartDate: chunkedUsers.0,
+                                            userDetailCreationDate: chunkedUsersFetchedDate,
                                             previousUserDetail: previousUserDetail,
                                             context: chunkedUsersProcessingContext
                                         )
