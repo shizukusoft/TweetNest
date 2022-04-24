@@ -133,6 +133,19 @@ extension Session {
     ) async throws -> [Twitter.User.ID: UserUpdateResult] where S: Sequence, S.Element == Twitter.User.ID {
         try await withThrowingTaskGroup(of: (Date, (users: [Twitter.User], errors: [TwitterServerError])).self) { chunkedUsersFetchTaskGroup in
             async let _refinedUserObjectIDByID: [Twitter.User.ID: NSManagedObjectID?] = context.perform { [userIDs = Set(userIDs)] in
+                let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
+                accountUserIDsfetchRequest.entity = Account.entity()
+                accountUserIDsfetchRequest.resultType = .dictionaryResultType
+                accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
+                accountUserIDsfetchRequest.returnsDistinctResults = true
+
+                let results = try context.fetch(accountUserIDsfetchRequest)
+                let allAccountUserIDs = Set(
+                    results.compactMap {
+                        $0["userID"] as? Twitter.User.ID
+                    }
+                )
+
                 let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
                 userFetchRequest.predicate = NSPredicate(format: "id IN %@", userIDs)
                 userFetchRequest.sortDescriptors = [
@@ -157,7 +170,7 @@ extension Session {
                             }
 
                             // Don't update user data if user has account. (Might overwrite followings/followers list)
-                            guard $0 == accountUserID || user?.accounts?.isEmpty != false else {
+                            guard $0 == accountUserID || allAccountUserIDs.contains($0) == false else {
                                 return nil
                             }
 
