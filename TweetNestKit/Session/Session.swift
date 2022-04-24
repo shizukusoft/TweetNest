@@ -31,11 +31,13 @@ public class Session {
 
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
+        .map { $0.userInfo?[NSPersistentHistoryTokenKey] as? NSPersistentHistoryToken }
+        .removeDuplicates()
         .receive(on: persistentStoreRemoteChangeNotificationQueue)
-        .sink { [weak self] notification in
+        .sink { [weak self] persistentHistoryToken in
             guard let self = self else { return }
 
-            self.handlePersistentStoreRemoteChanges(notification)
+            self.handlePersistentStoreRemoteChanges(persistentHistoryToken)
         }
 
     private lazy var persistentStoreRemoteChangeNotificationQueue = DispatchQueue(

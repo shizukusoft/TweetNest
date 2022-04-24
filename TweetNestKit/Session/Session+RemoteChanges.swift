@@ -19,11 +19,9 @@ extension Session {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
     
-    func handlePersistentStoreRemoteChanges(_ notification: Notification) {
+    func handlePersistentStoreRemoteChanges(_ persistentHistoryToken: NSPersistentHistoryToken?) {
         withExtendedBackgroundExecution {
             do {
-                let currentPersistentHistoryToken = notification.userInfo?[NSPersistentHistoryTokenKey] as? NSPersistentHistoryToken
-
                 let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
                     try NSKeyedUnarchiver.unarchivedObject(
                         ofClass: NSPersistentHistoryToken.self,
@@ -31,15 +29,10 @@ extension Session {
                     )
                 }
 
-                guard currentPersistentHistoryToken != lastPersistentHistoryToken else {
-                    self.logger.debug("Ignoring remote change notification: \(notification)")
-                    return
-                }
-
                 guard let lastPersistentHistoryToken = lastPersistentHistoryToken else {
-                    if let currentPersistentHistoryToken = currentPersistentHistoryToken {
+                    if let persistentHistoryToken = persistentHistoryToken {
                         TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
-                            withRootObject: currentPersistentHistoryToken,
+                            withRootObject: persistentHistoryToken,
                             requiringSecureCoding: true
                         )
                     }
