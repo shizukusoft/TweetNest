@@ -190,8 +190,6 @@ extension Session {
 extension Session {
     private func updateNotification(for userDetailObjectID: NSManagedObjectID, preferences: ManagedPreferences.Preferences) async {
         let notificationRequest: UNNotificationRequest? = await persistentContainer.performBackgroundTask { context in
-            context.undoManager = nil
-
             guard
                 let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
                 let newUserDetailCreationDate = newUserDetail.creationDate,
@@ -282,12 +280,10 @@ extension Session {
             return
         }
 
-        Task.detached {
-            do {
-                try await UNUserNotificationCenter.current().add(notificationRequest)
-            } catch {
-                self.logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
-            }
+        do {
+            try await UNUserNotificationCenter.current().add(notificationRequest)
+        } catch {
+            self.logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
         }
     }
 
@@ -300,26 +296,33 @@ extension Session {
 
     private func updateNotifications(transactions: [NSPersistentHistoryTransaction]) async {
         await withExtendedBackgroundExecution {
-            let changes = transactions.lazy
-                .compactMap(\.changes)
-                .joined()
-                .filter { $0.changedObjectID.entity == UserDetail.entity() }
+            let changes = OrderedDictionary<NSManagedObjectID, [NSPersistentHistoryChange]>(
+                grouping: transactions.lazy
+                    .compactMap(\.changes)
+                    .joined()
+                    .filter { $0.changedObjectID.entity == UserDetail.entity() },
+                by: \.changedObjectID
+            ).values.lazy.compactMap(\.last)
 
-            async let preferences = self.persistentContainer.performBackgroundTask { context in
+            let preferences = await self.persistentContainer.performBackgroundTask { context in
                 ManagedPreferences.managedPreferences(for: context).preferences
             }
 
-            for change in changes {
-                guard Task.isCancelled == false else { return }
-
-                switch change.changeType {
-                case .insert, .update:
-                    await self.updateNotification(for: change.changedObjectID, preferences: preferences)
-                case .delete:
-                    self.deleteNotifications(for: change.changedObjectID)
-                @unknown default:
-                    break
+            await withTaskGroup(of: Void.self) { taskGroup in
+                for change in changes {
+                    taskGroup.addTask {
+                        switch change.changeType {
+                        case .insert, .update:
+                            await self.updateNotification(for: change.changedObjectID, preferences: preferences)
+                        case .delete:
+                            self.deleteNotifications(for: change.changedObjectID)
+                        @unknown default:
+                            break
+                        }
+                    }
                 }
+
+                await taskGroup.waitForAll()
             }
         }
     }
