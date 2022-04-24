@@ -62,7 +62,6 @@ extension Session {
         let twitterAccount = try await Twitter.Account.me(session: twitterSession)
 
         let userID = String(twitterAccount.id)
-        async let updateUsersResults = self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)
 
         try await context.perform(schedule: .enqueued) {
             guard let account = context.object(with: accountObjectID) as? Account else {
@@ -78,6 +77,6 @@ extension Session {
             }
         }
 
-        return try await updateUsersResults[userID]?.get()
+        return try await updateUser(accountObjectID: accountObjectID, context: context)
     }
 }
