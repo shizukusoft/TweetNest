@@ -23,22 +23,11 @@ extension UserDetail {
         followerUserIDs: [String]? = nil,
         blockingUserIDs: [String]? = nil,
         mutingUserIDs: [String]? = nil,
-        userUpdateStartDate: Date = Date(),
-        userUpdateEndDate: Date = Date(),
-        userDetailCreationDate: Date = Date(),
-        previousUserDetail: UserDetail? = nil,
+        creationDate: Date = Date(),
+        user: User,
         context: NSManagedObjectContext
     ) throws -> UserDetail {
-        let user = previousUserDetail?.user ?? {
-            let user = User(context: context)
-            user.id = twitterUser.id
-            user.creationDate = userDetailCreationDate
-
-            return user
-        }()
-
-        user.lastUpdateStartDate = userUpdateStartDate
-        user.lastUpdateEndDate = userUpdateEndDate
+        let previousUserDetail = user.sortedUserDetails?.last
 
         let newUserDetail = UserDetail(context: context)
         newUserDetail.blockingUserIDs = blockingUserIDs
@@ -66,9 +55,9 @@ extension UserDetail {
 
             return previousUserDetail
         } else {
-            newUserDetail.creationDate = userDetailCreationDate
+            newUserDetail.creationDate = creationDate
             newUserDetail.user = user
-            newUserDetail.user!.modificationDate = userDetailCreationDate
+            newUserDetail.user!.modificationDate = creationDate
 
             return newUserDetail
         }

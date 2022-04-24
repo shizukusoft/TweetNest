@@ -251,8 +251,14 @@ extension Session {
 
                                     let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID?) = try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
                                         let userObjectID = refinedUserObjectIDByID[twitterUser.id] as? NSManagedObjectID
-                                        let user = userObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User }
-                                        let previousUserDetail = user?.sortedUserDetails?.last
+                                        let user = userObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User } ?? {
+                                            let user = User(context: context)
+                                            user.id = twitterUser.id
+                                            user.creationDate = chunkedUsersFetchedDate
+
+                                            return user
+                                        }()
+                                        let previousUserDetail = user.sortedUserDetails?.last
 
                                         let userDetail = try UserDetail.createOrUpdate(
                                             twitterUser: twitterUser,
@@ -261,11 +267,13 @@ extension Session {
                                             followerUserIDs: followerIDs,
                                             blockingUserIDs: myBlockingUserIDs,
                                             mutingUserIDs: myMutingUserIDs,
-                                            userUpdateStartDate: chunkedUsers.0,
-                                            userDetailCreationDate: chunkedUsersFetchedDate,
-                                            previousUserDetail: previousUserDetail,
+                                            creationDate: chunkedUsersFetchedDate,
+                                            user: user,
                                             context: chunkedUsersProcessingContext
                                         )
+
+                                        user.lastUpdateStartDate = chunkedUsers.0
+                                        user.lastUpdateEndDate = Date()
 
                                         return (previousUserDetail?.objectID, userDetail.objectID)
                                     }
