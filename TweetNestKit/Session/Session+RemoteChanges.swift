@@ -270,13 +270,6 @@ extension Session {
         )
     }
 
-    private func deleteNotifications(for userDetailObjectID: NSManagedObjectID) {
-        let notificationIdentifiers = Array([self.persistentContainer.recordID(for: userDetailObjectID)?.recordName, userDetailObjectID.uriRepresentation().absoluteString].compacted())
-
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: notificationIdentifiers)
-        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: notificationIdentifiers)
-    }
-
     private func updateNotifications(transactions: [NSPersistentHistoryTransaction]) async {
         await withExtendedBackgroundExecution {
             do {
@@ -292,28 +285,20 @@ extension Session {
                     return
                 }
 
-                let context = self.persistentContainer.newBackgroundContext()
-                context.undoManager = nil
-                context.automaticallyMergesChangesFromParent = false
-
-                async let _preferences = await context.perform {
-                    ManagedPreferences.managedPreferences(for: context).preferences
-                }
-
-                let targetUserDetailObjectIDs = changes.reduce(into: [NSManagedObjectID]()) { partialResult, change in
-                    switch change.changeType {
-                    case .insert, .update:
-                        partialResult.append(change.changedObjectID)
-                    case .delete:
-                        self.deleteNotifications(for: change.changedObjectID)
-                    @unknown default:
-                        break
+                let targetUserDetailObjectIDs: [NSManagedObjectID] = changes.compactMap {
+                        switch $0.changeType {
+                        case .insert, .update:
+                            return $0.changedObjectID
+                        case .delete:
+                            return nil
+                        @unknown default:
+                            return nil
+                        }
                     }
-                }
 
-                let preferences = await _preferences
+                let notificationRequests: [NSManagedObjectID: UNNotificationRequest?] = try await self.persistentContainer.performBackgroundTask { context in
+                    let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
-                let notificationRequests: [(NSManagedObjectID, UNNotificationRequest?)] = try await context.perform {
                     let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
                     accountUserIDsfetchRequest.entity = Account.entity()
                     accountUserIDsfetchRequest.resultType = .dictionaryResultType
@@ -326,7 +311,7 @@ extension Session {
                     }
 
                     guard accountUserIDs.isEmpty == false else {
-                        return []
+                        return [:]
                     }
 
                     let userDetailsFetchRequest = UserDetail.fetchRequest()
@@ -341,18 +326,24 @@ extension Session {
 
                     let userDetails = try context.fetch(userDetailsFetchRequest)
 
-                    return userDetails.map {
-                        ($0.objectID, self.notificationRequest(for: $0, preferences: preferences))
+                    return userDetails.reduce(into: [:]) {
+                        $0[$1.objectID] = self.notificationRequest(for: $1, preferences: preferences)
                     }
                 }
 
-                for notificationRequest in notificationRequests {
-                    if let notificationRequest = notificationRequest.1 {
+                var shouldBeDeletedNotificationIdentifiers = [String]()
+
+                for userDetailObjectID in changes.lazy.map(\.changedObjectID) {
+                    if let notificationRequest = notificationRequests[userDetailObjectID] as? UNNotificationRequest {
                         try await UNUserNotificationCenter.current().add(notificationRequest)
                     } else {
-                        self.deleteNotifications(for: notificationRequest.0)
+                        shouldBeDeletedNotificationIdentifiers.append(
+                            contentsOf: [self.persistentContainer.recordID(for: userDetailObjectID)?.recordName, userDetailObjectID.uriRepresentation().absoluteString].compacted()
+                        )
                     }
                 }
+
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: shouldBeDeletedNotificationIdentifiers)
             } catch {
                 self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
             }
