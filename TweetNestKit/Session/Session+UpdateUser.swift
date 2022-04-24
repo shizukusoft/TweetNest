@@ -133,28 +133,8 @@ extension Session {
     ) async throws -> [Twitter.User.ID: UserUpdateResult] where S: Sequence, S.Element == Twitter.User.ID {
         try await withThrowingTaskGroup(of: (Date, (users: [Twitter.User], errors: [TwitterServerError])).self) { chunkedUsersFetchTaskGroup in
             async let _refinedUserObjectIDByID: [Twitter.User.ID: NSManagedObjectID?] = context.perform { [userIDs = Set(userIDs)] in
-                let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
-                accountUserIDsfetchRequest.entity = Account.entity()
-                accountUserIDsfetchRequest.resultType = .dictionaryResultType
-                accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
-                accountUserIDsfetchRequest.returnsDistinctResults = true
-
-                let results = try context.fetch(accountUserIDsfetchRequest)
-                let otherAccountUserIDs = Set(
-                    results.compactMap {
-                        $0["userID"] as? Twitter.User.ID
-                    }
-                ).subtracting([accountUserID])
-
-                // Don't update user data if user has account. (Might overwrite followings/followers list)
-                let userIDs = userIDs.subtracting(otherAccountUserIDs)
-
                 let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-                userFetchRequest.predicate = NSCompoundPredicate(
-                    andPredicateWithSubpredicates: [
-                        NSPredicate(format: "id IN %@", userIDs)
-                    ]
-                )
+                userFetchRequest.predicate = NSPredicate(format: "id IN %@", userIDs)
                 userFetchRequest.sortDescriptors = [
                     NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
                     NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
@@ -173,6 +153,11 @@ extension Session {
                             let lastUpdateStartDate = user?.lastUpdateStartDate ?? .distantPast
 
                             guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
+                                return nil
+                            }
+
+                            // Don't update user data if user has account. (Might overwrite followings/followers list)
+                            guard $0 == accountUserID || user?.accounts?.isEmpty != false else {
                                 return nil
                             }
 
