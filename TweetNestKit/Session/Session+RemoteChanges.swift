@@ -29,17 +29,7 @@ extension Session {
                     )
                 }
 
-                let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
-                    after: lastPersistentHistoryToken
-                )
-
-                let context = self.persistentContainer.newBackgroundContext()
-                let persistentHistoryResult = try context.performAndWait { try context.execute(fetchHistoryRequest) } as? NSPersistentHistoryResult
-
-                guard
-                    let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
-                    let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
-                else {
+                guard let lastPersistentHistoryToken = lastPersistentHistoryToken else {
                     if let currentPersistentHistoryToken = notification.userInfo?[NSPersistentHistoryTokenKey] as? NSPersistentHistoryToken {
                         TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
                             withRootObject: currentPersistentHistoryToken,
@@ -47,6 +37,22 @@ extension Session {
                         )
                     }
 
+                    return
+                }
+
+                let context = self.persistentContainer.newBackgroundContext()
+                let persistentHistoryResult = try context.performAndWait {
+                    try context.execute(
+                        NSPersistentHistoryChangeRequest.fetchHistory(
+                            after: lastPersistentHistoryToken
+                        )
+                    )
+                } as? NSPersistentHistoryResult
+
+                guard
+                    let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
+                    let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
+                else {
                     return
                 }
 
@@ -182,11 +188,10 @@ extension Session {
 }
 
 extension Session {
-    private func updateNotification(for userDetailObjectID: NSManagedObjectID) async {
-        let context = persistentContainer.newBackgroundContext()
-        context.undoManager = nil
+    private func updateNotification(for userDetailObjectID: NSManagedObjectID, preferences: ManagedPreferences.Preferences) async {
+        let notificationRequest: UNNotificationRequest? = await persistentContainer.performBackgroundTask { context in
+            context.undoManager = nil
 
-        let notificationRequest: UNNotificationRequest? = await context.perform {
             guard
                 let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
                 let newUserDetailCreationDate = newUserDetail.creationDate,
@@ -203,8 +208,6 @@ extension Session {
             guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
                 return nil
             }
-
-            let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
             let notificationContent = UNMutableNotificationContent()
             notificationContent.title = newUserDetail.name ?? account.objectID.description
@@ -279,10 +282,12 @@ extension Session {
             return
         }
 
-        do {
-            try await UNUserNotificationCenter.current().add(notificationRequest)
-        } catch {
-            self.logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
+        Task.detached {
+            do {
+                try await UNUserNotificationCenter.current().add(notificationRequest)
+            } catch {
+                self.logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
+            }
         }
     }
 
@@ -300,12 +305,16 @@ extension Session {
                 .joined()
                 .filter { $0.changedObjectID.entity == UserDetail.entity() }
 
+            async let preferences = self.persistentContainer.performBackgroundTask { context in
+                ManagedPreferences.managedPreferences(for: context).preferences
+            }
+
             for change in changes {
                 guard Task.isCancelled == false else { return }
 
                 switch change.changeType {
                 case .insert, .update:
-                    await self.updateNotification(for: change.changedObjectID)
+                    await self.updateNotification(for: change.changedObjectID, preferences: preferences)
                 case .delete:
                     self.deleteNotifications(for: change.changedObjectID)
                 @unknown default:
