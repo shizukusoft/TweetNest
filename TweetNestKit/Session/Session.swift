@@ -31,20 +31,18 @@ public class Session {
 
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
-        .sink { [weak self] _ in
+        .receive(on: persistentStoreRemoteChangeNotificationQueue)
+        .sink { [weak self] notification in
             guard let self = self else { return }
 
-            Task.detached(priority: .medium) {
-                await self.handlePersistentStoreRemoteChanges()
-            }
+            self.handlePersistentStoreRemoteChanges(notification)
         }
 
-    private(set) lazy var persistentStoreRemoteChangeContext: NSManagedObjectContext = {
-        let persistentStoreRemoteChangeContext = persistentContainer.newBackgroundContext()
-        persistentStoreRemoteChangeContext.undoManager = nil
-
-        return persistentStoreRemoteChangeContext
-    }()
+    private lazy var persistentStoreRemoteChangeNotificationQueue = DispatchQueue(
+        label: [String(reflecting: self), Notification.Name.NSPersistentStoreRemoteChange.rawValue].joined(separator: "."),
+        qos: .default,
+        autoreleaseFrequency: .workItem
+    )
 
     @Published
     public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?

@@ -19,70 +19,69 @@ extension Session {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
     
-    func handlePersistentStoreRemoteChanges() async {
-        await withExtendedBackgroundExecution {
-            let persistentHistoryTransactions: [NSPersistentHistoryTransaction]? = await self.persistentStoreRemoteChangeContext.perform {
-                do {
-                    let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
-                        try NSKeyedUnarchiver.unarchivedObject(
-                            ofClass: NSPersistentHistoryToken.self,
-                            from: $0
+    func handlePersistentStoreRemoteChanges(_ notification: Notification) {
+        withExtendedBackgroundExecution {
+            do {
+                let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
+                    try NSKeyedUnarchiver.unarchivedObject(
+                        ofClass: NSPersistentHistoryToken.self,
+                        from: $0
+                    )
+                }
+
+                let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
+                    after: lastPersistentHistoryToken
+                )
+
+                let context = self.persistentContainer.newBackgroundContext()
+                let persistentHistoryResult = try context.performAndWait { try context.execute(fetchHistoryRequest) } as? NSPersistentHistoryResult
+
+                guard
+                    let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
+                    let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
+                else {
+                    if let currentPersistentHistoryToken = notification.userInfo?[NSPersistentHistoryTokenKey] as? NSPersistentHistoryToken {
+                        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
+                            withRootObject: currentPersistentHistoryToken,
+                            requiringSecureCoding: true
                         )
                     }
 
-                    let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
-                        after: lastPersistentHistoryToken
-                    )
-
-                    guard
-                        let persistentHistoryResult = try self.persistentStoreRemoteChangeContext.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
-                        let persistentHistoryTransactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction],
-                        let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
-                    else {
-                        return nil
-                    }
-
-                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
-                        withRootObject: newLastPersistentHistoryToken,
-                        requiringSecureCoding: true
-                    )
-
-                    return persistentHistoryTransactions
-                } catch {
-                    self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
-
-                    return nil
+                    return
                 }
-            }
 
-            guard let persistentHistoryTransactions = persistentHistoryTransactions else {
-                return
-            }
+                TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
+                    withRootObject: newLastPersistentHistoryToken,
+                    requiringSecureCoding: true
+                )
 
-            Task.detached {
-                await withTaskGroup(of: Void.self) { taskGroup in
-                    taskGroup.addTask(priority: .high) {
-                        await self.updateNotifications(transactions: persistentHistoryTransactions)
+                Task.detached {
+                    await withTaskGroup(of: Void.self) { taskGroup in
+                        taskGroup.addTask(priority: .high) {
+                            await self.updateNotifications(transactions: persistentHistoryTransactions)
+                        }
+
+                        taskGroup.addTask(priority: .medium) {
+                            await self.updateAccountCredential(transactions: persistentHistoryTransactions)
+                        }
+
+                        taskGroup.addTask(priority: .utility) {
+                            await self.cleansingAccount(transactions: persistentHistoryTransactions)
+                        }
+
+                        taskGroup.addTask(priority: .utility) {
+                            await self.cleansingUser(transactions: persistentHistoryTransactions)
+                        }
+
+                        taskGroup.addTask(priority: .utility) {
+                            await self.cleansingDataAssets(transactions: persistentHistoryTransactions)
+                        }
+
+                        await taskGroup.waitForAll()
                     }
-
-                    taskGroup.addTask(priority: .medium) {
-                        await self.updateAccountCredential(transactions: persistentHistoryTransactions)
-                    }
-
-                    taskGroup.addTask(priority: .utility) {
-                        await self.cleansingAccount(transactions: persistentHistoryTransactions)
-                    }
-
-                    taskGroup.addTask(priority: .utility) {
-                        await self.cleansingUser(transactions: persistentHistoryTransactions)
-                    }
-
-                    taskGroup.addTask(priority: .utility) {
-                        await self.cleansingDataAssets(transactions: persistentHistoryTransactions)
-                    }
-
-                    await taskGroup.waitForAll()
                 }
+            } catch {
+                self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
             }
         }
     }
