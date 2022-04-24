@@ -15,7 +15,7 @@ import Twitter
 import SwiftUI
 
 extension Session {
-    public typealias UserDetailChanges = (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?)
+    public typealias UserDetailChanges = (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?)?
     public typealias UserUpdateResult = Result<UserDetailChanges, Error>
 
     @discardableResult
@@ -118,11 +118,7 @@ extension Session {
             context: context
         )
 
-        guard let updatingAccountUserResult = try await updatingAccountUserResult[accountUserID] else {
-            throw SessionError.unknown
-        }
-
-        return try updatingAccountUserResult.get()
+        return try await updatingAccountUserResult[accountUserID]?.get()
     }
 
     private func updateUsers<S>(
