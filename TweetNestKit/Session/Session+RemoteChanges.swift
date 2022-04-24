@@ -24,7 +24,10 @@ extension Session {
             let persistentHistoryTransactions: [NSPersistentHistoryTransaction]? = await self.persistentStoreRemoteChangeContext.perform {
                 do {
                     let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
-                        try NSKeyedUnarchiver.unarchivedObject(ofClass: NSPersistentHistoryToken.self, from: $0)
+                        try NSKeyedUnarchiver.unarchivedObject(
+                            ofClass: NSPersistentHistoryToken.self,
+                            from: $0
+                        )
                     }
 
                     let fetchHistoryRequest = NSPersistentHistoryChangeRequest.fetchHistory(
@@ -33,14 +36,16 @@ extension Session {
 
                     guard
                         let persistentHistoryResult = try self.persistentStoreRemoteChangeContext.execute(fetchHistoryRequest) as? NSPersistentHistoryResult,
-                        let persistentHistoryTransactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction]
+                        let persistentHistoryTransactions = persistentHistoryResult.result as? [NSPersistentHistoryTransaction],
+                        let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
                     else {
                         return nil
                     }
 
-                    if let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token {
-                        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(withRootObject: newLastPersistentHistoryToken, requiringSecureCoding: true)
-                    }
+                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
+                        withRootObject: newLastPersistentHistoryToken,
+                        requiringSecureCoding: true
+                    )
 
                     return persistentHistoryTransactions
                 } catch {
@@ -50,7 +55,7 @@ extension Session {
                 }
             }
 
-            guard let persistentHistoryTransactions = persistentHistoryTransactions, persistentHistoryTransactions.isEmpty == false else {
+            guard let persistentHistoryTransactions = persistentHistoryTransactions else {
                 return
             }
 
