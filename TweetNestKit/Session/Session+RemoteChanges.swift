@@ -188,103 +188,86 @@ extension Session {
 }
 
 extension Session {
-    private func updateNotification(for userDetailObjectID: NSManagedObjectID, preferences: ManagedPreferences.Preferences) async {
-        let notificationRequest: UNNotificationRequest? = await persistentContainer.performBackgroundTask { context in
-            guard
-                let newUserDetail = context.object(with: userDetailObjectID) as? UserDetail,
-                let newUserDetailCreationDate = newUserDetail.creationDate,
-                Date(timeIntervalSinceNow: -(60 * 60)) <= newUserDetailCreationDate,
-                let user = newUserDetail.user,
-                let account = user.accounts?.last,
-                let sortedUserDetails = user.sortedUserDetails
-            else {
-                return nil
-            }
-
-            let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap { sortedUserDetails.index(before: $0) }
-
-            guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
-                return nil
-            }
-
-            let notificationContent = UNMutableNotificationContent()
-            notificationContent.title = newUserDetail.name ?? account.objectID.description
-            if let subtitle = newUserDetail.displayUsername ?? user.id?.displayUserID ?? account.userID?.displayUserID {
-                notificationContent.subtitle = subtitle
-            }
-            notificationContent.threadIdentifier = self.persistentContainer.recordID(for: account.objectID)?.recordName ?? account.objectID.uriRepresentation().absoluteString
-            notificationContent.categoryIdentifier = "NewAccountData"
-            notificationContent.sound = .default
-            notificationContent.interruptionLevel = .timeSensitive
-
-            var changes: [String] = []
-
-            if preferences.notifyProfileChanges {
-                if oldUserDetail.isProfileEqual(to: newUserDetail) == false {
-                    changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-            }
-
-            if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followingUserIDs) {
-                if followingUserIDsChanges.addedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-                if followingUserIDsChanges.removedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-            }
-
-            if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followerUserIDs) {
-                if followerUserIDsChanges.addedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-                if followerUserIDsChanges.removedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-            }
-
-            if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.blockingUserIDs) {
-                if blockingUserIDsChanges.addedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-                if blockingUserIDsChanges.removedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-            }
-
-            if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.mutingUserIDs) {
-                if mutingUserIDsChanges.addedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-                if mutingUserIDsChanges.removedUserIDsCount > 0 {
-                    changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                }
-            }
-
-            guard changes.isEmpty == false else {
-                self.deleteNotifications(for: userDetailObjectID)
-
-                return nil
-            }
-
-            notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
-
-            return UNNotificationRequest(
-                identifier: self.persistentContainer.recordID(for: userDetailObjectID)?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString,
-                content: notificationContent,
-                trigger: nil
-            )
+    private func notificationRequest(for newUserDetail: UserDetail, preferences: ManagedPreferences.Preferences) -> UNNotificationRequest? {
+        guard
+            let user = newUserDetail.user,
+            let account = user.accounts?.last,
+            let sortedUserDetails = user.sortedUserDetails
+        else {
+            return nil
         }
 
-        guard let notificationRequest = notificationRequest else {
-            return
+        let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap { sortedUserDetails.index(before: $0) }
+
+        guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
+            return nil
         }
 
-        do {
-            try await UNUserNotificationCenter.current().add(notificationRequest)
-        } catch {
-            self.logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
+        let notificationContent = UNMutableNotificationContent()
+        notificationContent.title = newUserDetail.name ?? account.objectID.description
+        if let subtitle = newUserDetail.displayUsername ?? user.id?.displayUserID ?? account.userID?.displayUserID {
+            notificationContent.subtitle = subtitle
         }
+        notificationContent.threadIdentifier = self.persistentContainer.recordID(for: account.objectID)?.recordName ?? account.objectID.uriRepresentation().absoluteString
+        notificationContent.categoryIdentifier = "NewAccountData"
+        notificationContent.sound = .default
+        notificationContent.interruptionLevel = .timeSensitive
+
+        var changes: [String] = []
+
+        if preferences.notifyProfileChanges {
+            if oldUserDetail.isProfileEqual(to: newUserDetail) == false {
+                changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followingUserIDs) {
+            if followingUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if followingUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followerUserIDs) {
+            if followerUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if followerUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.blockingUserIDs) {
+            if blockingUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if blockingUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.mutingUserIDs) {
+            if mutingUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if mutingUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        guard changes.isEmpty == false else {
+            return nil
+        }
+
+        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+
+        return UNNotificationRequest(
+            identifier: self.persistentContainer.recordID(for: newUserDetail.objectID)?.recordName ?? newUserDetail.objectID.uriRepresentation().absoluteString,
+            content: notificationContent,
+            trigger: nil
+        )
     }
 
     private func deleteNotifications(for userDetailObjectID: NSManagedObjectID) {
@@ -296,33 +279,82 @@ extension Session {
 
     private func updateNotifications(transactions: [NSPersistentHistoryTransaction]) async {
         await withExtendedBackgroundExecution {
-            let changes = OrderedDictionary<NSManagedObjectID, [NSPersistentHistoryChange]>(
-                grouping: transactions.lazy
-                    .compactMap(\.changes)
-                    .joined()
-                    .filter { $0.changedObjectID.entity == UserDetail.entity() },
-                by: \.changedObjectID
-            ).values.lazy.compactMap(\.last)
+            do {
+                let changes = OrderedDictionary<NSManagedObjectID, [NSPersistentHistoryChange]>(
+                    grouping: transactions.lazy
+                        .compactMap(\.changes)
+                        .joined()
+                        .filter { $0.changedObjectID.entity == UserDetail.entity() },
+                    by: \.changedObjectID
+                ).values.compactMap(\.last)
 
-            let preferences = await self.persistentContainer.performBackgroundTask { context in
-                ManagedPreferences.managedPreferences(for: context).preferences
-            }
+                guard changes.isEmpty == false else {
+                    return
+                }
 
-            await withTaskGroup(of: Void.self) { taskGroup in
-                for change in changes {
-                    taskGroup.addTask {
-                        switch change.changeType {
-                        case .insert, .update:
-                            await self.updateNotification(for: change.changedObjectID, preferences: preferences)
-                        case .delete:
-                            self.deleteNotifications(for: change.changedObjectID)
-                        @unknown default:
-                            break
-                        }
+                let context = self.persistentContainer.newBackgroundContext()
+                context.undoManager = nil
+                context.automaticallyMergesChangesFromParent = false
+
+                async let _preferences = await context.perform {
+                    ManagedPreferences.managedPreferences(for: context).preferences
+                }
+
+                let targetUserDetailObjectIDs = changes.reduce(into: [NSManagedObjectID]()) { partialResult, change in
+                    switch change.changeType {
+                    case .insert, .update:
+                        partialResult.append(change.changedObjectID)
+                    case .delete:
+                        self.deleteNotifications(for: change.changedObjectID)
+                    @unknown default:
+                        break
                     }
                 }
 
-                await taskGroup.waitForAll()
+                let preferences = await _preferences
+
+                let notificationRequests: [(NSManagedObjectID, UNNotificationRequest?)] = try await context.perform {
+                    let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
+                    accountUserIDsfetchRequest.entity = Account.entity()
+                    accountUserIDsfetchRequest.resultType = .dictionaryResultType
+                    accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
+                    accountUserIDsfetchRequest.returnsDistinctResults = true
+
+                    let results = try context.fetch(accountUserIDsfetchRequest)
+                    let accountUserIDs = results.compactMap {
+                        $0["userID"] as? Twitter.User.ID
+                    }
+
+                    guard accountUserIDs.isEmpty == false else {
+                        return []
+                    }
+
+                    let userDetailsFetchRequest = UserDetail.fetchRequest()
+                    userDetailsFetchRequest.predicate = NSCompoundPredicate(
+                        andPredicateWithSubpredicates: [
+                            NSPredicate(format: "SELF IN %@", targetUserDetailObjectIDs),
+                            NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
+                            NSPredicate(format: "user.id IN %@", accountUserIDs)
+                        ]
+                    )
+                    userDetailsFetchRequest.returnsObjectsAsFaults = false
+
+                    let userDetails = try context.fetch(userDetailsFetchRequest)
+
+                    return userDetails.map {
+                        ($0.objectID, self.notificationRequest(for: $0, preferences: preferences))
+                    }
+                }
+
+                for notificationRequest in notificationRequests {
+                    if let notificationRequest = notificationRequest.1 {
+                        try await UNUserNotificationCenter.current().add(notificationRequest)
+                    } else {
+                        self.deleteNotifications(for: notificationRequest.0)
+                    }
+                }
+            } catch {
+                self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
             }
         }
     }
