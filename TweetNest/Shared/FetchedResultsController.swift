@@ -17,21 +17,27 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     let managedObjectContext: NSManagedObjectContext
     var fetchRequest: NSFetchRequest<Element> {
         didSet {
-            fetchedResultsController = newFetchedResultsController()
+            managedObjectContext.perform {
+                self.fetchedResultsController = self.newFetchedResultsController()
+            }
         }
     }
     var cacheName: String? {
         didSet {
-            fetchedResultsController = newFetchedResultsController()
+            managedObjectContext.perform {
+                self.fetchedResultsController = self.newFetchedResultsController()
+            }
         }
     }
 
     var fetchedObjects: [Element] {
-        if fetchedResultsController.fetchedObjects == nil {
-            self.fetch(fetchedResultsController)
-        }
+        managedObjectContext.performAndWait {
+            if fetchedResultsController.fetchedObjects == nil {
+                self.fetch(fetchedResultsController)
+            }
 
-        return fetchedResultsController.fetchedObjects ?? []
+            return fetchedResultsController.fetchedObjects ?? []
+        }
     }
 
     init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
@@ -42,10 +48,8 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
 
         super.init()
 
-        Task.detached(priority: .utility) {
-            await MainActor.run {
-                _ = self.fetchedResultsController
-            }
+        managedObjectContext.perform {
+            _ = self.fetchedResultsController
         }
     }
 
