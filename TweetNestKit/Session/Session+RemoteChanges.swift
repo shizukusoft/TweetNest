@@ -56,18 +56,13 @@ extension Session {
                     return
                 }
 
-                TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
-                    withRootObject: newLastPersistentHistoryToken,
-                    requiringSecureCoding: true
-                )
-
                 Task.detached {
                     await withTaskGroup(of: Void.self) { taskGroup in
-                        taskGroup.addTask(priority: .high) {
+                        taskGroup.addTask {
                             await self.updateNotifications(transactions: persistentHistoryTransactions)
                         }
 
-                        taskGroup.addTask(priority: .medium) {
+                        taskGroup.addTask {
                             await self.updateAccountCredential(transactions: persistentHistoryTransactions)
                         }
 
@@ -86,6 +81,11 @@ extension Session {
                         await taskGroup.waitForAll()
                     }
                 }
+
+                TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
+                    withRootObject: newLastPersistentHistoryToken,
+                    requiringSecureCoding: true
+                )
             } catch {
                 self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
             }
@@ -188,10 +188,10 @@ extension Session {
 }
 
 extension Session {
-    private func notificationRequest(for newUserDetail: UserDetail, preferences: ManagedPreferences.Preferences) -> UNNotificationRequest? {
+    private func notificationContent(for newUserDetail: UserDetail, preferences: ManagedPreferences.Preferences) -> UNNotificationContent? {
         guard
             let user = newUserDetail.user,
-            let account = user.accounts?.last,
+            let userID = user.id,
             let sortedUserDetails = user.sortedUserDetails
         else {
             return nil
@@ -204,11 +204,11 @@ extension Session {
         }
 
         let notificationContent = UNMutableNotificationContent()
-        notificationContent.title = newUserDetail.name ?? account.objectID.description
-        if let subtitle = newUserDetail.displayUsername ?? user.id?.displayUserID ?? account.userID?.displayUserID {
-            notificationContent.subtitle = subtitle
+        if let name = newUserDetail.name {
+            notificationContent.title = name
         }
-        notificationContent.threadIdentifier = self.persistentContainer.recordID(for: account.objectID)?.recordName ?? account.objectID.uriRepresentation().absoluteString
+        notificationContent.subtitle = newUserDetail.displayUsername ?? userID.displayUserID
+        notificationContent.threadIdentifier = userID
         notificationContent.categoryIdentifier = "NewAccountData"
         notificationContent.sound = .default
         notificationContent.interruptionLevel = .timeSensitive
@@ -263,40 +263,28 @@ extension Session {
 
         notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
 
-        return UNNotificationRequest(
-            identifier: self.persistentContainer.recordID(for: newUserDetail.objectID)?.recordName ?? newUserDetail.objectID.uriRepresentation().absoluteString,
-            content: notificationContent,
-            trigger: nil
-        )
+        return notificationContent
     }
 
     private func updateNotifications(transactions: [NSPersistentHistoryTransaction]) async {
         await withExtendedBackgroundExecution {
             do {
-                let changes = OrderedDictionary<NSManagedObjectID, [NSPersistentHistoryChange]>(
-                    grouping: transactions.lazy
+                let changes = OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange>(
+                    transactions.lazy
                         .compactMap(\.changes)
                         .joined()
-                        .filter { $0.changedObjectID.entity == UserDetail.entity() },
-                    by: \.changedObjectID
-                ).values.compactMap(\.last)
+                        .filter { $0.changedObjectID.entity == UserDetail.entity() }
+                        .map { ($0.changedObjectID, $0) },
+                    uniquingKeysWith: { (_, last) in last }
+                )
 
                 guard changes.isEmpty == false else {
                     return
                 }
 
-                let targetUserDetailObjectIDs: [NSManagedObjectID] = changes.compactMap {
-                        switch $0.changeType {
-                        case .insert, .update:
-                            return $0.changedObjectID
-                        case .delete:
-                            return nil
-                        @unknown default:
-                            return nil
-                        }
-                    }
+                async let cloudKitRecordIDs = Task.detached { self.persistentContainer.recordIDs(for: changes.keys.elements) }.value
 
-                let notificationRequests: [NSManagedObjectID: UNNotificationRequest?] = try await self.persistentContainer.performBackgroundTask { context in
+                let notificationContents: [NSManagedObjectID: UNNotificationContent?] = try await self.persistentContainer.performBackgroundTask { context in
                     let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
                     let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
@@ -317,31 +305,50 @@ extension Session {
                     let userDetailsFetchRequest = UserDetail.fetchRequest()
                     userDetailsFetchRequest.predicate = NSCompoundPredicate(
                         andPredicateWithSubpredicates: [
-                            NSPredicate(format: "SELF IN %@", targetUserDetailObjectIDs),
+                            NSPredicate(format: "SELF IN %@", changes.keys.elements),
                             NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
                             NSPredicate(format: "user.id IN %@", accountUserIDs)
                         ]
                     )
+                    userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
                     userDetailsFetchRequest.returnsObjectsAsFaults = false
 
                     let userDetails = try context.fetch(userDetailsFetchRequest)
 
                     return userDetails.reduce(into: [:]) {
-                        $0[$1.objectID] = self.notificationRequest(for: $1, preferences: preferences)
+                        $0[$1.objectID] = self.notificationContent(for: $1, preferences: preferences)
                     }
                 }
 
-                var shouldBeDeletedNotificationIdentifiers = [String]()
+                var userDetailObjectIDsForDeletingNotification = [NSManagedObjectID]()
 
-                for userDetailObjectID in changes.lazy.map(\.changedObjectID) {
-                    if let notificationRequest = notificationRequests[userDetailObjectID] as? UNNotificationRequest {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } else {
-                        shouldBeDeletedNotificationIdentifiers.append(
-                            contentsOf: [self.persistentContainer.recordID(for: userDetailObjectID)?.recordName, userDetailObjectID.uriRepresentation().absoluteString].compacted()
-                        )
+                for change in changes.values {
+                    switch change.changeType {
+                    case .insert, .update:
+                        if let notificationContent = notificationContents[change.changedObjectID] as? UNNotificationContent {
+                            try await UNUserNotificationCenter.current().add(
+                                UNNotificationRequest(
+                                    identifier: cloudKitRecordIDs[change.changedObjectID]?.recordName ?? change.changedObjectID.uriRepresentation().absoluteString,
+                                    content: notificationContent,
+                                    trigger: nil
+                                )
+                            )
+                        } else {
+                            userDetailObjectIDsForDeletingNotification.append(change.changedObjectID)
+                        }
+                    case .delete:
+                        userDetailObjectIDsForDeletingNotification.append(change.changedObjectID)
+                    @unknown default:
+                        break
                     }
                 }
+
+                let fetchedCloudKitRecordIDs = await cloudKitRecordIDs
+
+                let shouldBeDeletedNotificationIdentifiers = userDetailObjectIDsForDeletingNotification
+                    .flatMap {
+                        [fetchedCloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                    }
 
                 UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: shouldBeDeletedNotificationIdentifiers)
             } catch {
