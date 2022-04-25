@@ -250,14 +250,42 @@ extension Session {
                                     try Task.checkCancellation()
 
                                     let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID?) = try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
-                                        let userObjectID = refinedUserObjectIDByID[twitterUser.id] as? NSManagedObjectID
-                                        let user = userObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User } ?? {
-                                            let user = User(context: context)
-                                            user.id = twitterUser.id
-                                            user.creationDate = chunkedUsersFetchedDate
+                                        let prefetchedUserObjectID = refinedUserObjectIDByID[twitterUser.id] as? NSManagedObjectID
+                                        let prefetchedUser = prefetchedUserObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User }
 
-                                            return user
+                                        let user = try prefetchedUser ?? {
+                                            let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                                            userFetchRequest.predicate = NSPredicate(format: "id == %@", twitterUser.id)
+                                            userFetchRequest.sortDescriptors = [
+                                                NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
+                                                NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
+                                            ]
+                                            userFetchRequest.fetchLimit = 1
+                                            userFetchRequest.returnsObjectsAsFaults = false
+
+                                            if let user = try chunkedUsersProcessingContext.fetch(userFetchRequest).first {
+                                                return user
+                                            } else {
+                                                let userObjectID: NSManagedObjectID = try context.performAndWait {
+                                                    let user = User(context: context)
+                                                    user.id = twitterUser.id
+                                                    user.creationDate = chunkedUsersFetchedDate
+
+                                                    try withExtendedBackgroundExecution {
+                                                        try context.save()
+                                                    }
+
+                                                    return user.objectID
+                                                }
+
+                                                guard let user = chunkedUsersProcessingContext.object(with: userObjectID) as? User else {
+                                                    fatalError()
+                                                }
+
+                                                return user
+                                            }
                                         }()
+
                                         let previousUserDetail = user.sortedUserDetails?.last
 
                                         let userDetail = try UserDetail.createOrUpdate(
@@ -294,7 +322,6 @@ extension Session {
                                     return (value, .failure(twitterError))
                                 }
                             }
-
 
                             return try await userProcessingTaskGroup.reduce(into: [], { $0.append($1) })
                         }
