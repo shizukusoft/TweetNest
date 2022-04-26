@@ -69,7 +69,7 @@ extension View {
             Button(role: .cancel) {
                 onDismiss?(error)
             } label: {
-                Text("Cancel")
+                Text("OK")
             }
         } message: { error in
             if let failureReason = error.failureReason {
