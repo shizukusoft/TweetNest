@@ -17,14 +17,14 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     let managedObjectContext: NSManagedObjectContext
     var fetchRequest: NSFetchRequest<Element> {
         didSet {
-            managedObjectContext.perform {
+            managedObjectContext.performAndWait {
                 self.fetchedResultsController = self.newFetchedResultsController()
             }
         }
     }
     var cacheName: String? {
         didSet {
-            managedObjectContext.perform {
+            managedObjectContext.performAndWait {
                 self.fetchedResultsController = self.newFetchedResultsController()
             }
         }
@@ -78,9 +78,9 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         )
         fetchedResultsController.delegate = self
 
-        Task(priority: .utility) {
-            await self.managedObjectContext.perform {
-                guard self.fetchedResultsController.fetchedObjects == nil else { return }
+        Task(priority: .utility) { [managedObjectContext, fetchedResultsController] in
+            await managedObjectContext.perform {
+                guard fetchedResultsController.fetchedObjects == nil else { return }
 
                 self.fetch(fetchedResultsController)
             }
@@ -103,6 +103,12 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     }
 
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        guard controller === self.fetchedResultsController else { return }
+
+        objectWillChange.send()
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         guard controller === self.fetchedResultsController else { return }
 
         objectWillChange.send()
