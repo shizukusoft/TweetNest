@@ -239,17 +239,9 @@ extension Session {
 
                                     let profileHeaderImageURL = try await _profileBanner?.sizes.max(by: { $0.value.width < $1.value.width })?.value.url
 
-                                    if let profileImageOriginalURL = twitterUser.profileImageOriginalURL {
-                                        self.dataAssetsURLSessionManager.download(profileImageOriginalURL)
-                                    }
-
-                                    if let profileHeaderImageURL = profileHeaderImageURL {
-                                        self.dataAssetsURLSessionManager.download(profileHeaderImageURL)
-                                    }
-
                                     try Task.checkCancellation()
 
-                                    let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID?) = try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
+                                    async let userDetailObjectIDs: (NSManagedObjectID?, NSManagedObjectID?) = chunkedUsersProcessingContext.perform(schedule: .enqueued) {
                                         let prefetchedUserObjectID = refinedUserObjectIDByID[twitterUser.id] as? NSManagedObjectID
                                         let prefetchedUser = prefetchedUserObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User }
 
@@ -306,7 +298,17 @@ extension Session {
                                         return (previousUserDetail?.objectID, userDetail.objectID)
                                     }
 
-                                    return (twitterUser.id, .success(userDetailObjectIDs))
+                                    Task.detached(priority: .utility) {
+                                        if let profileImageOriginalURL = twitterUser.profileImageOriginalURL {
+                                            self.dataAssetsURLSessionManager.download(profileImageOriginalURL)
+                                        }
+
+                                        if let profileHeaderImageURL = profileHeaderImageURL {
+                                            self.dataAssetsURLSessionManager.download(profileHeaderImageURL)
+                                        }
+                                    }
+
+                                    return try await (twitterUser.id, .success(userDetailObjectIDs))
                                 }
                             }
 
