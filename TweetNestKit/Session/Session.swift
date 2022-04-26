@@ -76,7 +76,11 @@ public class Session {
                         #endif
 
                         #if DEBUG
-                        try! self.persistentContainer.initializeCloudKitSchema(options: [])
+                        do {
+                            try self.persistentContainer.initializeCloudKitSchema(options: [])
+                        } catch {
+                            debugPrint(error)
+                        }
                         #endif
                     }
                 } catch {
