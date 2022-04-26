@@ -8,7 +8,7 @@
 
 import Foundation
 import CoreData
-import Twitter
+import TwitterV1
 
 public class UserDetail: NSManagedObject {
 
@@ -17,8 +17,7 @@ public class UserDetail: NSManagedObject {
 extension UserDetail {
     @discardableResult
     static func createOrUpdate(
-        twitterUser: Twitter.User,
-        profileHeaderImageURL: URL?,
+        twitterUser: TwitterV1.User,
         followingUserIDs: [String]? = nil,
         followerUserIDs: [String]? = nil,
         blockingUserIDs: [String]? = nil,
@@ -35,20 +34,20 @@ extension UserDetail {
         newUserDetail.followerUserIDs = followerUserIDs
         newUserDetail.mutingUserIDs = mutingUserIDs
 
-        newUserDetail.followerUsersCount = Int32(twitterUser.publicMetrics.followersCount)
-        newUserDetail.followingUsersCount = Int32(twitterUser.publicMetrics.followingUsersCount)
-        newUserDetail.isProtected = twitterUser.protected
-        newUserDetail.isVerified = twitterUser.verified
-        newUserDetail.listedCount = Int32(twitterUser.publicMetrics.listedCount)
+        newUserDetail.followerUsersCount = Int32(twitterUser.followersCount)
+        newUserDetail.followingUsersCount = Int32(twitterUser.friendsCount)
+        newUserDetail.isProtected = twitterUser.isProtected
+        newUserDetail.isVerified = twitterUser.isVerified
+        newUserDetail.listedCount = Int32(twitterUser.listedCount)
         newUserDetail.location = twitterUser.location
         newUserDetail.name = twitterUser.name
-        newUserDetail.profileHeaderImageURL = profileHeaderImageURL
+        newUserDetail.profileHeaderImageURL = twitterUser.profileBannerOriginalURL
         newUserDetail.profileImageURL = twitterUser.profileImageOriginalURL
-        newUserDetail.tweetsCount = Int32(twitterUser.publicMetrics.tweetsCount)
+        newUserDetail.tweetsCount = Int32(twitterUser.statusesCount)
         newUserDetail.url = twitterUser.expandedURL
         newUserDetail.userCreationDate = twitterUser.createdAt
         newUserDetail.userAttributedDescription = twitterUser.attributedDescription.flatMap({ NSAttributedString($0) })
-        newUserDetail.username = twitterUser.username
+        newUserDetail.username = twitterUser.screenName
 
         if let previousUserDetail = previousUserDetail, previousUserDetail ~= newUserDetail {
             context.delete(newUserDetail)
