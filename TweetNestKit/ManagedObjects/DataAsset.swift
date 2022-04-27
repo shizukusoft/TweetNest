@@ -35,10 +35,7 @@ extension DataAsset {
 
         let lastDataAsset = try context.fetch(dataAssetFetchRequest).first
 
-        if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash || lastDataAsset.data.flatMap({ Data(SHA512.hash(data: $0)) }) == dataSHA512Hash {
-            if lastDataAsset.dataMIMEType == nil{
-                lastDataAsset.dataMIMEType = dataMIMEType
-            }
+        if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash, lastDataAsset.dataMIMEType == dataMIMEType {
             return lastDataAsset
         } else {
             let newDataAsset = DataAsset(context: context)
