@@ -320,10 +320,8 @@ extension Session {
                         }
 
                         return results.map { userResult in
-                            Task.detached(priority: .utility) {
-                                userResult.2.forEach {
-                                    $0.resume()
-                                }
+                            userResult.2.forEach {
+                                $0.resume()
                             }
 
                             return (userResult.0, userResult.1)
