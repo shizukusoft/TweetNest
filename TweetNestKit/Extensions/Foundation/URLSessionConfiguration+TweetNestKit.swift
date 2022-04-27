@@ -40,6 +40,7 @@ extension URLSessionConfiguration {
         }()
 
         timeoutIntervalForRequest = 15
+        timeoutIntervalForResource = 2 * 24 * 60 * 60
 
         httpCookieAcceptPolicy = .never
         httpShouldSetCookies = false
