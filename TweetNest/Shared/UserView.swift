@@ -355,7 +355,7 @@ extension UserView {
                 if isUserContainsAccount {
                     try await TweetNestApp.session.updateAccount(accountObjectID)
                 } else {
-                    _ = try await TweetNestApp.session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
+                    _ = try await TweetNestApp.session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]
                 }
             } catch {
                 Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")

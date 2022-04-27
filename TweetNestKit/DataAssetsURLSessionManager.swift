@@ -33,6 +33,7 @@ class DataAssetsURLSessionManager: NSObject {
             urlSessionConfiguration = .twnk_default
         }
 
+        urlSessionConfiguration.networkServiceType = .background
         urlSessionConfiguration.httpAdditionalHeaders = nil
         urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.allowsConstrainedNetworkAccess = false
@@ -68,15 +69,16 @@ class DataAssetsURLSessionManager: NSObject {
 }
 
 extension DataAssetsURLSessionManager {
-    func download(_ url: URL, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) {
+    func download(_ url: URL, priority: Float = URLSessionTask.defaultPriority, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) -> URLSessionDownloadTask {
         var urlRequest = URLRequest(url: url)
         urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
 
         let downloadTask = urlSession.downloadTask(with: urlRequest)
         downloadTask.countOfBytesClientExpectsToSend = 1024
         downloadTask.countOfBytesClientExpectsToReceive = expectsToReceiveFileSize
+        downloadTask.priority = priority
 
-        downloadTask.resume()
+        return downloadTask
     }
 }
 
