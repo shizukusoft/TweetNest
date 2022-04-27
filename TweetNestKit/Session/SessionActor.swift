@@ -10,7 +10,7 @@ import Twitter
 import UnifiedLogging
 
 actor SessionActor {
-    var twitterSessions = [URL: Twitter.Session]()
+    lazy var twitterSessions = [URL: Twitter.Session]()
 
     var fetchNewDataTimer: DispatchSourceTimer? = nil {
         willSet {

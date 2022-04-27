@@ -14,7 +14,7 @@ import BackgroundTask
 import Twitter
 
 public class Session {
-    public static let shared = Session()
+    public static let shared = Session(twitterAPIConfiguration: { nil }, inMemory: false, isShared: true)
 
     private let _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
@@ -23,11 +23,11 @@ public class Session {
         }
     }
 
-    private let inMemory: Bool
-    let sessionActor = SessionActor()
+    let isShared: Bool
 
-    public private(set) lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
-    private(set) lazy var dataAssetsURLSessionManager = DataAssetsURLSessionManager(session: self)
+    let sessionActor = SessionActor()
+    public let persistentContainer: PersistentContainer
+    let dataAssetsURLSessionManager: DataAssetsURLSessionManager
 
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
@@ -46,7 +46,7 @@ public class Session {
         autoreleaseFrequency: .workItem
     )
 
-    @Published
+    @MainActor @Published
     public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?
 
     private lazy var fetchNewDataIntervalObserver = TweetNestKitUserDefaults.standard
@@ -54,9 +54,23 @@ public class Session {
             self?.fetchNewDataIntervalDidChange(changes.newValue ?? userDefaults.fetchNewDataInterval)
         }
 
-    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool) {
-        _twitterAPIConfiguration = .init(twitterAPIConfiguration)
-        self.inMemory = inMemory
+    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration?, inMemory: Bool, isShared: Bool = false) {
+        self.isShared = isShared
+        _twitterAPIConfiguration = .init({
+            if let twitterAPIConfiguration = try await twitterAPIConfiguration() {
+                return twitterAPIConfiguration
+            } else {
+                return try await .iCloud
+            }
+        })
+        let persistentContainer = PersistentContainer(inMemory: inMemory)
+        self.persistentContainer = persistentContainer
+
+        let dataAssetsURLSessionManager = DataAssetsURLSessionManager(
+            isShared: isShared,
+            managedObjectContext: persistentContainer.newBackgroundContext()
+        )
+        self.dataAssetsURLSessionManager = dataAssetsURLSessionManager
 
         _ = self.persistentStoreRemoteChangeNotification
         _ = self.fetchNewDataIntervalObserver
@@ -98,24 +112,19 @@ public class Session {
             }
         }
     }
+
+    deinit {
+        dataAssetsURLSessionManager.invalidate()
+    }
 }
 
 extension Session {
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () throws -> TwitterAPIConfiguration? = nil, inMemory: Bool = false) {
-        self.init(
-            twitterAPIConfiguration: {
-                if let twitterAPIConfiguration = try twitterAPIConfiguration() {
-                    return twitterAPIConfiguration
-                } else {
-                    return try await .iCloud
-                }
-            },
-            inMemory: inMemory
-        )
+        self.init(twitterAPIConfiguration: { try twitterAPIConfiguration() }, inMemory: inMemory)
     }
 
-    public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
-        self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
+    public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration? = nil, inMemory: Bool = false) async {
+        self.init(twitterAPIConfiguration: twitterAPIConfiguration, inMemory: inMemory)
     }
 }
 

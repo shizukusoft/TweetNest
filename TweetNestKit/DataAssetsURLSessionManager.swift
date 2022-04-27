@@ -8,6 +8,7 @@
 import Foundation
 import BackgroundTask
 import UnifiedLogging
+import CoreData
 
 class DataAssetsURLSessionManager: NSObject {
     static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".data-assets"
@@ -26,7 +27,7 @@ class DataAssetsURLSessionManager: NSObject {
     private var urlSessionConfiguration: URLSessionConfiguration {
         var urlSessionConfiguration: URLSessionConfiguration
 
-        if session === Session.shared {
+        if isShared {
             urlSessionConfiguration = .twnk_background(withIdentifier: Self.backgroundURLSessionIdentifier)
         } else {
             urlSessionConfiguration = .twnk_default
@@ -39,14 +40,17 @@ class DataAssetsURLSessionManager: NSObject {
         return urlSessionConfiguration
     }
 
-    private unowned let session: Session
-    private let dispatchGroup = DispatchGroup()
-    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
-    private lazy var managedObjectContext = session.persistentContainer.newBackgroundContext()
-    private lazy var logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+    private let isShared: Bool
 
-    init(session: Session) {
-        self.session = session
+    private let dispatchGroup = DispatchGroup()
+    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: DataAssetsURLSessionManager.self))
+    private let managedObjectContext: NSManagedObjectContext
+
+    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
+
+    init(isShared: Bool, managedObjectContext: NSManagedObjectContext) {
+        self.isShared = isShared
+        self.managedObjectContext = managedObjectContext
 
         super.init()
 
@@ -57,16 +61,20 @@ class DataAssetsURLSessionManager: NSObject {
     func handleBackgroundURLSessionEvents(completionHandler: @escaping () -> Void) {
         _backgroundURLSessionEventsCompletionHandler = completionHandler
     }
+
+    func invalidate() {
+        urlSession.invalidateAndCancel()
+    }
 }
 
 extension DataAssetsURLSessionManager {
-    func download(_ url: URL) {
+    func download(_ url: URL, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) {
         var urlRequest = URLRequest(url: url)
         urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
 
         let downloadTask = urlSession.downloadTask(with: urlRequest)
         downloadTask.countOfBytesClientExpectsToSend = 1024
-        downloadTask.countOfBytesClientExpectsToReceive = 3 * 1024 * 1024
+        downloadTask.countOfBytesClientExpectsToReceive = expectsToReceiveFileSize
 
         downloadTask.resume()
     }
