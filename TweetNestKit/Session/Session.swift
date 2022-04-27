@@ -68,7 +68,7 @@ public class Session {
 
         let dataAssetsURLSessionManager = DataAssetsURLSessionManager(
             isShared: isShared,
-            managedObjectContext: persistentContainer.newBackgroundContext()
+            persistentContainer: persistentContainer
         )
         self.dataAssetsURLSessionManager = dataAssetsURLSessionManager
 

@@ -44,13 +44,14 @@ class DataAssetsURLSessionManager: NSObject {
 
     private let dispatchGroup = DispatchGroup()
     private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: DataAssetsURLSessionManager.self))
-    private let managedObjectContext: NSManagedObjectContext
-
+    private let persistentContainer: PersistentContainer
+    
     private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
+    private lazy var managedObjectContext = persistentContainer.newBackgroundContext()
 
-    init(isShared: Bool, managedObjectContext: NSManagedObjectContext) {
+    init(isShared: Bool, persistentContainer: PersistentContainer) {
         self.isShared = isShared
-        self.managedObjectContext = managedObjectContext
+        self.persistentContainer = persistentContainer
 
         super.init()
 
