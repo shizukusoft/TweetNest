@@ -76,40 +76,40 @@ public class Session {
         _ = self.fetchNewDataIntervalObserver
 
         Task.detached {
-            Task(priority: .utility) {
-                do {
-                    try await self.persistentContainer.loadPersistentStores()
+            do {
+                try await self.persistentContainer.loadPersistentStores()
 
-                    Task.detached {
-                        await MainActor.run {
-                            self.persistentContainerLoadingResult = .success(())
-                        }
+                await MainActor.run {
+                    self.persistentContainerLoadingResult = .success(())
+                }
 
-                        #if canImport(CoreSpotlight)
-                        self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
-                        #endif
+                #if canImport(CoreSpotlight)
+                Task.detached(priority: .utility) {
+                    self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                }
+                #endif
 
-                        #if DEBUG
-                        do {
-                            try self.persistentContainer.initializeCloudKitSchema(options: [])
-                        } catch {
-                            debugPrint(error)
-                        }
-                        #endif
-                    }
-                } catch {
-                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                        .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
-
-                    await MainActor.run {
-                        self.persistentContainerLoadingResult = .failure(error)
+                #if DEBUG
+                Task.detached(priority: .utility) {
+                    do {
+                        try self.persistentContainer.initializeCloudKitSchema(options: [])
+                    } catch {
+                        debugPrint(error)
                     }
                 }
-            }
+                #endif
+            } catch {
+                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                    .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
 
-            Task(priority: .utility) {
-                _ = try? await self.twitterAPIConfiguration
+                await MainActor.run {
+                    self.persistentContainerLoadingResult = .failure(error)
+                }
             }
+        }
+
+        Task.detached(priority: .utility) {
+            _ = try? await self.twitterAPIConfiguration
         }
     }
 
