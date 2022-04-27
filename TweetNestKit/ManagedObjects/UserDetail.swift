@@ -24,9 +24,10 @@ extension UserDetail {
         mutingUserIDs: [String]? = nil,
         creationDate: Date = Date(),
         user: User,
+        previousUserDetail: UserDetail? = nil,
         context: NSManagedObjectContext
     ) throws -> UserDetail {
-        let previousUserDetail = user.sortedUserDetails?.last
+        let previousUserDetail = previousUserDetail ?? user.sortedUserDetails?.last
 
         let newUserDetail = UserDetail(context: context)
         newUserDetail.blockingUserIDs = blockingUserIDs
@@ -74,14 +75,14 @@ extension UserDetail {
 extension UserDetail {
     static func ~= (lhs: UserDetail, rhs: UserDetail) -> Bool {
         lhs.isProfileEqual(to: rhs) &&
-        lhs.blockingUserIDs == rhs.blockingUserIDs &&
-        lhs.followingUserIDs == rhs.followingUserIDs &&
-        lhs.followerUserIDs == rhs.followerUserIDs &&
         lhs.followerUsersCount == rhs.followerUsersCount &&
         lhs.followingUsersCount == rhs.followingUsersCount &&
         lhs.listedCount == rhs.listedCount &&
-        lhs.mutingUserIDs == rhs.mutingUserIDs &&
-        lhs.tweetsCount == rhs.tweetsCount
+        lhs.tweetsCount == rhs.tweetsCount &&
+        lhs.blockingUserIDs == rhs.blockingUserIDs &&
+        lhs.followingUserIDs == rhs.followingUserIDs &&
+        lhs.followerUserIDs == rhs.followerUserIDs &&
+        lhs.mutingUserIDs == rhs.mutingUserIDs
     }
 }
 

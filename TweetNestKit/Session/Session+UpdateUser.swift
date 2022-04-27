@@ -274,6 +274,7 @@ extension Session {
                                                 mutingUserIDs: addtionalUserInfos[userID]?.mutingUserIDs,
                                                 creationDate: chunkedUsersFetchedDate,
                                                 user: user,
+                                                previousUserDetail: previousUserDetail,
                                                 context: chunkedUsersProcessingContext
                                             )
 
