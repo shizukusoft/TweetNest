@@ -221,111 +221,111 @@ extension Session {
                         chunkedUsersProcessingContext.automaticallyMergesChangesFromParent = true
                         chunkedUsersProcessingContext.undoManager = nil
 
-                        let results = try await withThrowingTaskGroup(
-                            of: (Twitter.User.ID, UserDetailChanges, [URLSessionTask]).self,
-                            returning: [(Twitter.User.ID, UserDetailChanges, [URLSessionTask])].self
+                        let (results, downloadRequests) = try await withThrowingTaskGroup(
+                            of: (Twitter.User.ID, UserDetailChanges, [DataAssetsURLSessionManager.DownloadRequest]).self,
+                            returning: ([(Twitter.User.ID, UserDetailChanges)], [DataAssetsURLSessionManager.DownloadRequest]).self
                         ) { userProcessingTaskGroup in
                             for twitterUser in chunkedUsers.1 {
                                 let userID = String(twitterUser.id)
 
                                 userProcessingTaskGroup.addTask {
-                                    (
-                                        userID,
-                                        try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
-                                            let prefetchedUserObjectID = refinedUserObjectIDByID[String(twitterUser.id)] as? NSManagedObjectID
-                                            let prefetchedUser = prefetchedUserObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User }
+                                    async let userDetailChanges: UserDetailChanges = chunkedUsersProcessingContext.perform(schedule: .enqueued) {
+                                        let prefetchedUserObjectID = refinedUserObjectIDByID[String(twitterUser.id)] as? NSManagedObjectID
+                                        let prefetchedUser = prefetchedUserObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User }
 
-                                            let user = try prefetchedUser ?? {
-                                                let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-                                                userFetchRequest.predicate = NSPredicate(format: "id == %@", String(twitterUser.id))
-                                                userFetchRequest.sortDescriptors = [
-                                                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-                                                    NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
-                                                ]
-                                                userFetchRequest.fetchLimit = 1
-                                                userFetchRequest.returnsObjectsAsFaults = false
+                                        let user = try prefetchedUser ?? {
+                                            let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                                            userFetchRequest.predicate = NSPredicate(format: "id == %@", String(twitterUser.id))
+                                            userFetchRequest.sortDescriptors = [
+                                                NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
+                                                NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
+                                            ]
+                                            userFetchRequest.fetchLimit = 1
+                                            userFetchRequest.returnsObjectsAsFaults = false
 
-                                                if let user = try chunkedUsersProcessingContext.fetch(userFetchRequest).first {
-                                                    return user
-                                                } else {
-                                                    let userObjectID: NSManagedObjectID = context.performAndWait {
-                                                        let user = User(context: context)
-                                                        user.id = String(twitterUser.id)
-                                                        user.creationDate = chunkedUsersFetchedDate
+                                            if let user = try chunkedUsersProcessingContext.fetch(userFetchRequest).first {
+                                                return user
+                                            } else {
+                                                let userObjectID: NSManagedObjectID = context.performAndWait {
+                                                    let user = User(context: context)
+                                                    user.id = String(twitterUser.id)
+                                                    user.creationDate = chunkedUsersFetchedDate
 
-                                                        return user.objectID
-                                                    }
-
-                                                    guard let user = chunkedUsersProcessingContext.object(with: userObjectID) as? User else {
-                                                        fatalError()
-                                                    }
-
-                                                    return user
+                                                    return user.objectID
                                                 }
-                                            }()
 
-                                            let previousUserDetail = user.sortedUserDetails?.last
-
-                                            let userDetail = try UserDetail.createOrUpdate(
-                                                twitterUser: twitterUser,
-                                                followingUserIDs: addtionalUserInfos[userID]?.followingUserIDs,
-                                                followerUserIDs: addtionalUserInfos[userID]?.followerIDs,
-                                                blockingUserIDs: addtionalUserInfos[userID]?.blockingUserIDs,
-                                                mutingUserIDs: addtionalUserInfos[userID]?.mutingUserIDs,
-                                                creationDate: chunkedUsersFetchedDate,
-                                                user: user,
-                                                previousUserDetail: previousUserDetail,
-                                                context: chunkedUsersProcessingContext
-                                            )
-
-                                            user.lastUpdateStartDate = chunkedUsers.0
-                                            user.lastUpdateEndDate = Date()
-
-                                            return (previousUserDetail?.objectID, userDetail.objectID)
-                                        },
-                                        Array(
-                                            [
-                                                twitterUser.profileImageOriginalURL.flatMap {
-                                                    self.dataAssetsURLSessionManager.download($0, priority: URLSessionTask.defaultPriority, expectsToReceiveFileSize: 1 * 1024 * 1024)
-                                                },
-                                                twitterUser.profileBannerOriginalURL.flatMap {
-                                                    self.dataAssetsURLSessionManager.download($0, priority: URLSessionTask.lowPriority, expectsToReceiveFileSize: 5 * 1024 * 1024)
+                                                guard let user = chunkedUsersProcessingContext.object(with: userObjectID) as? User else {
+                                                    fatalError()
                                                 }
-                                            ].compacted()
+
+                                                return user
+                                            }
+                                        }()
+
+                                        let previousUserDetail = user.sortedUserDetails?.last
+
+                                        let userDetail = try UserDetail.createOrUpdate(
+                                            twitterUser: twitterUser,
+                                            followingUserIDs: addtionalUserInfos[userID]?.followingUserIDs,
+                                            followerUserIDs: addtionalUserInfos[userID]?.followerIDs,
+                                            blockingUserIDs: addtionalUserInfos[userID]?.blockingUserIDs,
+                                            mutingUserIDs: addtionalUserInfos[userID]?.mutingUserIDs,
+                                            creationDate: chunkedUsersFetchedDate,
+                                            user: user,
+                                            previousUserDetail: previousUserDetail,
+                                            context: chunkedUsersProcessingContext
                                         )
-                                    )
+
+                                        user.lastUpdateStartDate = chunkedUsers.0
+                                        user.lastUpdateEndDate = Date()
+
+                                        return (previousUserDetail?.objectID, userDetail.objectID)
+                                    }
+
+                                    let downloadRequests = [
+                                        twitterUser.profileImageOriginalURL.flatMap {
+                                            DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.defaultPriority, expectsToReceiveFileSize: 1 * 1024 * 1024)
+                                        },
+                                        twitterUser.profileBannerOriginalURL.flatMap {
+                                            DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.lowPriority, expectsToReceiveFileSize: 5 * 1024 * 1024)
+                                        },
+                                    ].compacted()
+
+                                    return try await (userID, userDetailChanges, Array(downloadRequests))
                                 }
                             }
 
-                            return try await userProcessingTaskGroup.reduce(into: [], { $0.append($1) })
+                            return try await userProcessingTaskGroup.reduce(
+                                into: ([(Twitter.User.ID, UserDetailChanges)](), [DataAssetsURLSessionManager.DownloadRequest]())
+                            ) { partialResult, element in
+                                partialResult.0.append((element.0, element.1))
+                                partialResult.1.append(contentsOf: element.2)
+                            }
                         }
 
-                        let chunkedUsersProcessingContextHasChanges: Bool = try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
+                        try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
                             guard chunkedUsersProcessingContext.hasChanges else {
-                                return false
+                                return
                             }
 
                             try chunkedUsersProcessingContext.save()
-                            return true
                         }
 
-                        if chunkedUsersProcessingContextHasChanges {
-                            try await context.perform(schedule: .enqueued) {
-                                if context.hasChanges {
-                                    try withExtendedBackgroundExecution {
-                                        try context.save()
-                                    }
-                                }
+                        async let contextSaves: Void = try await context.perform(schedule: .enqueued) {
+                            guard context.hasChanges else {
+                                return
+                            }
+
+                            try withExtendedBackgroundExecution {
+                                try context.save()
                             }
                         }
 
-                        return results.map { userResult in
-                            userResult.2.forEach {
-                                $0.resume()
-                            }
+                        await self.dataAssetsURLSessionManager.download(downloadRequests)
 
-                            return (userResult.0, userResult.1)
-                        }
+                        _ = try await contextSaves
+
+                        return results
                     }
                 }
 

@@ -8,6 +8,7 @@
 import Foundation
 import BackgroundTask
 import UnifiedLogging
+import OrderedCollections
 import CoreData
 
 class DataAssetsURLSessionManager: NSObject {
@@ -69,16 +70,61 @@ class DataAssetsURLSessionManager: NSObject {
 }
 
 extension DataAssetsURLSessionManager {
-    func download(_ url: URL, priority: Float = URLSessionTask.defaultPriority, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) -> URLSessionDownloadTask {
-        var urlRequest = URLRequest(url: url)
-        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+    struct DownloadRequest: Equatable, Hashable {
+        var urlRequest: URLRequest
+        var priority: Float
+        var expectsToReceiveFileSize: Int64
 
-        let downloadTask = urlSession.downloadTask(with: urlRequest)
-        downloadTask.countOfBytesClientExpectsToSend = 1024
-        downloadTask.countOfBytesClientExpectsToReceive = expectsToReceiveFileSize
-        downloadTask.priority = priority
+        init(urlRequest: URLRequest, priority: Float = URLSessionTask.defaultPriority, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) {
+            self.urlRequest = urlRequest
+            self.priority = priority
+            self.expectsToReceiveFileSize = expectsToReceiveFileSize
+        }
 
-        return downloadTask
+        init(url: URL, priority: Float = URLSessionTask.defaultPriority, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) {
+            let urlRequest = URLRequest(url: url)
+
+            self.init(urlRequest: urlRequest, priority: priority, expectsToReceiveFileSize: expectsToReceiveFileSize)
+        }
+    }
+
+    func download<S>(_ downloadRequests: S) async where S: Sequence, S.Element == DownloadRequest {
+        let downloadRequests = OrderedSet(downloadRequests)
+
+        return await withCheckedContinuation { [urlSession] continuation in
+            urlSession.getAllTasks { tasks in
+                let pendingDownloadTasks = Dictionary(
+                    grouping: tasks
+                        .lazy
+                        .filter {
+                            switch $0.state {
+                            case .running, .suspended:
+                                return true
+                            case .canceling, .completed:
+                                return false
+                            @unknown default:
+                                return false
+                            }
+                        }
+                        .compactMap { $0 as? URLSessionDownloadTask },
+                    by: \.originalRequest
+                )
+
+                for downloadRequest in downloadRequests {
+                    var urlRequest = downloadRequest.urlRequest
+                    urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+
+                    let downloadTask = pendingDownloadTasks[urlRequest]?.last ?? urlSession.downloadTask(with: urlRequest)
+                    downloadTask.countOfBytesClientExpectsToSend = 1024
+                    downloadTask.countOfBytesClientExpectsToReceive = downloadRequest.expectsToReceiveFileSize
+                    downloadTask.priority = downloadRequest.priority
+
+                    downloadTask.resume()
+                }
+
+                continuation.resume()
+            }
+        }
     }
 }
 
