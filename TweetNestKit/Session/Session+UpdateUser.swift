@@ -262,7 +262,15 @@ extension Session {
                                             }
                                         }()
 
-                                        let previousUserDetail = user.sortedUserDetails?.last
+                                        let previousUserDetailFetchRequest = UserDetail.fetchRequest()
+                                        previousUserDetailFetchRequest.predicate = NSPredicate(format: "user == %@", user)
+                                        previousUserDetailFetchRequest.sortDescriptors = [
+                                            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)
+                                        ]
+                                        previousUserDetailFetchRequest.fetchLimit = 1
+                                        previousUserDetailFetchRequest.returnsObjectsAsFaults = false
+
+                                        let previousUserDetail = try chunkedUsersProcessingContext.fetch(previousUserDetailFetchRequest).first
 
                                         let userDetail = try UserDetail.createOrUpdate(
                                             twitterUser: twitterUser,

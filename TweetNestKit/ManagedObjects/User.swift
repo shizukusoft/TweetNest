@@ -12,38 +12,17 @@ import Twitter
 
 public class User: NSManagedObject {
     public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
-        guard let userDetails = userDetails as? Set<UserDetail> else {
+        guard
+            let userDetails = userDetails?.sortedArray(
+                using: [
+                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+                ]
+            ) as? [UserDetail]
+        else {
             return nil
         }
 
-        let sortedUserDetailObjectIDs: OrderedSet<NSManagedObjectID>? = try? managedObjectContext.flatMap { managedObjectContext in
-            let fetchRequest = UserDetail.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "user == %@", self)
-            fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
-            ]
-            fetchRequest.propertiesToFetch = ["user", "creationDate"]
-            fetchRequest.returnsObjectsAsFaults = true
-
-            let results = try managedObjectContext.fetch(fetchRequest)
-
-            return OrderedSet(results.lazy.map(\.objectID))
-        }
-
-        var sortedUserDetails = OrderedSet(userDetails)
-
-        sortedUserDetails.sort { lhs, rhs in
-            if
-                let lhsIndex = sortedUserDetailObjectIDs?.firstIndex(of: lhs.objectID),
-                let rhsIndex = sortedUserDetailObjectIDs?.firstIndex(of: rhs.objectID)
-            {
-                return lhsIndex < rhsIndex
-            } else {
-                return lhs.creationDate ?? .distantPast < rhs.creationDate ?? .distantPast
-            }
-        }
-
-        return sortedUserDetails
+        return OrderedSet(uncheckedUniqueElements: userDetails)
     }
 
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
