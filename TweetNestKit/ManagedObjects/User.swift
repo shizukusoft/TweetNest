@@ -24,7 +24,6 @@ public class User: NSManagedObject {
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
             ]
-            fetchRequest.propertiesToFetch = ["user", "creationDate"]
             fetchRequest.includesPropertyValues = true
 
             let results = try managedObjectContext.fetch(fetchRequest)
