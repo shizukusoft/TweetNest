@@ -17,18 +17,17 @@ public class User: NSManagedObject {
         }
 
         let sortedUserDetailObjectIDs: OrderedSet<NSManagedObjectID>? = try? managedObjectContext.flatMap { managedObjectContext in
-            let fetchRequest = NSFetchRequest<NSManagedObjectID>()
-            fetchRequest.entity = UserDetail.entity()
-            fetchRequest.resultType = .managedObjectIDResultType
+            let fetchRequest = UserDetail.fetchRequest()
             fetchRequest.predicate = NSPredicate(format: "user == %@", self)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
             ]
-            fetchRequest.includesPropertyValues = true
+            fetchRequest.propertiesToFetch = ["user", "creationDate"]
+            fetchRequest.returnsObjectsAsFaults = true
 
             let results = try managedObjectContext.fetch(fetchRequest)
 
-            return OrderedSet(results)
+            return OrderedSet(results.lazy.map(\.objectID))
         }
 
         var sortedUserDetails = OrderedSet(userDetails)
