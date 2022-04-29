@@ -319,7 +319,7 @@ extension Session {
                             try chunkedUsersProcessingContext.save()
                         }
 
-                        async let contextSaves: Void = try await context.perform(schedule: .enqueued) {
+                        try await context.perform(schedule: .enqueued) {
                             guard context.hasChanges else {
                                 return
                             }
@@ -330,8 +330,6 @@ extension Session {
                         }
 
                         await self.dataAssetsURLSessionManager.download(downloadRequests)
-
-                        _ = try await contextSaves
 
                         return results
                     }

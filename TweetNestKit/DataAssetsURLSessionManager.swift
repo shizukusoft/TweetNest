@@ -92,9 +92,9 @@ extension DataAssetsURLSessionManager {
         let downloadRequests = OrderedSet(downloadRequests)
 
         return await withCheckedContinuation { [urlSession] continuation in
-            urlSession.getAllTasks { tasks in
+            urlSession.getTasksWithCompletionHandler { _, _, downloadTasks in
                 let pendingDownloadTasks = Dictionary(
-                    grouping: tasks
+                    grouping: downloadTasks
                         .lazy
                         .filter {
                             switch $0.state {
@@ -105,8 +105,7 @@ extension DataAssetsURLSessionManager {
                             @unknown default:
                                 return false
                             }
-                        }
-                        .compactMap { $0 as? URLSessionDownloadTask },
+                        },
                     by: \.originalRequest
                 )
 
