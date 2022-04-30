@@ -9,8 +9,5 @@
 /* background-refresh notification body. */
 "New Profile" = "新しいプロフィール";
 
-/* fetch-new-data notification title. */
-"Fetch New Data" = "データの取得";
-
-/* fetch-new-data notification subtitle. */
-"Error" = "エラー";
+/* fetch-new-data-title notification title. */
+"Fetch New Data Error" = "データの取得エラー";

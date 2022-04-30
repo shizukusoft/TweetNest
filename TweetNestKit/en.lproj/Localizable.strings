@@ -9,8 +9,5 @@
 /* background-refresh notification body. */
 "New Profile" = "New Profile";
 
-/* fetch-new-data notification title. */
-"Fetch New Data" = "Fetch New Data";
-
-/* fetch-new-data notification subtitle. */
-"Error" = "Error";
+/* fetch-new-data-title notification title. */
+"Fetch New Data Error" = "Fetch New Data Error";

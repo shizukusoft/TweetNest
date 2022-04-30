@@ -194,15 +194,19 @@ extension Session {
 extension Session {
     private func errorNotificationRequest(_ error: Error, for accountObjectID: NSManagedObjectID? = nil) -> UNNotificationRequest {
         let notificationContent = UNMutableNotificationContent()
-        notificationContent.title = String(localized: "Fetch New Data", bundle: .tweetNestKit, comment: "fetch-new-data notification title.")
-        notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "fetch-new-data notification subtitle.")
-        notificationContent.body = error.localizedDescription
+        notificationContent.title = String(localized: "Fetch New Data Error", bundle: .tweetNestKit, comment: "fetch-new-data-error notification title.")
+        notificationContent.interruptionLevel = .active
+        notificationContent.sound = .default
 
-        switch error {
-        case is CancellationError, URLError.cancelled:
-            notificationContent.interruptionLevel = .passive
-        default:
-            notificationContent.sound = .default
+        if
+            let localizedError = error as? LocalizedError,
+            let errorDescription = localizedError.errorDescription,
+            let failureReason = localizedError.failureReason
+        {
+            notificationContent.subtitle = errorDescription
+            notificationContent.body = failureReason
+        } else {
+            notificationContent.body = error.localizedDescription
         }
 
         if let accountObjectID = accountObjectID {
@@ -229,25 +233,17 @@ extension Session {
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-new-data")
 
         do {
-            let hasChanges = try await updateAllAccounts().reduce(false) { partialResult, hasChanges in
-                let accountObjectID = hasChanges.0
+            var hasChanges = false
+
+            for result in try await updateAllAccounts() {
+                let accountObjectID = result.0
 
                 do {
-                    let hasChanges = try hasChanges.1.get()
-
-                    return hasChanges
+                    hasChanges = try hasChanges || result.1.get()
                 } catch {
                     logger.error("Error occurred while update account \(accountObjectID, privacy: .public): \(error as NSError, privacy: .public)")
 
-                    Task.detached {
-                        do {
-                            try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error, for: accountObjectID))
-                        } catch {
-                            logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
-                        }
-                    }
-
-                    return false
+                    try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error, for: accountObjectID))
                 }
             }
 
@@ -255,7 +251,7 @@ extension Session {
         } catch {
             logger.error("Error occurred while update accounts: \(error as NSError, privacy: .public)")
 
-            try await UNUserNotificationCenter.current().add(errorNotificationRequest(error))
+            try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error))
 
             return false
         }
