@@ -219,21 +219,21 @@ extension Session {
                     let chunkedUsersFetchedDate = Date()
 
                     chunkedUsersProcessingTaskGroup.addTask {
-                        let chunkedUsersProcessingContext = NSManagedObjectContext(.privateQueue)
-                        chunkedUsersProcessingContext.parent = context
-                        chunkedUsersProcessingContext.automaticallyMergesChangesFromParent = true
-                        chunkedUsersProcessingContext.undoManager = nil
+                        try await withExtendedBackgroundExecution {
+                            let chunkedUsersProcessingContext = NSManagedObjectContext(.privateQueue)
+                            chunkedUsersProcessingContext.parent = context
+                            chunkedUsersProcessingContext.automaticallyMergesChangesFromParent = true
+                            chunkedUsersProcessingContext.undoManager = nil
 
-                        let (results, downloadRequests) = try await withThrowingTaskGroup(
-                            of: (Twitter.User.ID, UserDetailChanges, [DataAssetsURLSessionManager.DownloadRequest]).self,
-                            returning: ([(Twitter.User.ID, UserDetailChanges)], [DataAssetsURLSessionManager.DownloadRequest]).self
-                        ) { userProcessingTaskGroup in
-                            for twitterUser in chunkedUsers.1 {
-                                let userID = String(twitterUser.id)
+                            let (results, downloadRequests) = try await withThrowingTaskGroup(
+                                of: (Twitter.User.ID, UserDetailChanges, [DataAssetsURLSessionManager.DownloadRequest]).self,
+                                returning: ([(Twitter.User.ID, UserDetailChanges)], [DataAssetsURLSessionManager.DownloadRequest]).self
+                            ) { userProcessingTaskGroup in
+                                for twitterUser in chunkedUsers.1 {
+                                    let userID = String(twitterUser.id)
 
-                                userProcessingTaskGroup.addTask {
-                                    async let userDetailChanges: UserDetailChanges = chunkedUsersProcessingContext.perform(schedule: .enqueued) {
-                                        try withExtendedBackgroundExecution {
+                                    userProcessingTaskGroup.addTask {
+                                        async let userDetailChanges: UserDetailChanges = chunkedUsersProcessingContext.perform(schedule: .enqueued) {
                                             let prefetchedUserObjectID = refinedUserObjectIDByID[String(twitterUser.id)] as? NSManagedObjectID
                                             let prefetchedUser = prefetchedUserObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User }
 
@@ -293,52 +293,48 @@ extension Session {
 
                                             return (previousUserDetail?.objectID, userDetail.objectID)
                                         }
+
+                                        let downloadRequests = [
+                                            twitterUser.profileImageOriginalURL.flatMap {
+                                                DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.defaultPriority, expectsToReceiveFileSize: 1 * 1024 * 1024)
+                                            },
+                                            twitterUser.profileBannerOriginalURL.flatMap {
+                                                DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.lowPriority, expectsToReceiveFileSize: 5 * 1024 * 1024)
+                                            },
+                                        ].compacted()
+
+                                        return try await (userID, userDetailChanges, Array(downloadRequests))
                                     }
+                                }
 
-                                    let downloadRequests = [
-                                        twitterUser.profileImageOriginalURL.flatMap {
-                                            DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.defaultPriority, expectsToReceiveFileSize: 1 * 1024 * 1024)
-                                        },
-                                        twitterUser.profileBannerOriginalURL.flatMap {
-                                            DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.lowPriority, expectsToReceiveFileSize: 5 * 1024 * 1024)
-                                        },
-                                    ].compacted()
-
-                                    return try await (userID, userDetailChanges, Array(downloadRequests))
+                                return try await userProcessingTaskGroup.reduce(
+                                    into: ([(Twitter.User.ID, UserDetailChanges)](), [DataAssetsURLSessionManager.DownloadRequest]())
+                                ) { partialResult, element in
+                                    partialResult.0.append((element.0, element.1))
+                                    partialResult.1.append(contentsOf: element.2)
                                 }
                             }
 
-                            return try await userProcessingTaskGroup.reduce(
-                                into: ([(Twitter.User.ID, UserDetailChanges)](), [DataAssetsURLSessionManager.DownloadRequest]())
-                            ) { partialResult, element in
-                                partialResult.0.append((element.0, element.1))
-                                partialResult.1.append(contentsOf: element.2)
-                            }
-                        }
+                            try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
+                                guard chunkedUsersProcessingContext.hasChanges else {
+                                    return
+                                }
 
-                        try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
-                            guard chunkedUsersProcessingContext.hasChanges else {
-                                return
-                            }
-
-                            try withExtendedBackgroundExecution {
                                 try chunkedUsersProcessingContext.save()
                             }
-                        }
 
-                        try await context.perform(schedule: .enqueued) {
-                            guard context.hasChanges else {
-                                return
-                            }
+                            try await context.perform(schedule: .enqueued) {
+                                guard context.hasChanges else {
+                                    return
+                                }
 
-                            try withExtendedBackgroundExecution {
                                 try context.save()
                             }
+
+                            await self.dataAssetsURLSessionManager.download(downloadRequests)
+
+                            return results
                         }
-
-                        await self.dataAssetsURLSessionManager.download(downloadRequests)
-
-                        return results
                     }
                 }
 
