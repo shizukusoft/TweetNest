@@ -77,17 +77,17 @@ public class Session {
 
         Task.detached {
             do {
-                try await self.persistentContainer.loadPersistentStores()
+                try await withExtendedBackgroundExecution {
+                    try await self.persistentContainer.loadPersistentStores()
+
+                    #if canImport(CoreSpotlight)
+                    self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                    #endif
+                }
 
                 await MainActor.run {
                     self.persistentContainerLoadingResult = .success(())
                 }
-
-                #if canImport(CoreSpotlight)
-                Task.detached(priority: .utility) {
-                    self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
-                }
-                #endif
 
                 #if DEBUG
                 Task.detached(priority: .utility) {
