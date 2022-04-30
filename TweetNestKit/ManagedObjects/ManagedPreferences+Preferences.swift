@@ -10,7 +10,6 @@ import CoreData
 
 extension ManagedPreferences {
     public struct Preferences {
-        public var fetchProfileHeaderImages: Bool = false
         public var notifyProfileChanges: Bool = true
         public var notifyFollowingChanges: Bool = true
         public var notifyFollowerChanges: Bool = true
@@ -24,7 +23,6 @@ extension ManagedPreferences.Preferences: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let defaultPreferences = ManagedPreferences.Preferences()
 
-        self.fetchProfileHeaderImages = try container.decodeIfPresent(Bool.self, forKey: .fetchProfileHeaderImages) ?? defaultPreferences.fetchProfileHeaderImages
         self.notifyProfileChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyProfileChanges) ?? defaultPreferences.notifyProfileChanges
         self.notifyFollowingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowingChanges) ?? defaultPreferences.notifyFollowingChanges
         self.notifyFollowerChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowerChanges) ?? defaultPreferences.notifyFollowerChanges

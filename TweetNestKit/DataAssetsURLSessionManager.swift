@@ -8,6 +8,8 @@
 import Foundation
 import BackgroundTask
 import UnifiedLogging
+import OrderedCollections
+import CoreData
 
 class DataAssetsURLSessionManager: NSObject {
     static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".data-assets"
@@ -26,28 +28,32 @@ class DataAssetsURLSessionManager: NSObject {
     private var urlSessionConfiguration: URLSessionConfiguration {
         var urlSessionConfiguration: URLSessionConfiguration
 
-        if session === Session.shared {
+        if isShared {
             urlSessionConfiguration = .twnk_background(withIdentifier: Self.backgroundURLSessionIdentifier)
         } else {
             urlSessionConfiguration = .twnk_default
         }
 
         urlSessionConfiguration.httpAdditionalHeaders = nil
-        urlSessionConfiguration.isDiscretionary = true
+        urlSessionConfiguration.sessionSendsLaunchEvents = true
         urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.allowsConstrainedNetworkAccess = false
 
         return urlSessionConfiguration
     }
 
-    private unowned let session: Session
-    private let dispatchGroup = DispatchGroup()
-    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
-    private lazy var managedObjectContext = session.persistentContainer.newBackgroundContext()
-    private lazy var logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+    private let isShared: Bool
 
-    init(session: Session) {
-        self.session = session
+    private let dispatchGroup = DispatchGroup()
+    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: DataAssetsURLSessionManager.self))
+    private let persistentContainer: PersistentContainer
+    
+    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
+    private lazy var managedObjectContext = persistentContainer.newBackgroundContext()
+
+    init(isShared: Bool, persistentContainer: PersistentContainer) {
+        self.isShared = isShared
+        self.persistentContainer = persistentContainer
 
         super.init()
 
@@ -58,18 +64,67 @@ class DataAssetsURLSessionManager: NSObject {
     func handleBackgroundURLSessionEvents(completionHandler: @escaping () -> Void) {
         _backgroundURLSessionEventsCompletionHandler = completionHandler
     }
+
+    func invalidate() {
+        urlSession.invalidateAndCancel()
+    }
 }
 
 extension DataAssetsURLSessionManager {
-    func download(_ url: URL) {
-        var urlRequest = URLRequest(url: url)
-        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+    struct DownloadRequest: Equatable, Hashable {
+        var urlRequest: URLRequest
+        var priority: Float
+        var expectsToReceiveFileSize: Int64
 
-        let downloadTask = urlSession.downloadTask(with: urlRequest)
-        downloadTask.countOfBytesClientExpectsToSend = 1024
-        downloadTask.countOfBytesClientExpectsToReceive = 3 * 1024 * 1024
+        init(urlRequest: URLRequest, priority: Float = URLSessionTask.defaultPriority, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) {
+            self.urlRequest = urlRequest
+            self.priority = priority
+            self.expectsToReceiveFileSize = expectsToReceiveFileSize
+        }
 
-        downloadTask.resume()
+        init(url: URL, priority: Float = URLSessionTask.defaultPriority, expectsToReceiveFileSize: Int64 = NSURLSessionTransferSizeUnknown) {
+            let urlRequest = URLRequest(url: url)
+
+            self.init(urlRequest: urlRequest, priority: priority, expectsToReceiveFileSize: expectsToReceiveFileSize)
+        }
+    }
+
+    func download<S>(_ downloadRequests: S) async where S: Sequence, S.Element == DownloadRequest {
+        let downloadRequests = OrderedSet(downloadRequests)
+
+        return await withCheckedContinuation { [urlSession] continuation in
+            urlSession.getTasksWithCompletionHandler { _, _, downloadTasks in
+                let pendingDownloadTasks = Dictionary(
+                    grouping: downloadTasks
+                        .lazy
+                        .filter {
+                            switch $0.state {
+                            case .running, .suspended:
+                                return true
+                            case .canceling, .completed:
+                                return false
+                            @unknown default:
+                                return false
+                            }
+                        },
+                    by: \.originalRequest
+                )
+
+                for downloadRequest in downloadRequests {
+                    var urlRequest = downloadRequest.urlRequest
+                    urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+
+                    let downloadTask = pendingDownloadTasks[urlRequest]?.last ?? urlSession.downloadTask(with: urlRequest)
+                    downloadTask.countOfBytesClientExpectsToSend = 1024
+                    downloadTask.countOfBytesClientExpectsToReceive = downloadRequest.expectsToReceiveFileSize
+                    downloadTask.priority = downloadRequest.priority
+
+                    downloadTask.resume()
+                }
+
+                continuation.resume()
+            }
+        }
     }
 }
 
@@ -84,7 +139,7 @@ extension DataAssetsURLSessionManager: URLSessionDelegate {
 
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
         if let error = error {
-            self.logger.error("\(error as NSError, privacy: .public)")
+            logger.error("\(error as NSError, privacy: .public)")
         }
     }
 }
@@ -92,7 +147,7 @@ extension DataAssetsURLSessionManager: URLSessionDelegate {
 extension DataAssetsURLSessionManager: URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
-            self.logger.error("\(error as NSError, privacy: .public)")
+            logger.error("\(error as NSError, privacy: .public)")
         }
     }
 }
@@ -105,7 +160,7 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
             dispatchGroup.enter()
-            managedObjectContext.perform { [dispatchGroup, managedObjectContext, weak self] in
+            managedObjectContext.perform { [dispatchGroup, managedObjectContext, logger] in
                 defer {
                     dispatchGroup.leave()
                 }
@@ -119,11 +174,11 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
                         }
                     }
                 } catch {
-                    self?.logger.error("\(error as NSError, privacy: .public)")
+                    logger.error("\(error as NSError, privacy: .public)")
                 }
             }
         } catch {
-            self.logger.error("\(error as NSError, privacy: .public)")
+            logger.error("\(error as NSError, privacy: .public)")
         }
     }
 }

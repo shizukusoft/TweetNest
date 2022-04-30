@@ -31,17 +31,29 @@ extension Session {
 
         TweetNestKitUserDefaults.standard.lastCleansedDate = Date()
 
-        let context = self.persistentContainerNewBackgroundContext
+        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
+            taskGroup.addTask {
+                try await self.cleansingAllAccounts(context: self.persistentContainerNewBackgroundContext)
+            }
 
-        try await self.cleansingAllAccounts(context: context)
-        try await self.cleansingAllUsersAndUserDetails(context: context)
-        try await self.cleansingAllDataAssets(context: context)
+            taskGroup.addTask {
+                try await self.cleansingAllUsersAndUserDetails(context: self.persistentContainerNewBackgroundContext)
+            }
+
+            taskGroup.addTask {
+                try await self.cleansingAllDataAssets(context: self.persistentContainerNewBackgroundContext)
+            }
+
+            try await taskGroup.waitForAll()
+        }
+
+        try await cleansingAllPersistentStores()
     }
 
     public func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
-        let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Account.creationDate, ascending: false),
@@ -111,7 +123,7 @@ extension Session {
     }
 
     func cleansingAllUsersAndUserDetails(context: NSManagedObjectContext) async throws {
-        let userObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let userObjectIDs: [NSManagedObjectID] = try await context.perform {
             let userFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: User.entity().name!)
             userFetchRequest.resultType = .managedObjectIDResultType
             userFetchRequest.sortDescriptors = [
@@ -121,10 +133,17 @@ extension Session {
             return try context.fetch(userFetchRequest)
         }
 
-        for userObjectID in userObjectIDs {
-            try Task.checkCancellation()
-            try await self.cleansingUser(for: userObjectID, context: context)
-            try await self.cleansingUserDetails(for: userObjectID, context: context)
+        try await withThrowingTaskGroup(of: Void.self) { cleansingUserDetailsTaskGroup in
+            for userObjectID in userObjectIDs {
+                try Task.checkCancellation()
+                try await self.cleansingUser(for: userObjectID, context: context)
+
+                cleansingUserDetailsTaskGroup.addTask {
+                    try await self.cleansingUserDetails(for: userObjectID)
+                }
+            }
+
+            try await cleansingUserDetailsTaskGroup.waitForAll()
         }
     }
 
@@ -179,24 +198,26 @@ extension Session {
         }
     }
 
-    func cleansingUserDetails(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
-        let context = context ?? persistentContainerNewBackgroundContext
+    func cleansingUserDetails(for userObjectID: NSManagedObjectID) async throws {
+        let context = persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
-            guard
-                let user = try? context.existingObject(with: userObjectID) as? User
-            else {
-                return
-            }
+            let fetchRequest = UserDetail.fetchRequest()
+            fetchRequest.predicate = NSPredicate(format: "user == %@", userObjectID)
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+            ]
+            fetchRequest.returnsObjectsAsFaults = false
 
-            var userDetails = user.sortedUserDetails ?? OrderedSet()
+            var userDetails = OrderedSet(try context.fetch(fetchRequest))
 
-            for (index, userDetail) in userDetails.enumerated() {
-                let previousUserIndex = index - 1
+            for userDetail in userDetails {
+                let previousUserIndex = (userDetails.firstIndex(of: userDetail) ?? 0) - 1
                 let previousUserDetail = userDetails.indices.contains(previousUserIndex) ? userDetails[previousUserIndex] : nil
 
                 if previousUserDetail ~= userDetail {
                     userDetails.remove(userDetail)
+                    userDetail.user = nil
                     context.delete(userDetail)
                 }
             }
@@ -210,7 +231,7 @@ extension Session {
     }
 
     func cleansingAllDataAssets(context: NSManagedObjectContext) async throws {
-        let dataAssetObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let dataAssetObjectIDs: [NSManagedObjectID] = try await context.perform {
             let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: DataAsset.entity().name!)
             dataAssetsFetchRequest.resultType = .managedObjectIDResultType
             dataAssetsFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
@@ -236,7 +257,9 @@ extension Session {
                 return
             }
 
-            let dataAssetsFetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
+            let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
+            dataAssetsFetchRequest.entity = DataAsset.entity()
+            dataAssetsFetchRequest.resultType = .managedObjectIDResultType
             dataAssetsFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
                     NSPredicate(format: "url == %@", dataAssetURL as NSURL),
@@ -247,21 +270,57 @@ extension Session {
                 NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: true),
             ]
 
-            let dataAssets = try context.fetch(dataAssetsFetchRequest)
+            let dataAssetObjectIDs = OrderedSet(try context.fetch(dataAssetsFetchRequest))
 
-            guard dataAssets.count > 1 else { return }
+            guard dataAssetObjectIDs.count > 1 else { return }
 
-            let targetDataAsset = dataAssets.first ?? dataAsset
+            let targetDataAssetObjectID = dataAssetObjectIDs.first ?? dataAsset.objectID
 
-            for dataAsset in dataAssets {
-                guard dataAsset != targetDataAsset else { continue }
+            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(dataAssetObjectIDs.subtracting([targetDataAssetObjectID])))
 
-                context.delete(dataAsset)
-            }
+            try context.execute(batchDeleteRequest)
+        }
+    }
 
-            if context.hasChanges {
-                try withExtendedBackgroundExecution {
-                    try context.save()
+    public func cleansingAllPersistentStores() async throws {
+        let persistentContainer = persistentContainer
+        let temporalPersistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistentContainer.managedObjectModel)
+
+        for persistentStoreDescription in persistentContainer.persistentStoreDescriptions.lazy.compactMap({ $0.copy() as? NSPersistentStoreDescription }) {
+            guard persistentStoreDescription.type == NSSQLiteStoreType else { return }
+
+            persistentStoreDescription.cloudKitContainerOptions = nil
+            persistentStoreDescription.setOption(nil, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
+            persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteManualVacuumOption)
+            persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteAnalyzeOption)
+
+            try await persistentContainer.persistentStoreCoordinator.perform {
+                try temporalPersistentStoreCoordinator.performAndWait {
+                    var error: Error?
+
+                    withExtendedBackgroundExecution {
+                        let dispatchSemaphore = DispatchSemaphore(value: 0)
+
+                        temporalPersistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in
+                            temporalPersistentStoreCoordinator.perform {
+                                temporalPersistentStoreCoordinator.persistentStores.forEach {
+                                    try? temporalPersistentStoreCoordinator.remove($0)
+                                }
+                            }
+
+                            if let _error = _error {
+                                error = _error
+                            }
+
+                            dispatchSemaphore.signal()
+                        }
+
+                        dispatchSemaphore.wait()
+                    }
+
+                    if let error = error {
+                        throw error
+                    }
                 }
             }
         }

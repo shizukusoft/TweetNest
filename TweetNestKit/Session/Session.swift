@@ -14,7 +14,7 @@ import BackgroundTask
 import Twitter
 
 public class Session {
-    public static let shared = Session()
+    public static let shared = Session(twitterAPIConfiguration: { nil }, inMemory: false, isShared: true)
 
     private let _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
@@ -23,90 +23,108 @@ public class Session {
         }
     }
 
-    private let inMemory: Bool
-    private(set) lazy var sessionActor = SessionActor(session: self)
+    let isShared: Bool
 
-    public private(set) lazy var persistentContainer = PersistentContainer(inMemory: inMemory)
-    private(set) lazy var dataAssetsURLSessionManager = DataAssetsURLSessionManager(session: self)
+    let sessionActor = SessionActor()
+    public let persistentContainer: PersistentContainer
+    let dataAssetsURLSessionManager: DataAssetsURLSessionManager
 
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
-        .sink { [weak self] _ in
-            self?.handlePersistentStoreRemoteChanges()
+        .map { $0.userInfo?[NSPersistentHistoryTokenKey] as? NSPersistentHistoryToken }
+        .removeDuplicates()
+        .receive(on: persistentStoreRemoteChangeNotificationQueue)
+        .sink { [weak self] persistentHistoryToken in
+            guard let self = self else { return }
+
+            self.handlePersistentStoreRemoteChanges(persistentHistoryToken)
         }
 
-    @Published
+    private lazy var persistentStoreRemoteChangeNotificationQueue = DispatchQueue(
+        label: [String(reflecting: self), Notification.Name.NSPersistentStoreRemoteChange.rawValue].joined(separator: "."),
+        qos: .default,
+        autoreleaseFrequency: .workItem
+    )
+
+    @MainActor @Published
     public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?
-
-    @Published
-    public private(set) var persistentCloudKitContainerEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
-    private lazy var persistentCloudKitContainerEventDidChanges = NotificationCenter.default
-        .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: persistentContainer)
-        .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
-        .receive(on: DispatchQueue.main)
-        .sink { [weak self] event in
-            self?.persistentCloudKitContainerEvents[event.identifier] = PersistentContainer.CloudKitEvent(event)
-        }
 
     private lazy var fetchNewDataIntervalObserver = TweetNestKitUserDefaults.standard
         .observe(\.fetchNewDataInterval, options: [.new]) { [weak self] userDefaults, changes in
             self?.fetchNewDataIntervalDidChange(changes.newValue ?? userDefaults.fetchNewDataInterval)
         }
 
-    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool) {
-        _twitterAPIConfiguration = .init(twitterAPIConfiguration)
-        self.inMemory = inMemory
+    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration?, inMemory: Bool, isShared: Bool = false) {
+        self.isShared = isShared
+        _twitterAPIConfiguration = .init({
+            if let twitterAPIConfiguration = try await twitterAPIConfiguration() {
+                return twitterAPIConfiguration
+            } else {
+                return try await .iCloud
+            }
+        })
+        let persistentContainer = PersistentContainer(inMemory: inMemory)
+        self.persistentContainer = persistentContainer
+
+        let dataAssetsURLSessionManager = DataAssetsURLSessionManager(
+            isShared: isShared,
+            persistentContainer: persistentContainer
+        )
+        self.dataAssetsURLSessionManager = dataAssetsURLSessionManager
+
+        _ = self.persistentStoreRemoteChangeNotification
+        _ = self.fetchNewDataIntervalObserver
 
         Task.detached {
-            if inMemory == false {
-                _ = self.persistentStoreRemoteChangeNotification
-                _ = self.persistentCloudKitContainerEventDidChanges
-            }
-
-            Task(priority: .utility) {
-                do {
+            do {
+                try await withExtendedBackgroundExecution {
                     try await self.persistentContainer.loadPersistentStores()
 
-                    await MainActor.run {
-                        self.persistentContainerLoadingResult = .success(())
-                    }
-                } catch {
-                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                        .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
+                    #if canImport(CoreSpotlight)
+                    self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                    #endif
+                }
 
-                    await MainActor.run {
-                        self.persistentContainerLoadingResult = .failure(error)
+                await MainActor.run {
+                    self.persistentContainerLoadingResult = .success(())
+                }
+
+                #if DEBUG
+                Task.detached(priority: .utility) {
+                    do {
+                        try self.persistentContainer.initializeCloudKitSchema(options: [])
+                    } catch {
+                        debugPrint(error)
                     }
                 }
-            }
+                #endif
+            } catch {
+                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                    .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
 
-            Task(priority: .utility) {
-                _ = try? await self.twitterAPIConfiguration
-            }
-
-            Task(priority: .utility) {
-                _ = self.fetchNewDataIntervalObserver
+                await MainActor.run {
+                    self.persistentContainerLoadingResult = .failure(error)
+                }
             }
         }
+
+        Task.detached(priority: .utility) {
+            _ = try? await self.twitterAPIConfiguration
+        }
+    }
+
+    deinit {
+        dataAssetsURLSessionManager.invalidate()
     }
 }
 
 extension Session {
     public convenience init(twitterAPIConfiguration: @autoclosure @escaping () throws -> TwitterAPIConfiguration? = nil, inMemory: Bool = false) {
-        self.init(
-            twitterAPIConfiguration: {
-                if let twitterAPIConfiguration = try twitterAPIConfiguration() {
-                    return twitterAPIConfiguration
-                } else {
-                    return try await .iCloud
-                }
-            },
-            inMemory: inMemory
-        )
+        self.init(twitterAPIConfiguration: { try twitterAPIConfiguration() }, inMemory: inMemory)
     }
 
-    public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration, inMemory: Bool = false) async {
-        self.init(twitterAPIConfiguration: { try await twitterAPIConfiguration() }, inMemory: inMemory)
+    public convenience init(twitterAPIConfiguration: @autoclosure @escaping () async throws -> TwitterAPIConfiguration? = nil, inMemory: Bool = false) async {
+        self.init(twitterAPIConfiguration: twitterAPIConfiguration, inMemory: inMemory)
     }
 }
 
@@ -154,19 +172,21 @@ extension Session {
 extension Session {
     private func fetchNewDataIntervalDidChange(_ newValue: TimeInterval) {
         Task {
-            await sessionActor.updateFetchNewDataTimer(interval: newValue)
+            await sessionActor.updateFetchNewDataTimer(interval: newValue, session: self)
         }
     }
 
-    public func pauseAutomaticallyFetchNewData() {
+    public func pauseBackgroundTaskTimers() {
         Task {
             await sessionActor.destroyFetchNewDataTimer()
+            await sessionActor.destroyDataCleansingTimer()
         }
     }
 
-    public func resumeAutomaticallyFetchNewData() {
+    public func resumeBackgroundTaskTimers() {
         Task {
-            await sessionActor.initializeFetchNewDataTimer(interval: TweetNestKitUserDefaults.standard.fetchNewDataInterval)
+            await sessionActor.initializeFetchNewDataTimer(interval: TweetNestKitUserDefaults.standard.fetchNewDataInterval, session: self)
+            await sessionActor.initializeDataCleansingTimer(interval: Self.cleansingDataInterval, session: self)
         }
     }
 }
@@ -174,26 +194,36 @@ extension Session {
 extension Session {
     private func errorNotificationRequest(_ error: Error, for accountObjectID: NSManagedObjectID? = nil) -> UNNotificationRequest {
         let notificationContent = UNMutableNotificationContent()
-        notificationContent.title = String(localized: "Fetch New Data", bundle: .tweetNestKit, comment: "fetch-new-data notification title.")
-        notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "fetch-new-data notification subtitle.")
-        notificationContent.body = error.localizedDescription
+        notificationContent.title = String(localized: "Fetch New Data Error", bundle: .tweetNestKit, comment: "fetch-new-data-error notification title.")
+        notificationContent.interruptionLevel = .active
+        notificationContent.sound = .default
 
-        switch error {
-        case is CancellationError, URLError.cancelled:
-            notificationContent.interruptionLevel = .passive
-        default:
-            notificationContent.sound = .default
+        if
+            let localizedError = error as? LocalizedError,
+            let errorDescription = localizedError.errorDescription,
+            let failureReason = localizedError.failureReason
+        {
+            notificationContent.subtitle = errorDescription
+            notificationContent.body = failureReason
+        } else {
+            notificationContent.body = error.localizedDescription
         }
 
         if let accountObjectID = accountObjectID {
-            notificationContent.threadIdentifier = persistentContainer.recordID(for: accountObjectID)?.recordName ?? accountObjectID.uriRepresentation().absoluteString
+            let context = persistentContainer.newBackgroundContext()
+
+            let userID: Twitter.User.ID? = context.performAndWait {
+                (context.object(with: accountObjectID) as? Account)?.userID
+            }
+
+            notificationContent.threadIdentifier = userID ?? accountObjectID.uriRepresentation().absoluteString
         }
 
         return UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
     }
 
     @discardableResult
-    public func fetchNewData(cleansingData: Bool = true, force: Bool = false) async throws -> Bool {
+    public func fetchNewData(force: Bool = false) async throws -> Bool {
         guard force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date() else {
             return false
         }
@@ -203,45 +233,25 @@ extension Session {
         let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "fetch-new-data")
 
         do {
-            defer {
-                if cleansingData {
-                    Task.detached(priority: .utility) {
-                        do {
-                            try await self.cleansingAllData(force: force)
-                        } catch {
-                            logger.error("Error occurred while cleansing data: \(error as NSError, privacy: .public)")
-                        }
-                    }
-                }
-            }
+            var hasChanges = false
 
-            let hasChanges = try await updateAllAccounts()
-
-            return hasChanges.reduce(false) { partialResult, hasChanges in
-                let accountObjectID = hasChanges.0
+            for result in try await updateAllAccounts() {
+                let accountObjectID = result.0
 
                 do {
-                    let hasChanges = try hasChanges.1.get()
-
-                    return hasChanges
+                    hasChanges = try hasChanges || result.1.get()
                 } catch {
                     logger.error("Error occurred while update account \(accountObjectID, privacy: .public): \(error as NSError, privacy: .public)")
 
-                    Task.detached {
-                        do {
-                            try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error, for: accountObjectID))
-                        } catch {
-                            logger.error("Error occurred while request notification: \(error as NSError, privacy: .public)")
-                        }
-                    }
-
-                    return false
+                    try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error, for: accountObjectID))
                 }
             }
+
+            return hasChanges
         } catch {
             logger.error("Error occurred while update accounts: \(error as NSError, privacy: .public)")
 
-            try await UNUserNotificationCenter.current().add(errorNotificationRequest(error))
+            try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error))
 
             return false
         }

@@ -47,13 +47,6 @@ struct SettingsGeneralView: View {
             }
             #endif
 
-            Section {
-                Toggle("Fetch Profile Headers", isOn: Binding<Bool>(get: { managedPreferences.fetchProfileHeaderImages }, set: { managedPreferences.fetchProfileHeaderImages = $0 }))
-            }
-            .onChange(of: managedPreferences.fetchProfileHeaderImages) { _ in
-                save()
-            }
-
             #if os(iOS)
             Section {
                 Link(destination: URL(string: UIApplication.openSettingsURLString)!) {

@@ -22,14 +22,18 @@ struct UserRowsLabel: View {
             #endif
     }
 
-    init(userID: String) {
+    init(userID: String, user: User?) {
         self.userID = userID
 
         self._latestUserDetailsFetchedResultsController = StateObject(
             wrappedValue: FetchedResultsController<UserDetail>(
                 fetchRequest: {
                     let fetchRequest = UserDetail.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
+                    if let user = user {
+                        fetchRequest.predicate = NSPredicate(format: "user == %@", user.objectID)
+                    } else {
+                        fetchRequest.predicate = NSPredicate(value: false)
+                    }
                     fetchRequest.sortDescriptors = [
                         NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
                     ]
@@ -47,6 +51,6 @@ struct UserRowsLabel: View {
 
 struct UserRowsLabel_Previews: PreviewProvider {
     static var previews: some View {
-        UserRowsLabel(userID: "123456")
+        UserRowsLabel(userID: "123456", user: nil)
     }
 }

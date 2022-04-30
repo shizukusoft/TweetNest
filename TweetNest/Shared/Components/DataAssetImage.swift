@@ -16,7 +16,7 @@ struct DataAssetImage: View {
     let url: URL?
     let isExportable: Bool
 
-    @StateObject private var dataAssetsFetchedResultsController: FetchedResultsController<DataAsset>
+    @State private var dataAssetsFetchedResultsController: FetchedResultsController<DataAsset>
 
     struct ImageData: Equatable {
         var data: Data
@@ -84,21 +84,30 @@ struct DataAssetImage: View {
             resizableImage(cgImage, scale: cgImageScale)
             #endif
         }
-        .onChange(of: dataAssetsFetchedResultsController.fetchedObjects.first) { newValue in
-            updateImage(
-                from: newValue?.data.flatMap { data in
-                    newValue?.dataMIMEType.flatMap { dataMIMEType in
-                        ImageData(
-                            data: data,
-                            dataMIMEType: dataMIMEType
-                        )
+        .onReceive(
+            dataAssetsFetchedResultsController.objectWillChange
+                .receive(on: RunLoop.main)
+        ) { _ in
+            Task(priority: .utility) {
+                let imageData: ImageData? = await dataAssetsFetchedResultsController.managedObjectContext.perform {
+                    dataAssetsFetchedResultsController.fetchedObjects.first?.data.flatMap { data in
+                        dataAssetsFetchedResultsController.fetchedObjects.first?.dataMIMEType.flatMap { dataMIMEType in
+                            ImageData(
+                                data: data,
+                                dataMIMEType: dataMIMEType
+                            )
+                        }
                     }
                 }
-            )
+
+                await updateImage(
+                    from: imageData
+                )
+            }
         }
-        .onAppear {
-            updateImage(
-                from: dataAssetsFetchedResultsController.fetchedObjects.first?.data.flatMap { data in
+        .task {
+            let imageData: ImageData? = await dataAssetsFetchedResultsController.managedObjectContext.perform {
+                dataAssetsFetchedResultsController.fetchedObjects.first?.data.flatMap { data in
                     dataAssetsFetchedResultsController.fetchedObjects.first?.dataMIMEType.flatMap { dataMIMEType in
                         ImageData(
                             data: data,
@@ -106,6 +115,10 @@ struct DataAssetImage: View {
                         )
                     }
                 }
+            }
+
+            await updateImage(
+                from: imageData
             )
         }
     }
@@ -114,7 +127,7 @@ struct DataAssetImage: View {
         self.url = url
         self.isExportable = isExportable
 
-        self._dataAssetsFetchedResultsController = StateObject(
+        self._dataAssetsFetchedResultsController = State(
             wrappedValue: FetchedResultsController<DataAsset>(
                 fetchRequest: {
                     let fetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
@@ -126,7 +139,7 @@ struct DataAssetImage: View {
 
                     return fetchRequest
                 }(),
-                managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
+                managedObjectContext: TweetNestApp.session.persistentContainer.newBackgroundContext()
             )
         )
     }
@@ -162,45 +175,43 @@ struct DataAssetImage: View {
         )
     }
 
-    private func updateImage(from imageData: ImageData?) {
-        Task.detached(priority: .utility) {
-            let cgImageAndImageScale: (cgImage: CGImage, imageScale: CGFloat?)? = {
-                guard let imageData = imageData else {
-                    return nil
-                }
-
-                guard let imageSource = CGImageSourceCreateWithData(
-                    imageData.data as CFData,
-                    nil
-                ) else {
-                    return nil
-                }
-
-                guard let image = CGImageSourceCreateThumbnailAtIndex(
-                    imageSource,
-                    0,
-                    [
-                        kCGImageSourceCreateThumbnailFromImageAlways: true,
-                        kCGImageSourceShouldCache as String: true,
-                        kCGImageSourceShouldCacheImmediately as String: true,
-                        kCGImageSourceCreateThumbnailWithTransform as String: true,
-                    ] as CFDictionary
-                ) else {
-                    return nil
-                }
-
-                let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
-
-                let imageDPI = [imageProperties?[kCGImagePropertyDPIWidth], imageProperties?[kCGImagePropertyDPIHeight]].compactMap { ($0 as? NSNumber)?.doubleValue }.min()
-
-                return (cgImage: image, imageScale: imageDPI.flatMap { $0 / 72 })
-            }()
-
-            await MainActor.run {
-                self.imageData = imageData
-                self.cgImage = cgImageAndImageScale?.cgImage
-                self.cgImageScale = cgImageAndImageScale?.imageScale
+    private func updateImage(from imageData: ImageData?) async {
+        let cgImageAndImageScale: (cgImage: CGImage, imageScale: CGFloat?)? = {
+            guard let imageData = imageData else {
+                return nil
             }
+
+            guard let imageSource = CGImageSourceCreateWithData(
+                imageData.data as CFData,
+                nil
+            ) else {
+                return nil
+            }
+
+            guard let image = CGImageSourceCreateThumbnailAtIndex(
+                imageSource,
+                0,
+                [
+                    kCGImageSourceCreateThumbnailFromImageAlways: true,
+                    kCGImageSourceShouldCache as String: true,
+                    kCGImageSourceShouldCacheImmediately as String: true,
+                    kCGImageSourceCreateThumbnailWithTransform as String: true,
+                ] as CFDictionary
+            ) else {
+                return nil
+            }
+
+            let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
+
+            let imageDPI = [imageProperties?[kCGImagePropertyDPIWidth], imageProperties?[kCGImagePropertyDPIHeight]].compactMap { ($0 as? NSNumber)?.doubleValue }.min()
+
+            return (cgImage: image, imageScale: imageDPI.flatMap { $0 / 72 })
+        }()
+
+        await MainActor.run {
+            self.imageData = imageData
+            self.cgImage = cgImageAndImageScale?.cgImage
+            self.cgImageScale = cgImageAndImageScale?.imageScale
         }
     }
 }

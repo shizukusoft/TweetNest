@@ -10,9 +10,7 @@ import Twitter
 import UnifiedLogging
 
 actor SessionActor {
-    unowned let session: Session
-
-    var twitterSessions = [URL: Twitter.Session]()
+    lazy var twitterSessions = [URL: Twitter.Session]()
 
     var fetchNewDataTimer: DispatchSourceTimer? = nil {
         willSet {
@@ -27,9 +25,20 @@ actor SessionActor {
         }
     }
 
-    init(session: Session) {
-        self.session = session
+    var dataCleansingTimer: DispatchSourceTimer? = nil {
+        willSet {
+            guard dataCleansingTimer !== newValue else { return }
+
+            dataCleansingTimer?.cancel()
+        }
+        didSet {
+            guard dataCleansingTimer !== oldValue else { return }
+
+            dataCleansingTimer?.activate()
+        }
     }
+
+    init() { }
 }
 
 extension SessionActor {
@@ -49,7 +58,7 @@ extension SessionActor {
 }
 
 extension SessionActor {
-    func initializeFetchNewDataTimer(interval: TimeInterval) {
+    func initializeFetchNewDataTimer(interval: TimeInterval, session: Session) {
         guard interval > 0 else {
             self.fetchNewDataTimer = nil
             return
@@ -75,11 +84,47 @@ extension SessionActor {
         self.fetchNewDataTimer = nil
     }
 
-    func updateFetchNewDataTimer(interval: TimeInterval) {
+    func updateFetchNewDataTimer(interval: TimeInterval, session: Session) {
         guard fetchNewDataTimer != nil else {
             return
         }
 
-        initializeFetchNewDataTimer(interval: interval)
+        initializeFetchNewDataTimer(interval: interval, session: session)
+    }
+}
+
+extension SessionActor {
+    func initializeDataCleansingTimer(interval: TimeInterval, session: Session) {
+        guard interval > 0 else {
+            self.dataCleansingTimer = nil
+            return
+        }
+
+        let newDataCleansingTimer = DispatchSource.makeTimerSource(queue: .global(qos: .utility))
+        newDataCleansingTimer.setEventHandler { [session] in
+            Task {
+                do {
+                    try await session.cleansingAllData()
+                } catch {
+                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                        .error("Error occurred data cleansing: \(error as NSError, privacy: .public)")
+                }
+            }
+        }
+        newDataCleansingTimer.schedule(deadline: .now() + interval, repeating: interval, leeway: .seconds(30))
+
+        self.dataCleansingTimer = newDataCleansingTimer
+    }
+
+    func destroyDataCleansingTimer() {
+        self.dataCleansingTimer = nil
+    }
+
+    func updateDataCleansingTimer(interval: TimeInterval, session: Session) {
+        guard dataCleansingTimer != nil else {
+            return
+        }
+
+        initializeDataCleansingTimer(interval: interval, session: session)
     }
 }

@@ -13,7 +13,7 @@ import TweetNestKit
 struct AppStatusView: View {
     let isPersistentContainerLoaded: Bool
 
-    @State private var inProgressPersistentContainerCloudKitEvent = TweetNestApp.session.persistentCloudKitContainerEvents.values.last { $0.endDate == nil }
+    @State private var inProgressPersistentContainerCloudKitEvent = TweetNestApp.session.persistentContainer.cloudKitEvents.values.last { $0.endDate == nil }
 
     private var loadingText: Text? {
         switch (isPersistentContainerLoaded, inProgressPersistentContainerCloudKitEvent?.type) {
@@ -51,7 +51,8 @@ struct AppStatusView: View {
             }
         }
         .onReceive(
-            TweetNestApp.session.$persistentCloudKitContainerEvents
+            TweetNestApp.session.persistentContainer.$cloudKitEvents
+                .receive(on: RunLoop.main)
         ) {
             self.inProgressPersistentContainerCloudKitEvent = $0.values.last { $0.endDate == nil }
         }

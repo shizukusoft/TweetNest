@@ -30,14 +30,12 @@ extension DataAsset {
         dataAssetFetchRequest.predicate = NSPredicate(format: "url == %@", url as NSURL)
         dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         dataAssetFetchRequest.propertiesToFetch = ["dataMIMEType", "dataSHA512Hash"]
+        dataAssetFetchRequest.returnsObjectsAsFaults = false
         dataAssetFetchRequest.fetchLimit = 1
 
         let lastDataAsset = try context.fetch(dataAssetFetchRequest).first
 
-        if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash || lastDataAsset.data.flatMap({ Data(SHA512.hash(data: $0)) }) == dataSHA512Hash {
-            if lastDataAsset.dataMIMEType == nil{
-                lastDataAsset.dataMIMEType = dataMIMEType
-            }
+        if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash, lastDataAsset.dataMIMEType == dataMIMEType {
             return lastDataAsset
         } else {
             let newDataAsset = DataAsset(context: context)

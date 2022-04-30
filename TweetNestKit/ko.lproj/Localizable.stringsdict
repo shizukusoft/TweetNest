@@ -2,6 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>%ld New Block(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@blocks@</string>
+		<key>blocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 차단 %ld명</string>
+			<key>zero</key>
+			<string>새로운 차단 %ld명</string>
+		</dict>
+	</dict>
 	<key>%ld New Follower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -34,6 +50,38 @@
 			<string>새로운 팔로우 %ld명</string>
 		</dict>
 	</dict>
+	<key>%ld New Mute(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@mutes@</string>
+		<key>mutes</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 뮤트 %ld명</string>
+			<key>zero</key>
+			<string>새로운 뮤트 %ld명</string>
+		</dict>
+	</dict>
+	<key>%ld New Unblock(s)</key>
+	<dict>
+		<key>NSStringLocalizedFormatKey</key>
+		<string>%#@unblocks@</string>
+		<key>unblocks</key>
+		<dict>
+			<key>NSStringFormatSpecTypeKey</key>
+			<string>NSStringPluralRuleType</string>
+			<key>NSStringFormatValueTypeKey</key>
+			<string>ld</string>
+			<key>other</key>
+			<string>새로운 차단 해제 %ld명</string>
+			<key>zero</key>
+			<string>새로운 차단 해제 %ld명</string>
+		</dict>
+	</dict>
 	<key>%ld New Unfollower(s)</key>
 	<dict>
 		<key>NSStringLocalizedFormatKey</key>
@@ -64,54 +112,6 @@
 			<string>새로운 언팔로우 %ld명</string>
 			<key>zero</key>
 			<string>새로운 언팔로우 %ld명</string>
-		</dict>
-	</dict>
-	<key>%ld New Block(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@blocks@</string>
-		<key>blocks</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>other</key>
-			<string>새로운 차단 %ld명</string>
-			<key>zero</key>
-			<string>새로운 차단 %ld명</string>
-		</dict>
-	</dict>
-	<key>%ld New Unblock(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@unblocks@</string>
-		<key>unblocks</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>other</key>
-			<string>새로운 차단 해제 %ld명</string>
-			<key>zero</key>
-			<string>새로운 차단 해제 %ld명</string>
-		</dict>
-	</dict>
-	<key>%ld New Mute(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@mutes@</string>
-		<key>mutes</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>other</key>
-			<string>새로운 뮤트 %ld명</string>
-			<key>zero</key>
-			<string>새로운 뮤트 %ld명</string>
 		</dict>
 	</dict>
 	<key>%ld New Unmute(s)</key>

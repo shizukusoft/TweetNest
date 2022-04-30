@@ -21,9 +21,6 @@ extension URLSessionConfiguration {
     public static func twnk_background(withIdentifier identifier: String) -> URLSessionConfiguration {
         let urlSessionConfiguration = URLSessionConfiguration.background(withIdentifier: identifier)
 
-        urlSessionConfiguration.isDiscretionary = true
-        urlSessionConfiguration.sessionSendsLaunchEvents = true
-
         urlSessionConfiguration.reset()
 
         return urlSessionConfiguration
@@ -40,6 +37,7 @@ extension URLSessionConfiguration {
         }()
 
         timeoutIntervalForRequest = 15
+        timeoutIntervalForResource = 2 * 24 * 60 * 60
 
         httpCookieAcceptPolicy = .never
         httpShouldSetCookies = false

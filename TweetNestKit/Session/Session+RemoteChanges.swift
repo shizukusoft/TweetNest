@@ -19,307 +19,340 @@ extension Session {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
     
-    func handlePersistentStoreRemoteChanges() {
-        Task.detached { [self] in
+    func handlePersistentStoreRemoteChanges(_ persistentHistoryToken: NSPersistentHistoryToken?) {
+        withExtendedBackgroundExecution {
             do {
+                let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
+                    try NSKeyedUnarchiver.unarchivedObject(
+                        ofClass: NSPersistentHistoryToken.self,
+                        from: $0
+                    )
+                }
+
+                guard let lastPersistentHistoryToken = lastPersistentHistoryToken else {
+                    if let persistentHistoryToken = persistentHistoryToken {
+                        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
+                            withRootObject: persistentHistoryToken,
+                            requiringSecureCoding: true
+                        )
+                    }
+
+                    return
+                }
+
+                let context = self.persistentContainer.newBackgroundContext()
+                let persistentHistoryResult = try context.performAndWait {
+                    try context.execute(
+                        NSPersistentHistoryChangeRequest.fetchHistory(
+                            after: lastPersistentHistoryToken
+                        )
+                    )
+                } as? NSPersistentHistoryResult
+
                 guard
-                    let transactions = try await sessionActor.persistentHistoryTransactions,
-                    let lastPersistentHistoryTransactionDate = transactions.lastPersistentHistoryTransactionDate
+                    let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
+                    let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
                 else {
                     return
                 }
 
-                try await withExtendedBackgroundExecution {
-                    try Task.checkCancellation()
-
-                    do {
-                        try await withThrowingTaskGroup(of: Void.self) { taskGroup in
-                            taskGroup.addTask { try await self.handleUserDetailChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await self.handleAccountChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await self.handleUserChanges(transactions: transactions.transactions, context: transactions.context) }
-                            taskGroup.addTask { try await self.handleDataAssetsChanges(transactions: transactions.transactions, context: transactions.context) }
-
-                            try await taskGroup.waitForAll()
-                        }
-                    } catch {
-                        if error is CancellationError {
-                            do {
-                                try await self.sessionActor.updateLastPersistentHistoryTransactionTimestamp(lastPersistentHistoryTransactionDate)
-                            } catch {
-                                self.logger.error("Error occurred while rollback persistent history token: \(error as NSError, privacy: .public)")
-                            }
+                Task.detached {
+                    await withTaskGroup(of: Void.self) { taskGroup in
+                        taskGroup.addTask {
+                            await self.updateNotifications(transactions: persistentHistoryTransactions)
                         }
 
-                        throw error
+                        taskGroup.addTask {
+                            await self.updateAccountCredential(transactions: persistentHistoryTransactions)
+                        }
+
+                        taskGroup.addTask(priority: .utility) {
+                            await self.cleansingAccount(transactions: persistentHistoryTransactions)
+                        }
+
+                        taskGroup.addTask(priority: .utility) {
+                            await self.cleansingUser(transactions: persistentHistoryTransactions)
+                        }
+
+                        taskGroup.addTask(priority: .utility) {
+                            await self.cleansingDataAssets(transactions: persistentHistoryTransactions)
+                        }
+
+                        await taskGroup.waitForAll()
                     }
                 }
+
+                TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
+                    withRootObject: newLastPersistentHistoryToken,
+                    requiringSecureCoding: true
+                )
             } catch {
-                logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+                self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
             }
         }
     }
 
-    private func handleAccountChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
-        let accountChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
-            Array(
-                transactions
-                    .lazy
-                    .flatMap { $0.changes ?? [] }
-                    .filter { $0.changedObjectID.entity == Account.entity() }
-                    .map { ($0.changedObjectID, $0) }
-            ),
-            uniquingKeysWith: { $1 }
-        )
+    private func updateAccountCredential(transactions: [NSPersistentHistoryTransaction]) async {
+        let changedAccountObjectIDs = transactions.lazy
+            .compactMap(\.changes)
+            .joined()
+            .filter { $0.changedObjectID.entity == Account.entity() }
+            .filter { $0.changeType == .update }
+            .map(\.changedObjectID)
+            .uniqued()
 
-        for (accountObjectID, change) in accountChangesByObjectID {
-            try Task.checkCancellation()
+        let context = self.persistentContainer.newBackgroundContext()
+        context.undoManager = nil
 
-            func updateCredential() async {
-                let credential: Twitter.Session.Credential? = await context.perform(schedule: .enqueued) {
-                    guard let account = try? context.existingObject(with: accountObjectID) as? Account else {
-                        return nil
-                    }
-
-                    return account.credential
+        for changedAccountObjectID in changedAccountObjectIDs {
+            let credential: Twitter.Session.Credential? = await context.perform {
+                guard let account = context.object(with: changedAccountObjectID) as? Account else {
+                    return nil
                 }
 
-                guard let twitterSession = await sessionActor.twitterSessions[accountObjectID.uriRepresentation()] else {
+                return account.credential
+            }
+
+            guard let twitterSession = await self.sessionActor.twitterSessions[changedAccountObjectID.uriRepresentation()] else {
+                return
+            }
+
+            await twitterSession.updateCredential(credential)
+        }
+    }
+}
+
+extension Session {
+    private func cleansingAccount(transactions: [NSPersistentHistoryTransaction]) async {
+        let changedAccountObjectIDs = transactions.lazy
+            .compactMap(\.changes)
+            .joined()
+            .filter { $0.changedObjectID.entity == Account.entity() }
+            .filter { $0.changeType == .insert }
+            .map(\.changedObjectID)
+            .uniqued()
+
+        let context = self.persistentContainer.newBackgroundContext()
+        context.undoManager = nil
+
+        for changedAccountObjectID in changedAccountObjectIDs {
+            do {
+                try await self.cleansingAccount(for: changedAccountObjectID, context: context)
+            } catch {
+                self.logger.error("Error occurred while cleansing account: \(error as NSError, privacy: .public)")
+            }
+        }
+    }
+
+    private func cleansingUser(transactions: [NSPersistentHistoryTransaction]) async {
+        let changedUserObjectIDs = transactions.lazy
+            .compactMap(\.changes)
+            .joined()
+            .filter { $0.changedObjectID.entity == User.entity() }
+            .filter { $0.changeType == .insert }
+            .map(\.changedObjectID)
+            .uniqued()
+
+        let context = self.persistentContainer.newBackgroundContext()
+        context.undoManager = nil
+
+        for changedUserObjectID in changedUserObjectIDs {
+            do {
+                try await self.cleansingUser(for: changedUserObjectID, context: context)
+            } catch {
+                self.logger.error("Error occurred while cleansing user: \(error as NSError, privacy: .public)")
+            }
+        }
+    }
+
+    private func cleansingDataAssets(transactions: [NSPersistentHistoryTransaction]) async {
+        let changedDataAssetObjectIDs = transactions.lazy
+            .compactMap(\.changes)
+            .joined()
+            .filter { $0.changedObjectID.entity == DataAsset.entity() }
+            .filter { $0.changeType == .insert }
+            .map(\.changedObjectID)
+            .uniqued()
+
+        let context = self.persistentContainer.newBackgroundContext()
+        context.undoManager = nil
+
+        for changedDataAssetObjectID in changedDataAssetObjectIDs {
+            do {
+                try await self.cleansingDataAsset(for: changedDataAssetObjectID, context: context)
+            } catch {
+                self.logger.error("Error occurred while cleansing data asset: \(error as NSError, privacy: .public)")
+            }
+        }
+    }
+}
+
+extension Session {
+    private func notificationContent(for newUserDetail: UserDetail, preferences: ManagedPreferences.Preferences) -> UNNotificationContent? {
+        guard
+            let user = newUserDetail.user,
+            let userID = user.id,
+            let sortedUserDetails = user.sortedUserDetails
+        else {
+            return nil
+        }
+
+        let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap { sortedUserDetails.index(before: $0) }
+
+        guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
+            return nil
+        }
+
+        let notificationContent = UNMutableNotificationContent()
+        if let name = newUserDetail.name {
+            notificationContent.title = name
+        }
+        notificationContent.subtitle = newUserDetail.displayUsername ?? userID.displayUserID
+        notificationContent.threadIdentifier = userID
+        notificationContent.categoryIdentifier = "NewAccountData"
+        notificationContent.sound = .default
+        notificationContent.interruptionLevel = .timeSensitive
+
+        var changes: [String] = []
+
+        if preferences.notifyProfileChanges {
+            if oldUserDetail.isProfileEqual(to: newUserDetail) == false {
+                changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followingUserIDs) {
+            if followingUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if followingUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followerUserIDs) {
+            if followerUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if followerUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.blockingUserIDs) {
+            if blockingUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if blockingUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.mutingUserIDs) {
+            if mutingUserIDsChanges.addedUserIDsCount > 0 {
+                changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if mutingUserIDsChanges.removedUserIDsCount > 0 {
+                changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        guard changes.isEmpty == false else {
+            return nil
+        }
+
+        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+
+        return notificationContent
+    }
+
+    private func updateNotifications(transactions: [NSPersistentHistoryTransaction]) async {
+        await withExtendedBackgroundExecution {
+            do {
+                let changes = OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange>(
+                    transactions.lazy
+                        .compactMap(\.changes)
+                        .joined()
+                        .filter { $0.changedObjectID.entity == UserDetail.entity() }
+                        .map { ($0.changedObjectID, $0) },
+                    uniquingKeysWith: { (_, last) in last }
+                )
+
+                guard changes.isEmpty == false else {
                     return
                 }
 
-                await twitterSession.updateCredential(credential)
-            }
+                async let cloudKitRecordIDs = Task.detached { self.persistentContainer.recordIDs(for: changes.keys.elements) }.value
 
-            func cleansingAccount() async {
-                do {
-                    try await self.cleansingAccount(for: accountObjectID, context: context)
-                } catch {
-                    logger.error("Error occurred while cleansing account: \(String(reflecting: error), privacy: .public)")
-                }
-            }
-
-            switch change.changeType {
-            case .insert:
-                await cleansingAccount()
-            case .update:
-                await updateCredential()
-            case .delete:
-                break
-            @unknown default:
-                break
-            }
-        }
-    }
-
-    private func handleUserChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
-        let userChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
-            Array(
-                transactions
-                    .lazy
-                    .flatMap { $0.changes ?? [] }
-                    .filter { $0.changedObjectID.entity == User.entity() }
-                    .map { ($0.changedObjectID, $0) }
-            ),
-            uniquingKeysWith: { $1 }
-        )
-
-        for (userObjectID, change) in userChangesByObjectID {
-            try Task.checkCancellation()
-
-            func cleansingUser() async {
-                do {
-                    try await self.cleansingUser(for: userObjectID, context: context)
-                } catch {
-                    logger.error("Error occurred while cleansing user: \(String(reflecting: error), privacy: .public)")
-                }
-            }
-
-            switch change.changeType {
-            case .insert:
-                await cleansingUser()
-            case .update:
-                break
-            case .delete:
-                break
-            @unknown default:
-                break
-            }
-        }
-    }
-
-    private func handleDataAssetsChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
-        let dataAssetChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
-            Array(
-                transactions
-                    .lazy
-                    .flatMap { $0.changes ?? [] }
-                    .filter { $0.changedObjectID.entity == DataAsset.entity() }
-                    .map { ($0.changedObjectID, $0) }
-            ),
-            uniquingKeysWith: { $1 }
-        )
-
-        for (dataAssetObjectID, change) in dataAssetChangesByObjectID {
-            try Task.checkCancellation()
-
-            func cleansingDataAsset() async {
-                do {
-                    try await self.cleansingDataAsset(for: dataAssetObjectID, context: context)
-                } catch {
-                    logger.error("Error occurred while cleansing data asset: \(String(reflecting: error), privacy: .public)")
-                }
-            }
-
-            switch change.changeType {
-            case .insert:
-                await cleansingDataAsset()
-            case .update:
-                break
-            case .delete:
-                break
-            @unknown default:
-                break
-            }
-        }
-    }
-
-    private func handleUserDetailChanges(transactions: [NSPersistentHistoryTransaction], context: NSManagedObjectContext) async throws {
-        let userDetailChangesByObjectID: OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange> = OrderedDictionary(
-            Array(
-                transactions
-                    .lazy
-                    .flatMap { $0.changes ?? [] }
-                    .filter { $0.changedObjectID.entity == UserDetail.entity() }
-                    .map { ($0.changedObjectID, $0) }
-            ),
-            uniquingKeysWith: { $1 }
-        )
-
-        for (userDetailObjectID, change) in userDetailChangesByObjectID {
-            try Task.checkCancellation()
-
-            let notificationIdentifier = persistentContainer.recordID(for: userDetailObjectID)?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString
-
-            switch change.changeType {
-            case .insert, .update:
-                let notificationContent: UNNotificationContent? = await context.perform(schedule: .enqueued) { [persistentContainer] in
-                    guard
-                        let newUserDetail = try? context.existingObject(with: userDetailObjectID) as? UserDetail,
-                        Date(timeIntervalSinceNow: -(10 * 60)) <= (newUserDetail.creationDate ?? .distantPast),
-                        let user = newUserDetail.user,
-                        let sortedUserDetails = user.sortedUserDetails,
-                        sortedUserDetails.count > 1,
-                        let account = user.accounts?.max(by: { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast })
-                    else {
-                        return nil
-                    }
-
-                    let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap({ $0 - 1 })
-
-                    guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
-                        return nil
-                    }
-
+                let notificationContents: [NSManagedObjectID: UNNotificationContent?] = try await self.persistentContainer.performBackgroundTask { context in
                     let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
-                    let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = newUserDetail.name ?? account.objectID.description
-                    if let displayUsername = newUserDetail.displayUsername {
-                        notificationContent.subtitle = displayUsername
-                    } else if let userID = account.userID {
-                        notificationContent.subtitle = userID.displayUserID
-                    }
-                    notificationContent.categoryIdentifier = "NewAccountData"
-                    notificationContent.interruptionLevel = .passive
-                    notificationContent.threadIdentifier = persistentContainer.recordID(for: account.objectID)?.recordName ?? account.objectID.uriRepresentation().absoluteString
+                    let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
+                    accountUserIDsfetchRequest.entity = Account.entity()
+                    accountUserIDsfetchRequest.resultType = .dictionaryResultType
+                    accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
+                    accountUserIDsfetchRequest.returnsDistinctResults = true
 
-                    var changes: [String] = []
-
-                    if preferences.notifyProfileChanges {
-                        if oldUserDetail.isProfileEqual(to: newUserDetail) == false {
-                            changes.append(String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
+                    let results = try context.fetch(accountUserIDsfetchRequest)
+                    let accountUserIDs = results.compactMap {
+                        $0["userID"] as? Twitter.User.ID
                     }
 
-                    if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followingUserIDs) {
-                        if followingUserIDsChanges.addedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
-                        if followingUserIDsChanges.removedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
+                    guard accountUserIDs.isEmpty == false else {
+                        return [:]
                     }
 
-                    if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followerUserIDs) {
-                        if followerUserIDsChanges.addedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
-                        if followerUserIDsChanges.removedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
-                    }
-
-                    if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.blockingUserIDs) {
-                        if blockingUserIDsChanges.addedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
-                        if blockingUserIDsChanges.removedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
-                    }
-
-                    if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.mutingUserIDs) {
-                        if mutingUserIDsChanges.addedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
-                        if mutingUserIDsChanges.removedUserIDsCount > 0 {
-                            notificationContent.sound = .default
-                            notificationContent.interruptionLevel = .timeSensitive
-                            changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-                        }
-                    }
-
-                    guard changes.isEmpty == false else {
-                        return nil
-                    }
-
-                    notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
-
-                    return notificationContent
-                }
-
-                guard let notificationContent = notificationContent else { continue }
-
-                do {
-                    try await UNUserNotificationCenter.current().add(
-                        UNNotificationRequest(
-                            identifier: notificationIdentifier,
-                            content: notificationContent,
-                            trigger: nil
-                        )
+                    let userDetailsFetchRequest = UserDetail.fetchRequest()
+                    userDetailsFetchRequest.predicate = NSCompoundPredicate(
+                        andPredicateWithSubpredicates: [
+                            NSPredicate(format: "SELF IN %@", changes.keys.elements),
+                            NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
+                            NSPredicate(format: "user.id IN %@", accountUserIDs)
+                        ]
                     )
-                } catch {
-                    logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
+                    userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
+                    userDetailsFetchRequest.returnsObjectsAsFaults = false
+
+                    let userDetails = try context.fetch(userDetailsFetchRequest)
+
+                    return userDetails.reduce(into: [:]) {
+                        $0[$1.objectID] = self.notificationContent(for: $1, preferences: preferences)
+                    }
                 }
-            case .delete:
-                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
-                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
-            @unknown default:
-                break
+
+                var userDetailObjectIDsForDeletingNotification = [NSManagedObjectID]()
+
+                for change in changes.values {
+                    switch change.changeType {
+                    case .insert, .update:
+                        if let notificationContent = notificationContents[change.changedObjectID] as? UNNotificationContent {
+                            try await UNUserNotificationCenter.current().add(
+                                UNNotificationRequest(
+                                    identifier: cloudKitRecordIDs[change.changedObjectID]?.recordName ?? change.changedObjectID.uriRepresentation().absoluteString,
+                                    content: notificationContent,
+                                    trigger: nil
+                                )
+                            )
+                        } else {
+                            userDetailObjectIDsForDeletingNotification.append(change.changedObjectID)
+                        }
+                    case .delete:
+                        userDetailObjectIDsForDeletingNotification.append(change.changedObjectID)
+                    @unknown default:
+                        break
+                    }
+                }
+
+                let fetchedCloudKitRecordIDs = await cloudKitRecordIDs
+
+                let shouldBeDeletedNotificationIdentifiers = userDetailObjectIDsForDeletingNotification
+                    .flatMap {
+                        [fetchedCloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                    }
+
+                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: shouldBeDeletedNotificationIdentifiers)
+            } catch {
+                self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
             }
         }
     }

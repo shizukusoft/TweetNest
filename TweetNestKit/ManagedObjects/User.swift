@@ -12,40 +12,17 @@ import Twitter
 
 public class User: NSManagedObject {
     public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
-        (userDetails as? Set<UserDetail>).flatMap {
-            var sortedUserDetails = OrderedSet($0)
-
-            let sortedManagedObjectID: OrderedSet<NSManagedObjectID>? = managedObjectContext
-                .flatMap { context in
-                    let userDetailsObjectIDs = Set(sortedUserDetails.map(\.objectID))
-
-                    let fetchRequest = NSFetchRequest<NSManagedObjectID>()
-                    fetchRequest.entity = UserDetail.entity()
-                    fetchRequest.predicate = NSPredicate(format: "user == %@", objectID)
-                    fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
-                    ]
-                    fetchRequest.resultType = .managedObjectIDResultType
-
-                    guard let sortedManagedObjectID = (try? context.fetch(fetchRequest)).flatMap({ OrderedSet($0) }) else {
-                        return nil
-                    }
-
-                    guard sortedManagedObjectID.isSuperset(of: userDetailsObjectIDs) else {
-                        return nil
-                    }
-
-                    return sortedManagedObjectID
-                }
-
-            if let sortedManagedObjectID = sortedManagedObjectID {
-                sortedUserDetails.sort { (sortedManagedObjectID.firstIndex(of: $0.objectID) ?? .min) < (sortedManagedObjectID.firstIndex(of: $1.objectID) ?? .min) }
-            } else {
-                sortedUserDetails.sort { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
-            }
-
-            return sortedUserDetails
+        guard
+            let userDetails = userDetails?.sortedArray(
+                using: [
+                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+                ]
+            ) as? [UserDetail]
+        else {
+            return nil
         }
+
+        return OrderedSet(uncheckedUniqueElements: userDetails)
     }
 
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {

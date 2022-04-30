@@ -12,25 +12,24 @@ struct SettingsFetchNewDataView: View {
     @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.fetchNewDataInterval)
     var fetchNewDataInterval: TimeInterval = TweetNestKitUserDefaults.standard.fetchNewDataInterval
 
+    static var fetchNewDataIntervalOptions: Set<TimeInterval> {
+        [
+            5 * 60,
+            10 * 60,
+            15 * 60,
+            30 * 60,
+            60 * 60
+        ]
+    }
+
     @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.isBackgroundUpdateEnabled)
     var backgroundUpdate: Bool = true
 
     @ViewBuilder var fetchNewDataIntervalPicker: some View {
         Picker(selection: $fetchNewDataInterval) {
-            Text("Every 5 minutes")
-                .tag(TimeInterval(5 * 60))
-
-            Text("Every 10 minutes")
-                .tag(TimeInterval(10 * 60))
-
-            Text("Every 15 minutes")
-                .tag(TimeInterval(15 * 60))
-
-            Text("Every 30 minutes")
-                .tag(TimeInterval(30 * 60))
-
-            Text("Every hour")
-                .tag(TimeInterval(60 * 60))
+            ForEach(Self.fetchNewDataIntervalOptions.sorted(), id: \.self) { timeInterval in
+                Text("Every \(Date(timeIntervalSinceReferenceDate: 0)..<Date(timeIntervalSinceReferenceDate: timeInterval), format: .components(style: .narrow))")
+            }
 
             #if os(macOS)
             Divider()
@@ -39,15 +38,11 @@ struct SettingsFetchNewDataView: View {
             Text("Manually")
                 .tag(TimeInterval(0))
         } label: {
-
+            #if os(macOS)
+            Text("Fetch new data")
+            #endif
         }
     }
-
-    #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
-    @ViewBuilder var backgroundUpdateToggle: some View {
-        Toggle("Background Update", isOn: $backgroundUpdate)
-    }
-    #endif
 
     var body: some View {
         #if os(macOS)
@@ -62,7 +57,9 @@ struct SettingsFetchNewDataView: View {
 
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 Section {
-                    backgroundUpdateToggle
+                    Toggle("Background Update", isOn: $backgroundUpdate)
+                } footer: {
+                    Text("Update accounts in background on this device.")
                 }
                 #endif
             }
