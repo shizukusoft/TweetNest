@@ -79,10 +79,6 @@ public class Session {
             do {
                 try await withExtendedBackgroundExecution {
                     try await self.persistentContainer.loadPersistentStores()
-
-                    #if canImport(CoreSpotlight)
-                    self.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
-                    #endif
                 }
 
                 await MainActor.run {

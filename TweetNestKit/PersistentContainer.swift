@@ -73,6 +73,10 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
 
                 return persistentStoreDescription
             }
+
+            #if canImport(CoreSpotlight)
+            self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: tweetNestKitPersistentStoreDescription, coordinator: self.persistentStoreCoordinator)
+            #endif
         } else {
             persistentStoreDescriptions.forEach {
                 $0.url = nil
@@ -103,16 +107,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         persistentStoreCoordinator.performAndWait {
             do {
                 try self.migrationIfNeeded()
-
-                super.loadPersistentStores { storeDescription, error in
-                    #if canImport(CoreSpotlight)
-                    if storeDescription.type == NSSQLiteStoreType, storeDescription.configuration == Self.defaultPersistentStoreConfiguration {
-                        self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
-                    }
-                    #endif
-
-                    block(storeDescription, error)
-                }
 
                 super.loadPersistentStores(completionHandler: block)
             } catch {
