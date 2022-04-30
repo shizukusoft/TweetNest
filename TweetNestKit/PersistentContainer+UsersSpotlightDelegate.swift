@@ -12,16 +12,16 @@ import CoreSpotlight
 import Algorithms
 
 extension PersistentContainer {
-    class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
-        override func domainIdentifier() -> String {
+    public class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
+        public override func domainIdentifier() -> String {
             "\(Bundle.tweetNestKit.bundleIdentifier!).users"
         }
 
-        override func indexName() -> String? {
+        public override func indexName() -> String? {
             "users-index"
         }
 
-        override func attributeSet(for object: NSManagedObject) -> CSSearchableItemAttributeSet? {
+        public override func attributeSet(for object: NSManagedObject) -> CSSearchableItemAttributeSet? {
             if let user = object as? User {
                 let attributeSet = CSSearchableItemAttributeSet(contentType: .contact)
 

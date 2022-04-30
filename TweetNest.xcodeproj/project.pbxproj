@@ -126,6 +126,7 @@
 		1970663F26E709FE00D7F21D /* AccountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663E26E709FE00D7F21D /* AccountLabel.swift */; };
 		1970664026E709FE00D7F21D /* AccountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663E26E709FE00D7F21D /* AccountLabel.swift */; };
 		1970664126E709FE00D7F21D /* AccountLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663E26E709FE00D7F21D /* AccountLabel.swift */; };
+		1970CADA281D6FA8006A6943 /* NSPersistentContainer+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970CAD9281D6FA8006A6943 /* NSPersistentContainer+TweetNestKit.swift */; };
 		19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19718875270022BB000840C7 /* Date+TweetNestKit.swift */; };
 		197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */; };
 		197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */; };
@@ -443,6 +444,7 @@
 		195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
 		1970663A26E7043500D7F21D /* SettingsGeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGeneralView.swift; sourceTree = "<group>"; };
 		1970663E26E709FE00D7F21D /* AccountLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLabel.swift; sourceTree = "<group>"; };
+		1970CAD9281D6FA8006A6943 /* NSPersistentContainer+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentContainer+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19718875270022BB000840C7 /* Date+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+TweetNestKit.swift"; sourceTree = "<group>"; };
 		197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNumber+TwetNestKit.swift"; sourceTree = "<group>"; };
 		197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+CleansingData.swift"; sourceTree = "<group>"; };
@@ -808,6 +810,14 @@
 			path = Swift;
 			sourceTree = "<group>";
 		};
+		1970CAD8281D6F8F006A6943 /* CoreData */ = {
+			isa = PBXGroup;
+			children = (
+				1970CAD9281D6FA8006A6943 /* NSPersistentContainer+TweetNestKit.swift */,
+			);
+			path = CoreData;
+			sourceTree = "<group>";
+		};
 		19861E3926C8F81000073431 /* swift-twitter */ = {
 			isa = PBXGroup;
 			children = (
@@ -1003,6 +1013,7 @@
 		19C5A2D126BC217900AB1122 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				1970CAD8281D6F8F006A6943 /* CoreData */,
 				19861E3926C8F81000073431 /* swift-twitter */,
 				195DD4C626BFD31E008F0309 /* Swift */,
 				19C5A2D226BC218100AB1122 /* Foundation */,
@@ -1673,6 +1684,7 @@
 				190DF4C126BCF1B700E1F062 /* Session+UpdateUser.swift in Sources */,
 				19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */,
 				19C5A2BE26BC1F8A00AB1122 /* UserDetail.swift in Sources */,
+				1970CADA281D6FA8006A6943 /* NSPersistentContainer+TweetNestKit.swift in Sources */,
 				198E9D16280BF9210064CBD8 /* UserID.swift in Sources */,
 				19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */,
 				195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */,

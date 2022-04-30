@@ -72,10 +72,16 @@ struct TweetNestApp: App {
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 BackgroundTaskScheduler.shared.cancelBackgroundTasks()
                 #endif
+                #if canImport(CoreSpotlight)
+                Self.session.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                #endif
             case .background:
                 Self.session.pauseBackgroundTaskTimers()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
+                #endif
+                #if canImport(CoreSpotlight)
+                Self.session.persistentContainer.usersSpotlightDelegate?.stopSpotlightIndexing()
                 #endif
             @unknown default:
                 break

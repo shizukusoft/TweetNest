@@ -28,7 +28,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     #if canImport(CoreSpotlight)
-    private(set) lazy var usersSpotlightDelegate: UsersSpotlightDelegate? = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[1], coordinator: self.persistentStoreCoordinator)
+    public private(set) var usersSpotlightDelegate: UsersSpotlightDelegate?
     #endif
 
     @Published
@@ -84,10 +84,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                     }
                 }
             }
-
-            #if canImport(CoreSpotlight)
-            self.usersSpotlightDelegate = nil
-            #endif
         }
 
         NotificationCenter.default
@@ -104,9 +100,19 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     public override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> Void) {
-        persistentStoreCoordinator.perform {
+        persistentStoreCoordinator.performAndWait {
             do {
                 try self.migrationIfNeeded()
+
+                super.loadPersistentStores { storeDescription, error in
+                    #if canImport(CoreSpotlight)
+                    if storeDescription.type == NSSQLiteStoreType, storeDescription.configuration == Self.defaultPersistentStoreConfiguration {
+                        self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: storeDescription, coordinator: self.persistentStoreCoordinator)
+                    }
+                    #endif
+
+                    block(storeDescription, error)
+                }
 
                 super.loadPersistentStores(completionHandler: block)
             } catch {
@@ -122,35 +128,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         backgroundContext.automaticallyMergesChangesFromParent = true
         backgroundContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
         return backgroundContext
-    }
-}
-
-extension PersistentContainer {
-    public func loadPersistentStores(completionHandler block: @escaping (Result<Void, PersistentContainerError>) -> Void) {
-        var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
-
-        self.loadPersistentStores { (storeDescription, error) in
-            loadedPersistentStores[storeDescription] = error
-
-            if loadedPersistentStores.count == self.persistentStoreDescriptions.count {
-                let errors = loadedPersistentStores.compactMapValues { $0 }
-
-                guard errors.isEmpty else {
-                    block(.failure(PersistentContainerError.persistentStoresLoadingFailure(errors)))
-                    return
-                }
-
-                block(.success(()))
-            }
-        }
-    }
-
-    public func loadPersistentStores() async throws {
-        return try await withCheckedThrowingContinuation { continuation in
-            self.loadPersistentStores { result in
-                continuation.resume(with: result)
-            }
-        }
     }
 }
 
