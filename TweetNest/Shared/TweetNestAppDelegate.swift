@@ -11,19 +11,7 @@ import TweetNestKit
 import UnifiedLogging
 
 @MainActor
-class TweetNestAppDelegate: NSObject, ObservableObject {
-    #if DEBUG
-    var session: Session {
-        if TweetNestApp.isPreview {
-            return Session.preview
-        } else {
-            return Session.shared
-        }
-    }
-    #else
-    let session = Session.shared
-    #endif
-}
+class TweetNestAppDelegate: NSObject, ObservableObject { }
 
 extension TweetNestAppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {

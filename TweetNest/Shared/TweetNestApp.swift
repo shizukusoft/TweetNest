@@ -40,16 +40,12 @@ struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
 
-    var session: Session {
-        delegate.session
-    }
-
     var body: some Scene {
         Group {
             WindowGroup {
                 MainView()
                     .environmentObject(delegate)
-                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+                    .environment(\.managedObjectContext, Self.session.persistentContainer.viewContext)
                     #if os(macOS) && DEBUG
                     .frame(width: Self.isPreview ? 1440 : nil, height: Self.isPreview ? (900 - 52) : nil)
                     #endif
@@ -63,7 +59,7 @@ struct TweetNestApp: App {
             #if os(macOS)
             Settings {
                 SettingsMainView()
-                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+                    .environment(\.managedObjectContext, Self.session.persistentContainer.viewContext)
             }
             #elseif os(watchOS)
             WKNotificationScene(controller: NotificationController.self, category: "NewAccountData")
@@ -72,12 +68,12 @@ struct TweetNestApp: App {
         .onChange(of: scenePhase) { phase in
             switch phase {
             case .active, .inactive:
-                session.resumeBackgroundTaskTimers()
+                Self.session.resumeBackgroundTaskTimers()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 BackgroundTaskScheduler.shared.cancelBackgroundTasks()
                 #endif
             case .background:
-                session.pauseBackgroundTaskTimers()
+                Self.session.pauseBackgroundTaskTimers()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
                 BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
                 #endif
