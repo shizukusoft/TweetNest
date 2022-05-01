@@ -20,8 +20,8 @@ extension Session {
     }
     
     func handlePersistentStoreRemoteChanges(_ persistentHistoryToken: NSPersistentHistoryToken?) {
-        withExtendedBackgroundExecution {
-            do {
+        do {
+            try withExtendedBackgroundExecution {
                 let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
                     try NSKeyedUnarchiver.unarchivedObject(
                         ofClass: NSPersistentHistoryToken.self,
@@ -86,9 +86,9 @@ extension Session {
                     withRootObject: newLastPersistentHistoryToken,
                     requiringSecureCoding: true
                 )
-            } catch {
-                self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
             }
+        } catch {
+            self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
         }
     }
 
@@ -267,8 +267,8 @@ extension Session {
     }
 
     private func updateNotifications(transactions: [NSPersistentHistoryTransaction]) async {
-        await withExtendedBackgroundExecution {
-            do {
+        do {
+            try await withExtendedBackgroundExecution {
                 let changes = OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange>(
                     transactions.lazy
                         .compactMap(\.changes)
@@ -351,9 +351,9 @@ extension Session {
                     }
 
                 UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: shouldBeDeletedNotificationIdentifiers)
-            } catch {
-                self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
             }
+        } catch {
+            self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
         }
     }
 }

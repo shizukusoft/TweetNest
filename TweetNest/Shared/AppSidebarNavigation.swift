@@ -203,29 +203,23 @@ struct AppSidebarNavigation: View {
 
     @Sendable
     private func refresh() async {
-        await withExtendedBackgroundExecution {
-            guard isRefreshing == false else {
-                return
-            }
+        guard isRefreshing == false else {
+            return
+        }
 
-            isRefreshing = true
-            defer {
-                Task {
-                    await MainActor.run {
-                        isRefreshing = false
-                    }
-                }
-// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
-//                isRefreshing = false
-            }
+        isRefreshing = true
+        defer {
+            isRefreshing = false
+        }
 
-            do {
-                try await TweetNestApp.session.fetchNewData(force: true)
-            } catch {
-                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                self.error = TweetNestError(error)
-                showErrorAlert = true
+        do {
+            try await withExtendedBackgroundExecution {
+                _ = try await TweetNestApp.session.fetchNewData(force: true)
             }
+        }  catch {
+            Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+            self.error = TweetNestError(error)
+            showErrorAlert = true
         }
     }
 }

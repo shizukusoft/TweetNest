@@ -2758,15 +2758,15 @@
 			repositoryURL = "https://github.com/sinoru/swift-unified-log";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 2.0.0;
 			};
 		};
 		19F7914427F8A472008F9FC0 /* XCRemoteSwiftPackageReference "swift-background-task" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tweetnest/swift-background-task";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.13;
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

@@ -173,13 +173,13 @@ extension Session {
 
                     if context.hasChanges {
                         context.perform {
-                            withExtendedBackgroundExecution {
-                                do {
+                            do {
+                                try withExtendedBackgroundExecution {
                                     try context.save()
-                                } catch {
-                                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                        .error("\(error as NSError, privacy: .public)")
                                 }
+                            } catch {
+                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                                    .error("\(error as NSError, privacy: .public)")
                             }
                         }
                     }

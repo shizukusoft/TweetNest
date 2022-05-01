@@ -298,7 +298,7 @@ extension Session {
                 try temporalPersistentStoreCoordinator.performAndWait {
                     var error: Error?
 
-                    withExtendedBackgroundExecution {
+                    try withExtendedBackgroundExecution {
                         let dispatchSemaphore = DispatchSemaphore(value: 0)
 
                         temporalPersistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in
