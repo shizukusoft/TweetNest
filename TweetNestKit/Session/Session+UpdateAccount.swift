@@ -64,14 +64,14 @@ extension Session {
         let userID = String(twitterAccount.id)
 
         try await context.perform(schedule: .enqueued) {
-            guard let account = context.object(with: accountObjectID) as? Account else {
-                return
-            }
+            try withExtendedBackgroundExecution {
+                guard let account = context.object(with: accountObjectID) as? Account else {
+                    return
+                }
 
-            account.userID = userID
+                account.userID = userID
 
-            if account.hasChanges {
-                try withExtendedBackgroundExecution {
+                if account.hasChanges {
                     try context.save()
                 }
             }

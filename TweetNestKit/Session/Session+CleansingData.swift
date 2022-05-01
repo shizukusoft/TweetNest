@@ -73,49 +73,49 @@ extension Session {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
-            guard
-                let account = try? context.existingObject(with: accountObjectID) as? Account,
-                let accountToken = account.token,
-                let accountTokenSecret = account.tokenSecret
-            else {
-                return
-            }
+            try withExtendedBackgroundExecution {
+                guard
+                    let account = try? context.existingObject(with: accountObjectID) as? Account,
+                    let accountToken = account.token,
+                    let accountTokenSecret = account.tokenSecret
+                else {
+                    return
+                }
 
-            let accountFetchRequest: NSFetchRequest<Account> = Account.fetchRequest()
-            accountFetchRequest.predicate = NSCompoundPredicate(
-                andPredicateWithSubpredicates: [
-                    NSPredicate(format: "token == %@", accountToken),
-                    NSPredicate(format: "tokenSecret == %@", accountTokenSecret),
-                ]
-            )
-            accountFetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \Account.creationDate, ascending: true),
-            ]
-            accountFetchRequest.propertiesToFetch = ["creationDate", "preferringSortOrder", "userID", "preferences"]
-            accountFetchRequest.returnsObjectsAsFaults = false
-
-            let accounts = try context.fetch(accountFetchRequest)
-
-            guard accounts.count > 1 else { return }
-
-            let targetAccount = accounts.first ?? account
-
-            targetAccount.creationDate = accounts.first?.creationDate ?? account.creationDate
-            targetAccount.preferringSortOrder = accounts.first?.preferringSortOrder ?? account.preferringSortOrder
-            targetAccount.userID = accounts.last?.userID ?? account.userID
-
-            for account in accounts {
-                guard account != targetAccount else { continue }
-
-                targetAccount.preferences = .init(
-                    fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers
+                let accountFetchRequest: NSFetchRequest<Account> = Account.fetchRequest()
+                accountFetchRequest.predicate = NSCompoundPredicate(
+                    andPredicateWithSubpredicates: [
+                        NSPredicate(format: "token == %@", accountToken),
+                        NSPredicate(format: "tokenSecret == %@", accountTokenSecret),
+                    ]
                 )
+                accountFetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \Account.creationDate, ascending: true),
+                ]
+                accountFetchRequest.propertiesToFetch = ["creationDate", "preferringSortOrder", "userID", "preferences"]
+                accountFetchRequest.returnsObjectsAsFaults = false
 
-                context.delete(account)
-            }
+                let accounts = try context.fetch(accountFetchRequest)
 
-            if context.hasChanges {
-                try withExtendedBackgroundExecution {
+                guard accounts.count > 1 else { return }
+
+                let targetAccount = accounts.first ?? account
+
+                targetAccount.creationDate = accounts.first?.creationDate ?? account.creationDate
+                targetAccount.preferringSortOrder = accounts.first?.preferringSortOrder ?? account.preferringSortOrder
+                targetAccount.userID = accounts.last?.userID ?? account.userID
+
+                for account in accounts {
+                    guard account != targetAccount else { continue }
+
+                    targetAccount.preferences = .init(
+                        fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers
+                    )
+
+                    context.delete(account)
+                }
+
+                if context.hasChanges {
                     try context.save()
                 }
             }
@@ -151,47 +151,47 @@ extension Session {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
-            guard
-                let user = try? context.existingObject(with: userObjectID) as? User,
-                let userID = user.id
-            else {
-                return
-            }
+            try withExtendedBackgroundExecution {
+                guard
+                    let user = try? context.existingObject(with: userObjectID) as? User,
+                    let userID = user.id
+                else {
+                    return
+                }
 
-            let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
-            userFetchRequest.predicate = NSCompoundPredicate(
-                andPredicateWithSubpredicates: [
-                    NSPredicate(format: "id == %@", userID),
+                let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                userFetchRequest.predicate = NSCompoundPredicate(
+                    andPredicateWithSubpredicates: [
+                        NSPredicate(format: "id == %@", userID),
+                    ]
+                )
+                userFetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \User.creationDate, ascending: true),
                 ]
-            )
-            userFetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \User.creationDate, ascending: true),
-            ]
-            userFetchRequest.propertiesToFetch = ["creationDate", "lastUpdateEndDate", "lastUpdateStartDate", "modificationDate"]
-            userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
-            userFetchRequest.returnsObjectsAsFaults = false
+                userFetchRequest.propertiesToFetch = ["creationDate", "lastUpdateEndDate", "lastUpdateStartDate", "modificationDate"]
+                userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
+                userFetchRequest.returnsObjectsAsFaults = false
 
-            let users = try context.fetch(userFetchRequest)
+                let users = try context.fetch(userFetchRequest)
 
-            guard users.count > 1 else { return }
+                guard users.count > 1 else { return }
 
-            let targetUser = users.first ?? user
+                let targetUser = users.first ?? user
 
-            for user in users {
-                guard user != targetUser else { continue }
+                for user in users {
+                    guard user != targetUser else { continue }
 
-                targetUser.creationDate = [targetUser.creationDate, user.creationDate].lazy.compacted().min()
-                targetUser.lastUpdateEndDate = [targetUser.lastUpdateEndDate, user.lastUpdateEndDate].lazy.compacted().max()
-                targetUser.lastUpdateStartDate = [targetUser.lastUpdateStartDate, user.lastUpdateStartDate].lazy.compacted().max()
-                targetUser.modificationDate = [targetUser.modificationDate, user.modificationDate].lazy.compacted().max()
+                    targetUser.creationDate = [targetUser.creationDate, user.creationDate].lazy.compacted().min()
+                    targetUser.lastUpdateEndDate = [targetUser.lastUpdateEndDate, user.lastUpdateEndDate].lazy.compacted().max()
+                    targetUser.lastUpdateStartDate = [targetUser.lastUpdateStartDate, user.lastUpdateStartDate].lazy.compacted().max()
+                    targetUser.modificationDate = [targetUser.modificationDate, user.modificationDate].lazy.compacted().max()
 
-                targetUser.addToUserDetails(user.userDetails ?? [])
+                    targetUser.addToUserDetails(user.userDetails ?? [])
 
-                context.delete(user)
-            }
+                    context.delete(user)
+                }
 
-            if context.hasChanges {
-                try withExtendedBackgroundExecution {
+                if context.hasChanges {
                     try context.save()
                 }
             }
@@ -202,28 +202,28 @@ extension Session {
         let context = persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
-            let fetchRequest = UserDetail.fetchRequest()
-            fetchRequest.predicate = NSPredicate(format: "user == %@", userObjectID)
-            fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
-            ]
-            fetchRequest.returnsObjectsAsFaults = false
+            try withExtendedBackgroundExecution {
+                let fetchRequest = UserDetail.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "user == %@", userObjectID)
+                fetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+                ]
+                fetchRequest.returnsObjectsAsFaults = false
 
-            var userDetails = OrderedSet(try context.fetch(fetchRequest))
+                var userDetails = OrderedSet(try context.fetch(fetchRequest))
 
-            for userDetail in userDetails {
-                let previousUserIndex = (userDetails.firstIndex(of: userDetail) ?? 0) - 1
-                let previousUserDetail = userDetails.indices.contains(previousUserIndex) ? userDetails[previousUserIndex] : nil
+                for userDetail in userDetails {
+                    let previousUserIndex = (userDetails.firstIndex(of: userDetail) ?? 0) - 1
+                    let previousUserDetail = userDetails.indices.contains(previousUserIndex) ? userDetails[previousUserIndex] : nil
 
-                if previousUserDetail ~= userDetail {
-                    userDetails.remove(userDetail)
-                    userDetail.user = nil
-                    context.delete(userDetail)
+                    if previousUserDetail ~= userDetail {
+                        userDetails.remove(userDetail)
+                        userDetail.user = nil
+                        context.delete(userDetail)
+                    }
                 }
-            }
 
-            if context.hasChanges {
-                try withExtendedBackgroundExecution {
+                if context.hasChanges {
                     try context.save()
                 }
             }
@@ -298,7 +298,7 @@ extension Session {
                 try temporalPersistentStoreCoordinator.performAndWait {
                     var error: Error?
 
-                    withExtendedBackgroundExecution {
+                    try withExtendedBackgroundExecution {
                         let dispatchSemaphore = DispatchSemaphore(value: 0)
 
                         temporalPersistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in

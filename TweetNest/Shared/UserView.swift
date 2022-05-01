@@ -335,32 +335,30 @@ extension UserView {
 
     @Sendable
     private func refresh() async {
-        await withExtendedBackgroundExecution {
-            guard isRefreshing == false else {
-                return
-            }
+        guard isRefreshing == false else {
+            return
+        }
 
-            startRefreshing()
-            defer {
-                Task {
-                    await endRefreshing()
-                }
-            }
+        isRefreshing = true
+        defer {
+            isRefreshing = false
+        }
 
-            do {
-                guard let accountObjectID = accountObjectID else {
-                    return
-                }
+        guard let accountObjectID = accountObjectID else {
+            return
+        }
 
+        do {
+            try await withExtendedBackgroundExecution {
                 if isUserContainsAccount {
                     try await TweetNestApp.session.updateAccount(accountObjectID)
                 } else {
                     _ = try await TweetNestApp.session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]
                 }
-            } catch {
-                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                presentError(error: TweetNestError(error))
             }
+        } catch {
+            Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+            presentError(error: TweetNestError(error))
         }
     }
 }

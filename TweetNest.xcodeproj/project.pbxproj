@@ -2253,7 +2253,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.9.55;
+				CURRENT_PROJECT_VERSION = 1.9.56;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2326,7 +2326,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.9.55;
+				CURRENT_PROJECT_VERSION = 1.9.56;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -2758,15 +2758,15 @@
 			repositoryURL = "https://github.com/sinoru/swift-unified-log";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
+				minimumVersion = 2.0.0;
 			};
 		};
 		19F7914427F8A472008F9FC0 /* XCRemoteSwiftPackageReference "swift-background-task" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/tweetnest/swift-background-task";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.13;
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.1.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

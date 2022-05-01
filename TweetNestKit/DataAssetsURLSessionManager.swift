@@ -166,10 +166,10 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
                 }
 
                 do {
-                    try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
+                    try withExtendedBackgroundExecution {
+                        try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
 
-                    if managedObjectContext.hasChanges {
-                        try withExtendedBackgroundExecution {
+                        if managedObjectContext.hasChanges {
                             try managedObjectContext.save()
                         }
                     }
