@@ -140,6 +140,7 @@
 		19861E3E26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */; };
 		1989B75626BA537900755B1E /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
 		1989B75726BA537900755B1E /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
+		198CC4B82820244600D3C7EA /* TweetNestKitV2.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 198CC4B62820244600D3C7EA /* TweetNestKitV2.xcdatamodeld */; };
 		198E9D16280BF9210064CBD8 /* UserID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198E9D15280BF9210064CBD8 /* UserID.swift */; };
 		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
@@ -459,6 +460,7 @@
 		19861E3A26C8F82400073431 /* Session+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountEnvironmentKey.swift; sourceTree = "<group>"; };
 		1989B75526BA537900755B1E /* UserDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailView.swift; sourceTree = "<group>"; };
+		198CC4B72820244600D3C7EA /* TweetNestKitV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV2.xcdatamodel; sourceTree = "<group>"; };
 		198E9D15280BF9210064CBD8 /* UserID.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserID.swift; sourceTree = "<group>"; };
 		19933D2B25E901F3006AB4C0 /* TweetNestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestApp.swift; sourceTree = "<group>"; };
 		19933D2E25E901F4006AB4C0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -1002,6 +1004,7 @@
 				19E0040E26DBF41600A55963 /* Localizable.stringsdict */,
 				19C5A28926BC1F3500AB1122 /* TweetNestKit.docc */,
 				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
+				198CC4B62820244600D3C7EA /* TweetNestKitV2.xcdatamodeld */,
 			);
 			path = TweetNestKit;
 			sourceTree = "<group>";
@@ -1685,6 +1688,7 @@
 			files = (
 				19C5A2BD26BC1F8A00AB1122 /* Session.swift in Sources */,
 				195E783E26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift in Sources */,
+				198CC4B82820244600D3C7EA /* TweetNestKitV2.xcdatamodeld in Sources */,
 				19C5A2B326BC1F8A00AB1122 /* SecureUnarchiveFromDataTransformer.swift in Sources */,
 				195DD4BB26BEF09D008F0309 /* DataAsset+CoreDataProperties.swift in Sources */,
 				19EE519E280D110B0068CBCB /* Lazy.swift in Sources */,
@@ -2813,6 +2817,16 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
+		198CC4B62820244600D3C7EA /* TweetNestKitV2.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				198CC4B72820244600D3C7EA /* TweetNestKitV2.xcdatamodel */,
+			);
+			currentVersion = 198CC4B72820244600D3C7EA /* TweetNestKitV2.xcdatamodel */;
+			path = TweetNestKitV2.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
