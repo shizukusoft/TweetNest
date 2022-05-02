@@ -282,6 +282,10 @@ extension Session {
         }
     }
 
+    public func cleansingOrphanedCloudKitRecords() async throws {
+        // TODO: Remove orphaned CloudKit records (e.g. DataAssets from main container)
+    }
+
     public func cleansingAllPersistentStores() async throws {
         let persistentContainer = persistentContainer
         let temporalPersistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistentContainer.managedObjectModel)
