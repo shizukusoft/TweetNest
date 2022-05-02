@@ -282,75 +282,86 @@ extension Session {
                     return
                 }
 
-                async let cloudKitRecordIDs = Task.detached { self.persistentContainer.recordIDs(for: changes.keys.elements) }.value
+                try await withThrowingTaskGroup(of: (NSManagedObjectID, UNNotificationContent?).self) { notificationContentsTaskGroup in
+                    async let cloudKitRecordIDs = Task.detached { self.persistentContainer.recordIDs(for: changes.keys.elements) }.value
 
-                let notificationContents: [NSManagedObjectID: UNNotificationContent?] = try await self.persistentContainer.performBackgroundTask { context in
-                    let preferences = ManagedPreferences.managedPreferences(for: context).preferences
+                    let updatedObjectIDs: [NSManagedObjectID] = changes.lazy
+                        .filter { $0.value.changeType == .insert || $0.value.changeType == .update }
+                        .map { $0.key }
 
-                    let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
-                    accountUserIDsfetchRequest.entity = Account.entity()
-                    accountUserIDsfetchRequest.resultType = .dictionaryResultType
-                    accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
-                    accountUserIDsfetchRequest.returnsDistinctResults = true
+                    let context = self.persistentContainer.newBackgroundContext()
 
-                    let results = try context.fetch(accountUserIDsfetchRequest)
-                    let accountUserIDs = results.compactMap {
-                        $0["userID"] as? Twitter.User.ID
-                    }
+                    let (_userDetails, preferences): ([UserDetail], ManagedPreferences.Preferences) = try await context.perform {
+                        let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
-                    guard accountUserIDs.isEmpty == false else {
-                        return [:]
-                    }
+                        let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
+                        accountUserIDsfetchRequest.entity = Account.entity()
+                        accountUserIDsfetchRequest.resultType = .dictionaryResultType
+                        accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
+                        accountUserIDsfetchRequest.returnsDistinctResults = true
 
-                    let userDetailsFetchRequest = UserDetail.fetchRequest()
-                    userDetailsFetchRequest.predicate = NSCompoundPredicate(
-                        andPredicateWithSubpredicates: [
-                            NSPredicate(format: "SELF IN %@", changes.keys.elements),
-                            NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
-                            NSPredicate(format: "user.id IN %@", accountUserIDs)
-                        ]
-                    )
-                    userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
-                    userDetailsFetchRequest.returnsObjectsAsFaults = false
-
-                    let userDetails = try context.fetch(userDetailsFetchRequest)
-
-                    return userDetails.reduce(into: [:]) {
-                        $0[$1.objectID] = self.notificationContent(for: $1, preferences: preferences)
-                    }
-                }
-
-                var userDetailObjectIDsForDeletingNotification = [NSManagedObjectID]()
-
-                for change in changes.values {
-                    switch change.changeType {
-                    case .insert, .update:
-                        if let notificationContent = notificationContents[change.changedObjectID] as? UNNotificationContent {
-                            try await UNUserNotificationCenter.current().add(
-                                UNNotificationRequest(
-                                    identifier: cloudKitRecordIDs[change.changedObjectID]?.recordName ?? change.changedObjectID.uriRepresentation().absoluteString,
-                                    content: notificationContent,
-                                    trigger: nil
-                                )
-                            )
-                        } else {
-                            userDetailObjectIDsForDeletingNotification.append(change.changedObjectID)
+                        let results = try context.fetch(accountUserIDsfetchRequest)
+                        let accountUserIDs = results.compactMap {
+                            $0["userID"] as? Twitter.User.ID
                         }
-                    case .delete:
-                        userDetailObjectIDsForDeletingNotification.append(change.changedObjectID)
-                    @unknown default:
-                        break
+
+                        guard accountUserIDs.isEmpty == false else {
+                            return ([], preferences)
+                        }
+
+                        let userDetailsFetchRequest = UserDetail.fetchRequest()
+                        userDetailsFetchRequest.predicate = NSCompoundPredicate(
+                            andPredicateWithSubpredicates: [
+                                NSPredicate(format: "SELF IN %@", updatedObjectIDs),
+                                NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
+                                NSPredicate(format: "user.id IN %@", accountUserIDs)
+                            ]
+                        )
+                        userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
+                        userDetailsFetchRequest.returnsObjectsAsFaults = false
+
+                        let userDetails = try context.fetch(userDetailsFetchRequest)
+
+                        return (userDetails, preferences)
                     }
+
+                    for _userDetail in _userDetails {
+                        notificationContentsTaskGroup.addTask {
+                            (
+                                _userDetail.objectID,
+                                await context.perform {
+                                    self.notificationContent(for: _userDetail, preferences: preferences)
+                                }
+                            )
+                        }
+                    }
+
+                    var hasChangesObjectIDs = Set<NSManagedObjectID>()
+
+                    for try await (managedObjectID, notificationContent) in notificationContentsTaskGroup {
+                        guard let notificationContent = notificationContent else { continue }
+
+                        hasChangesObjectIDs.insert(managedObjectID)
+
+                        try await UNUserNotificationCenter.current().add(
+                            UNNotificationRequest(
+                                identifier: cloudKitRecordIDs[managedObjectID]?.recordName ?? managedObjectID.uriRepresentation().absoluteString,
+                                content: notificationContent,
+                                trigger: nil
+                            )
+                        )
+                    }
+
+                    let fetchedCloudKitRecordIDs = await cloudKitRecordIDs
+
+                    UNUserNotificationCenter.current().removeDeliveredNotifications(
+                        withIdentifiers: changes.keys.subtracting(hasChangesObjectIDs)
+                            .lazy
+                            .flatMap {
+                                [fetchedCloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                            }
+                    )
                 }
-
-                let fetchedCloudKitRecordIDs = await cloudKitRecordIDs
-
-                let shouldBeDeletedNotificationIdentifiers = userDetailObjectIDsForDeletingNotification
-                    .flatMap {
-                        [fetchedCloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
-                    }
-
-                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: shouldBeDeletedNotificationIdentifiers)
             }
         } catch {
             self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
