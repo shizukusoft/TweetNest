@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="20086" systemVersion="21E258" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="Account" representedClassName=".Account" syncable="YES">
+    <entity name="Account" representedClassName=".ManagedAccountV2" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TWNKAccountPreferencesTransformer" customClassName="."/>
+        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="ManagedAccountV2PreferencesTransformer" customClassName="."/>
         <attribute name="preferringSortOrder" attributeType="Integer 64" defaultValueString="-1" usesScalarValueType="YES"/>
         <attribute name="token" optional="YES" attributeType="String"/>
         <attribute name="tokenSecret" optional="YES" attributeType="String" allowsCloudEncryption="YES"/>
@@ -14,7 +14,7 @@
             <fetchIndexElement property="userID" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="DataAsset" representedClassName=".DataAsset" syncable="YES">
+    <entity name="DataAsset" representedClassName=".ManagedDataAssetV2" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="dataMIMEType" optional="YES" attributeType="String"/>
@@ -24,25 +24,27 @@
             <fetchIndexElement property="url" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="Preferences" representedClassName=".ManagedPreferences" syncable="YES">
+    <entity name="Preferences" representedClassName=".ManagedPreferencesV2" syncable="YES">
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TWNKManagedPreferencesTransformer" customClassName="."/>
     </entity>
-    <entity name="User" representedClassName=".User" syncable="YES">
+    <entity name="User" representedClassName=".ManagedUserV2" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="lastUpdateEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUpdateStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <relationship name="userDetails" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="UserDetail" inverseName="user" inverseEntity="UserDetail" spotlightIndexingEnabled="YES"/>
         <fetchedProperty name="accounts" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Account" predicateString="userID == $FETCH_SOURCE.id"/>
+        </fetchedProperty>
+        <fetchedProperty name="userDetails" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="UserDetail" predicateString="userID == $FETCH_SOURCE.id"/>
         </fetchedProperty>
         <fetchIndex name="byID">
             <fetchIndexElement property="id" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="UserDetail" representedClassName=".UserDetail" versionHashModifier="2" syncable="YES">
+    <entity name="UserDetail" representedClassName=".ManagedUserDetailV2" versionHashModifier="2" syncable="YES">
         <attribute name="blockingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="followerUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
@@ -61,10 +63,13 @@
         <attribute name="url" optional="YES" attributeType="URI"/>
         <attribute name="userAttributedDescription" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.SecureUnarchiveFromDataTransformer"/>
         <attribute name="userCreationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="userID" optional="YES" attributeType="String"/>
         <attribute name="username" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
-        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="userDetails" inverseEntity="User"/>
-        <fetchIndex name="byUserWithCreationDate">
-            <fetchIndexElement property="user" type="Binary" order="ascending"/>
+        <fetchedProperty name="users" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="User" predicateString="id == $FETCH_SOURCE.userID"/>
+        </fetchedProperty>
+        <fetchIndex name="byUserIDWithCreationDate">
+            <fetchIndexElement property="userID" type="Binary" order="ascending"/>
             <fetchIndexElement property="creationDate" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
@@ -82,6 +87,6 @@
         <element name="DataAsset" positionX="-54" positionY="144" width="128" height="104"/>
         <element name="Preferences" positionX="-54" positionY="144" width="128" height="59"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="140"/>
-        <element name="UserDetail" positionX="-45" positionY="27" width="128" height="329"/>
+        <element name="UserDetail" positionX="-45" positionY="27" width="128" height="350"/>
     </elements>
 </model>
