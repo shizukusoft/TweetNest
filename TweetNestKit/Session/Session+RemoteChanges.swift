@@ -89,6 +89,7 @@ extension Session {
             }
         } catch {
             self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+            TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = nil
         }
     }
 

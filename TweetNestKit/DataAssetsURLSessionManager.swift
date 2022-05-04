@@ -160,17 +160,23 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
             dispatchGroup.enter()
-            managedObjectContext.perform { [dispatchGroup, managedObjectContext, logger] in
+            Task.detached { [dispatchGroup, managedObjectContext, logger] in
                 defer {
                     dispatchGroup.leave()
                 }
 
-                do {
-                    try withExtendedBackgroundExecution {
-                        try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
+                while managedObjectContext.persistentStoreCoordinator?.persistentStores.isEmpty != false {
+                    await Task.yield()
+                }
 
-                        if managedObjectContext.hasChanges {
-                            try managedObjectContext.save()
+                do {
+                    try await managedObjectContext.perform(schedule: .enqueued) {
+                        try withExtendedBackgroundExecution {
+                            try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
+
+                            if managedObjectContext.hasChanges {
+                                try managedObjectContext.save()
+                            }
                         }
                     }
                 } catch {
