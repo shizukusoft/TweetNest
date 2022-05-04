@@ -20,6 +20,7 @@ extension PersistentContainer {
             ]
             v1PersistentContainer.persistentStoreDescriptions.forEach {
                 $0.type = NSSQLiteStoreType
+                $0.cloudKitContainerOptions = nil
                 $0.setOption(true as NSNumber, forKey: NSReadOnlyPersistentStoreOption)
             }
 
@@ -30,6 +31,7 @@ extension PersistentContainer {
             ]
             v3PersistentContainer.persistentStoreDescriptions.forEach {
                 $0.type = NSSQLiteStoreType
+                $0.cloudKitContainerOptions = nil
                 $0.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
             }
 
@@ -40,6 +42,7 @@ extension PersistentContainer {
             try migratePreferences(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
             try migrateUsers(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
             try migrateUserDetails(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
+            try migrateDataAssets(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
 
             try v1PersistentContainer.persistentStoreDescriptions.forEach {
                 try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: $0.url!, ofType: $0.type)
@@ -51,29 +54,36 @@ extension PersistentContainer {
         let v1Context = v1PersistentContainer.newBackgroundContext()
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
-        let v3AccountsBatchInsertRequest: NSBatchInsertRequest = try v1Context.performAndWait {
+        try v1Context.performAndWait {
             let v1AccountsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Account")
+            v1AccountsFetchRequest.fetchBatchSize = 10000
             v1AccountsFetchRequest.returnsObjectsAsFaults = false
 
             let v1Accounts = try v1Context.fetch(v1AccountsFetchRequest)
 
-            return NSBatchInsertRequest(
-                entity: ManagedAccount.entity(),
-                objects: v1Accounts.map { v1Account in
-                    [
-                        "creationDate": v1Account.value(forKey: "creationDate") as Any,
-                        "preferringSortOrder": v1Account.value(forKey: "preferringSortOrder") as Any,
-                        "token": v1Account.value(forKey: "token") as Any,
-                        "tokenSecret": v1Account.value(forKey: "tokenSecret") as Any,
-                        "userID": v1Account.value(forKey: "userID") as Any,
-                        "preferences": v1Account.value(forKey: "preferences") as Any
-                    ]
-                }
-            )
-        }
+            guard v1Accounts.count > 1 else { return }
 
-        try v3Context.performAndWait {
-            _ = try v3Context.execute(v3AccountsBatchInsertRequest)
+            for chunkedV1Accounts in v1Accounts.chunks(ofCount: v1AccountsFetchRequest.fetchBatchSize) {
+                let v3AccountsBatchInsertRequest = NSBatchInsertRequest(
+                    entity: ManagedAccount.entity(),
+                    objects: chunkedV1Accounts.map { v1Account in
+                        [
+                            "creationDate": v1Account.value(forKey: "creationDate") as Any,
+                            "preferringSortOrder": v1Account.value(forKey: "preferringSortOrder") as Any,
+                            "token": v1Account.value(forKey: "token") as Any,
+                            "tokenSecret": v1Account.value(forKey: "tokenSecret") as Any,
+                            "userID": v1Account.value(forKey: "userID") as Any,
+                            "preferences": v1Account.value(forKey: "preferences") as Any
+                        ]
+                    }
+                )
+
+                try v3Context.performAndWait {
+                    _ = try v3Context.execute(v3AccountsBatchInsertRequest)
+                }
+
+                chunkedV1Accounts.forEach { v1Context.refresh($0, mergeChanges: false) }
+            }
         }
     }
 
@@ -81,25 +91,32 @@ extension PersistentContainer {
         let v1Context = v1PersistentContainer.newBackgroundContext()
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
-        let v3PreferencesBatchInsertRequest: NSBatchInsertRequest = try v1Context.performAndWait {
+        try v1Context.performAndWait {
             let v1PreferencesFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Preferences")
+            v1PreferencesFetchRequest.fetchBatchSize = 10000
             v1PreferencesFetchRequest.returnsObjectsAsFaults = false
 
             let v1Preferences = try v1Context.fetch(v1PreferencesFetchRequest)
 
-            return NSBatchInsertRequest(
-                entity: ManagedPreferences.entity(),
-                objects: v1Preferences.map { v1Preference in
-                    [
-                        "modificationDate": v1Preference.value(forKey: "modificationDate") as Any,
-                        "preferences": v1Preference.value(forKey: "preferences") as Any
-                    ]
-                }
-            )
-        }
+            guard v1Preferences.count > 1 else { return }
 
-        try v3Context.performAndWait {
-            _ = try v3Context.execute(v3PreferencesBatchInsertRequest)
+            for chunkedV1Preferences in v1Preferences.chunks(ofCount: v1PreferencesFetchRequest.fetchBatchSize) {
+                let v3PreferencesBatchInsertRequest = NSBatchInsertRequest(
+                    entity: ManagedPreferences.entity(),
+                    objects: chunkedV1Preferences.map { v1Preference in
+                        [
+                            "modificationDate": v1Preference.value(forKey: "modificationDate") as Any,
+                            "preferences": v1Preference.value(forKey: "preferences") as Any
+                        ]
+                    }
+                )
+
+                try v3Context.performAndWait {
+                    _ = try v3Context.execute(v3PreferencesBatchInsertRequest)
+                }
+
+                chunkedV1Preferences.forEach { v1Context.refresh($0, mergeChanges: false) }
+            }
         }
     }
 
@@ -109,10 +126,12 @@ extension PersistentContainer {
 
         try v1Context.performAndWait {
             let v1UsersFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "User")
-            v1UsersFetchRequest.fetchBatchSize = 1000
+            v1UsersFetchRequest.fetchBatchSize = 10000
             v1UsersFetchRequest.returnsObjectsAsFaults = false
 
             let v1Users = try v1Context.fetch(v1UsersFetchRequest)
+
+            guard v1Users.count > 1 else { return }
 
             for chunkedV1Users in v1Users.chunks(ofCount: v1UsersFetchRequest.fetchBatchSize) {
                 let v3UsersBatchInsertRequest = NSBatchInsertRequest(
@@ -142,10 +161,12 @@ extension PersistentContainer {
 
         try v1Context.performAndWait {
             let v1UserDetailsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "UserDetail")
-            v1UserDetailsFetchRequest.fetchBatchSize = 1000
+            v1UserDetailsFetchRequest.fetchBatchSize = 10000
             v1UserDetailsFetchRequest.returnsObjectsAsFaults = false
 
             let v1UserDetails = try v1Context.fetch(v1UserDetailsFetchRequest)
+
+            guard v1UserDetails.count > 1 else { return }
 
             for chunkedV1UserDetails in v1UserDetails.chunks(ofCount: v1UserDetailsFetchRequest.fetchBatchSize) {
                 let v3UserDetailsBatchInsertRequest = NSBatchInsertRequest(
@@ -191,10 +212,12 @@ extension PersistentContainer {
 
         try v1Context.performAndWait {
             let v1DataAssetsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "DataAsset")
-            v1DataAssetsFetchRequest.fetchBatchSize = 100
+            v1DataAssetsFetchRequest.fetchBatchSize = 200
             v1DataAssetsFetchRequest.returnsObjectsAsFaults = false
 
             let v1DataAssets = try v1Context.fetch(v1DataAssetsFetchRequest)
+
+            guard v1DataAssets.count > 1 else { return }
 
             for chunkedV1DataAssets in v1DataAssets.chunks(ofCount: v1DataAssetsFetchRequest.fetchBatchSize) {
                 let v3DataAssetsInsertRequest = NSBatchInsertRequest(
