@@ -47,6 +47,14 @@ extension PersistentContainer {
             try v1PersistentContainer.persistentStoreDescriptions.forEach {
                 try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: $0.url!, ofType: $0.type)
             }
+
+            TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = v3PersistentContainer.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)
+                .flatMap {
+                    try? NSKeyedArchiver.archivedData(
+                        withRootObject: $0,
+                        requiringSecureCoding: true
+                    )
+                }
         }
     }
 
