@@ -7,7 +7,9 @@
 
 import Foundation
 import CoreData
+import CloudKit
 import Algorithms
+import UnifiedLogging
 
 extension PersistentContainer {
     func migrationIfNeeded() throws {
@@ -55,6 +57,39 @@ extension PersistentContainer {
                         requiringSecureCoding: true
                     )
                 }
+
+            Task.detached(priority: .utility) {
+                let containers: [CKContainer] = [
+                    .init(identifier: PersistentContainer.V1.defaultCloudKitIdentifier),
+                    .init(identifier: PersistentContainer.V1.accountsCloudKitIdentifier),
+                    .init(identifier: PersistentContainer.V1.dataAssetsCloudKitIdentifier),
+                ]
+
+                for container in containers {
+                    container.privateCloudDatabase.fetchAllRecordZones { zones, error in
+                        guard let zones = zones, error == nil else {
+                            Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                                .error("Error fetching zones.")
+                            return
+                        }
+
+                        let zoneIDs = zones.map { $0.zoneID }
+                        let deletionOperation = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)
+
+                        deletionOperation.modifyRecordZonesResultBlock = { result in
+                            do {
+                                try result.get()
+                            } catch {
+                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                                    .error("Error deleting records: \(error as NSError, privacy: .public)")
+                            }
+
+                        }
+
+                        container.privateCloudDatabase.add(deletionOperation)
+                    }
+                }
+            }
         }
     }
 
