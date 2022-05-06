@@ -23,7 +23,7 @@ extension Session {
 extension Session.TwitterAPIConfiguration {
     static var iCloud: Self {
         get async throws {
-            let container = CKContainer(identifier: Session.cloudKitIdentifier)
+            let container = CKContainer(identifier: PersistentContainer.V3.defaultCloudKitIdentifier)
             let database = container.publicCloudDatabase
 
             let query = CKQuery(recordType: "TwitterAPIConfiguration", predicate: NSPredicate(value: true))
