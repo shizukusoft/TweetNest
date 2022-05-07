@@ -19,8 +19,10 @@ class UserDetailTests: XCTestCase {
             newUserDetail.followingUserIDs = [2, 3, 6].map { String($0) }
             newUserDetail.followingUsersCount = 3
 
-            XCTAssertEqual(newUserDetail.followingUserChanges(from: oldUserDetail).followingUsersCount, 1)
-            XCTAssertEqual(newUserDetail.followingUserChanges(from: oldUserDetail).unfollowingUsersCount, 3)
+            let change = newUserDetail.userIDsChange(from: oldUserDetail, for: \.followingUserIDs)
+
+            XCTAssertEqual(change?.addedUserIDs.count, 1)
+            XCTAssertEqual(change?.removedUserIDs.count, 3)
         }
     }
 

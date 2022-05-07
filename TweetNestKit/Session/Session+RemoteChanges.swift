@@ -222,39 +222,39 @@ extension Session {
             }
         }
 
-        if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followingUserIDs) {
-            if followingUserIDsChanges.addedUserIDsCount > 0 {
-                changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+        if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.followingUserIDs) {
+            if followingUserIDsChanges.addedUserIDs.count > 0 {
+                changes.append(String(localized: "\(followingUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Following(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
             }
-            if followingUserIDsChanges.removedUserIDsCount > 0 {
-                changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-            }
-        }
-
-        if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.followerUserIDs) {
-            if followerUserIDsChanges.addedUserIDsCount > 0 {
-                changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
-            }
-            if followerUserIDsChanges.removedUserIDsCount > 0 {
-                changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            if followingUserIDsChanges.removedUserIDs.count > 0 {
+                changes.append(String(localized: "\(followingUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unfollowing(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
             }
         }
 
-        if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.blockingUserIDs) {
-            if blockingUserIDsChanges.addedUserIDsCount > 0 {
-                changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+        if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.followerUserIDs) {
+            if followerUserIDsChanges.addedUserIDs.count > 0 {
+                changes.append(String(localized: "\(followerUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Follower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
             }
-            if blockingUserIDsChanges.removedUserIDsCount > 0 {
-                changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            if followerUserIDsChanges.removedUserIDs.count > 0 {
+                changes.append(String(localized: "\(followerUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unfollower(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
             }
         }
 
-        if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChanges(from: oldUserDetail, for: \.mutingUserIDs) {
-            if mutingUserIDsChanges.addedUserIDsCount > 0 {
-                changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDsCount, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+        if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.blockingUserIDs) {
+            if blockingUserIDsChanges.addedUserIDs.count > 0 {
+                changes.append(String(localized: "\(blockingUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Block(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
             }
-            if mutingUserIDsChanges.removedUserIDsCount > 0 {
-                changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDsCount, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            if blockingUserIDsChanges.removedUserIDs.count > 0 {
+                changes.append(String(localized: "\(blockingUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unblock(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+        }
+
+        if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.mutingUserIDs) {
+            if mutingUserIDsChanges.addedUserIDs.count > 0 {
+                changes.append(String(localized: "\(mutingUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Mute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
+            }
+            if mutingUserIDsChanges.removedUserIDs.count > 0 {
+                changes.append(String(localized: "\(mutingUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unmute(s)", bundle: .tweetNestKit, comment: "background-refresh notification body."))
             }
         }
 

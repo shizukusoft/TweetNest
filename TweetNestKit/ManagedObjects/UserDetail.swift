@@ -9,6 +9,7 @@
 import Foundation
 import CoreData
 import TwitterV1
+import OrderedCollections
 
 public class UserDetail: NSManagedObject {
 
@@ -115,17 +116,22 @@ extension UserDetail {
 }
 
 extension UserDetail {
-    func userIDsChanges(from oldUserDetail: UserDetail?, for keyPath: KeyPath<UserDetail, [String]?>) -> (addedUserIDsCount: Int, removedUserIDsCount: Int)? {
-        let previousUserIDs = oldUserDetail == nil ? [] : oldUserDetail?[keyPath: keyPath].flatMap { Set($0) }
-        let latestUserIDs = self[keyPath: keyPath].flatMap { Set($0) }
+    struct UserIDsChange {
+        let addedUserIDs: OrderedSet<String>
+        let removedUserIDs: OrderedSet<String>
+    }
+
+    func userIDsChange(from oldUserDetail: UserDetail?, for keyPath: KeyPath<UserDetail, [String]?>) -> UserIDsChange? {
+        let previousUserIDs = oldUserDetail == nil ? [] : oldUserDetail?[keyPath: keyPath].flatMap { OrderedSet($0) }
+        let latestUserIDs = self[keyPath: keyPath].flatMap { OrderedSet($0) }
 
         guard let previousUserIDs = previousUserIDs, let latestUserIDs = latestUserIDs else {
             return nil
         }
 
-        let addedUserIDsCount = latestUserIDs.subtracting(previousUserIDs).count
-        let removedUserIDsCount = previousUserIDs.subtracting(latestUserIDs).count
-
-        return (addedUserIDsCount, removedUserIDsCount)
+        return UserIDsChange(
+            addedUserIDs: latestUserIDs.subtracting(previousUserIDs),
+            removedUserIDs: previousUserIDs.subtracting(latestUserIDs)
+        )
     }
 }
