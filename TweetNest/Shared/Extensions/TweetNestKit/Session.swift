@@ -21,7 +21,7 @@ extension TweetNestKit.Session {
         let session = Session(inMemory: true)
 
         #if DEBUG
-        try? session.insertPreviewDataToPersistentContainer()
+        try! session.insertPreviewDataToPersistentContainer()
         #endif
 
         return session
@@ -31,13 +31,15 @@ extension TweetNestKit.Session {
 #if DEBUG
 extension TweetNestKit.Session {
     nonisolated func insertPreviewDataToPersistentContainer() throws {
-        let viewContext = persistentContainer.viewContext
+        let context = persistentContainer.newBackgroundContext()
 
-        insertPreviewTweetNestAccountToPersistentContainer(context: viewContext)
-        insertPreviewTwitterUsersToPersistentContainer(context: viewContext)
-        insertPreviewAppleUserToPersistentContainer(context: viewContext)
+        try context.performAndWait {
+            insertPreviewTweetNestAccountToPersistentContainer(context: context)
+            insertPreviewTwitterUsersToPersistentContainer(context: context)
+            insertPreviewAppleUserToPersistentContainer(context: context)
 
-        try viewContext.save()
+            try context.save()
+        }
     }
 
     nonisolated private func insertPreviewTweetNestAccountToPersistentContainer(context: NSManagedObjectContext) {

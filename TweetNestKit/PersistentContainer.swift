@@ -62,6 +62,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 dataAssetsPersistentStoreDescription,
             ].lazy.map { persistentStoreDescription in
                 persistentStoreDescription.type = NSSQLiteStoreType
+                persistentStoreDescription.shouldAddStoreAsynchronously = true
                 persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
                 persistentStoreDescription.setOption(true as NSNumber, forKey: NSPersistentStoreRemoteChangeNotificationPostOptionKey)
 
@@ -81,6 +82,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
             persistentStoreDescriptions.forEach {
                 $0.url = nil
                 $0.type = NSInMemoryStoreType
+                $0.shouldAddStoreAsynchronously = true
                 $0.cloudKitContainerOptions = nil
                 if let persistentStoreOptions = persistentStoreOptions {
                     for (key, option) in persistentStoreOptions {

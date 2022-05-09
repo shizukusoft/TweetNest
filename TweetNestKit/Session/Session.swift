@@ -75,31 +75,39 @@ public class Session {
         _ = self.persistentStoreRemoteChangeNotification
         _ = self.fetchNewDataIntervalObserver
 
-        Task.detached {
-            do {
-                try await withExtendedBackgroundExecution {
-                    try await self.persistentContainer.loadPersistentStores()
-                }
+        self.persistentContainer.persistentStoreCoordinator.perform {
+            self.persistentContainer.loadPersistentStores { result in
+                switch result {
+                case .success:
+                    Task {
+                        await MainActor.run {
+                            self.persistentContainerLoadingResult = .success(())
+                        }
 
-                await MainActor.run {
-                    self.persistentContainerLoadingResult = .success(())
-                }
+                        #if DEBUG
+                        Task.detached(priority: .utility) {
+                            guard self.persistentContainer.persistentStoreDescriptions.contains(where: { $0.cloudKitContainerOptions != nil }) else {
+                                return
+                            }
 
-                #if DEBUG
-                Task.detached(priority: .utility) {
-                    do {
-                        try self.persistentContainer.initializeCloudKitSchema(options: [])
-                    } catch {
-                        debugPrint(error)
+                            do {
+                                try self.persistentContainer.initializeCloudKitSchema(options: [])
+                            } catch {
+                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                                    .error("\(error as NSError, privacy: .public)")
+                            }
+                        }
+                        #endif
                     }
-                }
-                #endif
-            } catch {
-                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                    .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
+                case .failure(let error):
+                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                        .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
 
-                await MainActor.run {
-                    self.persistentContainerLoadingResult = .failure(error)
+                    Task {
+                        await MainActor.run {
+                            self.persistentContainerLoadingResult = .failure(error)
+                        }
+                    }
                 }
             }
         }
