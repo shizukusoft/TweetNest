@@ -14,6 +14,7 @@ import AppKit
 #endif
 import CoreData
 import TweetNestKit
+import UniformTypeIdentifiers
 
 extension TweetNestKit.Session {
     public static let preview: Session = {
@@ -98,6 +99,7 @@ extension TweetNestKit.Session {
 
         let tweetnestProfileImageDataAsset = DataAsset(context: context)
         tweetnestProfileImageDataAsset.url = tweetnestUserDetail1.profileImageURL
+        tweetnestProfileImageDataAsset.dataMIMEType = UTType.png.preferredMIMEType
         tweetnestProfileImageDataAsset.data = NSDataAsset(name: "TweetNestProfileImageData")?.data
     }
 
@@ -146,6 +148,7 @@ extension TweetNestKit.Session {
 
         let twitterProfileImageDataAsset = DataAsset(context: context)
         twitterProfileImageDataAsset.url = twitterUserDetail.profileImageURL
+        twitterProfileImageDataAsset.dataMIMEType = UTType.jpeg.preferredMIMEType
         twitterProfileImageDataAsset.data = NSDataAsset(name: "TwitterProfileImageData")?.data
     }
 
@@ -174,6 +177,7 @@ extension TweetNestKit.Session {
 
         let appleProfileImageDataAsset = DataAsset(context: context)
         appleProfileImageDataAsset.url = appleUserDetail.profileImageURL
+        appleProfileImageDataAsset.dataMIMEType = UTType.jpeg.preferredMIMEType
         appleProfileImageDataAsset.data = NSDataAsset(name: "AppleProfileImageData")?.data
     }
 }
