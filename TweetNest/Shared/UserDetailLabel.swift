@@ -47,11 +47,6 @@ struct UserDetailLabel: View {
                 }
             } icon: {
                 ProfileImage(profileImageURL: userDetail.profileImageURL)
-                    #if os(watchOS)
-                    .frame(width: 16, height: 16)
-                    #else
-                    .frame(width: 24, height: 24)
-                    #endif
             }
             .accessibilityLabel(Text(verbatim: primaryName))
         }
