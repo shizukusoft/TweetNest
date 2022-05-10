@@ -29,15 +29,13 @@ extension DataAsset {
         let dataAssetFetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
         dataAssetFetchRequest.predicate = NSPredicate(format: "url == %@", url as NSURL)
         dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        dataAssetFetchRequest.propertiesToFetch = ["dataSHA512Hash"]
+        dataAssetFetchRequest.propertiesToFetch = ["dataMIMEType", "dataSHA512Hash"]
+        dataAssetFetchRequest.returnsObjectsAsFaults = false
         dataAssetFetchRequest.fetchLimit = 1
 
         let lastDataAsset = try context.fetch(dataAssetFetchRequest).first
 
-        if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash || lastDataAsset.data.flatMap({ Data(SHA512.hash(data: $0)) }) == dataSHA512Hash {
-            if lastDataAsset.dataMIMEType == nil{
-                lastDataAsset.dataMIMEType = dataMIMEType
-            }
+        if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash, lastDataAsset.dataMIMEType == dataMIMEType {
             return lastDataAsset
         } else {
             let newDataAsset = DataAsset(context: context)
@@ -47,21 +45,6 @@ extension DataAsset {
             newDataAsset.url = url
 
             return newDataAsset
-        }
-    }
-}
-
-extension DataAsset {
-    @discardableResult
-    static func dataAsset<T>(for url: URL, session: Session, context: NSManagedObjectContext, _ block: @escaping (DataAsset) throws -> T) async throws -> T {
-        var urlRequest = URLRequest(url: url)
-        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
-
-        let (data, response) = try await session.data(for: urlRequest)
-
-        try Task.checkCancellation()
-        return try await context.perform(schedule: .enqueued) {
-            try block(.dataAsset(data: data, dataMIMEType: response.mimeType, url: url, context: context))
         }
     }
 }

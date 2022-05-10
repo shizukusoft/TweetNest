@@ -8,6 +8,7 @@
 import SwiftUI
 import AuthenticationServices
 import TweetNestKit
+import BackgroundTask
 import UnifiedLogging
 
 enum AppSidebarNavigationItem: Hashable {
@@ -26,15 +27,6 @@ struct AppSidebarNavigation: View {
     #endif
 
     @State private var navigationItemSelection: AppSidebarNavigationItem?
-
-    @StateObject private var accountsFetchedResultsController = FetchedResultsController<Account>(
-        sortDescriptors: [
-            SortDescriptor(\.preferringSortOrder, order: .forward),
-            SortDescriptor(\.creationDate, order: .reverse),
-        ],
-        managedObjectContext: TweetNestApp.session.persistentContainer.viewContext,
-        cacheName: "Accounts"
-    )
 
     @State private var webAuthenticationSession: ASWebAuthenticationSession?
     @State private var isAddingAccount: Bool = false
@@ -84,13 +76,9 @@ struct AppSidebarNavigation: View {
     var body: some View {
         NavigationView {
             ZStack {
-                let accounts = isPersistentContainerLoaded ? accountsFetchedResultsController.fetchedObjects : []
-
                 List {
                     if isPersistentContainerLoaded {
-                        ForEach(accounts) { account in
-                            AppSidebarAccountsSection(account: account, navigationItemSelection: $navigationItemSelection)
-                        }
+                        AppSidebarAccountsSections(navigationItemSelection: $navigationItemSelection)
                     }
 
                     #if os(watchOS)
@@ -114,7 +102,6 @@ struct AppSidebarNavigation: View {
                 #if os(macOS)
                 .frame(minWidth: 182)
                 #endif
-                .animation(.default, value: accounts)
 
                 if let webAuthenticationSession = webAuthenticationSession {
                     WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
@@ -216,34 +203,23 @@ struct AppSidebarNavigation: View {
 
     @Sendable
     private func refresh() async {
-        await withExtendedBackgroundExecution {
-            guard isRefreshing == false else {
-                return
-            }
+        guard isRefreshing == false else {
+            return
+        }
 
-            isRefreshing = true
-            defer {
-                Task {
-                    await MainActor.run {
-                        isRefreshing = false
-                    }
-                }
-// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
-//                isRefreshing = false
-            }
+        isRefreshing = true
+        defer {
+            isRefreshing = false
+        }
 
-            do {
-                let hasChanges = try await TweetNestApp.session.updateAllAccounts()
-                try await TweetNestApp.session.cleansingAllData()
-
-                for hasChanges in hasChanges {
-                    _ = try hasChanges.1.get()
-                }
-            } catch {
-                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                self.error = TweetNestError(error)
-                showErrorAlert = true
+        do {
+            try await withExtendedBackgroundExecution {
+                _ = try await TweetNestApp.session.fetchNewData(force: true)
             }
+        }  catch {
+            Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+            self.error = TweetNestError(error)
+            showErrorAlert = true
         }
     }
 }

@@ -5,9 +5,12 @@
 //  Created by Jaehong Kang on 2021/09/08.
 //
 
+#if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
+
 import Foundation
 import UserNotifications
 import UnifiedLogging
+import BackgroundTask
 #if canImport(BackgroundTasks) && !os(macOS)
 import BackgroundTasks
 #endif
@@ -16,259 +19,174 @@ import WatchKit
 #endif
 
 public actor BackgroundTaskScheduler {
-    public enum ApplicationPhase: Hashable, Equatable {
-        case background
-        case inactive
-        case active
-    }
-
-    private unowned let session: Session
+    public static let shared = BackgroundTaskScheduler()
 
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).background-refresh"
     public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).data-cleansing"
 
-    static var preferredBackgroundTasksTimeInterval: TimeInterval {
-        (15 / 2) * 60 // Fetch no earlier than 7.5 minutes from now
+    private static var preferredBackgroundRefreshDate: Date {
+        TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval)
     }
 
-    static var preferredBackgroundRefreshDate: Date {
-        Date(timeIntervalSinceNow: preferredBackgroundTasksTimeInterval)
+    private static var preferredBackgroundDataCleansingDate: Date {
+        TweetNestKitUserDefaults.standard.lastCleansedDate.addingTimeInterval(Session.cleansingDataInterval)
     }
 
-    private var backgroundTimer: DispatchSourceTimer? {
-        willSet {
-            guard backgroundTimer !== newValue else { return }
-
-            backgroundTimer?.cancel()
-        }
-        didSet {
-            guard backgroundTimer !== oldValue else { return }
-
-            backgroundTimer?.activate()
-        }
+    private var session: Session {
+        .shared
     }
 
-    private var lastUpdate: Date {
-        get {
-            TweetNestKitUserDefaults.standard.lastBackgroundUpdate
-        } set {
-            TweetNestKitUserDefaults.standard.lastBackgroundUpdate = newValue
-        }
-    }
+    private let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: BackgroundTaskScheduler.self))
 
-    private lazy var isBackgroundUpdateEnabledObserver = TweetNestKitUserDefaults.standard
-        .observe(\.isBackgroundUpdateEnabled) { [weak self] _, _ in
-            Task { [weak self] in
-                await self?.isBackgroundUpdateEnabledDidChanges()
-            }
-        }
-
-    private init(session: Session, v: Void) {
-        self.session = session
-    }
-
-    convenience init(session: Session) {
-        self.init(session: session, v: ())
-        Task {
-            _ = await isBackgroundUpdateEnabledObserver
-        }
-    }
-
-    func newBackgroundTimer() -> DispatchSourceTimer {
-        let backgroundTimer = DispatchSource.makeTimerSource(queue: .global(qos: .utility))
-        backgroundTimer.setEventHandler {
-            Task {
-                await self.backgroundRefresh(dataCleansing: true)
-            }
-        }
-        backgroundTimer.schedule(deadline: .now() + Self.preferredBackgroundTasksTimeInterval, repeating: Self.preferredBackgroundTasksTimeInterval, leeway: .seconds(30))
-
-        return backgroundTimer
-    }
-
-    func invalidate() {
-        isBackgroundUpdateEnabledObserver.invalidate()
-        backgroundTimer = nil
-    }
+    private init() { }
 }
 
 extension BackgroundTaskScheduler {
-    private func isBackgroundUpdateEnabledDidChanges() async {
-        if TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled {
-            try? await scheduleBackgroundTasks(for: nil)
-        } else {
-            backgroundTimer = nil
-            #if canImport(BackgroundTasks) && !os(macOS)
-            BGTaskScheduler.shared.cancelAllTaskRequests()
-            #endif
-        }
-    }
-}
-
-extension BackgroundTaskScheduler {
-    public func scheduleBackgroundTasks(for applicationPhase: ApplicationPhase?) async throws {
+    @MainActor
+    public func scheduleBackgroundTasks() {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return }
 
-        #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
-        switch applicationPhase {
-        case .active, .inactive:
-            if backgroundTimer == nil {
-                backgroundTimer = newBackgroundTimer()
-            }
-        case .background, .none:
-            if applicationPhase == .background {
-                backgroundTimer = nil
-            }
-
-            #if canImport(BackgroundTasks) && !os(macOS)
+        #if canImport(BackgroundTasks) && !os(macOS)
+        do {
             let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
             backgroundRefreshRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate
 
             try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
 
-            let lastCleanseDate: Date = await session.persistentContainer.performBackgroundTask { context in
-                self.session.preferences(for: context).lastCleansed
-            }
-
-            let now = Date()
-            let twoDay = TimeInterval(2 * 24 * 60 * 60)
-
-            // Clean the database at most once per two day.
-            guard now > (lastCleanseDate + twoDay) else { return }
-
             let backgroundDataCleansingRequest = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
             backgroundDataCleansingRequest.requiresNetworkConnectivity = true
             backgroundDataCleansingRequest.requiresExternalPower = false
+            backgroundDataCleansingRequest.earliestBeginDate = Self.preferredBackgroundDataCleansingDate
 
             try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
-            #elseif canImport(WatchKit)
-            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
-                Task {
-                    await WKExtension.shared().scheduleBackgroundRefresh(
-                        withPreferredDate: Self.preferredBackgroundRefreshDate,
-                        userInfo: Self.backgroundRefreshBackgroundTaskIdentifier as NSString
-                    ) { error in
-                        if let error = error {
-                            continuation.resume(throwing: error)
-                        } else {
-                            continuation.resume()
-                        }
-                    }
+        } catch {
+            Task(priority: .high) {
+                self.logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
+            }
+        }
+        #elseif canImport(WatchKit)
+        WKExtension.shared().scheduleBackgroundRefresh(
+            withPreferredDate: Self.preferredBackgroundRefreshDate,
+            userInfo: Self.backgroundRefreshBackgroundTaskIdentifier as NSString
+        ) { error in
+            if let error = error {
+                Task(priority: .high) {
+                    self.logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
                 }
             }
-            #endif
         }
-        #else
-        if backgroundTimer == nil {
-            backgroundTimer = newBackgroundTimer()
-        }
+        #endif
+    }
+
+    public nonisolated func cancelBackgroundTasks() {
+        #if canImport(BackgroundTasks) && !os(macOS)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier)
         #endif
     }
 }
 
 extension BackgroundTaskScheduler {
     @discardableResult
-    func backgroundRefresh(dataCleansing: Bool = false) async -> Bool {
-        guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return true }
-        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-refresh")
+    private func backgroundRefresh() async -> Bool {
+        guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
 
-        do {
-            try await scheduleBackgroundTasks(for: nil)
-        } catch {
-            logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
+        logger.notice("Start background refresh")
+        defer {
+            logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
         }
 
-        guard lastUpdate.addingTimeInterval(60) < Date() else { return true }
-        lastUpdate = Date()
+        Task.detached {
+            await self.scheduleBackgroundTasks()
+        }
 
-        return await withExtendedBackgroundExecution { [self] in
-            logger.notice("Start background refresh")
-            defer {
-                logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
-            }
-
-            do {
-                try await session.updateAllAccounts()
-                if dataCleansing {
-                    try await session.cleansingAllData()
-                }
-
-                return true
-            } catch {
-                logger.error("Error occurred while update accounts: \(String(describing: error))")
-
-                switch error {
-                case is CancellationError, URLError.cancelled:
-                    break
-                default:
-                    let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
-                    notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
-                    notificationContent.body = error.localizedDescription
-                    notificationContent.sound = .default
-
-                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-
-                    do {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } catch {
-                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
-                    }
-                }
-
-                return false
-            }
+        do {
+            try await session.fetchNewData()
+            return true
+        } catch {
+            logger.error("Error occurred while background refresh: \(error as NSError, privacy: .public)")
+            return false
         }
     }
 
     @discardableResult
-    func backgroundDataCleansing() async -> Bool {
-        guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return true }
-        let logger = Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "background-data-cleansing")
+    private func backgroundDataCleansing() async -> Bool {
+        guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
 
-        do {
-            try await scheduleBackgroundTasks(for: nil)
-        } catch {
-            logger.error("Error occurred while schedule background tasks: \(error as NSError, privacy: .public)")
+        logger.notice("Start background data cleansing")
+        defer {
+            logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
         }
 
-        guard lastUpdate.addingTimeInterval(60) < Date() else { return true }
-        lastUpdate = Date()
+        Task.detached {
+            await self.scheduleBackgroundTasks()
+        }
 
-        return await withExtendedBackgroundExecution { [self] in
-            logger.notice("Start background data cleansing")
-            defer {
-                logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
-            }
-
-            do {
-                try await session.cleansingAllData()
-
-                return true
-            } catch {
-                logger.error("Error occurred while data cleansing: \(String(describing: error))")
-
-                switch error {
-                case is CancellationError, URLError.cancelled:
-                    break
-                default:
-                    let notificationContent = UNMutableNotificationContent()
-                    notificationContent.title = String(localized: "Background Refresh", bundle: .tweetNestKit, comment: "background-refresh notification title.")
-                    notificationContent.subtitle = String(localized: "Error", bundle: .tweetNestKit, comment: "background-refresh notification subtitle.")
-                    notificationContent.body = error.localizedDescription
-                    notificationContent.sound = .default
-
-                    let notificationRequest = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
-
-                    do {
-                        try await UNUserNotificationCenter.current().add(notificationRequest)
-                    } catch {
-                        logger.error("Error occurred while request notification: \(String(reflecting: error), privacy: .public)")
-                    }
-                }
-
-                return false
-            }
+        do {
+            try await session.cleansingAllData()
+            return true
+        } catch {
+            logger.error("Error occurred while background data cleansing: \(error as NSError, privacy: .public)")
+            return false
         }
     }
 }
+
+#endif
+
+#if canImport(BackgroundTasks) && !os(macOS)
+extension BackgroundTaskScheduler {
+    @available(iOSApplicationExtension, unavailable)
+    @available(tvOSApplicationExtension, unavailable)
+    @discardableResult
+    public nonisolated func registerBackgroundTasks() -> Bool {
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier, using: nil, launchHandler: handleBackgroundRefreshBackgroundTask(_:)) &&
+        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier, using: nil, launchHandler: handleDataCleansingBackgroundTask(_:))
+    }
+
+    nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
+        let task = Task {
+            backgroundTask.setTaskCompleted(success: await self.backgroundRefresh())
+        }
+
+        backgroundTask.expirationHandler = { [logger] in
+            logger.notice("Background refresh task expired for: \(backgroundTask.identifier, privacy: .public)")
+            task.cancel()
+            task.waitUntilFinished()
+        }
+    }
+
+    nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
+        let task = Task {
+            backgroundTask.setTaskCompleted(success: await self.backgroundDataCleansing())
+        }
+
+        backgroundTask.expirationHandler = { [logger] in
+            logger.notice("Background refresh task expired for: \(backgroundTask.identifier, privacy: .public)")
+            task.cancel()
+            task.waitUntilFinished()
+        }
+    }
+}
+#elseif canImport(WatchKit)
+extension BackgroundTaskScheduler {
+    @discardableResult
+    public nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
+        guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString }) else {
+            return []
+        }
+
+        let task = Task {
+            backgroundTask.setTaskCompletedWithSnapshot(await self.backgroundRefresh())
+        }
+
+        backgroundTask.expirationHandler = { [logger] in
+            logger.notice("Background refresh task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
+            task.cancel()
+            task.waitUntilFinished()
+        }
+
+        return [backgroundTask]
+    }
+}
+#endif

@@ -9,8 +9,20 @@ import Foundation
 import Twitter
 
 extension Twitter.Session {
+    private static var urlSessionConfiguration: URLSessionConfiguration {
+        let urlSessionConfiguration = URLSessionConfiguration.twnk_default
+
+        urlSessionConfiguration.networkServiceType = .responsiveData
+
+        #if os(iOS)
+        urlSessionConfiguration.multipathServiceType = .interactive
+        #endif
+
+        return urlSessionConfiguration
+    }
+
     convenience init(twitterAPIConfiguration: Session.TwitterAPIConfiguration) {
-        self.init(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret, urlSessionConfiguration: .twnk_default)
+        self.init(consumerKey: twitterAPIConfiguration.apiKey, consumerSecret: twitterAPIConfiguration.apiKeySecret, urlSessionConfiguration: Self.urlSessionConfiguration)
     }
 }
 

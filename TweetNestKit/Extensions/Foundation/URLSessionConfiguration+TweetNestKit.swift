@@ -6,29 +6,60 @@
 //
 
 import Foundation
+import OrderedCollections
 import Twitter
 
 extension URLSessionConfiguration {
     public static var twnk_default: URLSessionConfiguration {
-        let urlSessionConfiguration = URLSessionConfiguration.twt_default
-        urlSessionConfiguration.httpCookieStorage = nil
-        urlSessionConfiguration.httpShouldSetCookies = false
-        urlSessionConfiguration.httpCookieAcceptPolicy = .never
+        let urlSessionConfiguration = URLSessionConfiguration.default
 
-        urlSessionConfiguration.urlCredentialStorage = nil
-
-        urlSessionConfiguration.urlCache = .twnk_shared
-
-        urlSessionConfiguration.sharedContainerIdentifier = Session.applicationGroupIdentifier
-
-        urlSessionConfiguration.shouldUseExtendedBackgroundIdleMode = true
-
-        #if os(iOS)
-        urlSessionConfiguration.multipathServiceType = .handover
-        #endif
-
-        urlSessionConfiguration.timeoutIntervalForRequest = 15
+        urlSessionConfiguration.reset()
 
         return urlSessionConfiguration
+    }
+
+    public static func twnk_background(withIdentifier identifier: String) -> URLSessionConfiguration {
+        let urlSessionConfiguration = URLSessionConfiguration.background(withIdentifier: identifier)
+
+        urlSessionConfiguration.reset()
+
+        return urlSessionConfiguration
+    }
+
+    private func reset() {
+        httpAdditionalHeaders = {
+            var httpAdditionalHeaders = [AnyHashable : Any]()
+
+            let preferredLanguages = OrderedSet(Locale.preferredLanguages.flatMap { [$0, $0.components(separatedBy: "-")[0]] } + ["*"])
+            httpAdditionalHeaders["Accept-Language"] = preferredLanguages.qualityJoined
+
+            return httpAdditionalHeaders
+        }()
+
+        timeoutIntervalForRequest = 15
+        timeoutIntervalForResource = 2 * 24 * 60 * 60
+
+        httpCookieAcceptPolicy = .never
+        httpShouldSetCookies = false
+        httpCookieStorage = nil
+
+        urlCredentialStorage = nil
+
+        urlCache = .twnk_shared
+
+        sharedContainerIdentifier = Session.applicationGroupIdentifier
+
+        shouldUseExtendedBackgroundIdleMode = true
+    }
+}
+
+extension Collection where Element == String {
+    fileprivate var qualityJoined: String {
+        enumerated()
+            .map { offset, value in
+                let quality = 1.0 - ((Decimal(offset + 1)) / Decimal(count + 1))
+                return "\(value);q=\(quality)"
+            }
+            .joined(separator: ", ")
     }
 }

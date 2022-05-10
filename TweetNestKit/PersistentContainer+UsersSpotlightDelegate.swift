@@ -9,18 +9,19 @@
 
 import CoreData
 import CoreSpotlight
+import Algorithms
 
 extension PersistentContainer {
-    class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
-        override func domainIdentifier() -> String {
+    public class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
+        public override func domainIdentifier() -> String {
             "\(Bundle.tweetNestKit.bundleIdentifier!).users"
         }
 
-        override func indexName() -> String? {
+        public override func indexName() -> String? {
             "users-index"
         }
 
-        override func attributeSet(for object: NSManagedObject) -> CSSearchableItemAttributeSet? {
+        public override func attributeSet(for object: NSManagedObject) -> CSSearchableItemAttributeSet? {
             if let user = object as? User {
                 let attributeSet = CSSearchableItemAttributeSet(contentType: .contact)
 
@@ -32,12 +33,23 @@ extension PersistentContainer {
                 attributeSet.thumbnailData = try? sortedUserDetails?.last?.profileImageURL.flatMap {
                     let fetchRequest = DataAsset.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "url == %@", $0 as NSURL)
-                    fetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+                    fetchRequest.sortDescriptors =  [
+                        NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: false),
+                    ]
                     fetchRequest.fetchLimit = 1
 
                     return try user.managedObjectContext?.fetch(fetchRequest).first?.data
                 }
-                attributeSet.keywords = (sortedUserDetails?.compactMap(\.name) ?? []) + (sortedUserDetails?.compactMap(\.username) ?? [])
+
+                var keywords = [String]()
+                if let displayUserID = user.id?.displayUserID {
+                    keywords.append(displayUserID)
+                }
+                if let names = sortedUserDetails?.lazy.flatMap({ [$0.name, $0.username] }).compacted() {
+                    keywords.append(contentsOf: Set(names))
+                }
+
+                attributeSet.keywords = keywords
 
                 return attributeSet
             }

@@ -55,7 +55,7 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      enableAddressSanitizer = "YES"
+      enableThreadSanitizer = "YES"
       enableUBSanitizer = "YES">
       <Testables>
          <TestableReference
@@ -104,6 +104,14 @@
       <CommandLineArguments>
          <CommandLineArgument
             argument = "-com.tweetnest.TweetNest.Preview"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.Logging.stderr 0"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-com.apple.CoreData.CloudKitDebug 1"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OrderedCollections
+import BackgroundTask
 import UnifiedLogging
 import TweetNestKit
 import Twitter
@@ -88,36 +89,40 @@ struct BatchDeleteTweetsProgressView: View {
             isBatchDeletionExecuting = false
         }
 
-        await withExtendedBackgroundExecution {
-            await withTaskCancellationHandler {
-                guard let account = account else {
-                    return
-                }
+        guard let account = account else {
+            return
+        }
 
-                await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
-                    for (offset, targetTweetID) in targetTweets.keys.enumerated() {
-                        taskGroup.addTask {
-                            do {
-                                try await Tweet.delete(targetTweetID, session: .session(for: account, session: TweetNestApp.session))
-                                return (offset, .success(()))
-                            } catch {
-                                return (offset, .failure(error))
+        await withTaskCancellationHandler {
+            do {
+                try await withExtendedBackgroundExecution {
+                    await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
+                        for (offset, targetTweetID) in targetTweets.keys.enumerated() {
+                            taskGroup.addTask {
+                                do {
+                                    try await Tweet.delete(targetTweetID, session: .session(for: account, session: TweetNestApp.session))
+                                    return (offset, .success(()))
+                                } catch {
+                                    return (offset, .failure(error))
+                                }
                             }
                         }
+
+                        for await result in taskGroup {
+                            results[result.0] = result.1
+
+                            progress.completedUnitCount = Int64(results.count)
+                            updateProgressDescription()
+                        }
+
+                        isBatchDeletionFinished = true
                     }
-
-                    for await result in taskGroup {
-                        results[result.0] = result.1
-
-                        progress.completedUnitCount = Int64(results.count)
-                        updateProgressDescription()
-                    }
-
-                    isBatchDeletionFinished = true
                 }
-            } onCancel: {
-                progress.cancel()
+            } catch {
+                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
             }
+        } onCancel: {
+            progress.cancel()
         }
     }
 

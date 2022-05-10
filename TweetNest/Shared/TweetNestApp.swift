@@ -40,16 +40,12 @@ struct TweetNestApp: App {
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate
     @Environment(\.scenePhase) private var scenePhase
 
-    var session: Session {
-        delegate.session
-    }
-
     var body: some Scene {
         Group {
             WindowGroup {
                 MainView()
                     .environmentObject(delegate)
-                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+                    .environment(\.managedObjectContext, Self.session.persistentContainer.viewContext)
                     #if os(macOS) && DEBUG
                     .frame(width: Self.isPreview ? 1440 : nil, height: Self.isPreview ? (900 - 52) : nil)
                     #endif
@@ -63,29 +59,32 @@ struct TweetNestApp: App {
             #if os(macOS)
             Settings {
                 SettingsMainView()
-                    .environment(\.managedObjectContext, session.persistentContainer.viewContext)
+                    .environment(\.managedObjectContext, Self.session.persistentContainer.viewContext)
             }
             #elseif os(watchOS)
             WKNotificationScene(controller: NotificationController.self, category: "NewAccountData")
             #endif
         }
         .onChange(of: scenePhase) { phase in
-            Task {
-                do {
-                    switch phase {
-                    case .active:
-                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .active)
-                    case .inactive:
-                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .inactive)
-                    case .background:
-                        try await session.backgroundTaskScheduler.scheduleBackgroundTasks(for: .background)
-                    @unknown default:
-                        break
-                    }
-
-                } catch {
-                    Logger().error("Error occurred while schedule refresh: \(String(reflecting: error), privacy: .public)")
-                }
+            switch phase {
+            case .active, .inactive:
+                Self.session.resumeBackgroundTaskTimers()
+                #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
+                BackgroundTaskScheduler.shared.cancelBackgroundTasks()
+                #endif
+                #if canImport(CoreSpotlight)
+                Self.session.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                #endif
+            case .background:
+                Self.session.pauseBackgroundTaskTimers()
+                #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
+                BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
+                #endif
+                #if canImport(CoreSpotlight)
+                Self.session.persistentContainer.usersSpotlightDelegate?.stopSpotlightIndexing()
+                #endif
+            @unknown default:
+                break
             }
         }
     }

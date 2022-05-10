@@ -27,9 +27,6 @@ struct SettingsGeneralView: View {
         _managedPreferences.first ?? ManagedPreferences(context: viewContext)
     }
 
-    @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.isBackgroundUpdateEnabled)
-    var backgroundUpdate: Bool = true
-
     @AppStorage(TweetNestKitUserDefaults.DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess)
     var downloadsImagesUsingExpensiveNetworkAccess: Bool = true
 
@@ -39,13 +36,7 @@ struct SettingsGeneralView: View {
     var body: some View {
         Form {
             Section {
-                Toggle("Background Update", isOn: $backgroundUpdate)
-            } footer: {
-                Text("Update accounts in background on this device.")
-                    #if os(macOS)
-                    .foregroundColor(.secondary)
-                    .font(.footnote)
-                    #endif
+                SettingsFetchNewDataView()
             }
 
             #if os(iOS) || os(watchOS)
@@ -55,13 +46,6 @@ struct SettingsGeneralView: View {
                 Text("Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If “Allow More Data on 5G” is turned on this device, this option will be ignored.")
             }
             #endif
-
-            Section {
-                Toggle("Fetch Profile Headers", isOn: Binding<Bool>(get: { managedPreferences.fetchProfileHeaderImages }, set: { managedPreferences.fetchProfileHeaderImages = $0 }))
-            }
-            .onChange(of: managedPreferences.fetchProfileHeaderImages) { _ in
-                save()
-            }
 
             #if os(iOS)
             Section {

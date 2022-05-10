@@ -9,16 +9,17 @@ import Foundation
 import CoreData
 import UserNotifications
 import UnifiedLogging
+import BackgroundTask
 import Twitter
 import OrderedCollections
 
 extension Session {
     @discardableResult
-    public nonisolated func updateAllAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
+    public func updateAllAccounts() async throws -> [(NSManagedObjectID, Result<Bool, Swift.Error>)] {
         let context = persistentContainer.newBackgroundContext()
         context.undoManager = nil
 
-        let accountObjectIDs: [NSManagedObjectID] = try await context.perform(schedule: .enqueued) {
+        let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
             let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
             fetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
@@ -33,7 +34,7 @@ extension Session {
             accountObjectIDs.forEach { accountObjectID in
                 taskGroup.addTask {
                     do {
-                        let updateResults = try await self.updateAccount(accountObjectID)
+                        let updateResults = try await self.updateAccount(accountObjectID, context: context)
                         return (accountObjectID, .success(updateResults?.oldUserDetailObjectID != updateResults?.newUserDetailObjectID))
                     } catch {
                         return (accountObjectID, .failure(error))
@@ -46,24 +47,24 @@ extension Session {
     }
 
     @discardableResult
-    public nonisolated func updateAccount(
+    public func updateAccount(
         _ accountObjectID: NSManagedObjectID,
         context _context: NSManagedObjectContext? = nil
     ) async throws -> (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?)? {
-        try await withExtendedBackgroundExecution {
-            let context = _context ?? self.persistentContainer.newBackgroundContext()
-            await context.perform {
-                let undoManager = _context.flatMap { _context in _context.performAndWait { _context.undoManager }  }
+        let context = _context ?? {
+            let context = self.persistentContainer.newBackgroundContext()
+            context.undoManager = nil
 
-                context.undoManager = undoManager
-            }
+            return context
+        }()
 
-            let twitterSession = try await self.twitterSession(for: accountObjectID)
-            let twitterAccount = try await Twitter.Account.me(session: twitterSession)
+        let twitterSession = try await self.twitterSession(for: accountObjectID)
+        let twitterAccount = try await Twitter.Account.me(session: twitterSession)
 
-            let userID = String(twitterAccount.id)
+        let userID = String(twitterAccount.id)
 
-            try await context.perform(schedule: .enqueued) {
+        try await context.perform(schedule: .enqueued) {
+            try withExtendedBackgroundExecution {
                 guard let account = context.object(with: accountObjectID) as? Account else {
                     return
                 }
@@ -74,8 +75,8 @@ extension Session {
                     try context.save()
                 }
             }
-
-            return try await self.updateUsers(ids: [userID], accountObjectID: accountObjectID, accountUserID: userID, context: context)[userID]?.get()
         }
+
+        return try await updateUser(accountObjectID: accountObjectID, context: context)
     }
 }

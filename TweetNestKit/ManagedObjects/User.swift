@@ -12,13 +12,17 @@ import Twitter
 
 public class User: NSManagedObject {
     public dynamic var sortedUserDetails: OrderedSet<UserDetail>? {
-        (userDetails as? Set<UserDetail>).flatMap {
-            var userDetails = OrderedSet($0)
-
-            userDetails.sort { $0.creationDate ?? .distantPast < $1.creationDate ?? .distantPast }
-
-            return userDetails
+        guard
+            let userDetails = userDetails?.sortedArray(
+                using: [
+                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+                ]
+            ) as? [UserDetail]
+        else {
+            return nil
         }
+
+        return OrderedSet(uncheckedUniqueElements: userDetails)
     }
 
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {

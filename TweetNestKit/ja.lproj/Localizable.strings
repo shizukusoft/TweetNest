@@ -1,9 +1,13 @@
-/* background-refresh notification title. */
-"Background Refresh" = "バックグラウンド更新";
+/*
+  Localizable.strings
+  TweetNest
 
-/* update-accounts notification subtitle. */
-"Error" = "エラー";
+  Created by Jaehong Kang on 2021/08/08.
+
+*/
 
 /* background-refresh notification body. */
 "New Profile" = "新しいプロフィール";
 
+/* fetch-new-data-title notification title. */
+"Fetch New Data Error" = "データの取得エラー";

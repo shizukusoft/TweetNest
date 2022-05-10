@@ -11,5 +11,8 @@ jobs:
   SwiftLint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: norio-nomura/action-swiftlint@3.2.1
+      - uses: actions/checkout@v3
+      - uses: sinoru/actions-setup-swift@v2
+        with:
+          swift-version: '5.6.1'
+      - uses: sinoru/actions-swiftlint@v6

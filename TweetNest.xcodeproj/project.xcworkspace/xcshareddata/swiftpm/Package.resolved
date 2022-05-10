@@ -1,12 +1,21 @@
 {
   "pins" : [
     {
+      "identity" : "swift-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-algorithms.git",
+      "state" : {
+        "revision" : "b14b7f4c528c942f121c8b860b9410b2bf57825e",
+        "version" : "1.0.0"
+      }
+    },
+    {
       "identity" : "swift-background-task",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tweetnest/swift-background-task",
       "state" : {
-        "revision" : "d52890a59509436a3f79b8242fa68d3d02e59b2d",
-        "version" : "0.0.15"
+        "revision" : "1819e6caf1fda0d8d6ad80e70e372b0e2a60022e",
+        "version" : "0.1.1"
       }
     },
     {
@@ -28,12 +37,21 @@
       }
     },
     {
+      "identity" : "swift-numerics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-numerics",
+      "state" : {
+        "revision" : "0a5bc04095a675662cf24757cc0640aa2204253b",
+        "version" : "1.0.2"
+      }
+    },
+    {
       "identity" : "swift-twitter",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/tweetnest/swift-twitter",
       "state" : {
         "branch" : "develop",
-        "revision" : "2206f7e8a472fcc6c0d9cdef8cd9206c3cd1984c"
+        "revision" : "d99d835cc24c70792f246780ccbadb8d44f56c6c"
       }
     },
     {
@@ -41,8 +59,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-unified-log",
       "state" : {
-        "revision" : "08fbd351e4370c4b0008bc9dfa8c24a9135c059d",
-        "version" : "1.0.0"
+        "revision" : "aaa92ac8b6cada0601d19e1423169a81e4725ba8",
+        "version" : "2.0.0"
       }
     },
     {

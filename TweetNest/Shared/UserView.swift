@@ -8,6 +8,7 @@
 import SwiftUI
 import CoreData
 import TweetNestKit
+import BackgroundTask
 import UnifiedLogging
 
 struct UserView: View {
@@ -97,24 +98,26 @@ struct UserView: View {
 
     var body: some View {
         let user = usersFetchedResultsController.fetchedObjects.first
+        let userDetails = userDetailsFetchedResultsController.fetchedObjects.lazy.filter { $0.user?.objectID == user?.objectID }
+        let latestUserDetail: UserDetail? = userDetails.first
 
         Group {
             #if os(macOS)
             VStack(alignment: .leading, spacing: 8) {
                 VStack(alignment: .leading, spacing: 8) {
-                    if let latestUserDetail = userDetailsFetchedResultsController.fetchedObjects.first {
+                    if let latestUserDetail = latestUserDetail {
                         UserDetailProfileView(userDetail: latestUserDetail)
                     }
                     FootnotesView(userID: userID, user: user)
                 }
                 .padding()
 
-                AllDataView(userDetails: userDetailsFetchedResultsController.fetchedObjects)
+                AllDataView(userDetails: userDetails)
             }
             #else
             List {
                 Section {
-                    if let latestUserDetail = userDetailsFetchedResultsController.fetchedObjects.first {
+                    if let latestUserDetail = latestUserDetail {
                         UserDetailProfileView(userDetail: latestUserDetail)
                     }
                 } header: {
@@ -132,7 +135,7 @@ struct UserView: View {
                 #endif
 
                 Section(String(localized: "All Data")) {
-                    AllDataView(userDetails: userDetailsFetchedResultsController.fetchedObjects)
+                    AllDataView(userDetails: userDetails)
                 }
             }
             #endif
@@ -140,7 +143,7 @@ struct UserView: View {
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
         #endif
-        .navigationTitle(Text(verbatim: user?.sortedUserDetails?.last?.displayUsername ?? userID.displayUserID))
+        .navigationTitle(Text(verbatim: latestUserDetail?.displayUsername ?? userID.displayUserID))
         .refreshable(action: refresh)
         #if os(iOS) || os(macOS)
         .toolbar {
@@ -260,57 +263,47 @@ struct UserView: View {
             }
         }
         #endif
-        .onChange(of: usersFetchedResultsController.fetchedObjects.first?.objectID) { newValue in
-            self.userDetailsFetchedResultsController.fetchRequest = Self.newUserDetailsFetchRequest(for: newValue)
-        }
     }
 
     init(userID: String) {
         self.userID = userID
 
-        let usersFetchedResultsController: FetchedResultsController<User> = FetchedResultsController(
-            fetchRequest: {
-                let fetchRequest = User.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
-                fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-                    NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
-                ]
-                fetchRequest.fetchLimit = 1
-                fetchRequest.propertiesToFetch = ["id", "lastUpdateStartDate", "lastUpdateEndDate"]
-                fetchRequest.returnsObjectsAsFaults = false
-
-                return fetchRequest
-
-            }(),
-            managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
-        )
-
         self._usersFetchedResultsController = StateObject(
-            wrappedValue: usersFetchedResultsController
+            wrappedValue: FetchedResultsController(
+                fetchRequest: {
+                    let fetchRequest = User.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
+                    fetchRequest.sortDescriptors = [
+                        NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
+                    ]
+                    fetchRequest.fetchLimit = 1
+                    fetchRequest.propertiesToFetch = ["id", "lastUpdateStartDate", "lastUpdateEndDate"]
+                    fetchRequest.returnsObjectsAsFaults = false
+
+                    return fetchRequest
+
+                }(),
+                managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
+            )
         )
 
         self._userDetailsFetchedResultsController = StateObject(
             wrappedValue: FetchedResultsController(
-                fetchRequest: Self.newUserDetailsFetchRequest(for: usersFetchedResultsController.fetchedObjects.first?.objectID),
+                fetchRequest: {
+                    let fetchRequest = UserDetail.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
+                    fetchRequest.sortDescriptors = [
+                        NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                    ]
+                    fetchRequest.returnsObjectsAsFaults = false
+
+                    return fetchRequest
+
+                }(),
                 managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
             )
         )
-    }
-
-    private static func newUserDetailsFetchRequest(for userObjectID: NSManagedObjectID?) -> NSFetchRequest<UserDetail> {
-        let fetchRequest = UserDetail.fetchRequest()
-        if let userObjectID = userObjectID {
-            fetchRequest.predicate = NSPredicate(format: "user == %@", userObjectID)
-        } else {
-            fetchRequest.predicate = NSPredicate(value: false)
-        }
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
-        ]
-        fetchRequest.returnsObjectsAsFaults = false
-
-        return fetchRequest
     }
 }
 
@@ -342,32 +335,30 @@ extension UserView {
 
     @Sendable
     private func refresh() async {
-        await withExtendedBackgroundExecution {
-            guard isRefreshing == false else {
-                return
-            }
+        guard isRefreshing == false else {
+            return
+        }
 
-            startRefreshing()
-            defer {
-                Task {
-                    await endRefreshing()
-                }
-            }
+        isRefreshing = true
+        defer {
+            isRefreshing = false
+        }
 
-            do {
-                guard let accountObjectID = accountObjectID else {
-                    return
-                }
+        guard let accountObjectID = accountObjectID else {
+            return
+        }
 
+        do {
+            try await withExtendedBackgroundExecution {
                 if isUserContainsAccount {
                     try await TweetNestApp.session.updateAccount(accountObjectID)
                 } else {
-                    _ = try await TweetNestApp.session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]?.get()
+                    _ = try await TweetNestApp.session.updateUsers(ids: [userID].compactMap { $0 }, accountObjectID: accountObjectID)[userID]
                 }
-            } catch {
-                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                presentError(error: TweetNestError(error))
             }
+        } catch {
+            Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
+            presentError(error: TweetNestError(error))
         }
     }
 }

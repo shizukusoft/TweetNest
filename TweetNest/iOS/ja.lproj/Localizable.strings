@@ -77,10 +77,16 @@
 "Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If “Allow More Data on 5G” is turned on this device, this option will be ignored." = "他のネットワークに接続できない場合、モバイル通信か共有ネットワークを使用して画像をダウンロードできるようにします。“5Gでより多くのデータを許容”をオンにしていると、この設定は無視されます。";
 
 /* No comment provided by engineer. */
+"Every %@" = "%@ごと";
+
+/* No comment provided by engineer. */
 "Fetch Blocking Users" = "ブロックしたアカウントを取り込む";
 
 /* No comment provided by engineer. */
 "Fetch Muting Users" = "ミュートしているアカウントを取り込む";
+
+/* No comment provided by engineer. */
+"Fetch New Data" = "データの取得";
 
 /* No comment provided by engineer. */
 "Fetch Profile Headers" = "プロフィールのヘッダーを取り込む";
@@ -129,6 +135,9 @@
 
 /* No comment provided by engineer. */
 "Location" = "場所";
+
+/* No comment provided by engineer. */
+"Manually" = "手動";
 
 /* No comment provided by engineer. */
 "More" = "その他";

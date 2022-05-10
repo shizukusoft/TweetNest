@@ -22,33 +22,6 @@ public class ManagedPreferences: NSManagedObject {
 }
 
 extension ManagedPreferences {
-    public struct Preferences {
-        public var lastCleansed: Date = .distantPast
-        public var fetchProfileHeaderImages: Bool = false
-        public var notifyProfileChanges: Bool = true
-        public var notifyFollowingChanges: Bool = true
-        public var notifyFollowerChanges: Bool = true
-        public var notifyBlockingChanges: Bool = false
-        public var notifyMutingChanges: Bool = false
-    }
-}
-
-extension ManagedPreferences.Preferences: Codable {
-    public init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let defaultPreferences = ManagedPreferences.Preferences()
-
-        self.lastCleansed = try container.decodeIfPresent(Date.self, forKey: .lastCleansed) ?? defaultPreferences.lastCleansed
-        self.fetchProfileHeaderImages = try container.decodeIfPresent(Bool.self, forKey: .fetchProfileHeaderImages) ?? defaultPreferences.fetchProfileHeaderImages
-        self.notifyProfileChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyProfileChanges) ?? defaultPreferences.notifyProfileChanges
-        self.notifyFollowingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowingChanges) ?? defaultPreferences.notifyFollowingChanges
-        self.notifyFollowerChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowerChanges) ?? defaultPreferences.notifyFollowerChanges
-        self.notifyBlockingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyBlockingChanges) ?? defaultPreferences.notifyBlockingChanges
-        self.notifyMutingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyMutingChanges) ?? defaultPreferences.notifyMutingChanges
-    }
-}
-
-extension ManagedPreferences.Preferences {
     @objc(TWNKManagedPreferencesTransformer)
     class Transformer: ValueTransformer {
         override class func transformedValueClass() -> AnyClass {
@@ -56,7 +29,7 @@ extension ManagedPreferences.Preferences {
         }
 
         override func transformedValue(_ value: Any?) -> Any? {
-            guard let value = value as? ManagedPreferences.Preferences? else {
+            guard let value = value as? Preferences? else {
                 preconditionFailure()
             }
 
@@ -75,7 +48,7 @@ extension ManagedPreferences.Preferences {
                 return nil
             }
 
-            return try? PropertyListDecoder().decode(ManagedPreferences.Preferences.self, from: value as Data)
+            return try? PropertyListDecoder().decode(Preferences.self, from: value as Data)
         }
     }
 }
@@ -111,5 +84,16 @@ extension ManagedPreferences {
 
             setPrimitiveValue(Date(), forKey: Key.modificationDate)
         }
+    }
+}
+
+extension ManagedPreferences{
+    public static func managedPreferences(for context: NSManagedObjectContext) -> ManagedPreferences  {
+        let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
+        fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
+        fetchReuqest.fetchLimit = 1
+        fetchReuqest.returnsObjectsAsFaults = false
+
+        return (try? context.fetch(fetchReuqest).first) ?? ManagedPreferences(context: context)
     }
 }

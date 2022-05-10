@@ -9,10 +9,10 @@ import SwiftUI
 import TweetNestKit
 
 extension UserView {
-    struct AllDataView: View {
+    struct AllDataView<UserDetails: RandomAccessCollection>: View where UserDetails.Element == UserDetail {
         @Environment(\.account) var account: Account?
 
-        let userDetails: [UserDetail]
+        let userDetails: UserDetails
         
         var body: some View {
             #if os(macOS)
@@ -56,16 +56,30 @@ extension UserView {
             }
             #else
             ForEach(userDetails) { userDetail in
-                NavigationLink(
-                    userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
-                ) {
+                let title = userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description
+
+                NavigationLink {
                     UserDetailView(userDetail: userDetail)
-                        .navigationTitle(
-                            Text(userDetail.creationDate?.formatted(date: .abbreviated, time: .standard) ?? userDetail.objectID.description)
-                            .accessibilityLabel(Text(userDetail.creationDate?.formatted(date: .complete, time: .standard) ?? userDetail.objectID.description))
-                        )
+                        .navigationTitle(title)
                         .environment(\.account, account)
+                } label: {
+                    TweetNestStack {
+                        UserDetailLabel(userDetail: userDetail, placeholder: userDetail.objectID.description, showsUsername: false)
+                            #if os(watchOS)
+                            .labelStyle(.userDetailLabelStyle(iconWidth: 16, iconHeight: 16))
+                            #else
+                            .labelStyle(.userDetailLabelStyle(iconWidth: 24, iconHeight: 24))
+                            #endif
+
+                        Spacer()
+
+                        if let creationDate = userDetail.creationDate {
+                            Text(creationDate.formatted(date: .numeric, time: .shortened))
+                                .foregroundColor(.secondary)
+                        }
+                    }
                 }
+                .accessibilityLabel(title)
             }
             #endif
         }

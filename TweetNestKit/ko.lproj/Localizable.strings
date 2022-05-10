@@ -1,9 +1,13 @@
-/* background-refresh notification title. */
-"Background Refresh" = "백그라운드 새로 고침";
+/*
+  Localizable.strings
+  TweetNest
 
-/* update-accounts notification subtitle. */
-"Error" = "오류";
+  Created by Jaehong Kang on 2021/08/08.
+
+*/
 
 /* background-refresh notification body. */
 "New Profile" = "새 프로필";
 
+/* fetch-new-data-title notification title. */
+"Fetch New Data Error" = "데이터 업데이트 오류";

@@ -20,9 +20,6 @@
 "Add Account" = "アカウントを追加";
 
 /* No comment provided by engineer. */
-"Background Update" = "バックグラウンド更新";
-
-/* No comment provided by engineer. */
 "Blocked Accounts" = "ブロックしたアカウント";
 
 /* No comment provided by engineer. */
@@ -62,10 +59,16 @@
 "Done" = "完了";
 
 /* No comment provided by engineer. */
+"Every %@" = "%@ごと";
+
+/* No comment provided by engineer. */
 "Fetch Blocking Users" = "ブロックしたアカウントを取り込む";
 
 /* No comment provided by engineer. */
 "Fetch Muting Users" = "ミュートしているアカウントを取り込む";
+
+/* No comment provided by engineer. */
+"Fetch new data" = "データの取得";
 
 /* No comment provided by engineer. */
 "Fetch Profile Headers" = "プロフィールのヘッダーを取り込む";
@@ -111,6 +114,9 @@
 
 /* No comment provided by engineer. */
 "Location" = "場所";
+
+/* No comment provided by engineer. */
+"Manually" = "手動";
 
 /* No comment provided by engineer. */
 "More" = "その他";
@@ -195,9 +201,6 @@
 
 /* No comment provided by engineer. */
 "Until" = "最後";
-
-/* No comment provided by engineer. */
-"Update accounts in background on this device." = "このデバイスでアカウントのバックグラウンド更新を行います。";
 
 /* No comment provided by engineer. */
 "Updated %@ ago" = "%@前に更新されました";
