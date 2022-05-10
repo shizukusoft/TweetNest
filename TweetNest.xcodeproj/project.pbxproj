@@ -95,7 +95,6 @@
 		194360FF280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436100280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436101280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
-		1944554128116D4600128A22 /* PersistentContainer+Supports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554028116D4600128A22 /* PersistentContainer+Supports.swift */; };
 		1944554428116F0900128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
 		1944554528116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
 		1944554628116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
@@ -434,7 +433,6 @@
 		193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
 		193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFetchNewDataView.swift; sourceTree = "<group>"; };
 		194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserView+FootnotesView.swift"; sourceTree = "<group>"; };
-		1944554028116D4600128A22 /* PersistentContainer+Supports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+Supports.swift"; sourceTree = "<group>"; };
 		1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSections.swift; sourceTree = "<group>"; };
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1945F84126F0D3D900CE4EFB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -1053,7 +1051,6 @@
 				196BF03F2820EFF50030B757 /* PersistentContainer+V1.swift */,
 				196BF0412820F0F80030B757 /* PersistentContainer+V3.swift */,
 				196BF0432820FA510030B757 /* PersistentContainer+Migration.swift */,
-				1944554028116D4600128A22 /* PersistentContainer+Supports.swift */,
 				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
 				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
 				198CC4B62820244600D3C7EA /* TweetNestKitV3.xcdatamodeld */,
@@ -1736,7 +1733,6 @@
 				197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */,
 				196BF0392820D1BD0030B757 /* ManagedAccount.swift in Sources */,
 				196BF0372820D1BD0030B757 /* ManagedUserDetail.swift in Sources */,
-				1944554128116D4600128A22 /* PersistentContainer+Supports.swift in Sources */,
 				196BF0382820D1BD0030B757 /* ManagedUserDetail+CoreDataProperties.swift in Sources */,
 				19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */,
 				1978AF0F280FC9C80081D481 /* Session+Support.swift in Sources */,
