@@ -7,7 +7,6 @@
 
 import Foundation
 
-@objc
 class SecureUnarchiveFromDataTransformer: NSSecureUnarchiveFromDataTransformer {
     override class var allowedTopLevelClasses: [AnyClass] {
         return super.allowedTopLevelClasses + [NSAttributedString.self]
