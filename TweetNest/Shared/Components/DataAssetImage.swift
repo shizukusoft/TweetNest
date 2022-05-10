@@ -20,7 +20,7 @@ struct DataAssetImage: View {
 
     struct ImageData: Equatable {
         var data: Data
-        var dataMIMEType: String
+        var dataMIMEType: String?
     }
     @State private var imageData: ImageData?
 
@@ -32,7 +32,7 @@ struct DataAssetImage: View {
     var body: some View {
         Group {
             #if os(macOS) || os(iOS)
-            if isExportable, let url = url, let cgImage = cgImage, let imageData = imageData, let utType = UTType(mimeType: imageData.dataMIMEType, conformingTo: .image) {
+            if isExportable, let url = url, let cgImage = cgImage, let imageData = imageData, let utType = imageData.dataMIMEType.flatMap({ UTType(mimeType: $0, conformingTo: .image) }) {
                 let filename = url.pathExtension.isEmpty ? url.appendingPathExtension(for: utType).lastPathComponent : url.lastPathComponent
 
                 Group {
@@ -91,12 +91,10 @@ struct DataAssetImage: View {
             Task(priority: .utility) {
                 let imageData: ImageData? = await dataAssetsFetchedResultsController.managedObjectContext.perform {
                     dataAssetsFetchedResultsController.fetchedObjects.first?.data.flatMap { data in
-                        dataAssetsFetchedResultsController.fetchedObjects.first?.dataMIMEType.flatMap { dataMIMEType in
-                            ImageData(
-                                data: data,
-                                dataMIMEType: dataMIMEType
-                            )
-                        }
+                        ImageData(
+                            data: data,
+                            dataMIMEType: dataAssetsFetchedResultsController.fetchedObjects.first?.dataMIMEType
+                        )
                     }
                 }
 
@@ -108,12 +106,10 @@ struct DataAssetImage: View {
         .task {
             let imageData: ImageData? = await dataAssetsFetchedResultsController.managedObjectContext.perform {
                 dataAssetsFetchedResultsController.fetchedObjects.first?.data.flatMap { data in
-                    dataAssetsFetchedResultsController.fetchedObjects.first?.dataMIMEType.flatMap { dataMIMEType in
-                        ImageData(
-                            data: data,
-                            dataMIMEType: dataMIMEType
-                        )
-                    }
+                    ImageData(
+                        data: data,
+                        dataMIMEType: dataAssetsFetchedResultsController.fetchedObjects.first?.dataMIMEType
+                    )
                 }
             }
 

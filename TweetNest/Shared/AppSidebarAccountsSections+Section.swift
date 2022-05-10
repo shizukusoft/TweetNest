@@ -22,7 +22,12 @@ extension AppSidebarAccountsSections {
             } header: {
                 UserDetailLabel(userDetail: userDetailsFetchedResultsController.fetchedObjects.first, account: account)
                     #if os(watchOS)
+                    .labelStyle(.userDetailLabelStyle(iconWidth: 16, iconHeight: 16))
                     .padding([.bottom], 2)
+                    #elseif os (macOS)
+                    .labelStyle(.userDetailLabelStyle(iconWidth: 18, iconHeight: 18))
+                    #else
+                    .labelStyle(.userDetailLabelStyle(iconWidth: 24, iconHeight: 24))
                     #endif
             }
             .onChange(of: account.userID) { newValue in

@@ -1,7 +1,0 @@
-for_platform :ios do
-  scheme("TweetNest (iOS)")
-end
-
-for_platform :mac do
-  scheme("TweetNest (macOS)")
-end

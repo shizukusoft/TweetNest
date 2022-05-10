@@ -144,6 +144,9 @@
 		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B93626B6F9E000AFCC9E /* SafariView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B93526B6F9E000AFCC9E /* SafariView.swift */; };
+		19960CD428294067002D4956 /* UserDetailLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19960CD328294067002D4956 /* UserDetailLabelStyle.swift */; };
+		19960CD528294067002D4956 /* UserDetailLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19960CD328294067002D4956 /* UserDetailLabelStyle.swift */; };
+		19960CD628294067002D4956 /* UserDetailLabelStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19960CD328294067002D4956 /* UserDetailLabelStyle.swift */; };
 		1997BF69280B501A009ABA72 /* UserDetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1997BF68280B501A009ABA72 /* UserDetailLabel.swift */; };
 		1997BF6A280B501A009ABA72 /* UserDetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1997BF68280B501A009ABA72 /* UserDetailLabel.swift */; };
 		1997BF6B280B501A009ABA72 /* UserDetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1997BF68280B501A009ABA72 /* UserDetailLabel.swift */; };
@@ -468,6 +471,7 @@
 		19933EF025E91277006AB4C0 /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		1995B92B26B6F1ED00AFCC9E /* UserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserView.swift; sourceTree = "<group>"; };
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
+		19960CD328294067002D4956 /* UserDetailLabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailLabelStyle.swift; sourceTree = "<group>"; };
 		1997BF68280B501A009ABA72 /* UserDetailLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailLabel.swift; sourceTree = "<group>"; };
 		199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestError.swift; sourceTree = "<group>"; };
 		19A6FF1526D6835F00AB7B7E /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -866,6 +870,7 @@
 				19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */,
 				19FB868527E5D10C00AAC5CB /* SectionedFetchedResultsController.swift */,
 				1997BF68280B501A009ABA72 /* UserDetailLabel.swift */,
+				19960CD328294067002D4956 /* UserDetailLabelStyle.swift */,
 				19DB9E4A27084E5C000E5FA2 /* Components */,
 				1908FBFB26F6EE020095AF77 /* BatchDeleteTweets */,
 				193AFB6726CA33D3008BFF67 /* Settings */,
@@ -1495,6 +1500,7 @@
 				1997BF69280B501A009ABA72 /* UserDetailLabel.swift in Sources */,
 				19DA23D126B98767002436DC /* UserDetailProfileView.swift in Sources */,
 				192F008826FC270B000EC734 /* UserView+AllDataView.swift in Sources */,
+				19960CD428294067002D4956 /* UserDetailLabelStyle.swift in Sources */,
 				1908FC0D26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift in Sources */,
 				19861E3D26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */,
 				193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */,
@@ -1555,6 +1561,7 @@
 				19C12F8926D93F9E0022793C /* TweetNestStack.swift in Sources */,
 				1951EBEC270850FC00311B3C /* DetailImageView.swift in Sources */,
 				66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */,
+				19960CD528294067002D4956 /* UserDetailLabelStyle.swift in Sources */,
 				1908FC0626F6EFFD0095AF77 /* BatchDeleteTweetsLoadingTwitterArchiveView.swift in Sources */,
 				19DA23D226B98767002436DC /* UserDetailProfileView.swift in Sources */,
 				19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
@@ -1636,6 +1643,7 @@
 				1908FC0326F6EF280095AF77 /* BatchDeleteTweetsLoadingRecentTweetsView.swift in Sources */,
 				19EABBCC26D6877600D3B003 /* TweetNestAppDelegate.swift in Sources */,
 				19B3130626E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */,
+				19960CD628294067002D4956 /* UserDetailLabelStyle.swift in Sources */,
 				1944554428116F0900128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				19EABBCD26D6877600D3B003 /* MainView.swift in Sources */,
 				19EABBDF26D6878400D3B003 /* URL.swift in Sources */,
@@ -2253,7 +2261,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.9.56;
+				CURRENT_PROJECT_VERSION = 1.9.57;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2326,7 +2334,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.9.56;
+				CURRENT_PROJECT_VERSION = 1.9.57;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
