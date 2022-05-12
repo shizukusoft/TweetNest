@@ -12,7 +12,7 @@ import Algorithms
 import UnifiedLogging
 
 extension PersistentContainer {
-    func migrationIfNeeded() throws {
+    func migrateIfNeeded() throws {
         if FileManager.default.fileExists(atPath: Self.V1.defaultPersistentStoreURL.path) {
             let v1PersistentContainer = NSPersistentContainer(name: "\(Bundle.tweetNestKit.name!)", managedObjectModel: Self.V1.managedObjectModel)
             v1PersistentContainer.persistentStoreDescriptions = [

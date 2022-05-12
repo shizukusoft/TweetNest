@@ -93,7 +93,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     public override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> Void) {
         persistentStoreCoordinator.performAndWait {
             do {
-                try self.migrationIfNeeded()
+                try self.migrateIfNeeded()
 
                 super.loadPersistentStores(completionHandler: block)
             } catch {
