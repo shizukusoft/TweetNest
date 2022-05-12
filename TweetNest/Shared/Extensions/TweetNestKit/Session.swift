@@ -54,7 +54,6 @@ extension TweetNestKit.Session {
         tweetnestUser.creationDate = Date(timeIntervalSince1970: 1628780400)
         tweetnestUser.lastUpdateStartDate = now
         tweetnestUser.lastUpdateEndDate = now
-        tweetnestUser.modificationDate = now
         tweetnestUser.id = tweetnestAccount.userID
 
         let tweetnestUserDetail1 = ManagedUserDetail(context: context)
@@ -112,7 +111,6 @@ extension TweetNestKit.Session {
         twitterUser.creationDate = now
         twitterUser.lastUpdateStartDate = now
         twitterUser.lastUpdateEndDate = now
-        twitterUser.modificationDate = now
         twitterUser.id = "783214"
 
         let twitterUserDetail = ManagedUserDetail(context: context)
@@ -132,7 +130,6 @@ extension TweetNestKit.Session {
         twitterSupportUser.creationDate = now
         twitterSupportUser.lastUpdateStartDate = now
         twitterSupportUser.lastUpdateEndDate = now
-        twitterSupportUser.modificationDate = now
         twitterSupportUser.id = "17874544"
 
         let twitterSupportUserDetail = ManagedUserDetail(context: context)
@@ -161,7 +158,6 @@ extension TweetNestKit.Session {
         appleUser.creationDate = now
         appleUser.lastUpdateStartDate = now
         appleUser.lastUpdateEndDate = now
-        appleUser.modificationDate = now
         appleUser.id = "380749300"
 
         let appleUserDetail = ManagedUserDetail(context: context)

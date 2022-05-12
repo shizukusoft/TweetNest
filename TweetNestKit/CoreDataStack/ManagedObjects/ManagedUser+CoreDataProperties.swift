@@ -20,7 +20,6 @@ extension ManagedUser {
     @NSManaged public var id: String?
     @NSManaged public var lastUpdateEndDate: Date?
     @NSManaged public var lastUpdateStartDate: Date?
-    @NSManaged public var modificationDate: Date?
 
 }
 

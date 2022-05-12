@@ -33,7 +33,6 @@
         <attribute name="id" optional="YES" attributeType="String"/>
         <attribute name="lastUpdateEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="lastUpdateStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <fetchedProperty name="accounts" optional="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="Account" predicateString="userID == $FETCH_SOURCE.id"/>
         </fetchedProperty>
@@ -86,7 +85,7 @@
         <element name="Account" positionX="-63" positionY="-18" width="128" height="140"/>
         <element name="DataAsset" positionX="-54" positionY="144" width="128" height="104"/>
         <element name="Preferences" positionX="-54" positionY="144" width="128" height="59"/>
-        <element name="User" positionX="-63" positionY="0" width="128" height="140"/>
+        <element name="User" positionX="-63" positionY="0" width="128" height="125"/>
         <element name="UserDetail" positionX="-45" positionY="27" width="128" height="350"/>
     </elements>
 </model>
