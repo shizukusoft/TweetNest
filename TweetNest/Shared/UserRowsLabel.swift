@@ -11,7 +11,7 @@ import TweetNestKit
 struct UserRowsLabel: View {
     let userID: String
 
-    @StateObject private var latestUserDetailsFetchedResultsController: FetchedResultsController<UserDetail>
+    @StateObject private var latestUserDetailsFetchedResultsController: FetchedResultsController<ManagedUserDetail>
 
     var body: some View {
         let latestUserDetail = latestUserDetailsFetchedResultsController.fetchedObjects.first
@@ -24,20 +24,16 @@ struct UserRowsLabel: View {
             #endif
     }
 
-    init(userID: String, user: User?) {
+    init(userID: String) {
         self.userID = userID
 
         self._latestUserDetailsFetchedResultsController = StateObject(
-            wrappedValue: FetchedResultsController<UserDetail>(
+            wrappedValue: FetchedResultsController<ManagedUserDetail>(
                 fetchRequest: {
-                    let fetchRequest = UserDetail.fetchRequest()
-                    if let user = user {
-                        fetchRequest.predicate = NSPredicate(format: "user == %@", user.objectID)
-                    } else {
-                        fetchRequest.predicate = NSPredicate(value: false)
-                    }
+                    let fetchRequest = ManagedUserDetail.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "userID == %@", userID)
                     fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false),
                     ]
                     fetchRequest.fetchLimit = 1
                     fetchRequest.propertiesToFetch = ["name", "username", "profileImageURL"]
@@ -53,6 +49,6 @@ struct UserRowsLabel: View {
 
 struct UserRowsLabel_Previews: PreviewProvider {
     static var previews: some View {
-        UserRowsLabel(userID: "123456", user: nil)
+        UserRowsLabel(userID: "123456")
     }
 }

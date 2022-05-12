@@ -15,7 +15,7 @@ extension Session {
 
         return await context.perform {
             guard
-                let account = context.object(with: accountObjectID) as? Account
+                let account = context.object(with: accountObjectID) as? ManagedAccount
             else {
                 return nil
             }

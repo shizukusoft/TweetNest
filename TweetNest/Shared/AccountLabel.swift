@@ -9,10 +9,10 @@ import SwiftUI
 import TweetNestKit
 
 struct AccountLabel: View {
-    @ObservedObject var account: Account
+    @ObservedObject var account: ManagedAccount
 
     @FetchRequest
-    private var userDetails: FetchedResults<UserDetail>
+    private var userDetails: FetchedResults<ManagedUserDetail>
 
     var body: some View {
         let userDetail = userDetails.first
@@ -30,16 +30,15 @@ struct AccountLabel: View {
             }
     }
 
-    init(account: Account) {
+    init(account: ManagedAccount) {
         self.account = account
 
         self._userDetails = FetchRequest(
             fetchRequest: {
-                let fetchRequest = UserDetail.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "user.id == %@", account.userID ?? "")
+                let fetchRequest = ManagedUserDetail.fetchRequest()
+                fetchRequest.predicate = account.userID.flatMap { NSPredicate(format: "userID == %@", $0) } ?? NSPredicate(value: false)
                 fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \UserDetail.user?.modificationDate, ascending: false),
-                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)
+                    NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false)
                 ]
                 fetchRequest.fetchLimit = 1
                 fetchRequest.propertiesToFetch = ["username", "profileImageURL"]

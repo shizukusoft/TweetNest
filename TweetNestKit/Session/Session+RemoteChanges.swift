@@ -97,7 +97,7 @@ extension Session {
         let changedAccountObjectIDs = transactions.lazy
             .compactMap(\.changes)
             .joined()
-            .filter { $0.changedObjectID.entity == Account.entity() }
+            .filter { $0.changedObjectID.entity == ManagedAccount.entity() }
             .filter { $0.changeType == .update }
             .map(\.changedObjectID)
             .uniqued()
@@ -107,7 +107,7 @@ extension Session {
 
         for changedAccountObjectID in changedAccountObjectIDs {
             let credential: Twitter.Session.Credential? = await context.perform {
-                guard let account = context.object(with: changedAccountObjectID) as? Account else {
+                guard let account = context.object(with: changedAccountObjectID) as? ManagedAccount else {
                     return nil
                 }
 
@@ -128,7 +128,7 @@ extension Session {
         let changedAccountObjectIDs = transactions.lazy
             .compactMap(\.changes)
             .joined()
-            .filter { $0.changedObjectID.entity == Account.entity() }
+            .filter { $0.changedObjectID.entity == ManagedAccount.entity() }
             .filter { $0.changeType == .insert }
             .map(\.changedObjectID)
             .uniqued()
@@ -149,7 +149,7 @@ extension Session {
         let changedUserObjectIDs = transactions.lazy
             .compactMap(\.changes)
             .joined()
-            .filter { $0.changedObjectID.entity == User.entity() }
+            .filter { $0.changedObjectID.entity == ManagedUser.entity() }
             .filter { $0.changeType == .insert }
             .map(\.changedObjectID)
             .uniqued()
@@ -170,7 +170,7 @@ extension Session {
         let changedDataAssetObjectIDs = transactions.lazy
             .compactMap(\.changes)
             .joined()
-            .filter { $0.changedObjectID.entity == DataAsset.entity() }
+            .filter { $0.changedObjectID.entity == ManagedDataAsset.entity() }
             .filter { $0.changeType == .insert }
             .map(\.changedObjectID)
             .uniqued()
@@ -189,18 +189,28 @@ extension Session {
 }
 
 extension Session {
-    private func notificationContent(for newUserDetail: UserDetail, preferences: ManagedPreferences.Preferences) -> UNNotificationContent? {
+    private func notificationContent(for newUserDetail: ManagedUserDetail, preferences: ManagedPreferences.Preferences, context: NSManagedObjectContext) -> UNNotificationContent? {
         guard
-            let user = newUserDetail.user,
-            let userID = user.id,
-            let sortedUserDetails = user.sortedUserDetails
+            let userID = newUserDetail.userID,
+            let newUserDetailCreationDate = newUserDetail.creationDate
         else {
             return nil
         }
 
-        let oldUserDetailIndex = sortedUserDetails.lastIndex(of: newUserDetail).flatMap { sortedUserDetails.index(before: $0) }
+        let oldUserDetailFetchRequest = ManagedUserDetail.fetchRequest()
+        oldUserDetailFetchRequest.predicate = NSCompoundPredicate(
+            andPredicateWithSubpredicates: [
+                NSPredicate(format: "userID == %@", userID),
+                NSPredicate(format: "creationDate < %@", newUserDetailCreationDate as NSDate)
+            ]
+        )
+        oldUserDetailFetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false)
+        ]
+        oldUserDetailFetchRequest.fetchLimit = 1
+        oldUserDetailFetchRequest.returnsObjectsAsFaults = false
 
-        guard let oldUserDetail = oldUserDetailIndex.flatMap({ sortedUserDetails.indices.contains($0) == true ? sortedUserDetails[$0] : nil }) else {
+        guard let oldUserDetail = try? context.fetch(oldUserDetailFetchRequest).first else {
             return nil
         }
 
@@ -274,7 +284,7 @@ extension Session {
                     transactions.lazy
                         .compactMap(\.changes)
                         .joined()
-                        .filter { $0.changedObjectID.entity == UserDetail.entity() }
+                        .filter { $0.changedObjectID.entity == ManagedUserDetail.entity() }
                         .map { ($0.changedObjectID, $0) },
                     uniquingKeysWith: { (_, last) in last }
                 )
@@ -292,11 +302,11 @@ extension Session {
 
                     let context = self.persistentContainer.newBackgroundContext()
 
-                    let (_userDetails, preferences): ([UserDetail], ManagedPreferences.Preferences) = try await context.perform {
+                    let (_userDetails, preferences): ([ManagedUserDetail], ManagedPreferences.Preferences) = try await context.perform {
                         let preferences = ManagedPreferences.managedPreferences(for: context).preferences
 
                         let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
-                        accountUserIDsfetchRequest.entity = Account.entity()
+                        accountUserIDsfetchRequest.entity = ManagedAccount.entity()
                         accountUserIDsfetchRequest.resultType = .dictionaryResultType
                         accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
                         accountUserIDsfetchRequest.returnsDistinctResults = true
@@ -310,15 +320,14 @@ extension Session {
                             return ([], preferences)
                         }
 
-                        let userDetailsFetchRequest = UserDetail.fetchRequest()
+                        let userDetailsFetchRequest = ManagedUserDetail.fetchRequest()
                         userDetailsFetchRequest.predicate = NSCompoundPredicate(
                             andPredicateWithSubpredicates: [
                                 NSPredicate(format: "SELF IN %@", updatedObjectIDs),
                                 NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
-                                NSPredicate(format: "user.id IN %@", accountUserIDs)
+                                NSPredicate(format: "userID IN %@", accountUserIDs)
                             ]
                         )
-                        userDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
                         userDetailsFetchRequest.returnsObjectsAsFaults = false
 
                         let userDetails = try context.fetch(userDetailsFetchRequest)
@@ -331,7 +340,7 @@ extension Session {
                             (
                                 _userDetail.objectID,
                                 await context.perform {
-                                    self.notificationContent(for: _userDetail, preferences: preferences)
+                                    self.notificationContent(for: _userDetail, preferences: preferences, context: context)
                                 }
                             )
                         }

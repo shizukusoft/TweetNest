@@ -10,7 +10,7 @@ import TweetNestKit
 
 struct UserDetailLabel: View {
     private struct UserDetailLabel: View {
-        @ObservedObject var userDetail: UserDetail
+        @ObservedObject var userDetail: ManagedUserDetail
         let placeholder: String
 
         let showsName: Bool
@@ -52,7 +52,7 @@ struct UserDetailLabel: View {
         }
     }
 
-    let userDetail: UserDetail?
+    let userDetail: ManagedUserDetail?
     let placeholder: String
     let showsName: Bool
     let showsUsername: Bool
@@ -71,14 +71,14 @@ struct UserDetailLabel: View {
         }
     }
 
-    init(userDetail: UserDetail?, placeholder: String, showsName: Bool = true, showsUsername: Bool = true) {
+    init(userDetail: ManagedUserDetail?, placeholder: String, showsName: Bool = true, showsUsername: Bool = true) {
         self.userDetail = userDetail
         self.placeholder = placeholder
         self.showsName = showsName
         self.showsUsername = showsUsername
     }
 
-    init(userDetail: UserDetail?, account: Account) {
+    init(userDetail: ManagedUserDetail?, account: ManagedAccount) {
         self.init(
             userDetail: userDetail,
             placeholder: account.userID?.displayUserID ?? account.objectID.uriRepresentation().absoluteString,

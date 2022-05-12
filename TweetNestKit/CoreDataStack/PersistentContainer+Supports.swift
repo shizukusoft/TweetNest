@@ -21,8 +21,8 @@ extension PersistentContainer {
         }
 
         usersFetchedPropertyDescription.fetchRequest?.sortDescriptors = [
-            NSSortDescriptor(keyPath: \User.creationDate, ascending: true),
-            NSSortDescriptor(keyPath: \User.modificationDate, ascending: true),
+            NSSortDescriptor(key: "creationDate", ascending: true),
+            NSSortDescriptor(key: "modificationDate", ascending: true),
         ]
 
         guard let userEntity = managedObjectModel.entitiesByName["User"] else {
@@ -34,7 +34,7 @@ extension PersistentContainer {
         }
 
         accountsFetchedPropertyDescription.fetchRequest?.sortDescriptors = [
-            NSSortDescriptor(keyPath: \Account.creationDate, ascending: true),
+            NSSortDescriptor(key: "creationDate", ascending: true),
         ]
 
         return managedObjectModel

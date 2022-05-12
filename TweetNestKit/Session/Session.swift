@@ -217,7 +217,7 @@ extension Session {
             let context = persistentContainer.newBackgroundContext()
 
             let userID: Twitter.User.ID? = context.performAndWait {
-                (context.object(with: accountObjectID) as? Account)?.userID
+                (context.object(with: accountObjectID) as? ManagedAccount)?.userID
             }
 
             notificationContent.threadIdentifier = userID ?? accountObjectID.uriRepresentation().absoluteString

@@ -35,31 +35,12 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
 
     init(inMemory: Bool = false, cloudKit: Bool = true, persistentStoreOptions: [String: Any?]? = nil) {
-        super.init(name: Bundle.tweetNestKit.name!, managedObjectModel: Self.managedObjectModel)
+        super.init(name: "\(Bundle.tweetNestKit.name!).V3", managedObjectModel: Self.V3.managedObjectModel)
 
         if inMemory == false {
-            let accountsPersistentStoreDescription = NSPersistentStoreDescription(url: Self.accountsPersistentStoreURL)
-            accountsPersistentStoreDescription.configuration = Self.accountsPersistentStoreConfiguration
-            if cloudKit {
-                accountsPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.accountsCloudKitIdentifier)
-            }
-
-            let tweetNestKitPersistentStoreDescription = NSPersistentStoreDescription(url: Self.defaultPersistentStoreURL)
-            tweetNestKitPersistentStoreDescription.configuration = Self.defaultPersistentStoreConfiguration
-            if cloudKit {
-                tweetNestKitPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.cloudKitIdentifier)
-            }
-
-            let dataAssetsPersistentStoreDescription = NSPersistentStoreDescription(url: Self.dataAssetsPersistentStoreURL)
-            dataAssetsPersistentStoreDescription.configuration = Self.dataAssetsPersistentStoreConfiguration
-            if cloudKit {
-                dataAssetsPersistentStoreDescription.cloudKitContainerOptions = NSPersistentCloudKitContainerOptions(containerIdentifier: Session.dataAssetsCloudKitIdentifier)
-            }
-
             persistentStoreDescriptions = [
-                accountsPersistentStoreDescription,
-                tweetNestKitPersistentStoreDescription,
-                dataAssetsPersistentStoreDescription,
+                Self.V3.userDataPersistentStoreDescription,
+                Self.V3.defaultPersistentStoreDescription,
             ].lazy.map { persistentStoreDescription in
                 persistentStoreDescription.type = NSSQLiteStoreType
                 persistentStoreDescription.shouldAddStoreAsynchronously = true
@@ -72,11 +53,15 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                     }
                 }
 
+                if cloudKit == false {
+                    persistentStoreDescription.cloudKitContainerOptions = nil
+                }
+
                 return persistentStoreDescription
             }
 
             #if canImport(CoreSpotlight)
-            self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: tweetNestKitPersistentStoreDescription, coordinator: self.persistentStoreCoordinator)
+            self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[0], coordinator: self.persistentStoreCoordinator)
             #endif
         } else {
             persistentStoreDescriptions.forEach {
@@ -124,65 +109,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
         backgroundContext.automaticallyMergesChangesFromParent = true
         backgroundContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
         return backgroundContext
-    }
-}
-
-extension PersistentContainer {
-    private func migrationIfNeeded() throws {
-        guard FileManager.default.fileExists(atPath: Self.defaultPersistentStoreURL.path) else {
-            return
-        }
-
-        var isMigrated: Bool = false
-
-        if FileManager.default.fileExists(atPath: Self.dataAssetsPersistentStoreURL.path) == false {
-            // Step 1. Migrate default store with nil configuration
-
-            let defaultModelMigrationPersistentContainer = NSPersistentContainer(name: "TweetNestKit", managedObjectModel: persistentStoreCoordinator.managedObjectModel)
-            defaultModelMigrationPersistentContainer.persistentStoreDescriptions[0].type = NSSQLiteStoreType
-            defaultModelMigrationPersistentContainer.persistentStoreDescriptions[0].url = Self.defaultPersistentStoreURL
-            defaultModelMigrationPersistentContainer.persistentStoreDescriptions[0].setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-
-            defaultModelMigrationPersistentContainer.loadPersistentStores { _, _ in }
-
-            // Step 2. Migrate default store to data assets store
-
-            let dataAssetsStoreMigrationPersistentContainer = NSPersistentContainer(name: "DataAssets", managedObjectModel: persistentStoreCoordinator.managedObjectModel)
-            dataAssetsStoreMigrationPersistentContainer.persistentStoreDescriptions[0].type = NSSQLiteStoreType
-            dataAssetsStoreMigrationPersistentContainer.persistentStoreDescriptions[0].configuration = Self.dataAssetsPersistentStoreConfiguration
-            dataAssetsStoreMigrationPersistentContainer.persistentStoreDescriptions[0].url = Self.defaultPersistentStoreURL
-            dataAssetsStoreMigrationPersistentContainer.persistentStoreDescriptions[0].setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-            dataAssetsStoreMigrationPersistentContainer.persistentStoreDescriptions[0].setOption(true as NSNumber, forKey: NSReadOnlyPersistentStoreOption)
-
-            dataAssetsStoreMigrationPersistentContainer.loadPersistentStores { _, _ in }
-
-            if let store = dataAssetsStoreMigrationPersistentContainer.persistentStoreCoordinator.persistentStores.first {
-                _ = try dataAssetsStoreMigrationPersistentContainer.persistentStoreCoordinator.migratePersistentStore(store, to: Self.dataAssetsPersistentStoreURL, options: nil, type: .sqlite)
-            }
-
-            isMigrated = true
-        }
-
-        if isMigrated { // Clean up default store
-            // Step 1. Migrate default store to temp store, and migrate back to default store
-
-            let defaultStoreMigrationPersistentContainer = NSPersistentContainer(name: "TweetNestKit", managedObjectModel: persistentStoreCoordinator.managedObjectModel)
-            defaultStoreMigrationPersistentContainer.persistentStoreDescriptions[0].type = NSSQLiteStoreType
-            defaultStoreMigrationPersistentContainer.persistentStoreDescriptions[0].configuration = Self.defaultPersistentStoreConfiguration
-            defaultStoreMigrationPersistentContainer.persistentStoreDescriptions[0].url = Self.defaultPersistentStoreURL
-            defaultStoreMigrationPersistentContainer.persistentStoreDescriptions[0].setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-            defaultStoreMigrationPersistentContainer.persistentStoreDescriptions[0].setOption(true as NSNumber, forKey: NSReadOnlyPersistentStoreOption)
-
-            defaultStoreMigrationPersistentContainer.loadPersistentStores { _, _ in }
-
-            if let store = defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.persistentStores.first {
-                let tempStore = try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.migratePersistentStore(store, to: Self.defaultPersistentStoreURL.appendingPathExtension("temp"), options: nil, type: .sqlite)
-                try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: Self.defaultPersistentStoreURL, type: .sqlite, options: nil)
-
-                _ = try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.migratePersistentStore(tempStore, to: Self.defaultPersistentStoreURL, options: nil, type: .sqlite)
-                try defaultStoreMigrationPersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: Self.defaultPersistentStoreURL.appendingPathExtension("temp"), type: .sqlite, options: nil)
-            }
-        }
     }
 }
 

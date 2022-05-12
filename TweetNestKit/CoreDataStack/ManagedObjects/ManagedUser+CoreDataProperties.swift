@@ -1,8 +1,8 @@
 //
-//  ManagedUserV2+CoreDataProperties.swift
+//  ManagedUser+CoreDataProperties.swift
 //  TweetNestKit
 //
-//  Created by 강재홍 on 2022/05/02.
+//  Created by 강재홍 on 2022/05/03.
 //
 //
 
@@ -10,10 +10,10 @@ import Foundation
 import CoreData
 
 
-extension ManagedUserV2 {
+extension ManagedUser {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<ManagedUserV2> {
-        return NSFetchRequest<ManagedUserV2>(entityName: "User")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<ManagedUser> {
+        return NSFetchRequest<ManagedUser>(entityName: "User")
     }
 
     @NSManaged public var creationDate: Date?
@@ -24,6 +24,6 @@ extension ManagedUserV2 {
 
 }
 
-extension ManagedUserV2 : Identifiable {
+extension ManagedUser : Identifiable {
 
 }

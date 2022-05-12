@@ -1,14 +1,14 @@
 //
-//  ManagedPreferencesV2+Preferences.swift
+//  ManagedPreferences+Preferences.swift
 //  TweetNestKit
 //
-//  Created by 강재홍 on 2022/05/03.
+//  Created by 강재홍 on 2022/04/20.
 //
 
 import Foundation
 import CoreData
 
-extension ManagedPreferencesV2 {
+extension ManagedPreferences {
     public struct Preferences {
         public var notifyProfileChanges: Bool = true
         public var notifyFollowingChanges: Bool = true
@@ -18,10 +18,10 @@ extension ManagedPreferencesV2 {
     }
 }
 
-extension ManagedPreferencesV2.Preferences: Codable {
+extension ManagedPreferences.Preferences: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let defaultPreferences = ManagedPreferencesV2.Preferences()
+        let defaultPreferences = ManagedPreferences.Preferences()
 
         self.notifyProfileChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyProfileChanges) ?? defaultPreferences.notifyProfileChanges
         self.notifyFollowingChanges = try container.decodeIfPresent(Bool.self, forKey: .notifyFollowingChanges) ?? defaultPreferences.notifyFollowingChanges
@@ -31,16 +31,46 @@ extension ManagedPreferencesV2.Preferences: Codable {
     }
 }
 
-extension ManagedPreferencesV2.Preferences {
+@objc
+class ManagedPreferencesTransformer: ValueTransformer {
+    override class func transformedValueClass() -> AnyClass {
+        NSData.self
+    }
+
+    override func transformedValue(_ value: Any?) -> Any? {
+        guard let value = value as? ManagedPreferences.Preferences? else {
+            preconditionFailure()
+        }
+
+        return value.flatMap {
+            do {
+                return try PropertyListEncoder().encode($0) as NSData
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+
+    override func reverseTransformedValue(_ value: Any?) -> Any? {
+        guard let value = value as? NSData else {
+            return nil
+        }
+
+        return try? PropertyListDecoder().decode(ManagedPreferences.Preferences.self, from: value as Data)
+    }
+}
+
+extension ManagedPreferences.Preferences {
     public init(for context: NSManagedObjectContext) {
         self = context.performAndWait {
-            ManagedPreferencesV2.managedPreferences(for: context).preferences
+            ManagedPreferences.managedPreferences(for: context).preferences
         }
     }
 
     public init(for context: NSManagedObjectContext) async {
         self = await context.perform {
-            ManagedPreferencesV2.managedPreferences(for: context).preferences
+            ManagedPreferences.managedPreferences(for: context).preferences
         }
     }
 }

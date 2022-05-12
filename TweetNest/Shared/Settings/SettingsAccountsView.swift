@@ -18,7 +18,7 @@ struct SettingsAccountsView: View {
         ],
         animation: .default
     )
-    private var accounts: FetchedResults<Account>
+    private var accounts: FetchedResults<ManagedAccount>
 
     #if os(macOS)
     var body: some View {

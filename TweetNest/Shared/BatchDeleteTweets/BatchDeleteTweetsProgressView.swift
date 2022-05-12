@@ -13,7 +13,7 @@ import TweetNestKit
 import Twitter
 
 struct BatchDeleteTweetsProgressView: View {
-    @Environment(\.account) private var account: TweetNestKit.Account?
+    @Environment(\.account) private var account: ManagedAccount?
 
     let targetTweets: OrderedDictionary<Tweet.ID, Tweet>
     @Binding var isBatchDeletionExecuting: Bool

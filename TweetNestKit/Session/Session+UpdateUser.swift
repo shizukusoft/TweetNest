@@ -41,7 +41,7 @@ extension Session {
         let userIDs = Set(userIDs)
 
         let accountUserID: Twitter.User.ID? = try await context.perform {
-            guard let account = context.object(with: accountObjectID) as? Account else {
+            guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
                 throw SessionError.unknown
             }
 
@@ -74,9 +74,9 @@ extension Session {
             return context
         }()
 
-        let (accountPreferences, accountUserID) = try await context.perform { () -> (Account.Preferences, Twitter.User.ID?) in
+        let (accountPreferences, accountUserID) = try await context.perform { () -> (ManagedAccount.Preferences, Twitter.User.ID?) in
             try withExtendedBackgroundExecution {
-                guard let account = context.object(with: accountObjectID) as? Account else {
+                guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
                     throw SessionError.unknown
                 }
 
@@ -126,7 +126,7 @@ extension Session {
             async let _refinedUserObjectIDByID: [Twitter.User.ID: NSManagedObjectID?] = context.perform { [userIDs = Set(userIDs)] in
                 try withExtendedBackgroundExecution {
                     let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
-                    accountUserIDsfetchRequest.entity = Account.entity()
+                    accountUserIDsfetchRequest.entity = ManagedAccount.entity()
                     accountUserIDsfetchRequest.resultType = .dictionaryResultType
                     accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
                     accountUserIDsfetchRequest.returnsDistinctResults = true
@@ -138,16 +138,18 @@ extension Session {
                         }
                     )
 
-                    let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                    let userFetchRequest = ManagedUser.fetchRequest()
                     userFetchRequest.predicate = NSPredicate(format: "id IN %@", userIDs)
                     userFetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-                        NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
+                        NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: false)
                     ]
                     userFetchRequest.returnsObjectsAsFaults = false
 
                     let users = try context.fetch(userFetchRequest)
-                    let usersByID = Dictionary(uniqueKeysWithValues: users.lazy.uniqued(on: \.id).map { ($0.id, $0) })
+                    let usersByID = Dictionary(
+                        users.lazy.map { ($0.id, $0) },
+                        uniquingKeysWith: { first, _ in first }
+                    )
 
                     let refinedUserObjectIDByID: [Twitter.User.ID: NSManagedObjectID?] = Dictionary(
                         uniqueKeysWithValues: userIDs
@@ -235,14 +237,13 @@ extension Session {
                                     userProcessingTaskGroup.addTask {
                                         async let userDetailChanges: UserDetailChanges = chunkedUsersProcessingContext.perform(schedule: .enqueued) {
                                             let prefetchedUserObjectID = refinedUserObjectIDByID[String(twitterUser.id)] as? NSManagedObjectID
-                                            let prefetchedUser = prefetchedUserObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? User }
+                                            let prefetchedUser = prefetchedUserObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? ManagedUser }
 
                                             let user = try prefetchedUser ?? {
-                                                let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                                                let userFetchRequest = ManagedUser.fetchRequest()
                                                 userFetchRequest.predicate = NSPredicate(format: "id == %@", String(twitterUser.id))
                                                 userFetchRequest.sortDescriptors = [
-                                                    NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-                                                    NSSortDescriptor(keyPath: \User.creationDate, ascending: false)
+                                                    NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: false)
                                                 ]
                                                 userFetchRequest.fetchLimit = 1
                                                 userFetchRequest.returnsObjectsAsFaults = false
@@ -251,14 +252,14 @@ extension Session {
                                                     return user
                                                 } else {
                                                     let userObjectID: NSManagedObjectID = context.performAndWait {
-                                                        let user = User(context: context)
+                                                        let user = ManagedUser(context: context)
                                                         user.id = String(twitterUser.id)
                                                         user.creationDate = chunkedUsersFetchedDate
 
                                                         return user.objectID
                                                     }
 
-                                                    guard let user = chunkedUsersProcessingContext.object(with: userObjectID) as? User else {
+                                                    guard let user = chunkedUsersProcessingContext.object(with: userObjectID) as? ManagedUser else {
                                                         fatalError()
                                                     }
 
@@ -266,30 +267,28 @@ extension Session {
                                                 }
                                             }()
 
-                                            let previousUserDetailFetchRequest = UserDetail.fetchRequest()
-                                            previousUserDetailFetchRequest.predicate = NSPredicate(format: "user == %@", user)
+                                            let previousUserDetailFetchRequest = ManagedUserDetail.fetchRequest()
+                                            previousUserDetailFetchRequest.predicate = NSPredicate(format: "userID == %@", userID)
                                             previousUserDetailFetchRequest.sortDescriptors = [
-                                                NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false)
+                                                NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false)
                                             ]
                                             previousUserDetailFetchRequest.fetchLimit = 1
                                             previousUserDetailFetchRequest.returnsObjectsAsFaults = false
 
                                             let previousUserDetail = try chunkedUsersProcessingContext.fetch(previousUserDetailFetchRequest).first
 
-                                            let userDetail = try UserDetail.createOrUpdate(
+                                            let userDetail = try ManagedUserDetail.createOrUpdate(
                                                 twitterUser: twitterUser,
                                                 followingUserIDs: addtionalUserInfos[userID]?.followingUserIDs,
                                                 followerUserIDs: addtionalUserInfos[userID]?.followerIDs,
                                                 blockingUserIDs: addtionalUserInfos[userID]?.blockingUserIDs,
                                                 mutingUserIDs: addtionalUserInfos[userID]?.mutingUserIDs,
                                                 creationDate: chunkedUsersFetchedDate,
-                                                user: user,
                                                 previousUserDetail: previousUserDetail,
                                                 context: chunkedUsersProcessingContext
                                             )
 
-                                            user.lastUpdateStartDate = chunkedUsers.0
-                                            user.lastUpdateEndDate = Date()
+                                            user.lastUpdateEndDate = chunkedUsersFetchedDate
 
                                             return (previousUserDetail?.objectID, userDetail.objectID)
                                         }

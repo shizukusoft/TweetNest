@@ -9,11 +9,11 @@ import SwiftUI
 import TweetNestKit
 
 public struct AccountEnvironmentKey: EnvironmentKey {
-    public static var defaultValue: Account?
+    public static var defaultValue: ManagedAccount?
 }
 
 public extension EnvironmentValues {
-    var account: Account? {
+    var account: ManagedAccount? {
         get { self[AccountEnvironmentKey.self] }
         set { self[AccountEnvironmentKey.self] = newValue }
     }

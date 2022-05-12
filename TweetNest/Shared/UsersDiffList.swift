@@ -12,10 +12,10 @@ import OrderedCollections
 import Algorithms
 
 struct UsersDiffList: View {
-    @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<UserDetail>
+    @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<ManagedUserDetail>
 
     let title: LocalizedStringKey
-    let diffKeyPath: KeyPath<UserDetail, [String]?>
+    let diffKeyPath: KeyPath<ManagedUserDetail, [String]?>
 
     @State private var searchQuery: String = ""
 
@@ -24,7 +24,7 @@ struct UsersDiffList: View {
         let userDetailPairs = userDetails
             .lazy
             .indexed()
-            .map { (index: LazySequence<[UserDetail]>.Index, element: LazySequence<[UserDetail]>.Element) -> (UserDetail, UserDetail?) in
+            .map { (index: LazySequence<[ManagedUserDetail]>.Index, element: LazySequence<[ManagedUserDetail]>.Element) -> (ManagedUserDetail, ManagedUserDetail?) in
                 let nextIndex = userDetails.index(after: index)
 
                 return (element, userDetails.indices.contains(nextIndex) ? userDetails[nextIndex] : nil)
@@ -56,21 +56,21 @@ struct UsersDiffList: View {
         #endif
     }
 
-    init(_ title: LocalizedStringKey, user: User?, diffKeyPath: KeyPath<UserDetail, [String]?>) {
+    init(_ title: LocalizedStringKey, userID: String?, diffKeyPath: KeyPath<ManagedUserDetail, [String]?>) {
         self._userDetailsFetchedResultsController = StateObject(
-            wrappedValue: FetchedResultsController<UserDetail>(
+            wrappedValue: FetchedResultsController<ManagedUserDetail>(
                 fetchRequest: {
-                    let fetchRequest = UserDetail.fetchRequest()
+                    let fetchRequest = ManagedUserDetail.fetchRequest()
                     fetchRequest.predicate = NSCompoundPredicate(
                         andPredicateWithSubpredicates: Array(
                             [
-                                user.flatMap { NSPredicate(format: "user == %@", $0.objectID) } ?? NSPredicate(value: false),
+                                userID.flatMap { NSPredicate(format: "userID == %@", $0) } ?? NSPredicate(value: false),
                                 diffKeyPath._kvcKeyPathString.flatMap { NSPredicate(format: "%K != NULL", $0) },
                             ].compacted()
                         )
                     )
                     fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false),
                     ]
 
                     if let keyPathString = diffKeyPath._kvcKeyPathString {
