@@ -16,3 +16,5 @@ jobs:
         with:
           swift-version: '5.6.1'
       - uses: sinoru/actions-swiftlint@v6
+        with: 
+          swiftlint-version: '809dcc6bdcf40b35fc23c01086fa884f84ad9473'
