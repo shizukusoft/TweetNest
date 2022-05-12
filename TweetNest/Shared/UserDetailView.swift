@@ -9,8 +9,8 @@ import SwiftUI
 import TweetNestKit
 
 struct UserDetailView: View {
-    @Environment(\.account) var account: Account?
-    @ObservedObject var userDetail: UserDetail
+    @Environment(\.account) var account: ManagedAccount?
+    @ObservedObject var userDetail: ManagedUserDetail
 
     @ViewBuilder
     var followingUsersLabel: some View {

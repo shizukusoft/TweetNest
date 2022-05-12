@@ -20,10 +20,10 @@ extension Session {
         context.undoManager = nil
 
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
-            let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
+            let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: ManagedAccount.entity().name!)
             fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \Account.preferringSortOrder, ascending: true),
-                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false),
+                NSSortDescriptor(keyPath: \ManagedAccount.preferringSortOrder, ascending: true),
+                NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: false),
             ]
             fetchRequest.resultType = .managedObjectIDResultType
 
@@ -65,7 +65,7 @@ extension Session {
 
         try await context.perform(schedule: .enqueued) {
             try withExtendedBackgroundExecution {
-                guard let account = context.object(with: accountObjectID) as? Account else {
+                guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
                     return
                 }
 

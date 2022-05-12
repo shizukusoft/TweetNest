@@ -31,6 +31,36 @@ extension ManagedPreferences.Preferences: Codable {
     }
 }
 
+@objc
+class ManagedPreferencesTransformer: ValueTransformer {
+    override class func transformedValueClass() -> AnyClass {
+        NSData.self
+    }
+
+    override func transformedValue(_ value: Any?) -> Any? {
+        guard let value = value as? ManagedPreferences.Preferences? else {
+            preconditionFailure()
+        }
+
+        return value.flatMap {
+            do {
+                return try PropertyListEncoder().encode($0) as NSData
+            } catch {
+                let nsError = error as NSError
+                fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
+            }
+        }
+    }
+
+    override func reverseTransformedValue(_ value: Any?) -> Any? {
+        guard let value = value as? NSData else {
+            return nil
+        }
+
+        return try? PropertyListDecoder().decode(ManagedPreferences.Preferences.self, from: value as Data)
+    }
+}
+
 extension ManagedPreferences.Preferences {
     public init(for context: NSManagedObjectContext) {
         self = context.performAndWait {

@@ -16,7 +16,7 @@ struct DataAssetImage: View {
     let url: URL?
     let isExportable: Bool
 
-    @State private var dataAssetsFetchedResultsController: FetchedResultsController<DataAsset>
+    @State private var dataAssetsFetchedResultsController: FetchedResultsController<ManagedDataAsset>
 
     struct ImageData: Equatable {
         var data: Data
@@ -124,10 +124,10 @@ struct DataAssetImage: View {
         self.isExportable = isExportable
 
         self._dataAssetsFetchedResultsController = State(
-            wrappedValue: FetchedResultsController<DataAsset>(
+            wrappedValue: FetchedResultsController<ManagedDataAsset>(
                 fetchRequest: {
-                    let fetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
-                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]
+                    let fetchRequest = ManagedDataAsset.fetchRequest()
+                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedDataAsset.creationDate, ascending: false)]
                     fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(value: false)
                     fetchRequest.propertiesToFetch = ["data", "dataMIMEType"]
                     fetchRequest.returnsObjectsAsFaults = false

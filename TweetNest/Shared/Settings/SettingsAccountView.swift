@@ -10,7 +10,7 @@ import TweetNestKit
 
 struct SettingsAccountView: View {
     @Environment(\.managedObjectContext) private var viewContext
-    @ObservedObject var account: Account
+    @ObservedObject var account: ManagedAccount
 
     @State var showError: Bool = false
     @State var error: TweetNestError?
@@ -32,7 +32,7 @@ struct SettingsAccountView: View {
             }
         }
         .navigationTitle(
-            Text(verbatim: account.users?.last?.sortedUserDetails?.last?.displayUsername ?? account.userID?.displayUserID ?? account.objectID.description)
+            Text(verbatim: account.users?.last?.userDetails?.last?.displayUsername ?? account.userID?.displayUserID ?? account.objectID.description)
         )
         #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)

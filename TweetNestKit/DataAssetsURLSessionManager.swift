@@ -158,6 +158,7 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
 
         do {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
+            let creationDate = Date()
 
             dispatchGroup.enter()
             Task.detached { [dispatchGroup, managedObjectContext, logger] in
@@ -172,7 +173,13 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
                 do {
                     try await managedObjectContext.perform(schedule: .enqueued) {
                         try withExtendedBackgroundExecution {
-                            try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
+                            try ManagedDataAsset.dataAsset(
+                                data: data,
+                                dataMIMEType: downloadTask.response?.mimeType,
+                                url: originalRequestURL,
+                                creationDate: creationDate,
+                                context: managedObjectContext
+                            )
 
                             if managedObjectContext.hasChanges {
                                 try managedObjectContext.save()

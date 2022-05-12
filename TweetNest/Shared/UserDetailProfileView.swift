@@ -9,7 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserDetailProfileView: View {
-    @ObservedObject var userDetail: UserDetail
+    @ObservedObject var userDetail: ManagedUserDetail
 
     @Environment(\.openURL) private var openURL
 
@@ -36,7 +36,7 @@ struct UserDetailProfileView: View {
                         #endif
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(verbatim: userDetail.name ?? userDetail.user?.id?.displayUserID ?? "")
+                        Text(verbatim: userDetail.name ?? userDetail.userID?.displayUserID ?? "")
                         if let username = userDetail.username {
                             Text(verbatim: "@\(username)")
                                 .foregroundColor(.secondary)

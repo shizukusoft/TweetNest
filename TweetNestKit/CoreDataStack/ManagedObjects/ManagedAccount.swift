@@ -1,23 +1,24 @@
 //
-//  Account.swift
+//  ManagedAccount+CoreDataClass.swift
 //  TweetNestKit
 //
-//  Created by Jaehong Kang on 2021/02/24.
+//  Created by Jaehong Kang on 2022/05/03.
+//
 //
 
 import Foundation
 import CoreData
 import Twitter
 
-public class Account: NSManagedObject {
+public class ManagedAccount: NSManagedObject {
 
 }
 
-extension Account {
-    @NSManaged public private(set) var users: [User]? // The accessor of the users property.
+extension ManagedAccount {
+    @NSManaged public private(set) var users: [ManagedUser]? // The accessor of the users property.
 }
 
-extension Account {
+extension ManagedAccount {
     var credential: Twitter.Session.Credential? {
         guard
             let token = token,
@@ -30,7 +31,7 @@ extension Account {
     }
 }
 
-extension Account {
+extension ManagedAccount {
     struct Key {
         static let preferences = "preferences"
     }

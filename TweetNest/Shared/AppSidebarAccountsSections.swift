@@ -11,7 +11,7 @@ import TweetNestKit
 struct AppSidebarAccountsSections: View {
     @Binding var navigationItemSelection: AppSidebarNavigationItem?
 
-    @StateObject private var accountsFetchedResultsController = FetchedResultsController<Account>(
+    @StateObject private var accountsFetchedResultsController = FetchedResultsController<ManagedAccount>(
         sortDescriptors: [
             SortDescriptor(\.preferringSortOrder, order: .forward),
             SortDescriptor(\.creationDate, order: .reverse),

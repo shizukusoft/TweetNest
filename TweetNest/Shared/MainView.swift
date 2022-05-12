@@ -24,7 +24,7 @@ struct MainView: View {
     @State var error: TweetNestError?
     @State var showErrorAlert: Bool = false
 
-    @State var user: User?
+    @State var user: ManagedUser?
 
     var body: some View {
         AppSidebarNavigation(isPersistentContainerLoaded: $isPersistentContainerLoaded)
@@ -87,7 +87,7 @@ struct MainView: View {
             let identifier = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String,
             let uri = URL(string: identifier),
             let objectID = viewContext.persistentStoreCoordinator?.managedObjectID(forURIRepresentation: uri),
-            let user = viewContext.object(with: objectID) as? User
+            let user = viewContext.object(with: objectID) as? ManagedUser
         else {
             return
         }

@@ -52,7 +52,7 @@ extension Session {
         let context = persistentContainer.newBackgroundContext()
 
         return try await context.perform(schedule: .enqueued) {
-            let account = Account(context: context)
+            let account = ManagedAccount(context: context)
             account.creationDate = Date()
             account.token = tokenResponse.token
             account.tokenSecret = tokenResponse.tokenSecret

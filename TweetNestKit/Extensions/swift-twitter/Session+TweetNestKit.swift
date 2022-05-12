@@ -27,7 +27,7 @@ extension Twitter.Session {
 }
 
 extension Twitter.Session {
-    public static func session(for account: Account, session: Session) async throws -> Twitter.Session {
+    public static func session(for account: ManagedAccount, session: Session) async throws -> Twitter.Session {
         try await session.twitterSession(for: account.objectID)
     }
 }

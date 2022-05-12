@@ -11,7 +11,7 @@ import TweetNestKit
 extension UserView {
     struct FootnotesView: View {
         let userID: String
-        let user: User?
+        let user: ManagedUser?
 
 
         var body: some View {
@@ -31,7 +31,7 @@ extension UserView {
 
 extension UserView.FootnotesView {
     private struct UpdatesText: View {
-        @ObservedObject var user: User
+        @ObservedObject var user: ManagedUser
 
         var body: some View {
             if let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {

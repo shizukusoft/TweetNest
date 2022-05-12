@@ -10,11 +10,11 @@ import OrderedCollections
 import TweetNestKit
 
 struct UsersDiffListSection: View {
-    let diffKeyPath: KeyPath<UserDetail, [String]?>
+    let diffKeyPath: KeyPath<ManagedUserDetail, [String]?>
     let searchQuery: String
 
-    var previousUserDetail: UserDetail?
-    @ObservedObject var userDetail: UserDetail
+    var previousUserDetail: ManagedUserDetail?
+    @ObservedObject var userDetail: ManagedUserDetail
 
     var body: some View {
         let userIDs = OrderedSet(userDetail[keyPath: diffKeyPath] ?? [])

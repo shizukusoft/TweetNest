@@ -12,11 +12,11 @@ import BackgroundTask
 import UnifiedLogging
 
 enum AppSidebarNavigationItem: Hashable {
-    case profile(Account)
-    case followings(Account)
-    case followers(Account)
-    case blockings(Account)
-    case mutings(Account)
+    case profile(ManagedAccount)
+    case followings(ManagedAccount)
+    case followers(ManagedAccount)
+    case blockings(ManagedAccount)
+    case mutings(ManagedAccount)
 }
 
 struct AppSidebarNavigation: View {
