@@ -21,7 +21,11 @@ extension TweetNestKit.Session {
         let session = Session(inMemory: true)
 
         #if DEBUG
-        try! session.insertPreviewDataToPersistentContainer()
+        do {
+            try session.insertPreviewDataToPersistentContainer()
+        } catch {
+            fatalError(String(reflecting: error))
+        }
         #endif
 
         return session

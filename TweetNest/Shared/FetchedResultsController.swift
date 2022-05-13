@@ -53,7 +53,11 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         }
     }
 
-    convenience init(sortDescriptors: [SortDescriptor<Element>], predicate: NSPredicate? = nil, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
+    convenience init(
+        sortDescriptors: [SortDescriptor<Element>], predicate: NSPredicate? = nil,
+        managedObjectContext: NSManagedObjectContext, cacheName: String? = nil,
+        onError errorHandler: (@Sendable (Error) -> Void)? = nil
+    ) {
         self.init(
             fetchRequest: {
                 let fetchRequest = NSFetchRequest<Element>()

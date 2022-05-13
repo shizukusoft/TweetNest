@@ -132,7 +132,8 @@ class TweetNestScreenTests: XCTestCase {
             app.buttons["Delete Recent Tweets"].tap()
         } else if app.navigationBars[Self.dispalyUserName].buttons["More"].exists {
             app.navigationBars[Self.dispalyUserName].buttons["More"].tap()
-            app.collectionViews.buttons.element(boundBy: 3).tap() // app.collectionViews/*@START_MENU_TOKEN@*/.buttons["Delete"]/*[[".cells.buttons[\"Delete\"]",".buttons[\"Delete\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+            // app.collectionViews/*@START_MENU_TOKEN@*/.buttons["Delete"]/*[[".cells.buttons[\"Delete\"]",".buttons[\"Delete\"]"],[[[-1,1],[-1,0]]],[0]]@END_MENU_TOKEN@*/.tap()
+            app.collectionViews.buttons.element(boundBy: 3).tap()
             app.buttons["Delete Recent Tweets"].tap()
         } else {
             #if os(watchOS)
