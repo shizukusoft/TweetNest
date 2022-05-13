@@ -1,6 +1,5 @@
 disabled_rules:
-  - weak_delegate
-  - opening_brace
+  - trailing_comma
 opt_in_rules:
   - array_init
   - capture_variable
@@ -12,15 +11,24 @@ line_length:
 
 identifier_name:
   min_length:
-    warning: 3
-    error: 2
+    warning: 2
+    error: 1
+  max_length:
+    warning: 80
+    error: 100
+  allowed_symbols:
+    - '_'
+
+type_name:
+  min_length:
+    warning: 2
+    error: 1
   max_length:
     warning: 80
     error: 100
   excluded:
-    - id
-  allowed_symbols:
-    - '_'
+    - ''
 
-trailing_comma:
-  mandatory_comma: true
+nesting:
+  type_level: 2
+  function_level: 3
