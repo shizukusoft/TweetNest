@@ -44,7 +44,7 @@ extension PersistentContainer {
             try migratePreferences(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
             try migrateUsers(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
             try migrateUserDetails(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
-            try migrateDataAssets(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
+            try migrateUserDataAssets(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
 
             try v1PersistentContainer.persistentStoreDescriptions.forEach {
                 try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: $0.url!, ofType: $0.type)
@@ -249,7 +249,7 @@ extension PersistentContainer {
         }
     }
 
-    private func migrateDataAssets(v1PersistentContainer: NSPersistentContainer, v3PersistentContainer: NSPersistentContainer) throws {
+    private func migrateUserDataAssets(v1PersistentContainer: NSPersistentContainer, v3PersistentContainer: NSPersistentContainer) throws {
         let v1Context = v1PersistentContainer.newBackgroundContext()
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
@@ -263,8 +263,8 @@ extension PersistentContainer {
             guard v1DataAssets.count > 1 else { return }
 
             for chunkedV1DataAssets in v1DataAssets.chunks(ofCount: v1DataAssetsFetchRequest.fetchBatchSize) {
-                let v3DataAssetsInsertRequest = NSBatchInsertRequest(
-                    entity: ManagedDataAsset.entity(),
+                let v3UserDataAssetsInsertRequest = NSBatchInsertRequest(
+                    entity: ManagedUserDataAsset.entity(),
                     objects: chunkedV1DataAssets.map { v1DataAsset in
                         [
                             "creationDate": v1DataAsset.value(forKey: "creationDate") as Any,
@@ -277,7 +277,7 @@ extension PersistentContainer {
                 )
 
                 try v3Context.performAndWait {
-                    _ = try v3Context.execute(v3DataAssetsInsertRequest)
+                    _ = try v3Context.execute(v3UserDataAssetsInsertRequest)
                 }
 
 

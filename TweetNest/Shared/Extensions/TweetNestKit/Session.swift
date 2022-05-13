@@ -98,7 +98,7 @@ extension TweetNestKit.Session {
         tweetnestUserDetail3.url = URL(string: "https://www.tweetnest.com")
         tweetnestUserDetail3.userID = tweetnestUser.id
 
-        let tweetnestProfileImageDataAsset = ManagedDataAsset(context: context)
+        let tweetnestProfileImageDataAsset = ManagedUserDataAsset(context: context)
         tweetnestProfileImageDataAsset.url = tweetnestUserDetail1.profileImageURL
         tweetnestProfileImageDataAsset.dataMIMEType = UTType.png.preferredMIMEType
         tweetnestProfileImageDataAsset.data = NSDataAsset(name: "TweetNestProfileImageData")?.data
@@ -145,7 +145,7 @@ extension TweetNestKit.Session {
         twitterSupportUserDetail.userID = twitterSupportUser.id
         twitterSupportUserDetail.userAttributedDescription = NSAttributedString(string: "Here to help. 💙")
 
-        let twitterProfileImageDataAsset = ManagedDataAsset(context: context)
+        let twitterProfileImageDataAsset = ManagedUserDataAsset(context: context)
         twitterProfileImageDataAsset.url = twitterUserDetail.profileImageURL
         twitterProfileImageDataAsset.dataMIMEType = UTType.jpeg.preferredMIMEType
         twitterProfileImageDataAsset.data = NSDataAsset(name: "TwitterProfileImageData")?.data
@@ -173,7 +173,7 @@ extension TweetNestKit.Session {
         appleUserDetail.userID = appleUser.id
         appleUserDetail.userAttributedDescription = NSAttributedString(string: "Apple.com", attributes: [.link: URL(string: "http://Apple.com")!])
 
-        let appleProfileImageDataAsset = ManagedDataAsset(context: context)
+        let appleProfileImageDataAsset = ManagedUserDataAsset(context: context)
         appleProfileImageDataAsset.url = appleUserDetail.profileImageURL
         appleProfileImageDataAsset.dataMIMEType = UTType.jpeg.preferredMIMEType
         appleProfileImageDataAsset.data = NSDataAsset(name: "AppleProfileImageData")?.data

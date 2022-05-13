@@ -173,7 +173,7 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
                 do {
                     try await managedObjectContext.perform(schedule: .enqueued) {
                         try withExtendedBackgroundExecution {
-                            try ManagedDataAsset.dataAsset(
+                            try ManagedUserDataAsset.userDataAsset(
                                 data: data,
                                 dataMIMEType: downloadTask.response?.mimeType,
                                 url: originalRequestURL,

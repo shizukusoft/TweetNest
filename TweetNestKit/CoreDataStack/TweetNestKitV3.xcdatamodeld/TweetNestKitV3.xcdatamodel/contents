@@ -14,16 +14,6 @@
             <fetchIndexElement property="userID" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
-    <entity name="DataAsset" representedClassName=".ManagedDataAsset" syncable="YES">
-        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
-        <attribute name="dataMIMEType" optional="YES" attributeType="String"/>
-        <attribute name="dataSHA512Hash" optional="YES" attributeType="Binary"/>
-        <attribute name="url" optional="YES" attributeType="URI"/>
-        <fetchIndex name="byURL">
-            <fetchIndexElement property="url" type="Binary" order="ascending"/>
-        </fetchIndex>
-    </entity>
     <entity name="Preferences" representedClassName=".ManagedPreferences" syncable="YES">
         <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.ManagedPreferencesTransformer" customClassName="."/>
@@ -41,6 +31,16 @@
         </fetchedProperty>
         <fetchIndex name="byID">
             <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="UserDataAsset" representedClassName=".ManagedUserDataAsset" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="dataMIMEType" optional="YES" attributeType="String"/>
+        <attribute name="dataSHA512Hash" optional="YES" attributeType="Binary"/>
+        <attribute name="url" optional="YES" attributeType="URI"/>
+        <fetchIndex name="byURL">
+            <fetchIndexElement property="url" type="Binary" order="ascending"/>
         </fetchIndex>
     </entity>
     <entity name="UserDetail" representedClassName=".ManagedUserDetail" versionHashModifier="2" syncable="YES">
@@ -77,13 +77,13 @@
         <memberEntity name="Account"/>
     </configuration>
     <configuration name="UserData" usedWithCloudKit="YES">
-        <memberEntity name="DataAsset"/>
+        <memberEntity name="UserDataAsset"/>
         <memberEntity name="User"/>
         <memberEntity name="UserDetail"/>
     </configuration>
     <elements>
         <element name="Account" positionX="-63" positionY="-18" width="128" height="140"/>
-        <element name="DataAsset" positionX="-54" positionY="144" width="128" height="104"/>
+        <element name="UserDataAsset" positionX="-54" positionY="144" width="128" height="104"/>
         <element name="Preferences" positionX="-54" positionY="144" width="128" height="59"/>
         <element name="User" positionX="-63" positionY="0" width="128" height="125"/>
         <element name="UserDetail" positionX="-45" positionY="27" width="128" height="350"/>

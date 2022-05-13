@@ -1,5 +1,5 @@
 //
-//  ManagedDataAsset+CoreDataProperties.swift
+//  ManagedUserDataAsset+CoreDataProperties.swift
 //  TweetNestKit
 //
 //  Created by 강재홍 on 2022/05/03.
@@ -10,10 +10,10 @@ import Foundation
 import CoreData
 
 
-extension ManagedDataAsset {
+extension ManagedUserDataAsset {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<ManagedDataAsset> {
-        return NSFetchRequest<ManagedDataAsset>(entityName: "DataAsset")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<ManagedUserDataAsset> {
+        return NSFetchRequest<ManagedUserDataAsset>(entityName: "UserDataAsset")
     }
 
     @NSManaged public var creationDate: Date?
@@ -24,6 +24,6 @@ extension ManagedDataAsset {
 
 }
 
-extension ManagedDataAsset : Identifiable {
+extension ManagedUserDataAsset : Identifiable {
 
 }

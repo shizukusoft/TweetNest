@@ -1,6 +1,6 @@
 //
-//  DataAssetImage.swift
-//  DataAssetImage
+//  UserDataAssetImage.swift
+//  UserDataAssetImage
 //
 //  Created by Jaehong Kang on 2021/08/08.
 //
@@ -12,11 +12,11 @@ import CoreData
 import TweetNestKit
 import UnifiedLogging
 
-struct DataAssetImage: View {
+struct UserDataAssetImage: View {
     let url: URL?
     let isExportable: Bool
 
-    @State private var dataAssetsFetchedResultsController: FetchedResultsController<ManagedDataAsset>
+    @State private var dataAssetsFetchedResultsController: FetchedResultsController<ManagedUserDataAsset>
 
     struct ImageData: Equatable {
         var data: Data
@@ -124,10 +124,10 @@ struct DataAssetImage: View {
         self.isExportable = isExportable
 
         self._dataAssetsFetchedResultsController = State(
-            wrappedValue: FetchedResultsController<ManagedDataAsset>(
+            wrappedValue: FetchedResultsController<ManagedUserDataAsset>(
                 fetchRequest: {
-                    let fetchRequest = ManagedDataAsset.fetchRequest()
-                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedDataAsset.creationDate, ascending: false)]
+                    let fetchRequest = ManagedUserDataAsset.fetchRequest()
+                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: false)]
                     fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(value: false)
                     fetchRequest.propertiesToFetch = ["data", "dataMIMEType"]
                     fetchRequest.returnsObjectsAsFaults = false

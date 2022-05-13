@@ -17,7 +17,7 @@ struct UserDetailProfileView: View {
         Group {
             #if os(iOS) || os(macOS)
             if let profileHeaderImageURL = userDetail.profileHeaderImageURL {
-                DataAssetImage(url: profileHeaderImageURL, isExportable: true)
+                UserDataAssetImage(url: profileHeaderImageURL, isExportable: true)
                     .aspectRatio(3, contentMode: .fill)
                     #if os(iOS)
                     .listRowSeparator(.hidden)

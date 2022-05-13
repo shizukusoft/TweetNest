@@ -29,10 +29,10 @@ extension PersistentContainer {
                 attributeSet.displayName = user.userDetails?.last?.name
                 attributeSet.alternateNames = user.userDetails?.last?.username.flatMap { ["@\($0)"] }
                 attributeSet.thumbnailData = try? user.userDetails?.last?.profileImageURL.flatMap {
-                    let fetchRequest = ManagedDataAsset.fetchRequest()
+                    let fetchRequest = ManagedUserDataAsset.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "url == %@", $0 as NSURL)
                     fetchRequest.sortDescriptors =  [
-                        NSSortDescriptor(keyPath: \ManagedDataAsset.creationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: false),
                     ]
                     fetchRequest.fetchLimit = 1
 

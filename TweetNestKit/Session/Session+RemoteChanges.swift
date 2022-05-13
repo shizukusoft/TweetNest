@@ -76,7 +76,7 @@ extension Session {
                         }
 
                         taskGroup.addTask(priority: .utility) {
-                            await self.cleansingDataAssets(transactions: persistentHistoryTransactions)
+                            await self.cleansingUserDataAssets(transactions: persistentHistoryTransactions)
                         }
 
                         await taskGroup.waitForAll()
@@ -167,11 +167,11 @@ extension Session {
         }
     }
 
-    private func cleansingDataAssets(transactions: [NSPersistentHistoryTransaction]) async {
-        let changedDataAssetObjectIDs = transactions.lazy
+    private func cleansingUserDataAssets(transactions: [NSPersistentHistoryTransaction]) async {
+        let changedUserDataAssetObjectIDs = transactions.lazy
             .compactMap(\.changes)
             .joined()
-            .filter { $0.changedObjectID.entity == ManagedDataAsset.entity() }
+            .filter { $0.changedObjectID.entity == ManagedUserDataAsset.entity() }
             .filter { $0.changeType == .insert }
             .map(\.changedObjectID)
             .uniqued()
@@ -179,9 +179,9 @@ extension Session {
         let context = self.persistentContainer.newBackgroundContext()
         context.undoManager = nil
 
-        for changedDataAssetObjectID in changedDataAssetObjectIDs {
+        for changedUserDataAssetObjectID in changedUserDataAssetObjectIDs {
             do {
-                try await self.cleansingDataAsset(for: changedDataAssetObjectID, context: context)
+                try await self.cleansingUserDataAsset(for: changedUserDataAssetObjectID, context: context)
             } catch {
                 self.logger.error("Error occurred while cleansing data asset: \(error as NSError, privacy: .public)")
             }

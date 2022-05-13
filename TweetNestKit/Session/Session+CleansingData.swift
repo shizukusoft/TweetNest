@@ -45,7 +45,7 @@ extension Session {
             }
 
             taskGroup.addTask {
-                try await self.cleansingAllDataAssets(context: self.persistentContainerNewBackgroundContext)
+                try await self.cleansingAllUserDataAssets(context: self.persistentContainerNewBackgroundContext)
             }
 
             try await taskGroup.waitForAll()
@@ -255,56 +255,56 @@ extension Session {
         }
     }
 
-    func cleansingAllDataAssets(context: NSManagedObjectContext) async throws {
-        let dataAssetObjectIDs: [NSManagedObjectID] = try await context.perform {
-            let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
-            dataAssetsFetchRequest.entity = ManagedDataAsset.entity()
-            dataAssetsFetchRequest.resultType = .managedObjectIDResultType
-            dataAssetsFetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \ManagedDataAsset.creationDate, ascending: true)
+    func cleansingAllUserDataAssets(context: NSManagedObjectContext) async throws {
+        let userDataAssetObjectIDs: [NSManagedObjectID] = try await context.perform {
+            let userDataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
+            userDataAssetsFetchRequest.entity = ManagedUserDataAsset.entity()
+            userDataAssetsFetchRequest.resultType = .managedObjectIDResultType
+            userDataAssetsFetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: true)
             ]
 
-            return try context.fetch(dataAssetsFetchRequest)
+            return try context.fetch(userDataAssetsFetchRequest)
         }
 
-        for dataAssetObjectID in dataAssetObjectIDs {
+        for userDataAssetObjectID in userDataAssetObjectIDs {
             try Task.checkCancellation()
-            try await self.cleansingDataAsset(for: dataAssetObjectID, context: context)
+            try await self.cleansingUserDataAsset(for: userDataAssetObjectID, context: context)
         }
     }
 
-    public func cleansingDataAsset(for dataAssetObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+    public func cleansingUserDataAsset(for userDataAssetObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
             guard
-                let dataAsset = try? context.existingObject(with: dataAssetObjectID) as? ManagedDataAsset,
-                let dataAssetURL = dataAsset.url,
-                let dataAssetDataSHA512Hash = dataAsset.dataSHA512Hash
+                let userDataAsset = try? context.existingObject(with: userDataAssetObjectID) as? ManagedUserDataAsset,
+                let userDataAssetURL = userDataAsset.url,
+                let userDataAssetDataSHA512Hash = userDataAsset.dataSHA512Hash
             else {
                 return
             }
 
-            let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
-            dataAssetsFetchRequest.entity = ManagedDataAsset.entity()
-            dataAssetsFetchRequest.resultType = .managedObjectIDResultType
-            dataAssetsFetchRequest.predicate = NSCompoundPredicate(
+            let userDataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
+            userDataAssetsFetchRequest.entity = ManagedUserDataAsset.entity()
+            userDataAssetsFetchRequest.resultType = .managedObjectIDResultType
+            userDataAssetsFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
-                    NSPredicate(format: "url == %@", dataAssetURL as NSURL),
-                    NSPredicate(format: "dataSHA512Hash == %@", dataAssetDataSHA512Hash as NSData),
+                    NSPredicate(format: "url == %@", userDataAssetURL as NSURL),
+                    NSPredicate(format: "dataSHA512Hash == %@", userDataAssetDataSHA512Hash as NSData),
                 ]
             )
-            dataAssetsFetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \ManagedDataAsset.creationDate, ascending: true),
+            userDataAssetsFetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: true),
             ]
 
-            let dataAssetObjectIDs = OrderedSet(try context.fetch(dataAssetsFetchRequest))
+            let userDataAssetObjectIDs = OrderedSet(try context.fetch(userDataAssetsFetchRequest))
 
-            guard dataAssetObjectIDs.count > 1 else { return }
+            guard userDataAssetObjectIDs.count > 1 else { return }
 
-            let targetDataAssetObjectID = dataAssetObjectIDs.first ?? dataAsset.objectID
+            let targetUserDataAssetObjectID = userDataAssetObjectIDs.first ?? userDataAsset.objectID
 
-            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(dataAssetObjectIDs.subtracting([targetDataAssetObjectID])))
+            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(userDataAssetObjectIDs.subtracting([targetUserDataAssetObjectID])))
 
             try context.execute(batchDeleteRequest)
         }
