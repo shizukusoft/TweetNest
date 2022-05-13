@@ -1048,10 +1048,10 @@
 			children = (
 				196BF02B2820D0540030B757 /* ManagedObjects */,
 				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
-				196BF03F2820EFF50030B757 /* PersistentContainer+V1.swift */,
-				196BF0412820F0F80030B757 /* PersistentContainer+V3.swift */,
 				196BF0432820FA510030B757 /* PersistentContainer+Migration.swift */,
 				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
+				196BF03F2820EFF50030B757 /* PersistentContainer+V1.swift */,
+				196BF0412820F0F80030B757 /* PersistentContainer+V3.swift */,
 				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
 				198CC4B62820244600D3C7EA /* TweetNestKitV3.xcdatamodeld */,
 			);

@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 
 extension PersistentContainer {
+    @available(*, deprecated, renamed: "V3")
     struct V1 {
         static var managedObjectModel: NSManagedObjectModel {
             let managedObjectModel = NSManagedObjectModel(contentsOf: Bundle.tweetNestKit.url(forResource: Bundle.tweetNestKit.name!, withExtension: "momd")!)!
