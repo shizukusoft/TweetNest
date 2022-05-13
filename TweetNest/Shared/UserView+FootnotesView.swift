@@ -13,7 +13,6 @@ extension UserView {
         let userID: String
         let user: ManagedUser?
 
-
         var body: some View {
             VStack(alignment: .leading) {
                 Text(userID.displayUserID)

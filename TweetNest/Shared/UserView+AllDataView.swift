@@ -13,7 +13,7 @@ extension UserView {
         @Environment(\.account) var account: ManagedAccount?
 
         let userDetails: UserDetails
-        
+
         var body: some View {
             #if os(macOS)
             Table(userDetails) {

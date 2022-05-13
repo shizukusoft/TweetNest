@@ -12,7 +12,7 @@ import UnifiedLogging
 actor SessionActor {
     lazy var twitterSessions = [URL: Twitter.Session]()
 
-    var fetchNewDataTimer: DispatchSourceTimer? = nil {
+    var fetchNewDataTimer: DispatchSourceTimer? {
         willSet {
             guard fetchNewDataTimer !== newValue else { return }
 
@@ -25,7 +25,7 @@ actor SessionActor {
         }
     }
 
-    var dataCleansingTimer: DispatchSourceTimer? = nil {
+    var dataCleansingTimer: DispatchSourceTimer? {
         willSet {
             guard dataCleansingTimer !== newValue else { return }
 
@@ -42,7 +42,7 @@ actor SessionActor {
 }
 
 extension SessionActor {
-    func run<T>(resultType: T.Type = T.self, body: @Sendable (isolated SessionActor) async throws -> T) async rethrows -> T where T : Sendable {
+    func run<T>(resultType: T.Type = T.self, body: @Sendable (isolated SessionActor) async throws -> T) async rethrows -> T where T: Sendable {
         try await body(self)
     }
 }

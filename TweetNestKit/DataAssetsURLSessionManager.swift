@@ -47,7 +47,7 @@ class DataAssetsURLSessionManager: NSObject {
     private let dispatchGroup = DispatchGroup()
     private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: DataAssetsURLSessionManager.self))
     private let persistentContainer: PersistentContainer
-    
+
     private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
     private lazy var managedObjectContext = persistentContainer.newBackgroundContext()
 

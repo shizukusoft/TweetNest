@@ -55,8 +55,8 @@ extension ManagedPreferences {
     }
 }
 
-extension ManagedPreferences{
-    public static func managedPreferences(for context: NSManagedObjectContext) -> ManagedPreferences  {
+extension ManagedPreferences {
+    public static func managedPreferences(for context: NSManagedObjectContext) -> ManagedPreferences {
         let fetchReuqest: NSFetchRequest<ManagedPreferences> = ManagedPreferences.fetchRequest()
         fetchReuqest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedPreferences.modificationDate, ascending: false)]
         fetchReuqest.fetchLimit = 1

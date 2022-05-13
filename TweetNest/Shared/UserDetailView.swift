@@ -137,10 +137,10 @@ struct UserDetailView: View {
     }
 }
 
-//#if DEBUG
-//struct UserDetailView_Previews: PreviewProvider {
+// #if DEBUG
+// struct UserDetailView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        UserDetailView()
 //    }
-//}
-//#endif
+// }
+// #endif

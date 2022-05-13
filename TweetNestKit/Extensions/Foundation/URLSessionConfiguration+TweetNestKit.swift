@@ -28,7 +28,7 @@ extension URLSessionConfiguration {
 
     private func reset() {
         httpAdditionalHeaders = {
-            var httpAdditionalHeaders = [AnyHashable : Any]()
+            var httpAdditionalHeaders = [AnyHashable: Any]()
 
             let preferredLanguages = OrderedSet(Locale.preferredLanguages.flatMap { [$0, $0.components(separatedBy: "-")[0]] } + ["*"])
             httpAdditionalHeaders["Accept-Language"] = preferredLanguages.qualityJoined

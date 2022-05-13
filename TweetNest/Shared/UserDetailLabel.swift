@@ -88,8 +88,8 @@ struct UserDetailLabel: View {
     }
 }
 
-//struct UserDetailLabel_Previews: PreviewProvider {
+// struct UserDetailLabel_Previews: PreviewProvider {
 //    static var previews: some View {
 //        UserDetailLabel()
 //    }
-//}
+// }

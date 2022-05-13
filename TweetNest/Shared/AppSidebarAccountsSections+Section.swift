@@ -146,11 +146,10 @@ extension AppSidebarAccountsSections {
     }
 }
 
-//#if DEBUG
-//struct AppSidebarAccountRows_Previews: PreviewProvider {
+// #if DEBUG
+// struct AppSidebarAccountRows_Previews: PreviewProvider {
 //    static var previews: some View {
 //        AppSidebarAccountRows()
 //    }
-//}
-//#endif
-
+// }
+// #endif

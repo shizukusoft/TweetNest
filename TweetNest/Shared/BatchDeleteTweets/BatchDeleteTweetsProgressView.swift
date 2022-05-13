@@ -57,7 +57,7 @@ struct BatchDeleteTweetsProgressView: View {
             ProgressView(progress)
                 .progressViewStyle(.linear)
                 .padding()
-                
+
         }
         .onAppear {
             withAnimation {

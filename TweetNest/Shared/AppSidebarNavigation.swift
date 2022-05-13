@@ -216,7 +216,7 @@ struct AppSidebarNavigation: View {
             try await withExtendedBackgroundExecution {
                 _ = try await TweetNestApp.session.fetchNewData(force: true)
             }
-        }  catch {
+        } catch {
             Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
             self.error = TweetNestError(error)
             showErrorAlert = true

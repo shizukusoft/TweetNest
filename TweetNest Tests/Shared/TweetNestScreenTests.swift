@@ -148,7 +148,7 @@ class TweetNestScreenTests: XCTestCase {
             expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
         ], timeout: 5.0)
         #endif
-        
+
         takeScreenshot(name: "Batch Delete Tweets Form Screen")
     }
 

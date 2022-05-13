@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension ManagedAccount {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<ManagedAccount> {
@@ -24,6 +23,6 @@ extension ManagedAccount {
 
 }
 
-extension ManagedAccount : Identifiable {
+extension ManagedAccount: Identifiable {
 
 }

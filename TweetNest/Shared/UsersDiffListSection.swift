@@ -65,8 +65,8 @@ struct UsersDiffListSection: View {
     }
 }
 
-//struct UsersDiffListSection_Previews: PreviewProvider {
+// struct UsersDiffListSection_Previews: PreviewProvider {
 //    static var previews: some View {
 //        UsersDiffListSection()
 //    }
-//}
+// }

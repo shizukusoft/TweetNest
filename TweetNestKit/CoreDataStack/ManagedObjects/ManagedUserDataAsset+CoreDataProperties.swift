@@ -9,7 +9,6 @@
 import Foundation
 import CoreData
 
-
 extension ManagedUserDataAsset {
 
     @nonobjc public class func fetchRequest() -> NSFetchRequest<ManagedUserDataAsset> {
@@ -24,6 +23,6 @@ extension ManagedUserDataAsset {
 
 }
 
-extension ManagedUserDataAsset : Identifiable {
+extension ManagedUserDataAsset: Identifiable {
 
 }

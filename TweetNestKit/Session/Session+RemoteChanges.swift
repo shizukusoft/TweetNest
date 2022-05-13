@@ -19,7 +19,7 @@ extension Session {
     private var logger: Logger {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
-    
+
     func handlePersistentStoreRemoteChanges(_ persistentHistoryToken: NSPersistentHistoryToken?) {
         do {
             try withExtendedBackgroundExecution {

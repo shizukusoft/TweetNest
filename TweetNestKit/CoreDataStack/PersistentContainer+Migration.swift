@@ -280,7 +280,6 @@ extension PersistentContainer {
                     _ = try v3Context.execute(v3UserDataAssetsInsertRequest)
                 }
 
-
                 chunkedV1DataAssets.forEach { v1Context.refresh($0, mergeChanges: false) }
             }
         }

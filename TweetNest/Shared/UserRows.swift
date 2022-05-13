@@ -97,7 +97,7 @@ struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs
         self.icon = icon
     }
 
-    init(userIDs: UserIDs, searchQuery: String = "", @ViewBuilder icon: () -> Icon){
+    init(userIDs: UserIDs, searchQuery: String = "", @ViewBuilder icon: () -> Icon) {
         self.init(userIDs: userIDs, searchQuery: searchQuery, icon: icon())
     }
 
