@@ -8,15 +8,21 @@
 import Foundation
 import CoreData
 
-protocol PersistentContainerMigrationProtocol {
-    func migrateIfNeeded() throws
+private protocol PersistentContainerMigrationProtocol {
+    func _migrateIfNeeded() throws
 }
 
 @available(*, deprecated) // Workaround: https://forums.swift.org/t/suppressing-deprecated-warnings/53970/6
 extension PersistentContainer: PersistentContainerMigrationProtocol {
-    func migrateIfNeeded() throws {
+    fileprivate func _migrateIfNeeded() throws {
         if FileManager.default.fileExists(atPath: Self.V1.defaultPersistentStoreURL.path) {
             try V3.migrateFromV1()
         }
+    }
+}
+
+extension PersistentContainer {
+    func migrateIfNeeded() throws {
+        try (self as PersistentContainerMigrationProtocol)._migrateIfNeeded()
     }
 }

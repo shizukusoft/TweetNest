@@ -126,17 +126,11 @@ extension PersistentContainer.V3 {
         try migrateUserDetailsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
         try migrateUserDataAssetsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
 
-        try v1PersistentContainer.persistentStoreDescriptions.forEach {
-            try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: $0.url!, ofType: $0.type)
-        }
-
-        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = v3PersistentContainer.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)
-            .flatMap {
-                try? NSKeyedArchiver.archivedData(
-                    withRootObject: $0,
-                    requiringSecureCoding: true
-                )
+        try v1PersistentContainer.persistentStoreCoordinator.performAndWait {
+            try v1PersistentContainer.persistentStoreDescriptions.forEach {
+                try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: $0.url!, ofType: $0.type)
             }
+        }
 
         Task.detached(priority: .utility) {
             let containers: [CKContainer] = [
@@ -169,6 +163,16 @@ extension PersistentContainer.V3 {
                     container.privateCloudDatabase.add(deletionOperation)
                 }
             }
+        }
+
+        v3PersistentContainer.persistentStoreCoordinator.performAndWait {
+            TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = v3PersistentContainer.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)
+                .flatMap {
+                    try? NSKeyedArchiver.archivedData(
+                        withRootObject: $0,
+                        requiringSecureCoding: true
+                    )
+                }
         }
     }
 
