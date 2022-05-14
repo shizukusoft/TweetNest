@@ -165,8 +165,6 @@
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		19A1F1B926F38D4300A28A49 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
 		19A6FF1E26D6836000AB7B7E /* TweetNest WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		19A6FF2726D6836000AB7B7E /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2626D6836000AB7B7E /* NotificationController.swift */; };
-		19A6FF2926D6836000AB7B7E /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2826D6836000AB7B7E /* NotificationView.swift */; };
 		19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */; };
 		19A6FF4826D6836100AB7B7E /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF4726D6836100AB7B7E /* TweetNestTests.swift */; };
 		19A6FF4B26D6836100AB7B7E /* TweetNest.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 19A6FF1526D6835F00AB7B7E /* TweetNest.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -492,8 +490,6 @@
 		199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestError.swift; sourceTree = "<group>"; };
 		19A6FF1526D6835F00AB7B7E /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		19A6FF2626D6836000AB7B7E /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
-		19A6FF2826D6836000AB7B7E /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		19A6FF3126D6836100AB7B7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19A6FF3226D6836100AB7B7E /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
@@ -952,8 +948,6 @@
 			isa = PBXGroup;
 			children = (
 				19EABBEC26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift */,
-				19A6FF2626D6836000AB7B7E /* NotificationController.swift */,
-				19A6FF2826D6836000AB7B7E /* NotificationView.swift */,
 				19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */,
 				19A6FF3126D6836100AB7B7E /* Info.plist */,
 				19C6570626DAB53100D1A272 /* Localizable.strings */,
@@ -1646,7 +1640,6 @@
 			files = (
 				19EABBCA26D6877600D3B003 /* AppSidebarNavigation.swift in Sources */,
 				1908FC0F26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift in Sources */,
-				19A6FF2726D6836000AB7B7E /* NotificationController.swift in Sources */,
 				19EABBC626D6877600D3B003 /* TweetNestApp.swift in Sources */,
 				19EABBDA26D6877A00D3B003 /* SettingsAccountView.swift in Sources */,
 				19FB868427E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
@@ -1690,7 +1683,6 @@
 				19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */,
 				19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */,
 				1970664126E709FE00D7F21D /* AccountLabel.swift in Sources */,
-				19A6FF2926D6836000AB7B7E /* NotificationView.swift in Sources */,
 				1908FBFF26F6EE150095AF77 /* BatchDeleteTweetsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
