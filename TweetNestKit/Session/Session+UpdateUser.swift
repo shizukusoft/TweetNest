@@ -283,6 +283,7 @@ extension Session {
                 userFetchRequest.sortDescriptors = [
                     NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: false)
                 ]
+                userFetchRequest.propertiesToFetch = ["lastUpdateStartDate"]
                 userFetchRequest.returnsObjectsAsFaults = false
 
                 let users = try context.fetch(userFetchRequest)
