@@ -146,7 +146,7 @@ extension Session {
             }
 
             return try await withThrowingTaskGroup(
-                of: [(Twitter.User.ID, UserDetailChanges)].self
+                of: ([(Twitter.User.ID, UserDetailChanges)], [DataAssetsURLSessionManager.DownloadRequest]).self
             ) { chunkedUsersProcessingTaskGroup in
                 for try await chunkedUsers in chunkedUsersFetchTaskGroup {
                     chunkedUsersProcessingTaskGroup.addTask {
@@ -156,7 +156,7 @@ extension Session {
                             chunkedUsersProcessingContext.automaticallyMergesChangesFromParent = true
                             chunkedUsersProcessingContext.undoManager = nil
 
-                            let (results, downloadRequests) = try await withThrowingTaskGroup(
+                            let results = try await withThrowingTaskGroup(
                                 of: (Twitter.User.ID, UserDetailChanges, [DataAssetsURLSessionManager.DownloadRequest]).self,
                                 returning: ([(Twitter.User.ID, UserDetailChanges)], [DataAssetsURLSessionManager.DownloadRequest]).self
                             ) { userProcessingTaskGroup in
@@ -185,10 +185,6 @@ extension Session {
                                                 previousUserDetail: previousUserDetail,
                                                 context: chunkedUsersProcessingContext
                                             )
-
-                                            let userObjectID = userObjectIDsByUserID[String(twitterUser.id)] as? NSManagedObjectID
-                                            let user = userObjectID.flatMap { chunkedUsersProcessingContext.object(with: $0) as? ManagedUser }
-                                            user?.lastUpdateEndDate = Date()
 
                                             return (previousUserDetail?.objectID, userDetail.objectID)
                                         }
@@ -223,24 +219,40 @@ extension Session {
                             }
 
                             try await context.perform(schedule: .enqueued) {
-                                guard context.hasChanges else {
-                                    return
+                                let userFetchRequest = ManagedUser.fetchRequest()
+                                userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] } )
+                                userFetchRequest.propertiesToFetch = []
+                                userFetchRequest.returnsObjectsAsFaults = false
+
+                                let users = try context.fetch(userFetchRequest)
+
+                                for user in users {
+                                    user.lastUpdateEndDate = Date()
                                 }
 
                                 try context.save()
                             }
-
-                            await self.dataAssetsURLSessionManager.download(downloadRequests)
 
                             return results
                         }
                     }
                 }
 
-                return try await chunkedUsersProcessingTaskGroup.reduce(into: [:]) { totalResults, chunkedUsersResults in
-                    chunkedUsersResults.forEach {
+                var dataAssetsDownloadRequests = Set<DataAssetsURLSessionManager.DownloadRequest>()
+                defer {
+                    Task.detached { [dataAssetsURLSessionManager = self.dataAssetsURLSessionManager, dataAssetsDownloadRequests] in
+                        try await withExtendedBackgroundExecution {
+                            await dataAssetsURLSessionManager.download(dataAssetsDownloadRequests)
+                        }
+                    }
+                }
+
+                return try await chunkedUsersProcessingTaskGroup.reduce(into: [:]) { totalResults, chunkedResults in
+                    chunkedResults.0.forEach {
                         totalResults[$0.0] = $0.1
                     }
+
+                    dataAssetsDownloadRequests.formUnion(chunkedResults.1)
                 }
             }
         }
