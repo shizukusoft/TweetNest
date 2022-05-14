@@ -27,7 +27,10 @@ extension Session.TwitterAPIConfiguration {
             let database = container.publicCloudDatabase
 
             let query = CKQuery(recordType: "TwitterAPIConfiguration", predicate: NSPredicate(value: true))
-            query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
+            query.sortDescriptors = [
+                NSSortDescriptor(key: "modificationDate", ascending: false),
+                NSSortDescriptor(key: "creationDate", ascending: false)
+            ]
 
             guard let record = try await database.records(matching: query, resultsLimit: 1).matchResults.first?.1.get() else {
                 throw SessionError.noCloudKitRecord
