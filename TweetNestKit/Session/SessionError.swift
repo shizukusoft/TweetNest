@@ -9,6 +9,7 @@ import Foundation
 
 enum SessionError: Swift.Error {
     case unknown
+    case noCloudKitRecord
     case noAPIKey
     case noAPIKeySecret
     case invalidServerResponse(URLResponse)

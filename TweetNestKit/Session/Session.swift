@@ -60,7 +60,7 @@ public class Session {
             if let twitterAPIConfiguration = try await twitterAPIConfiguration() {
                 return twitterAPIConfiguration
             } else {
-                return try await .iCloud
+                return try await .cloudKit
             }
         })
         let persistentContainer = PersistentContainer(inMemory: inMemory)
