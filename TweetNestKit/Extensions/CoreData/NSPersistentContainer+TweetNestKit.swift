@@ -6,14 +6,16 @@
 //
 
 import CoreData
+import Algorithms
+import OrderedCollections
 
 extension NSPersistentContainer {
     public struct LoadingError: Error {
-        public var errors: [NSPersistentStoreDescription: Error]
+        public var errors: OrderedDictionary<NSPersistentStoreDescription, Error>
     }
 
     public func loadPersistentStores(completionHandler block: @escaping (Result<Void, LoadingError>) -> Void) {
-        var loadedPersistentStores = [NSPersistentStoreDescription: Error?]()
+        var loadedPersistentStores = OrderedDictionary<NSPersistentStoreDescription, Error?>()
 
         self.loadPersistentStores { (storeDescription, error) in
             loadedPersistentStores[storeDescription] = error
@@ -37,5 +39,31 @@ extension NSPersistentContainer {
                 continuation.resume(with: result)
             }
         }
+    }
+}
+
+extension NSPersistentContainer.LoadingError: LocalizedError {
+    public var errorDescription: String? {
+        errors.values
+            .lazy
+            .map { ($0 as? LocalizedError)?.errorDescription ?? $0.localizedDescription }
+            .uniqued()
+            .joined(separator: "\n")
+    }
+
+    public var failureReason: String? {
+        errors.values
+            .lazy
+            .compactMap { ($0 as? LocalizedError)?.failureReason ?? ($0 as NSError).localizedFailureReason }
+            .uniqued()
+            .joined(separator: "\n")
+    }
+
+    public var recoverySuggestion: String? {
+        errors.values
+            .lazy
+            .compactMap { ($0 as? LocalizedError)?.recoverySuggestion ?? ($0 as NSError).localizedRecoverySuggestion }
+            .uniqued()
+            .joined(separator: "\n")
     }
 }
