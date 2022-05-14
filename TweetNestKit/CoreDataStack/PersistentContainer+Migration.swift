@@ -18,7 +18,7 @@ extension PersistentContainer: PersistentContainerMigrationProtocol {
     fileprivate func _migrateIfNeeded() throws {
         if
             FileManager.default.fileExists(atPath: Self.V1.defaultPersistentStoreURL.path) &&
-            FileManager.default.fileExists(atPath: Self.V3.defaultPersistentStoreURL.path) == false
+            !FileManager.default.fileExists(atPath: Self.V3.defaultPersistentStoreURL.path)
         {
             try V3.migrateFromV1()
         }

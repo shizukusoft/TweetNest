@@ -83,43 +83,34 @@ extension PersistentContainer.V3 {
                 try v3PersistentContainer.persistentStoreCoordinator.performAndWait {
                     TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try v3PersistentContainer.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)
                         .flatMap {
-                            try NSKeyedArchiver.archivedData(
-                                withRootObject: $0,
-                                requiringSecureCoding: true
-                            )
+                            try NSKeyedArchiver.archivedData(withRootObject: $0, requiringSecureCoding: true)
                         }
                 }
             } catch {
-                try v3PersistentContainer.persistentStoreCoordinator.performAndWait {
-                    for persistentStore in v3PersistentContainer.persistentStoreCoordinator.persistentStores {
-                        try v3PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(
-                            at: persistentStore.url!,
-                            ofType: persistentStore.type,
-                            options: [
-                                NSPersistentStoreForceDestroyOption: true
-                            ]
-                        )
-                    }
-                }
+                try? destoryPersistentContainer(v3PersistentContainer)
 
                 throw error
             }
 
-            try v1PersistentContainer.persistentStoreCoordinator.performAndWait {
-                for persistentStore in v1PersistentContainer.persistentStoreCoordinator.persistentStores {
-                    try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(
-                        at: persistentStore.url!,
-                        ofType: persistentStore.type,
-                        options: [
-                            NSReadOnlyPersistentStoreOption: false,
-                            NSPersistentStoreForceDestroyOption: true
-                        ]
-                    )
-                }
-            }
+            try destoryPersistentContainer(v1PersistentContainer)
 
             Task.detached(priority: .utility) {
                 deleteV1CloudKitPrivateRecordZones()
+            }
+        }
+    }
+
+    private static func destoryPersistentContainer(_ persistentContainer: NSPersistentContainer) throws {
+        try persistentContainer.persistentStoreCoordinator.performAndWait {
+            for persistentStore in persistentContainer.persistentStoreCoordinator.persistentStores {
+                try persistentContainer.persistentStoreCoordinator.destroyPersistentStore(
+                    at: persistentStore.url!,
+                    ofType: persistentStore.type,
+                    options: [
+                        NSReadOnlyPersistentStoreOption: false,
+                        NSPersistentStoreForceDestroyOption: true
+                    ]
+                )
             }
         }
     }

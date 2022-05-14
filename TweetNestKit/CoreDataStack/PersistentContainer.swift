@@ -37,7 +37,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     init(inMemory: Bool = false, cloudKit: Bool = true, persistentStoreOptions: [String: Any?]? = nil) {
         super.init(name: "\(Bundle.tweetNestKit.name!).V3", managedObjectModel: Self.V3.managedObjectModel)
 
-        if inMemory == false {
+        if !inMemory {
             persistentStoreDescriptions = [
                 Self.V3.userDataPersistentStoreDescription,
                 Self.V3.defaultPersistentStoreDescription,
@@ -53,7 +53,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                     }
                 }
 
-                if cloudKit == false {
+                if !cloudKit {
                     persistentStoreDescription.cloudKitContainerOptions = nil
                 }
 
