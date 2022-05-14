@@ -210,15 +210,15 @@ extension Session {
                                 }
                             }
 
-                            try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
-                                guard chunkedUsersProcessingContext.hasChanges else {
-                                    return
+                            try await context.perform(schedule: .enqueued) {
+                                try chunkedUsersProcessingContext.performAndWait {
+                                    guard chunkedUsersProcessingContext.hasChanges else {
+                                        return
+                                    }
+
+                                    try chunkedUsersProcessingContext.save()
                                 }
 
-                                try chunkedUsersProcessingContext.save()
-                            }
-
-                            try await context.perform(schedule: .enqueued) {
                                 let userFetchRequest = ManagedUser.fetchRequest()
                                 userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] } )
                                 userFetchRequest.propertiesToFetch = []
