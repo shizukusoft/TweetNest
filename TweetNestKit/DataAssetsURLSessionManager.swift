@@ -114,7 +114,11 @@ extension DataAssetsURLSessionManager {
                     var urlRequest = downloadRequest.urlRequest
                     urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
 
-                    let downloadTask = pendingDownloadTasks[urlRequest]?.last ?? urlSession.downloadTask(with: urlRequest)
+                    guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
+                        continue
+                    }
+
+                    let downloadTask = urlSession.downloadTask(with: urlRequest)
                     downloadTask.countOfBytesClientExpectsToSend = 1024
                     downloadTask.countOfBytesClientExpectsToReceive = downloadRequest.expectsToReceiveFileSize
                     downloadTask.priority = downloadRequest.priority
