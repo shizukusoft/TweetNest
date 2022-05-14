@@ -11,7 +11,13 @@ import TweetNestKit
 import UnifiedLogging
 
 @MainActor
-class TweetNestAppDelegate: NSObject, ObservableObject { }
+class TweetNestAppDelegate: NSObject, ObservableObject {
+    override init() {
+        super.init()
+
+        UNUserNotificationCenter.current().delegate = self
+    }
+}
 
 extension TweetNestAppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification) async -> UNNotificationPresentationOptions {

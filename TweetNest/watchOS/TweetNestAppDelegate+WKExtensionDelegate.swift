@@ -11,8 +11,6 @@ import UserNotifications
 
 extension TweetNestAppDelegate: WKExtensionDelegate {
     func applicationDidFinishLaunching() {
-        UNUserNotificationCenter.current().delegate = self
-
         WKExtension.shared().registerForRemoteNotifications()
     }
 
