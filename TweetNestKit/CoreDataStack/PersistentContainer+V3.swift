@@ -63,8 +63,23 @@ extension PersistentContainer {
             return managedObjectModel
         }()
 
+        static var defaultDirectoryURL: URL {
+            let defaultDirectoryURL = PersistentContainer.defaultDirectoryURL().appendingPathComponent("V3")
+
+            if FileManager.default.fileExists(atPath: defaultDirectoryURL.path) == false {
+                do {
+                    try FileManager.default.createDirectory(at: defaultDirectoryURL, withIntermediateDirectories: true)
+                } catch {
+                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                        .error("\(error as NSError, privacy: .public)")
+                }
+            }
+
+            return defaultDirectoryURL
+        }
+
         static var defaultPersistentStoreURL: URL {
-            PersistentContainer.defaultDirectoryURL().appendingPathComponent("V3").appendingPathComponent("TweetNestKit.sqlite")
+            defaultDirectoryURL.appendingPathComponent("TweetNestKit.sqlite")
         }
         static let defaultPersistentStoreConfiguration = "TweetNestKit"
         static let defaultCloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!).v3"
@@ -77,7 +92,7 @@ extension PersistentContainer {
         }
 
         static var userDataPersistentStoreURL: URL {
-            PersistentContainer.defaultDirectoryURL().appendingPathComponent("V3").appendingPathComponent("UserData.sqlite")
+            defaultDirectoryURL.appendingPathComponent("UserData.sqlite")
         }
         static let userDataPersistentStoreConfiguration = "UserData"
         static let userDataCloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!).v3.userData"
@@ -93,86 +108,105 @@ extension PersistentContainer {
 
 @available(*, deprecated) // Workaround: https://forums.swift.org/t/suppressing-deprecated-warnings/53970/6
 extension PersistentContainer.V3 {
+    struct MigrationError: Error {}
+
     static func migrateFromV1() throws {
-        let v1PersistentContainer = NSPersistentContainer(name: "\(Bundle.tweetNestKit.name!)", managedObjectModel: PersistentContainer.V1.managedObjectModel)
-        v1PersistentContainer.persistentStoreDescriptions = [
-            NSPersistentStoreDescription(url: PersistentContainer.V1.accountsPersistentStoreURL),
-            NSPersistentStoreDescription(url: PersistentContainer.V1.dataAssetsPersistentStoreURL),
-            NSPersistentStoreDescription(url: PersistentContainer.V1.defaultPersistentStoreURL),
-        ]
-        v1PersistentContainer.persistentStoreDescriptions.forEach {
-            $0.type = NSSQLiteStoreType
-            $0.cloudKitContainerOptions = nil
-            $0.setOption(true as NSNumber, forKey: NSReadOnlyPersistentStoreOption)
-        }
-
-        let v3PersistentContainer = NSPersistentContainer(name: "\(Bundle.tweetNestKit.name!).v3", managedObjectModel: managedObjectModel)
-        v3PersistentContainer.persistentStoreDescriptions = [
-            userDataPersistentStoreDescription,
-            defaultPersistentStoreDescription,
-        ]
-        v3PersistentContainer.persistentStoreDescriptions.forEach {
-            $0.type = NSSQLiteStoreType
-            $0.cloudKitContainerOptions = nil
-            $0.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
-        }
-
-        v1PersistentContainer.loadPersistentStores { _, _ in }
-        v3PersistentContainer.loadPersistentStores { _, _ in }
-
-        try migrateAccountsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
-        try migratePreferencesFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
-        try migrateUsersFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
-        try migrateUserDetailsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
-        try migrateUserDataAssetsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
-
-        try v1PersistentContainer.persistentStoreCoordinator.performAndWait {
-            try v1PersistentContainer.persistentStoreDescriptions.forEach {
-                try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(at: $0.url!, ofType: $0.type)
-            }
-        }
-
-        Task.detached(priority: .utility) {
-            let containers: [CKContainer] = [
-                .init(identifier: PersistentContainer.V1.defaultCloudKitIdentifier),
-                .init(identifier: PersistentContainer.V1.accountsCloudKitIdentifier),
-                .init(identifier: PersistentContainer.V1.dataAssetsCloudKitIdentifier),
+        try autoreleasepool {
+            let v1PersistentContainer = NSPersistentContainer(name: "\(Bundle.tweetNestKit.name!)", managedObjectModel: PersistentContainer.V1.managedObjectModel)
+            v1PersistentContainer.persistentStoreDescriptions = [
+                NSPersistentStoreDescription(url: PersistentContainer.V1.accountsPersistentStoreURL),
+                NSPersistentStoreDescription(url: PersistentContainer.V1.dataAssetsPersistentStoreURL),
+                NSPersistentStoreDescription(url: PersistentContainer.V1.defaultPersistentStoreURL),
             ]
-
-            for container in containers {
-                container.privateCloudDatabase.fetchAllRecordZones { zones, error in
-                    guard let zones = zones, error == nil else {
-                        Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                            .error("Error fetching zones.")
-                        return
-                    }
-
-                    let zoneIDs = zones.map { $0.zoneID }
-                    let deletionOperation = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)
-
-                    deletionOperation.modifyRecordZonesResultBlock = { result in
-                        do {
-                            try result.get()
-                        } catch {
-                            Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                .error("Error deleting records: \(error as NSError, privacy: .public)")
-                        }
-
-                    }
-
-                    container.privateCloudDatabase.add(deletionOperation)
-                }
+            v1PersistentContainer.persistentStoreDescriptions.forEach {
+                $0.type = NSSQLiteStoreType
+                $0.cloudKitContainerOptions = nil
+                $0.setOption(true as NSNumber, forKey: NSReadOnlyPersistentStoreOption)
+                $0.setValue("EXCLUSIVE" as NSString, forPragmaNamed: "locking_mode")
             }
-        }
 
-        v3PersistentContainer.persistentStoreCoordinator.performAndWait {
-            TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = v3PersistentContainer.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)
-                .flatMap {
-                    try? NSKeyedArchiver.archivedData(
-                        withRootObject: $0,
-                        requiringSecureCoding: true
+            let v3PersistentContainer = NSPersistentContainer(name: "\(Bundle.tweetNestKit.name!).v3", managedObjectModel: managedObjectModel)
+            v3PersistentContainer.persistentStoreDescriptions = [
+                userDataPersistentStoreDescription,
+                defaultPersistentStoreDescription,
+            ]
+            v3PersistentContainer.persistentStoreDescriptions.forEach {
+                $0.type = NSSQLiteStoreType
+                $0.cloudKitContainerOptions = nil
+                $0.setOption(true as NSNumber, forKey: NSPersistentHistoryTrackingKey)
+            }
+
+            let dispatchGroup = DispatchGroup()
+
+            var v1PersistentContainerLoadingResult: Result<Void, Error>!
+            var v3PersistentContainerLoadingResult: Result<Void, Error>!
+
+            dispatchGroup.enter()
+            v1PersistentContainer.loadPersistentStores { result in
+                v1PersistentContainerLoadingResult = result.mapError { $0 }
+                dispatchGroup.leave()
+            }
+
+            dispatchGroup.enter()
+            v3PersistentContainer.loadPersistentStores { result in
+                v3PersistentContainerLoadingResult = result.mapError { $0 }
+                dispatchGroup.leave()
+            }
+
+            dispatchGroup.wait()
+
+            try v1PersistentContainerLoadingResult.get()
+
+            do {
+                try v3PersistentContainerLoadingResult.get()
+
+                try migrateAccountsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
+                try migratePreferencesFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
+                try migrateUsersFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
+                try migrateUserDetailsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
+                try migrateUserDataAssetsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
+
+                try v3PersistentContainer.persistentStoreCoordinator.performAndWait {
+                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try v3PersistentContainer.persistentStoreCoordinator.currentPersistentHistoryToken(fromStores: nil)
+                        .flatMap {
+                            try NSKeyedArchiver.archivedData(
+                                withRootObject: $0,
+                                requiringSecureCoding: true
+                            )
+                        }
+                }
+            } catch {
+                try v3PersistentContainer.persistentStoreCoordinator.performAndWait {
+                    for persistentStore in v3PersistentContainer.persistentStoreCoordinator.persistentStores {
+                        try v3PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(
+                            at: persistentStore.url!,
+                            ofType: persistentStore.type,
+                            options: [
+                                NSPersistentStoreForceDestroyOption: true
+                            ]
+                        )
+                    }
+                }
+
+                throw error
+            }
+
+            try v1PersistentContainer.persistentStoreCoordinator.performAndWait {
+                for persistentStore in v1PersistentContainer.persistentStoreCoordinator.persistentStores {
+                    try v1PersistentContainer.persistentStoreCoordinator.destroyPersistentStore(
+                        at: persistentStore.url!,
+                        ofType: persistentStore.type,
+                        options: [
+                            NSReadOnlyPersistentStoreOption: false,
+                            NSPersistentStoreForceDestroyOption: true
+                        ]
                     )
                 }
+            }
+
+            Task.detached(priority: .utility) {
+                deleteV1CloudKitPrivateRecordZones()
+            }
         }
     }
 
@@ -181,34 +215,35 @@ extension PersistentContainer.V3 {
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
         try v1Context.performAndWait {
-            let v1AccountsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Account")
-            v1AccountsFetchRequest.fetchBatchSize = 10000
-            v1AccountsFetchRequest.returnsObjectsAsFaults = false
+            try autoreleasepool {
+                let v1AccountsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Account")
+                v1AccountsFetchRequest.fetchBatchSize = 10000
+                v1AccountsFetchRequest.includesPendingChanges = false
+                v1AccountsFetchRequest.returnsObjectsAsFaults = false
 
-            let v1Accounts = try v1Context.fetch(v1AccountsFetchRequest)
+                let v1Accounts = try v1Context.fetch(v1AccountsFetchRequest)
 
-            guard v1Accounts.count > 1 else { return }
+                guard v1Accounts.count > 0 else { return }
 
-            for chunkedV1Accounts in v1Accounts.chunks(ofCount: v1AccountsFetchRequest.fetchBatchSize) {
-                let v3AccountsBatchInsertRequest = NSBatchInsertRequest(
-                    entity: ManagedAccount.entity(),
-                    objects: chunkedV1Accounts.map { v1Account in
-                        [
-                            "creationDate": v1Account.value(forKey: "creationDate") as Any,
-                            "preferringSortOrder": v1Account.value(forKey: "preferringSortOrder") as Any,
-                            "token": v1Account.value(forKey: "token") as Any,
-                            "tokenSecret": v1Account.value(forKey: "tokenSecret") as Any,
-                            "userID": v1Account.value(forKey: "userID") as Any,
-                            "preferences": v1Account.value(forKey: "preferences") as Any
-                        ]
+                for chunkedV1Accounts in v1Accounts.chunks(ofCount: v1AccountsFetchRequest.fetchBatchSize) {
+                    try v3Context.performAndWait {
+                        try autoreleasepool {
+                            for v1Account in chunkedV1Accounts {
+                                let v3Account = NSManagedObject(entity: managedObjectModel.entitiesByName["Account"]!, insertInto: v3Context)
+
+                                v1Account.committedValues(forKeys: nil).forEach {
+                                    switch $0.key {
+                                    default:
+                                        v3Account.setValue($0.value is NSNull ? nil : $0.value, forKey: $0.key)
+                                    }
+                                }
+                            }
+
+                            try v3Context.save()
+                            v3Context.reset()
+                        }
                     }
-                )
-
-                try v3Context.performAndWait {
-                    _ = try v3Context.execute(v3AccountsBatchInsertRequest)
                 }
-
-                chunkedV1Accounts.forEach { v1Context.refresh($0, mergeChanges: false) }
             }
         }
     }
@@ -218,30 +253,35 @@ extension PersistentContainer.V3 {
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
         try v1Context.performAndWait {
-            let v1PreferencesFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Preferences")
-            v1PreferencesFetchRequest.fetchBatchSize = 10000
-            v1PreferencesFetchRequest.returnsObjectsAsFaults = false
+            try autoreleasepool {
+                let v1PreferencesFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Preferences")
+                v1PreferencesFetchRequest.fetchBatchSize = 10000
+                v1PreferencesFetchRequest.includesPendingChanges = false
+                v1PreferencesFetchRequest.returnsObjectsAsFaults = false
 
-            let v1Preferences = try v1Context.fetch(v1PreferencesFetchRequest)
+                let v1Preferences = try v1Context.fetch(v1PreferencesFetchRequest)
 
-            guard v1Preferences.count > 1 else { return }
+                guard v1Preferences.count > 0 else { return }
 
-            for chunkedV1Preferences in v1Preferences.chunks(ofCount: v1PreferencesFetchRequest.fetchBatchSize) {
-                let v3PreferencesBatchInsertRequest = NSBatchInsertRequest(
-                    entity: ManagedPreferences.entity(),
-                    objects: chunkedV1Preferences.map { v1Preference in
-                        [
-                            "modificationDate": v1Preference.value(forKey: "modificationDate") as Any,
-                            "preferences": v1Preference.value(forKey: "preferences") as Any
-                        ]
+                for chunkedV1Preferences in v1Preferences.chunks(ofCount: v1PreferencesFetchRequest.fetchBatchSize) {
+                    try v3Context.performAndWait {
+                        try autoreleasepool {
+                            for v1Preference in chunkedV1Preferences {
+                                let v3Preferences = NSManagedObject(entity: managedObjectModel.entitiesByName["Preferences"]!, insertInto: v3Context)
+
+                                v1Preference.committedValues(forKeys: nil).forEach {
+                                    switch $0.key {
+                                    default:
+                                        v3Preferences.setValue($0.value is NSNull ? nil : $0.value, forKey: $0.key)
+                                    }
+                                }
+                            }
+
+                            try v3Context.save()
+                            v3Context.reset()
+                        }
                     }
-                )
-
-                try v3Context.performAndWait {
-                    _ = try v3Context.execute(v3PreferencesBatchInsertRequest)
                 }
-
-                chunkedV1Preferences.forEach { v1Context.refresh($0, mergeChanges: false) }
             }
         }
     }
@@ -251,32 +291,37 @@ extension PersistentContainer.V3 {
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
         try v1Context.performAndWait {
-            let v1UsersFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "User")
-            v1UsersFetchRequest.fetchBatchSize = 10000
-            v1UsersFetchRequest.returnsObjectsAsFaults = false
+            try autoreleasepool {
+                let v1UsersFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "User")
+                v1UsersFetchRequest.fetchBatchSize = 10000
+                v1UsersFetchRequest.includesPendingChanges = false
+                v1UsersFetchRequest.returnsObjectsAsFaults = false
 
-            let v1Users = try v1Context.fetch(v1UsersFetchRequest)
+                let v1Users = try v1Context.fetch(v1UsersFetchRequest)
 
-            guard v1Users.count > 1 else { return }
+                guard v1Users.count > 0 else { return }
 
-            for chunkedV1Users in v1Users.chunks(ofCount: v1UsersFetchRequest.fetchBatchSize) {
-                let v3UsersBatchInsertRequest = NSBatchInsertRequest(
-                    entity: ManagedUser.entity(),
-                    objects: chunkedV1Users.map { v1User in
-                        [
-                            "creationDate": v1User.value(forKey: "creationDate") as Any,
-                            "id": v1User.value(forKey: "id") as Any,
-                            "lastUpdateEndDate": v1User.value(forKey: "lastUpdateEndDate") as Any,
-                            "lastUpdateStartDate": v1User.value(forKey: "lastUpdateStartDate") as Any,
-                        ]
+                for chunkedV1Users in v1Users.chunks(ofCount: v1UsersFetchRequest.fetchBatchSize) {
+                    try v3Context.performAndWait {
+                        try autoreleasepool {
+                            for v1User in chunkedV1Users {
+                                let v3User = NSManagedObject(entity: managedObjectModel.entitiesByName["User"]!, insertInto: v3Context)
+
+                                v1User.committedValues(forKeys: nil).forEach {
+                                    switch $0.key {
+                                    case "modificationDate":
+                                        break
+                                    default:
+                                        v3User.setValue($0.value is NSNull ? nil : $0.value, forKey: $0.key)
+                                    }
+                                }
+                            }
+
+                            try v3Context.save()
+                            v3Context.reset()
+                        }
                     }
-                )
-
-                try v3Context.performAndWait {
-                    _ = try v3Context.execute(v3UsersBatchInsertRequest)
                 }
-
-                chunkedV1Users.forEach { v1Context.refresh($0, mergeChanges: false) }
             }
         }
     }
@@ -286,48 +331,38 @@ extension PersistentContainer.V3 {
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
         try v1Context.performAndWait {
-            let v1UserDetailsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "UserDetail")
-            v1UserDetailsFetchRequest.fetchBatchSize = 10000
-            v1UserDetailsFetchRequest.returnsObjectsAsFaults = false
+            try autoreleasepool {
+                let v1UserDetailsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "UserDetail")
+                v1UserDetailsFetchRequest.fetchBatchSize = 10000
+                v1UserDetailsFetchRequest.includesPendingChanges = false
+                v1UserDetailsFetchRequest.returnsObjectsAsFaults = false
+                v1UserDetailsFetchRequest.relationshipKeyPathsForPrefetching = ["user"]
 
-            let v1UserDetails = try v1Context.fetch(v1UserDetailsFetchRequest)
+                let v1UserDetails = try v1Context.fetch(v1UserDetailsFetchRequest)
 
-            guard v1UserDetails.count > 1 else { return }
+                guard v1UserDetails.count > 0 else { return }
 
-            for chunkedV1UserDetails in v1UserDetails.chunks(ofCount: v1UserDetailsFetchRequest.fetchBatchSize) {
-                let v3UserDetailsBatchInsertRequest = NSBatchInsertRequest(
-                    entity: ManagedUserDetail.entity(),
-                    objects: chunkedV1UserDetails.map { v1UserDetail in
-                        [
-                            "blockingUserIDs": v1UserDetail.value(forKey: "blockingUserIDs") as Any,
-                            "creationDate": v1UserDetail.value(forKey: "creationDate") as Any,
-                            "followerUserIDs": v1UserDetail.value(forKey: "followerUserIDs") as Any,
-                            "followerUsersCount": v1UserDetail.value(forKey: "followerUsersCount") as Any,
-                            "followingUserIDs": v1UserDetail.value(forKey: "followingUserIDs") as Any,
-                            "followingUsersCount": v1UserDetail.value(forKey: "followingUsersCount") as Any,
-                            "isProtected": v1UserDetail.value(forKey: "isProtected") as Any,
-                            "isVerified": v1UserDetail.value(forKey: "isVerified") as Any,
-                            "listedCount": v1UserDetail.value(forKey: "listedCount") as Any,
-                            "location": v1UserDetail.value(forKey: "location") as Any,
-                            "mutingUserIDs": v1UserDetail.value(forKey: "mutingUserIDs") as Any,
-                            "name": v1UserDetail.value(forKey: "name") as Any,
-                            "profileHeaderImageURL": v1UserDetail.value(forKey: "profileHeaderImageURL") as Any,
-                            "profileImageURL": v1UserDetail.value(forKey: "profileImageURL") as Any,
-                            "tweetsCount": v1UserDetail.value(forKey: "tweetsCount") as Any,
-                            "url": v1UserDetail.value(forKey: "url") as Any,
-                            "userAttributedDescription": v1UserDetail.value(forKey: "userAttributedDescription") as Any,
-                            "userCreationDate": v1UserDetail.value(forKey: "userCreationDate") as Any,
-                            "userID": v1UserDetail.value(forKeyPath: "user.id") as Any,
-                            "username": v1UserDetail.value(forKey: "username") as Any,
-                        ]
+                for chunkedV1UserDetails in v1UserDetails.chunks(ofCount: v1UserDetailsFetchRequest.fetchBatchSize) {
+                    try v3Context.performAndWait {
+                        try autoreleasepool {
+                            for v1UserDetail in chunkedV1UserDetails {
+                                let v3UserDetail = NSManagedObject(entity: managedObjectModel.entitiesByName["UserDetail"]!, insertInto: v3Context)
+
+                                v1UserDetail.committedValues(forKeys: nil).forEach {
+                                    switch $0.key {
+                                    case "user":
+                                        v3UserDetail.setValue(v1UserDetail.value(forKeyPath: "user.id"), forKey: "userID")
+                                    default:
+                                        v3UserDetail.setValue($0.value is NSNull ? nil : $0.value, forKey: $0.key)
+                                    }
+                                }
+                            }
+
+                            try v3Context.save()
+                            v3Context.reset()
+                        }
                     }
-                )
-
-                try v3Context.performAndWait {
-                    _ = try v3Context.execute(v3UserDetailsBatchInsertRequest)
                 }
-
-                chunkedV1UserDetails.forEach { v1Context.refresh($0, mergeChanges: false) }
             }
         }
     }
@@ -337,33 +372,68 @@ extension PersistentContainer.V3 {
         let v3Context = v3PersistentContainer.newBackgroundContext()
 
         try v1Context.performAndWait {
-            let v1DataAssetsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "DataAsset")
-            v1DataAssetsFetchRequest.fetchBatchSize = 200
-            v1DataAssetsFetchRequest.returnsObjectsAsFaults = false
+            try autoreleasepool {
+                let v1DataAssetsFetchRequest = NSFetchRequest<NSManagedObject>(entityName: "DataAsset")
+                v1DataAssetsFetchRequest.fetchBatchSize = 200
+                v1DataAssetsFetchRequest.includesPendingChanges = false
+                v1DataAssetsFetchRequest.returnsObjectsAsFaults = false
 
-            let v1DataAssets = try v1Context.fetch(v1DataAssetsFetchRequest)
+                let v1DataAssets = try v1Context.fetch(v1DataAssetsFetchRequest)
 
-            guard v1DataAssets.count > 1 else { return }
+                guard v1DataAssets.count > 0 else { return }
 
-            for chunkedV1DataAssets in v1DataAssets.chunks(ofCount: v1DataAssetsFetchRequest.fetchBatchSize) {
-                let v3UserDataAssetsInsertRequest = NSBatchInsertRequest(
-                    entity: ManagedUserDataAsset.entity(),
-                    objects: chunkedV1DataAssets.map { v1DataAsset in
-                        [
-                            "creationDate": v1DataAsset.value(forKey: "creationDate") as Any,
-                            "data": v1DataAsset.value(forKey: "data") as Any,
-                            "dataMIMEType": v1DataAsset.value(forKey: "dataMIMEType") as Any,
-                            "dataSHA512Hash": v1DataAsset.value(forKey: "dataSHA512Hash") as Any,
-                            "url": v1DataAsset.value(forKey: "url") as Any,
-                        ]
+                for chunkedV1DataAssets in v1DataAssets.chunks(ofCount: v1DataAssetsFetchRequest.fetchBatchSize) {
+                    try v3Context.performAndWait {
+                        try autoreleasepool {
+                            for v1DataAsset in chunkedV1DataAssets {
+                                let v3UserDataAsset = NSManagedObject(entity: managedObjectModel.entitiesByName["UserDataAsset"]!, insertInto: v3Context)
+
+                                v1DataAsset.committedValues(forKeys: nil).forEach {
+                                    switch $0.key {
+                                    default:
+                                        v3UserDataAsset.setValue($0.value is NSNull ? nil : $0.value, forKey: $0.key)
+                                    }
+                                }
+                            }
+
+                            try v3Context.save()
+                            v3Context.reset()
+                        }
                     }
-                )
+                }
+            }
+        }
+    }
 
-                try v3Context.performAndWait {
-                    _ = try v3Context.execute(v3UserDataAssetsInsertRequest)
+    private static func deleteV1CloudKitPrivateRecordZones() {
+        let containers: [CKContainer] = [
+            .init(identifier: PersistentContainer.V1.defaultCloudKitIdentifier),
+            .init(identifier: PersistentContainer.V1.accountsCloudKitIdentifier),
+            .init(identifier: PersistentContainer.V1.dataAssetsCloudKitIdentifier),
+        ]
+
+        for container in containers {
+            container.privateCloudDatabase.fetchAllRecordZones { zones, error in
+                guard let zones = zones, error == nil else {
+                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                        .error("Error fetching zones.")
+                    return
                 }
 
-                chunkedV1DataAssets.forEach { v1Context.refresh($0, mergeChanges: false) }
+                let zoneIDs = zones.map { $0.zoneID }
+                let deletionOperation = CKModifyRecordZonesOperation(recordZonesToSave: nil, recordZoneIDsToDelete: zoneIDs)
+
+                deletionOperation.modifyRecordZonesResultBlock = { result in
+                    do {
+                        try result.get()
+                    } catch {
+                        Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                            .error("Error deleting records: \(error as NSError, privacy: .public)")
+                    }
+
+                }
+
+                container.privateCloudDatabase.add(deletionOperation)
             }
         }
     }
