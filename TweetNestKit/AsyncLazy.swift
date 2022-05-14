@@ -11,7 +11,7 @@ actor AsyncLazy<Value> {
     enum Status {
         case uninitialized
         case initializing
-        case initialized(Value)
+        case initialized(Result<Value, Error>)
     }
 
     private let initializer: () async throws -> Value
@@ -27,14 +27,19 @@ actor AsyncLazy<Value> {
             switch value {
             case .uninitialized:
                 self.value = .initializing
-                let value = try await initializer()
-                self.value = .initialized(value)
 
-                return value
+                do {
+                    let value = try await initializer()
+                    self.value = .initialized(.success(value))
+                } catch {
+                    self.value = .initialized(.failure(error))
+                }
+
+                return try await self.wrappedValue
             case .initializing:
                 return try await self.wrappedValue
-            case .initialized(let value):
-                return value
+            case .initialized(let result):
+                return try result.get()
             }
         }
     }
