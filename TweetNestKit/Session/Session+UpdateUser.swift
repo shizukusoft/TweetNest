@@ -146,7 +146,7 @@ extension Session {
             }
 
             return try await withThrowingTaskGroup(
-                of: ([(Twitter.User.ID, UserDetailChanges)], [DataAssetsURLSessionManager.DownloadRequest]).self
+                of: ([(Twitter.User.ID, UserDetailChanges)], [UserDataAssetsURLSessionManager.DownloadRequest]).self
             ) { chunkedUsersProcessingTaskGroup in
                 for try await chunkedUsers in chunkedUsersFetchTaskGroup {
                     chunkedUsersProcessingTaskGroup.addTask {
@@ -157,8 +157,8 @@ extension Session {
                             chunkedUsersProcessingContext.undoManager = nil
 
                             let results = try await withThrowingTaskGroup(
-                                of: (Twitter.User.ID, UserDetailChanges, [DataAssetsURLSessionManager.DownloadRequest]).self,
-                                returning: ([(Twitter.User.ID, UserDetailChanges)], [DataAssetsURLSessionManager.DownloadRequest]).self
+                                of: (Twitter.User.ID, UserDetailChanges, [UserDataAssetsURLSessionManager.DownloadRequest]).self,
+                                returning: ([(Twitter.User.ID, UserDetailChanges)], [UserDataAssetsURLSessionManager.DownloadRequest]).self
                             ) { userProcessingTaskGroup in
                                 for twitterUser in chunkedUsers.0 {
                                     let userID = String(twitterUser.id)
@@ -191,10 +191,10 @@ extension Session {
 
                                         let downloadRequests = [
                                             twitterUser.profileImageOriginalURL.flatMap {
-                                                DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.defaultPriority, expectsToReceiveFileSize: 1 * 1024 * 1024)
+                                                UserDataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.defaultPriority, expectsToReceiveFileSize: 1 * 1024 * 1024)
                                             },
                                             twitterUser.profileBannerOriginalURL.flatMap {
-                                                DataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.lowPriority, expectsToReceiveFileSize: 5 * 1024 * 1024)
+                                                UserDataAssetsURLSessionManager.DownloadRequest(url: $0, priority: URLSessionTask.lowPriority, expectsToReceiveFileSize: 5 * 1024 * 1024)
                                             },
                                         ].compacted()
 
@@ -203,7 +203,7 @@ extension Session {
                                 }
 
                                 return try await userProcessingTaskGroup.reduce(
-                                    into: ([(Twitter.User.ID, UserDetailChanges)](), [DataAssetsURLSessionManager.DownloadRequest]())
+                                    into: ([(Twitter.User.ID, UserDetailChanges)](), [UserDataAssetsURLSessionManager.DownloadRequest]())
                                 ) { partialResult, element in
                                     partialResult.0.append((element.0, element.1))
                                     partialResult.1.append(contentsOf: element.2)
@@ -238,9 +238,9 @@ extension Session {
                     }
                 }
 
-                var dataAssetsDownloadRequests = Set<DataAssetsURLSessionManager.DownloadRequest>()
+                var dataAssetsDownloadRequests = Set<UserDataAssetsURLSessionManager.DownloadRequest>()
                 defer {
-                    Task.detached { [dataAssetsURLSessionManager = self.dataAssetsURLSessionManager, dataAssetsDownloadRequests] in
+                    Task.detached { [dataAssetsURLSessionManager = self.userDataAssetsURLSessionManager, dataAssetsDownloadRequests] in
                         try await withExtendedBackgroundExecution {
                             await dataAssetsURLSessionManager.download(dataAssetsDownloadRequests)
                         }

@@ -27,7 +27,7 @@ public class Session {
 
     let sessionActor = SessionActor()
     public let persistentContainer: PersistentContainer
-    let dataAssetsURLSessionManager: DataAssetsURLSessionManager
+    let userDataAssetsURLSessionManager: UserDataAssetsURLSessionManager
 
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
@@ -66,11 +66,11 @@ public class Session {
         let persistentContainer = PersistentContainer(inMemory: inMemory)
         self.persistentContainer = persistentContainer
 
-        let dataAssetsURLSessionManager = DataAssetsURLSessionManager(
+        let dataAssetsURLSessionManager = UserDataAssetsURLSessionManager(
             isShared: isShared,
             persistentContainer: persistentContainer
         )
-        self.dataAssetsURLSessionManager = dataAssetsURLSessionManager
+        self.userDataAssetsURLSessionManager = dataAssetsURLSessionManager
 
         _ = self.persistentStoreRemoteChangeNotification
         _ = self.fetchNewDataIntervalObserver
@@ -118,7 +118,7 @@ public class Session {
     }
 
     deinit {
-        dataAssetsURLSessionManager.invalidate()
+        userDataAssetsURLSessionManager.invalidate()
     }
 }
 
@@ -162,9 +162,9 @@ extension Session {
     @discardableResult
     public static func handleEventsForBackgroundURLSession(_ identifier: String, completionHandler: @escaping () -> Void) -> Bool {
         switch identifier {
-        case DataAssetsURLSessionManager.backgroundURLSessionIdentifier:
+        case UserDataAssetsURLSessionManager.backgroundURLSessionIdentifier:
             Task {
-                await Session.shared.dataAssetsURLSessionManager.handleBackgroundURLSessionEvents(completionHandler: completionHandler)
+                await Session.shared.userDataAssetsURLSessionManager.handleBackgroundURLSessionEvents(completionHandler: completionHandler)
             }
             return true
         default:

@@ -88,7 +88,7 @@
 		193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
 		193AFB6F26CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
-		193B995C280E585E00A59984 /* DataAssetsURLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */; };
+		193B995C280E585E00A59984 /* UserDataAssetsURLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995B280E585E00A59984 /* UserDataAssetsURLSessionManager.swift */; };
 		193B995E280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */; };
 		193B995F280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */; };
 		193B9960280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */; };
@@ -431,7 +431,7 @@
 		193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+UpdateAccount.swift"; sourceTree = "<group>"; };
 		193AFB6826CA3411008BFF67 /* SettingsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMainView.swift; sourceTree = "<group>"; };
 		193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountView.swift; sourceTree = "<group>"; };
-		193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
+		193B995B280E585E00A59984 /* UserDataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
 		193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFetchNewDataView.swift; sourceTree = "<group>"; };
 		194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserView+FootnotesView.swift"; sourceTree = "<group>"; };
 		1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSections.swift; sourceTree = "<group>"; };
@@ -999,7 +999,7 @@
 			children = (
 				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
 				19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */,
-				193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */,
+				193B995B280E585E00A59984 /* UserDataAssetsURLSessionManager.swift */,
 				19EE519D280D110B0068CBCB /* Lazy.swift */,
 				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
@@ -1744,7 +1744,7 @@
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
 				19469AC3282FC3700011A951 /* PersistentContainer+V3_Migration.swift in Sources */,
 				19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */,
-				193B995C280E585E00A59984 /* DataAssetsURLSessionManager.swift in Sources */,
+				193B995C280E585E00A59984 /* UserDataAssetsURLSessionManager.swift in Sources */,
 				1985B42D26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift in Sources */,
 				19AFA14126E837B800764D79 /* BackgroundTaskScheduler.swift in Sources */,
 				1978AF13280FE1A90081D481 /* SessionActor.swift in Sources */,

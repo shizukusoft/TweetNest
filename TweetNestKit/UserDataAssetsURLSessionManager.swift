@@ -1,5 +1,5 @@
 //
-//  DataAssetsURLSessionManager.swift
+//  UserDataAssetsURLSessionManager.swift
 //  TweetNestKit
 //
 //  Created by 강재홍 on 2022/04/19.
@@ -11,8 +11,8 @@ import UnifiedLogging
 import OrderedCollections
 import CoreData
 
-class DataAssetsURLSessionManager: NSObject {
-    static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".data-assets"
+class UserDataAssetsURLSessionManager: NSObject {
+    static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".user-data-assets"
 
     @MainActor
     private var _backgroundURLSessionEventsCompletionHandler: (() -> Void)?
@@ -45,7 +45,7 @@ class DataAssetsURLSessionManager: NSObject {
     private let isShared: Bool
 
     private let dispatchGroup = DispatchGroup()
-    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: DataAssetsURLSessionManager.self))
+    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: UserDataAssetsURLSessionManager.self))
     private let persistentContainer: PersistentContainer
 
     private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
@@ -70,7 +70,7 @@ class DataAssetsURLSessionManager: NSObject {
     }
 }
 
-extension DataAssetsURLSessionManager {
+extension UserDataAssetsURLSessionManager {
     struct DownloadRequest: Equatable, Hashable {
         var urlRequest: URLRequest
         var priority: Float
@@ -132,7 +132,7 @@ extension DataAssetsURLSessionManager {
     }
 }
 
-extension DataAssetsURLSessionManager: URLSessionDelegate {
+extension UserDataAssetsURLSessionManager: URLSessionDelegate {
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         dispatchGroup.notify(queue: .global(qos: .default)) {
             DispatchQueue.main.async {
@@ -148,7 +148,7 @@ extension DataAssetsURLSessionManager: URLSessionDelegate {
     }
 }
 
-extension DataAssetsURLSessionManager: URLSessionTaskDelegate {
+extension UserDataAssetsURLSessionManager: URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
             logger.error("\(error as NSError, privacy: .public)")
@@ -156,7 +156,7 @@ extension DataAssetsURLSessionManager: URLSessionTaskDelegate {
     }
 }
 
-extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
+extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let originalRequestURL = downloadTask.originalRequest?.url else { return }
 
