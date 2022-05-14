@@ -90,8 +90,6 @@ extension UserDataAssetsURLSessionManager {
     }
 
     func download<S>(_ downloadRequests: S) async where S: Sequence, S.Element == DownloadRequest {
-        let downloadRequests = OrderedSet(downloadRequests)
-
         return await withCheckedContinuation { [urlSession] continuation in
             urlSession.getTasksWithCompletionHandler { _, _, downloadTasks in
                 let pendingDownloadTasks = Dictionary(
@@ -110,20 +108,26 @@ extension UserDataAssetsURLSessionManager {
                     by: \.originalRequest
                 )
 
-                for downloadRequest in downloadRequests {
-                    var urlRequest = downloadRequest.urlRequest
-                    urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+                let newDownloadTasks: [URLSessionDownloadTask] = downloadRequests.lazy
+                    .uniqued()
+                    .compactMap {
+                        var urlRequest = $0.urlRequest
+                        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
 
-                    guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
-                        continue
+                        guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
+                            return nil
+                        }
+
+                        let downloadTask = urlSession.downloadTask(with: urlRequest)
+                        downloadTask.countOfBytesClientExpectsToSend = 1024
+                        downloadTask.countOfBytesClientExpectsToReceive = $0.expectsToReceiveFileSize
+                        downloadTask.priority = $0.priority
+
+                        return downloadTask
                     }
 
-                    let downloadTask = urlSession.downloadTask(with: urlRequest)
-                    downloadTask.countOfBytesClientExpectsToSend = 1024
-                    downloadTask.countOfBytesClientExpectsToReceive = downloadRequest.expectsToReceiveFileSize
-                    downloadTask.priority = downloadRequest.priority
-
-                    downloadTask.resume()
+                newDownloadTasks.forEach {
+                    $0.resume()
                 }
 
                 continuation.resume()

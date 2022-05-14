@@ -239,20 +239,22 @@ extension Session {
                 }
 
                 var dataAssetsDownloadRequests = Set<UserDataAssetsURLSessionManager.DownloadRequest>()
-                defer {
-                    Task.detached { [dataAssetsURLSessionManager = self.userDataAssetsURLSessionManager, dataAssetsDownloadRequests] in
-                        try await withExtendedBackgroundExecution {
-                            await dataAssetsURLSessionManager.download(dataAssetsDownloadRequests)
+                do {
+                    let results = try await chunkedUsersProcessingTaskGroup.reduce(into: [Twitter.User.ID: UserDetailChanges]()) { totalResults, chunkedResults in
+                        chunkedResults.0.forEach {
+                            totalResults[$0.0] = $0.1
                         }
-                    }
-                }
 
-                return try await chunkedUsersProcessingTaskGroup.reduce(into: [:]) { totalResults, chunkedResults in
-                    chunkedResults.0.forEach {
-                        totalResults[$0.0] = $0.1
+                        dataAssetsDownloadRequests.formUnion(chunkedResults.1)
                     }
 
-                    dataAssetsDownloadRequests.formUnion(chunkedResults.1)
+                    await self.userDataAssetsURLSessionManager.download(dataAssetsDownloadRequests)
+
+                    return results
+                } catch {
+                    await self.userDataAssetsURLSessionManager.download(dataAssetsDownloadRequests)
+
+                    throw error
                 }
             }
         }
