@@ -101,6 +101,7 @@
 		1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */; };
 		1945F84226F0D3D900CE4EFB /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1945F84126F0D3D900CE4EFB /* CloudKit.framework */; };
 		1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1946203C26D68F0E003DB010 /* CloudKit.framework */; };
+		19469AC3282FC3700011A951 /* PersistentContainer+V3_Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19469AC2282FC3700011A951 /* PersistentContainer+V3_Migration.swift */; };
 		194EF57E26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		194EF57F26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
@@ -437,6 +438,7 @@
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1945F84126F0D3D900CE4EFB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1946203C26D68F0E003DB010 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
+		19469AC2282FC3700011A951 /* PersistentContainer+V3_Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V3_Migration.swift"; sourceTree = "<group>"; };
 		194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppSidebarAccountsSections+Section.swift"; sourceTree = "<group>"; };
 		1951EBEA270850FC00311B3C /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
 		195392C027E636130042B1CA /* UserRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRows.swift; sourceTree = "<group>"; };
@@ -1052,6 +1054,7 @@
 				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
 				196BF03F2820EFF50030B757 /* PersistentContainer+V1.swift */,
 				196BF0412820F0F80030B757 /* PersistentContainer+V3.swift */,
+				19469AC2282FC3700011A951 /* PersistentContainer+V3_Migration.swift */,
 				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
 				198CC4B62820244600D3C7EA /* TweetNestKitV3.xcdatamodeld */,
 			);
@@ -1739,6 +1742,7 @@
 				196BF03C2820D1BD0030B757 /* ManagedUser+CoreDataProperties.swift in Sources */,
 				19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */,
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
+				19469AC3282FC3700011A951 /* PersistentContainer+V3_Migration.swift in Sources */,
 				19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */,
 				193B995C280E585E00A59984 /* DataAssetsURLSessionManager.swift in Sources */,
 				1985B42D26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift in Sources */,
