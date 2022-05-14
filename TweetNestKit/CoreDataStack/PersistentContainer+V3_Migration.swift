@@ -103,14 +103,24 @@ extension PersistentContainer.V3 {
     private static func destoryPersistentContainer(_ persistentContainer: NSPersistentContainer) throws {
         try persistentContainer.persistentStoreCoordinator.performAndWait {
             for persistentStore in persistentContainer.persistentStoreCoordinator.persistentStores {
+                guard let persistentStoreURL = persistentStore.url else {
+                    continue
+                }
+
                 try persistentContainer.persistentStoreCoordinator.destroyPersistentStore(
-                    at: persistentStore.url!,
-                    ofType: persistentStore.type,
+                    at: persistentStoreURL,
+                    type: NSPersistentStore.StoreType(rawValue: persistentStore.type),
                     options: [
-                        NSReadOnlyPersistentStoreOption: false,
                         NSPersistentStoreForceDestroyOption: true
                     ]
                 )
+
+                do {
+                    try FileManager.default.removeItem(at: persistentStoreURL)
+                } catch {
+                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
+                        .error("\(error as NSError, privacy: .public)")
+                }
             }
         }
     }
