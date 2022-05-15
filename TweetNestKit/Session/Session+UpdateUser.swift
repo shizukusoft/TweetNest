@@ -210,27 +210,27 @@ extension Session {
                                 }
                             }
 
-                            try await context.perform(schedule: .enqueued) {
-                                try chunkedUsersProcessingContext.performAndWait {
-                                    guard chunkedUsersProcessingContext.hasChanges else {
-                                        return
+                            try await chunkedUsersProcessingContext.perform(schedule: .enqueued) {
+                                try context.performAndWait {
+                                    try autoreleasepool {
+                                        if chunkedUsersProcessingContext.hasChanges {
+                                            try chunkedUsersProcessingContext.save()
+                                        }
+
+                                        let userFetchRequest = ManagedUser.fetchRequest()
+                                        userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] } )
+                                        userFetchRequest.propertiesToFetch = []
+                                        userFetchRequest.returnsObjectsAsFaults = false
+
+                                        let users = try context.fetch(userFetchRequest)
+
+                                        for user in users {
+                                            user.lastUpdateEndDate = Date()
+                                        }
+
+                                        try context.save()
                                     }
-
-                                    try chunkedUsersProcessingContext.save()
                                 }
-
-                                let userFetchRequest = ManagedUser.fetchRequest()
-                                userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] } )
-                                userFetchRequest.propertiesToFetch = []
-                                userFetchRequest.returnsObjectsAsFaults = false
-
-                                let users = try context.fetch(userFetchRequest)
-
-                                for user in users {
-                                    user.lastUpdateEndDate = Date()
-                                }
-
-                                try context.save()
                             }
 
                             return results
