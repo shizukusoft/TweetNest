@@ -23,7 +23,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     public override var viewContext: NSManagedObjectContext {
         let viewContext = super.viewContext
         viewContext.automaticallyMergesChangesFromParent = true
-        viewContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
+        viewContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         return viewContext
     }
 
@@ -107,7 +107,7 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     public override func newBackgroundContext() -> NSManagedObjectContext {
         let backgroundContext = super.newBackgroundContext()
         backgroundContext.automaticallyMergesChangesFromParent = true
-        backgroundContext.mergePolicy = NSMergePolicy(merge: NSMergePolicyType.mergeByPropertyStoreTrumpMergePolicyType)
+        backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         return backgroundContext
     }
 }
