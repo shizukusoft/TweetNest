@@ -20,23 +20,31 @@ extension Session {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
 
-    func handlePersistentStoreRemoteChanges(_ persistentHistoryToken: NSPersistentHistoryToken?) {
+    private static var lastPersistentHistoryToken: NSPersistentHistoryToken? {
+        get throws {
+            try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
+                try NSKeyedUnarchiver.unarchivedObject(
+                    ofClass: NSPersistentHistoryToken.self,
+                    from: $0
+                )
+            }
+        }
+    }
+
+    private static func setLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) throws {
+        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try newValue.flatMap {
+            try NSKeyedArchiver.archivedData(
+                withRootObject: $0,
+                requiringSecureCoding: true
+            )
+        }
+    }
+
+    func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?) {
         do {
             try withExtendedBackgroundExecution {
-                let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
-                    try NSKeyedUnarchiver.unarchivedObject(
-                        ofClass: NSPersistentHistoryToken.self,
-                        from: $0
-                    )
-                }
-
-                guard let lastPersistentHistoryToken = lastPersistentHistoryToken else {
-                    if let persistentHistoryToken = persistentHistoryToken {
-                        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
-                            withRootObject: persistentHistoryToken,
-                            requiringSecureCoding: true
-                        )
-                    }
+                guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
+                    try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
 
                     return
                 }
@@ -54,6 +62,8 @@ extension Session {
                     let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
                     let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
                 else {
+                    try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+
                     return
                 }
 
@@ -83,14 +93,16 @@ extension Session {
                     }
                 }
 
-                TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
-                    withRootObject: newLastPersistentHistoryToken,
-                    requiringSecureCoding: true
-                )
+                try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
             }
         } catch {
             self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
-            TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = nil
+
+            do {
+                try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+            } catch {
+                try? Self.setLastPersistentHistoryToken(nil)
+            }
         }
     }
 
