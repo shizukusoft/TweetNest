@@ -291,9 +291,8 @@ extension Session {
 
                                 return user
                             }()
-                            let lastUpdateStartDate = user.lastUpdateStartDate ?? .distantPast
 
-                            guard lastUpdateStartDate < Date(timeIntervalSinceNow: -60) else {
+                            guard (user.lastUpdateStartDate ?? .distantPast) < Date(timeIntervalSinceNow: -60) else {
                                 return nil
                             }
 
@@ -331,7 +330,7 @@ extension Session {
     private func updateUsers(
         _ users: [TwitterV1.User],
         usersFetchDates: ClosedRange<Date>,
-        userObjectIDsByUserID: [Twitter.User.ID : NSManagedObjectID],
+        userObjectIDsByUserID: [Twitter.User.ID: NSManagedObjectID],
         addtionalUserInfos: [Twitter.User.ID: AdditionalUserInfo] = [:],
         context: NSManagedObjectContext
     ) async throws -> ([(Twitter.User.ID, UserDetailChanges)], [UserDataAssetsURLSessionManager.DownloadRequest]) {
@@ -403,7 +402,7 @@ extension Session {
                         }
 
                         let userFetchRequest = ManagedUser.fetchRequest()
-                        userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] } )
+                        userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] })
                         userFetchRequest.returnsObjectsAsFaults = false
 
                         let users = try context.fetch(userFetchRequest)
