@@ -61,7 +61,7 @@ struct UserDetailProfileView: View {
             }
             .padding([.top, .bottom], 8)
 
-            if let location = userDetail.location {
+            if let location = userDetail.location, !location.isEmpty {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 Label {
                     TweetNestStack {
