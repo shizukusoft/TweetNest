@@ -16,6 +16,10 @@ extension UserView {
         var body: some View {
             VStack(alignment: .leading) {
                 Text(userID.displayUserID)
+                    #if os(macOS) || os(iOS)
+                    .textSelection(.enabled)
+                    #endif
+
                 if let user = user {
                     UpdatesText(user: user)
                 }

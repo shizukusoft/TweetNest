@@ -20,77 +20,93 @@ extension Session {
         Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
     }
 
-    func handlePersistentStoreRemoteChanges(_ persistentHistoryToken: NSPersistentHistoryToken?) {
+    private static var lastPersistentHistoryToken: NSPersistentHistoryToken? {
+        get throws {
+            try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
+                try NSKeyedUnarchiver.unarchivedObject(
+                    ofClass: NSPersistentHistoryToken.self,
+                    from: $0
+                )
+            }
+        }
+    }
+
+    private static func setLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) throws {
+        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try newValue.flatMap {
+            try NSKeyedArchiver.archivedData(
+                withRootObject: $0,
+                requiringSecureCoding: true
+            )
+        }
+    }
+
+    func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?) {
         do {
             try withExtendedBackgroundExecution {
-                let lastPersistentHistoryToken = try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
-                    try NSKeyedUnarchiver.unarchivedObject(
-                        ofClass: NSPersistentHistoryToken.self,
-                        from: $0
-                    )
-                }
+                do {
+                    guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
+                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
 
-                guard let lastPersistentHistoryToken = lastPersistentHistoryToken else {
-                    if let persistentHistoryToken = persistentHistoryToken {
-                        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
-                            withRootObject: persistentHistoryToken,
-                            requiringSecureCoding: true
-                        )
+                        return
                     }
 
-                    return
-                }
-
-                let context = self.persistentContainer.newBackgroundContext()
-                let persistentHistoryResult = try context.performAndWait {
-                    try context.execute(
-                        NSPersistentHistoryChangeRequest.fetchHistory(
-                            after: lastPersistentHistoryToken
+                    let context = self.persistentContainer.newBackgroundContext()
+                    let persistentHistoryResult = try context.performAndWait {
+                        try context.execute(
+                            NSPersistentHistoryChangeRequest.fetchHistory(
+                                after: lastPersistentHistoryToken
+                            )
                         )
-                    )
-                } as? NSPersistentHistoryResult
+                    } as? NSPersistentHistoryResult
 
-                guard
-                    let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
-                    let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
-                else {
-                    return
-                }
+                    guard
+                        let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
+                        let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
+                    else {
+                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
 
-                Task.detached {
-                    await withTaskGroup(of: Void.self) { taskGroup in
-                        taskGroup.addTask {
-                            await self.updateNotifications(transactions: persistentHistoryTransactions)
-                        }
-
-                        taskGroup.addTask {
-                            await self.updateAccountCredential(transactions: persistentHistoryTransactions)
-                        }
-
-                        taskGroup.addTask(priority: .utility) {
-                            await self.cleansingAccount(transactions: persistentHistoryTransactions)
-                        }
-
-                        taskGroup.addTask(priority: .utility) {
-                            await self.cleansingUser(transactions: persistentHistoryTransactions)
-                        }
-
-                        taskGroup.addTask(priority: .utility) {
-                            await self.cleansingUserDataAssets(transactions: persistentHistoryTransactions)
-                        }
-
-                        await taskGroup.waitForAll()
+                        return
                     }
-                }
 
-                TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try NSKeyedArchiver.archivedData(
-                    withRootObject: newLastPersistentHistoryToken,
-                    requiringSecureCoding: true
-                )
+                    Task.detached {
+                        await self.handlePersistentHistoryTransactions(persistentHistoryTransactions)
+                    }
+
+                    try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
+                } catch {
+                    try? Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+
+                    throw error
+                }
             }
         } catch {
             self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
-            TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = nil
+        }
+    }
+
+    private func handlePersistentHistoryTransactions(_ persistentHistoryTransactions: [NSPersistentHistoryTransaction]) async {
+        await withTaskGroup(of: Void.self) { taskGroup in
+            taskGroup.addTask {
+                await self.updateNotifications(transactions: persistentHistoryTransactions)
+            }
+
+            taskGroup.addTask {
+                await self.updateAccountCredential(transactions: persistentHistoryTransactions)
+            }
+
+            taskGroup.addTask(priority: .utility) {
+                await self.cleansingAccount(transactions: persistentHistoryTransactions)
+            }
+
+            taskGroup.addTask(priority: .utility) {
+                await self.cleansingUser(transactions: persistentHistoryTransactions)
+            }
+
+            taskGroup.addTask(priority: .utility) {
+                await self.cleansingUserDataAssets(transactions: persistentHistoryTransactions)
+            }
+
+            await taskGroup.waitForAll()
         }
     }
 
@@ -362,15 +378,22 @@ extension Session {
                         )
                     }
 
-                    Task.detached(priority: .utility) { [needsToBeRemovedObjectIDs = changes.keys.subtracting(hasChangesObjectIDs)] in
-                        let cloudKitRecordIDs = self.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
+                    let needsToBeRemovedObjectIDs = changes.keys.subtracting(hasChangesObjectIDs)
+                    Task.detached(priority: .utility) {
+                        do {
+                            try withExtendedBackgroundExecution(expirationHandler: nil) {
+                                let cloudKitRecordIDs = self.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
 
-                        let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {
-                            [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                                let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {
+                                    [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                                }
+
+                                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: userNotificationIdentifiers)
+                                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
+                            }
+                        } catch {
+                            self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
                         }
-
-                        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: userNotificationIdentifiers)
-                        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
                     }
                 }
             }

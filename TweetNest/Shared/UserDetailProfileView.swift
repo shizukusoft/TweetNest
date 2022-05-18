@@ -37,8 +37,15 @@ struct UserDetailProfileView: View {
 
                     VStack(alignment: .leading, spacing: 4) {
                         Text(verbatim: userDetail.name ?? userDetail.userID?.displayUserID ?? "")
-                        if let username = userDetail.username {
-                            Text(verbatim: "@\(username)")
+                            #if os(macOS) || os(iOS)
+                            .textSelection(.enabled)
+                            #endif
+
+                        if let displayUsername = userDetail.displayUsername {
+                            Text(verbatim: displayUsername)
+                                #if os(macOS) || os(iOS)
+                                .textSelection(.enabled)
+                                #endif
                                 .foregroundColor(.secondary)
                         }
                     }
@@ -46,12 +53,15 @@ struct UserDetailProfileView: View {
 
                 if let userAttributedDescription = userDetail.userAttributedDescription.flatMap({AttributedString($0)}), userAttributedDescription.startIndex != userAttributedDescription.endIndex {
                     Text(userAttributedDescription)
+                        #if os(macOS) || os(iOS)
+                        .textSelection(.enabled)
+                        #endif
                         .layoutPriority(1)
                 }
             }
             .padding([.top, .bottom], 8)
 
-            if let location = userDetail.location {
+            if let location = userDetail.location, !location.isEmpty {
                 let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
                 Label {
                     TweetNestStack {
@@ -71,6 +81,9 @@ struct UserDetailProfileView: View {
                         }
                         .lineLimit(1)
                         .allowsTightening(true)
+                        #if os(macOS) || os(iOS)
+                        .textSelection(.enabled)
+                        #endif
                     }
                 } icon: {
                     Image(systemName: "location")
@@ -93,6 +106,9 @@ struct UserDetailProfileView: View {
                         Link(url.absoluteString, destination: url)
                             .lineLimit(1)
                             .allowsTightening(true)
+                            #if os(macOS) || os(iOS)
+                            .textSelection(.enabled)
+                            #endif
                     }
                 } icon: {
                     Image(systemName: "safari")
@@ -118,6 +134,9 @@ struct UserDetailProfileView: View {
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                         .allowsTightening(true)
+                        #if os(macOS) || os(iOS)
+                        .textSelection(.enabled)
+                        #endif
                     }
                 } icon: {
                     Image(systemName: "calendar")

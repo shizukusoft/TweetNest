@@ -76,6 +76,8 @@ extension UserView {
                         if let creationDate = userDetail.creationDate {
                             Text(creationDate.formatted(date: .numeric, time: .shortened))
                                 .foregroundColor(.secondary)
+                                .lineLimit(1)
+                                .layoutPriority(1)
                         }
                     }
                 }

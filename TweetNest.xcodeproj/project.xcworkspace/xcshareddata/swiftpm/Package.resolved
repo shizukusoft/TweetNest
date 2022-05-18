@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-cminizip-ng.git",
       "state" : {
-        "revision" : "d6b0b99ff157603d297bf3353bcfc431ec2edc32",
-        "version" : "0.0.5"
+        "revision" : "515df869172537c60e6704beb60bc6750b5bea7e",
+        "version" : "0.0.6"
       }
     },
     {
@@ -60,7 +60,7 @@
       "location" : "https://github.com/tweetnest/swift-twitter",
       "state" : {
         "branch" : "develop",
-        "revision" : "d99d835cc24c70792f246780ccbadb8d44f56c6c"
+        "revision" : "b004ce31d583b00fce6771fb538fbb55fdd79e4d"
       }
     },
     {
@@ -77,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-zip.git",
       "state" : {
-        "revision" : "67fb3adb5dfa57f41c3dda8ba42231c2d0ad22fd",
-        "version" : "0.0.3"
+        "revision" : "e91876de8762b9e447607a788c363115903b7810",
+        "version" : "0.0.4"
       }
     }
   ],
