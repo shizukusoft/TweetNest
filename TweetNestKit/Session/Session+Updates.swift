@@ -72,23 +72,32 @@ extension Session {
             }
         }
 
-        let fetchStartDate = Date()
+        let (accountUser, additionalAccountUserInfo, usersFetchDates): (TwitterV1.User, AdditionalUserInfo, ClosedRange<Date>) = try await withExtendedBackgroundExecution {
+            let fetchStartDate = Date()
 
-        async let myBlockingUserIDs = try await withExtendedBackgroundExecution {
-            accountPreferences.fetchBlockingUsers ? try await Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
-        }
+            async let accountUser = TwitterV1.User.me(session: twitterSession)
+            async let myBlockingUserIDs = accountPreferences.fetchBlockingUsers ? try await Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
+            async let myMutingUserIDs = accountPreferences.fetchMutingUsers ? try await Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
 
-        async let myMutingUserIDs = try await withExtendedBackgroundExecution {
-            accountPreferences.fetchMutingUsers ? try await Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
-        }
+            let accountUserID = try await String(accountUser.id)
+            async let followingUserIDs = Twitter.User.followingUserIDs(forUserID: accountUserID, session: twitterSession).userIDs
+            async let followerIDs = Twitter.User.followerIDs(forUserID: accountUserID, session: twitterSession).userIDs
 
-        let accountUser = try await withExtendedBackgroundExecution {
-            try await TwitterV1.User.me(session: twitterSession)
+            let additionalAccountUserInfo = try await AdditionalUserInfo(
+                followingUserIDs: followingUserIDs,
+                followerIDs: followerIDs,
+                blockingUserIDs: myBlockingUserIDs,
+                mutingUserIDs: myMutingUserIDs
+            )
+
+            let fetchEndDate = Date()
+
+            return try await (accountUser, additionalAccountUserInfo, fetchStartDate...fetchEndDate)
         }
 
         let accountUserID = String(accountUser.id)
 
-        async let userObjectIDsByUserID = preflightUsersForUpdating(userIDs: [accountUserID], accountUserID: accountUserID, updateStartDate: fetchStartDate, context: context)
+        async let userObjectIDsByUserID = preflightUsersForUpdating(userIDs: [accountUserID], accountUserID: accountUserID, context: context)
         async let updateAccount: Void = context.perform(schedule: .enqueued) {
             try withExtendedBackgroundExecution {
                 guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
@@ -105,26 +114,9 @@ extension Session {
             }
         }
 
-        async let followingUserIDs = try await withExtendedBackgroundExecution {
-            try await Twitter.User.followingUserIDs(forUserID: accountUserID, session: twitterSession).userIDs
-        }
-
-        async let followerIDs = try await withExtendedBackgroundExecution {
-            try await Twitter.User.followerIDs(forUserID: accountUserID, session: twitterSession).userIDs
-        }
-
-        let additionalAccountUserInfo = try await AdditionalUserInfo(
-            followingUserIDs: followingUserIDs,
-            followerIDs: followerIDs,
-            blockingUserIDs: myBlockingUserIDs,
-            mutingUserIDs: myMutingUserIDs
-        )
-
-        let fetchEndDate = Date()
-
         let accountUserDetailChanges = try await updateUsers(
             [accountUser],
-            usersFetchDates: fetchStartDate...fetchEndDate,
+            usersFetchDates: usersFetchDates,
             userObjectIDsByUserID: userObjectIDsByUserID,
             addtionalUserInfos: [
                 accountUserID: additionalAccountUserInfo
@@ -192,19 +184,20 @@ extension Session {
 
             for chunkedUserIDs in userObjectIDsByUserID.keys.chunks(ofCount: 100) {
                 chunkedUsersFetchTaskGroup.addTask {
-                    let fetchStartDate = Date()
+                    try await withExtendedBackgroundExecution {
+                        let fetchStartDate = Date()
 
-                    let users: [TwitterV1.User] = try await withExtendedBackgroundExecution {
+                        let users: [TwitterV1.User]
                         if userObjectIDsByUserID.count == 1 && chunkedUserIDs.count == 1 {
-                            return try await [TwitterV1.User(id: chunkedUserIDs[chunkedUserIDs.startIndex], session: twitterSession)]
+                            users = try await [TwitterV1.User(id: chunkedUserIDs[chunkedUserIDs.startIndex], session: twitterSession)]
                         } else {
-                            return try await TwitterV1.User.users(ids: Array(chunkedUserIDs), session: twitterSession)
+                            users = try await TwitterV1.User.users(ids: Array(chunkedUserIDs), session: twitterSession)
                         }
+
+                        let fetchEndDate = Date()
+
+                        return (users, fetchStartDate...fetchEndDate)
                     }
-
-                    let fetchEndDate = Date()
-
-                    return (users, fetchStartDate...fetchEndDate)
                 }
             }
 
@@ -248,7 +241,6 @@ extension Session {
     private func preflightUsersForUpdating<S>(
         userIDs: S,
         accountUserID: String,
-        updateStartDate: Date? = nil,
         context: NSManagedObjectContext
     ) async throws -> [Twitter.User.ID: NSManagedObjectID] where S: Sequence, S.Element == Twitter.User.ID {
         try await context.perform { [userIDs = Set(userIDs)] in
@@ -301,7 +293,7 @@ extension Session {
                                 return nil
                             }
 
-                            user.lastUpdateStartDate = updateStartDate ?? Date()
+                            user.lastUpdateStartDate = Date()
 
                             return (userID, user)
                         }
@@ -408,7 +400,8 @@ extension Session {
                         let users = try context.fetch(userFetchRequest)
 
                         for user in users {
-                            user.lastUpdateEndDate = Date()
+                            user.lastUpdateStartDate = usersFetchDates.lowerBound
+                            user.lastUpdateEndDate = usersFetchDates.upperBound
                         }
 
                         if context.hasChanges {
