@@ -82,11 +82,11 @@ extension Session {
             accountPreferences.fetchMutingUsers ? try await Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
         }
 
-        let me = try await withExtendedBackgroundExecution {
+        let accountUser = try await withExtendedBackgroundExecution {
             try await TwitterV1.User.me(session: twitterSession)
         }
 
-        let accountUserID = String(me.id)
+        let accountUserID = String(accountUser.id)
 
         async let userObjectIDsByUserID = preflightUsersForUpdating(userIDs: [accountUserID], accountUserID: accountUserID, updateStartDate: fetchStartDate, context: context)
         async let updateAccount: Void = context.perform(schedule: .enqueued) {
@@ -123,7 +123,7 @@ extension Session {
         let fetchEndDate = Date()
 
         let accountUserDetailChanges = try await updateUsers(
-            [me],
+            [accountUser],
             usersFetchDates: fetchStartDate...fetchEndDate,
             userObjectIDsByUserID: userObjectIDsByUserID,
             addtionalUserInfos: [
@@ -183,9 +183,12 @@ extension Session {
 
         async let accountUpdateResult = userIDs.contains(accountUserID) ? updateAccount(accountObjectID, context: context) : nil
 
-        let twitterSession = try await self.twitterSession(for: accountObjectID)
-        var updatingUsersResult: [Twitter.User.ID: UserDetailChanges] = try await withThrowingTaskGroup(of: ([TwitterV1.User], ClosedRange<Date>).self) { chunkedUsersFetchTaskGroup in
+        var updatingUsersResult = try await withThrowingTaskGroup(
+            of: ([TwitterV1.User], ClosedRange<Date>).self,
+            returning: [Twitter.User.ID: UserDetailChanges].self
+        ) { [userIDs = userIDs.subtracting([accountUserID])] chunkedUsersFetchTaskGroup in
             let userObjectIDsByUserID = try await preflightUsersForUpdating(userIDs: userIDs, accountUserID: accountUserID, context: context)
+            let twitterSession = try await self.twitterSession(for: accountObjectID)
 
             for chunkedUserIDs in userObjectIDsByUserID.keys.chunks(ofCount: 100) {
                 chunkedUsersFetchTaskGroup.addTask {
@@ -247,7 +250,7 @@ extension Session {
         accountUserID: String,
         updateStartDate: Date? = nil,
         context: NSManagedObjectContext
-    ) async throws -> [Twitter.User.ID: NSManagedObjectID?] where S: Sequence, S.Element == Twitter.User.ID {
+    ) async throws -> [Twitter.User.ID: NSManagedObjectID] where S: Sequence, S.Element == Twitter.User.ID {
         try await context.perform { [userIDs = Set(userIDs)] in
             try withExtendedBackgroundExecution {
                 let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
@@ -268,7 +271,7 @@ extension Session {
                 userFetchRequest.sortDescriptors = [
                     NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: false)
                 ]
-                userFetchRequest.propertiesToFetch = ["lastUpdateStartDate"]
+                userFetchRequest.propertiesToFetch = ["id", "lastUpdateStartDate"]
                 userFetchRequest.returnsObjectsAsFaults = false
 
                 let users = try context.fetch(userFetchRequest)
@@ -277,7 +280,7 @@ extension Session {
                     uniquingKeysWith: { first, _ in first }
                 )
 
-                let refinedUserObjectIDByID: [Twitter.User.ID: NSManagedObjectID?] = Dictionary(
+                let refinedUsersByUserID: [Twitter.User.ID: ManagedUser] = Dictionary(
                     uniqueKeysWithValues: userIDs
                         .lazy
                         .compactMap { userID in
@@ -290,7 +293,7 @@ extension Session {
                             }()
                             let lastUpdateStartDate = user.lastUpdateStartDate ?? .distantPast
 
-                            guard lastUpdateStartDate.addingTimeInterval(60) < Date() else {
+                            guard lastUpdateStartDate < Date(timeIntervalSinceNow: -60) else {
                                 return nil
                             }
 
@@ -301,24 +304,17 @@ extension Session {
 
                             user.lastUpdateStartDate = updateStartDate ?? Date()
 
-                            return (userID, user.objectID)
+                            return (userID, user)
                         }
                 )
 
                 if context.hasChanges {
-                    context.perform {
-                        do {
-                            try withExtendedBackgroundExecution {
-                                try context.save()
-                            }
-                        } catch {
-                            Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                .error("\(error as NSError, privacy: .public)")
-                        }
-                    }
+                    try context.save()
                 }
 
-                return refinedUserObjectIDByID
+                return refinedUsersByUserID.mapValues {
+                    $0.objectID
+                }
             }
         }
     }
@@ -335,7 +331,7 @@ extension Session {
     private func updateUsers(
         _ users: [TwitterV1.User],
         usersFetchDates: ClosedRange<Date>,
-        userObjectIDsByUserID: [Twitter.User.ID : NSManagedObjectID?],
+        userObjectIDsByUserID: [Twitter.User.ID : NSManagedObjectID],
         addtionalUserInfos: [Twitter.User.ID: AdditionalUserInfo] = [:],
         context: NSManagedObjectContext
     ) async throws -> ([(Twitter.User.ID, UserDetailChanges)], [UserDataAssetsURLSessionManager.DownloadRequest]) {
@@ -408,7 +404,6 @@ extension Session {
 
                         let userFetchRequest = ManagedUser.fetchRequest()
                         userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] } )
-                        userFetchRequest.propertiesToFetch = []
                         userFetchRequest.returnsObjectsAsFaults = false
 
                         let users = try context.fetch(userFetchRequest)
@@ -417,7 +412,9 @@ extension Session {
                             user.lastUpdateEndDate = Date()
                         }
 
-                        try context.save()
+                        if context.hasChanges {
+                            try context.save()
+                        }
                     }
                 }
             }

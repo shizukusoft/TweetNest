@@ -80,7 +80,7 @@ extension Session {
         try await context.perform(schedule: .enqueued) {
             try withExtendedBackgroundExecution {
                 guard
-                    let account = try? context.existingObject(with: accountObjectID) as? ManagedAccount,
+                    let account = context.object(with: accountObjectID) as? ManagedAccount,
                     let accountUserID = account.userID
                 else {
                     return
@@ -158,7 +158,7 @@ extension Session {
         try await context.perform(schedule: .enqueued) {
             try withExtendedBackgroundExecution {
                 guard
-                    let user = try? context.existingObject(with: userObjectID) as? ManagedUser,
+                    let user = context.object(with: userObjectID) as? ManagedUser,
                     let userID = user.id
                 else {
                     return
@@ -174,7 +174,6 @@ extension Session {
                     NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: true),
                 ]
                 userFetchRequest.propertiesToFetch = ["creationDate", "lastUpdateEndDate", "lastUpdateStartDate"]
-                userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
                 userFetchRequest.returnsObjectsAsFaults = false
 
                 let users = try context.fetch(userFetchRequest)
@@ -281,7 +280,7 @@ extension Session {
 
         try await context.perform(schedule: .enqueued) {
             guard
-                let userDataAsset = try? context.existingObject(with: userDataAssetObjectID) as? ManagedUserDataAsset,
+                let userDataAsset = context.object(with: userDataAssetObjectID) as? ManagedUserDataAsset,
                 let userDataAssetURL = userDataAsset.url
             else {
                 return
