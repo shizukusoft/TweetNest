@@ -81,8 +81,7 @@ extension Session {
             try withExtendedBackgroundExecution {
                 guard
                     let account = try? context.existingObject(with: accountObjectID) as? ManagedAccount,
-                    let accountToken = account.token,
-                    let accountTokenSecret = account.tokenSecret
+                    let accountUserID = account.userID
                 else {
                     return
                 }
@@ -90,14 +89,13 @@ extension Session {
                 let accountFetchRequest = ManagedAccount.fetchRequest()
                 accountFetchRequest.predicate = NSCompoundPredicate(
                     andPredicateWithSubpredicates: [
-                        NSPredicate(format: "token == %@", accountToken),
-                        NSPredicate(format: "tokenSecret == %@", accountTokenSecret),
+                        NSPredicate(format: "userID == %@", accountUserID)
                     ]
                 )
                 accountFetchRequest.sortDescriptors = [
                     NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: true),
                 ]
-                accountFetchRequest.propertiesToFetch = ["creationDate", "preferringSortOrder", "userID", "preferences"]
+                accountFetchRequest.propertiesToFetch = ["creationDate", "preferringSortOrder", "token", "tokenSecret", "preferences"]
                 accountFetchRequest.returnsObjectsAsFaults = false
 
                 let accounts = try context.fetch(accountFetchRequest)
@@ -108,13 +106,18 @@ extension Session {
 
                 targetAccount.creationDate = accounts.first?.creationDate ?? account.creationDate
                 targetAccount.preferringSortOrder = accounts.first?.preferringSortOrder ?? account.preferringSortOrder
-                targetAccount.userID = accounts.last?.userID ?? account.userID
 
                 for account in accounts {
                     guard account != targetAccount else { continue }
 
+                    if let token = account.tokenSecret, let tokenSecret = account.tokenSecret {
+                        targetAccount.token = token
+                        targetAccount.tokenSecret = tokenSecret
+                    }
+
                     targetAccount.preferences = .init(
-                        fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers
+                        fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers,
+                        fetchMutingUsers: targetAccount.preferences.fetchMutingUsers || account.preferences.fetchMutingUsers
                     )
 
                     context.delete(account)
@@ -279,8 +282,7 @@ extension Session {
         try await context.perform(schedule: .enqueued) {
             guard
                 let userDataAsset = try? context.existingObject(with: userDataAssetObjectID) as? ManagedUserDataAsset,
-                let userDataAssetURL = userDataAsset.url,
-                let userDataAssetDataSHA512Hash = userDataAsset.dataSHA512Hash
+                let userDataAssetURL = userDataAsset.url
             else {
                 return
             }
@@ -291,7 +293,8 @@ extension Session {
             userDataAssetsFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
                     NSPredicate(format: "url == %@", userDataAssetURL as NSURL),
-                    NSPredicate(format: "dataSHA512Hash == %@", userDataAssetDataSHA512Hash as NSData),
+                    NSPredicate(format: "dataMIMEType == %@", userDataAsset.dataMIMEType as? NSString ?? NSNull()),
+                    NSPredicate(format: "dataSHA512Hash == %@", userDataAsset.dataSHA512Hash as? NSData ?? NSNull()),
                 ]
             )
             userDataAssetsFetchRequest.sortDescriptors = [
