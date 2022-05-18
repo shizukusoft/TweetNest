@@ -85,34 +85,28 @@ extension Session {
     }
 
     private func handlePersistentHistoryTransactions(_ persistentHistoryTransactions: [NSPersistentHistoryTransaction]) async {
-        do {
-            try await withExtendedBackgroundExecution {
-                await withTaskGroup(of: Void.self) { taskGroup in
-                    taskGroup.addTask {
-                        await self.updateNotifications(transactions: persistentHistoryTransactions)
-                    }
-
-                    taskGroup.addTask {
-                        await self.updateAccountCredential(transactions: persistentHistoryTransactions)
-                    }
-
-                    taskGroup.addTask(priority: .utility) {
-                        await self.cleansingAccount(transactions: persistentHistoryTransactions)
-                    }
-
-                    taskGroup.addTask(priority: .utility) {
-                        await self.cleansingUser(transactions: persistentHistoryTransactions)
-                    }
-
-                    taskGroup.addTask(priority: .utility) {
-                        await self.cleansingUserDataAssets(transactions: persistentHistoryTransactions)
-                    }
-
-                    await taskGroup.waitForAll()
-                }
+        await withTaskGroup(of: Void.self) { taskGroup in
+            taskGroup.addTask {
+                await self.updateNotifications(transactions: persistentHistoryTransactions)
             }
-        } catch {
-            self.logger.error("Error occurred while handle persistent history transactions: \(error as NSError, privacy: .public)")
+
+            taskGroup.addTask {
+                await self.updateAccountCredential(transactions: persistentHistoryTransactions)
+            }
+
+            taskGroup.addTask(priority: .utility) {
+                await self.cleansingAccount(transactions: persistentHistoryTransactions)
+            }
+
+            taskGroup.addTask(priority: .utility) {
+                await self.cleansingUser(transactions: persistentHistoryTransactions)
+            }
+
+            taskGroup.addTask(priority: .utility) {
+                await self.cleansingUserDataAssets(transactions: persistentHistoryTransactions)
+            }
+
+            await taskGroup.waitForAll()
         }
     }
 
@@ -386,8 +380,6 @@ extension Session {
 
                     let needsToBeRemovedObjectIDs = changes.keys.subtracting(hasChangesObjectIDs)
                     Task.detached(priority: .utility) {
-                        await Task.yield()
-
                         do {
                             try withExtendedBackgroundExecution(expirationHandler: nil) {
                                 let cloudKitRecordIDs = self.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)

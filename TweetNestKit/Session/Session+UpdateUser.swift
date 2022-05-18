@@ -83,29 +83,54 @@ extension Session {
 
         let twitterSession = try await self.twitterSession(for: accountObjectID)
 
-        let (followingUserIDs, followerIDs, myBlockingUserIDs, myMutingUserIDs): ([Twitter.User.ID], [Twitter.User.ID], [Twitter.User.ID]?, [Twitter.User.ID]?) = try await withExtendedBackgroundExecution {
-            async let followingUserIDs = try await Twitter.User.followingUserIDs(forUserID: accountUserID, session: twitterSession).userIDs
-            async let followerIDs = try await Twitter.User.followerIDs(forUserID: accountUserID, session: twitterSession).userIDs
-            async let myBlockingUserIDs = accountPreferences.fetchBlockingUsers ? try await Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
-            async let myMutingUserIDs = accountPreferences.fetchMutingUsers ? try await Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
-
-            return try await (followingUserIDs, followerIDs, myBlockingUserIDs, myMutingUserIDs)
+        async let followingUserIDs = try await withExtendedBackgroundExecution {
+            try await Twitter.User.followingUserIDs(forUserID: accountUserID, session: twitterSession).userIDs
         }
 
-        return try await self.updateUsers(
-            ids: Set<Twitter.User.ID>([accountUserID] + [followingUserIDs, followerIDs, myBlockingUserIDs, myMutingUserIDs].compacted().joined()),
+        async let followerIDs = try await withExtendedBackgroundExecution {
+            try await Twitter.User.followerIDs(forUserID: accountUserID, session: twitterSession).userIDs
+        }
+
+        async let myBlockingUserIDs = try await withExtendedBackgroundExecution {
+            accountPreferences.fetchBlockingUsers ? try await Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
+        }
+
+        async let myMutingUserIDs = try await withExtendedBackgroundExecution {
+            accountPreferences.fetchMutingUsers ? try await Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
+        }
+
+        let additionalAccountUserInfo = try await AdditionalUserInfo(
+            followingUserIDs: followingUserIDs,
+            followerIDs: followerIDs,
+            blockingUserIDs: myBlockingUserIDs,
+            mutingUserIDs: myMutingUserIDs
+        )
+
+        async let accountUserDetailChanges = self.updateUsers(
+            ids: [accountUserID],
             accountUserID: accountUserID,
             twitterSession: twitterSession,
             addtionalUserInfos: [
-                accountUserID: AdditionalUserInfo(
-                    followingUserIDs: followingUserIDs,
-                    followerIDs: followerIDs,
-                    blockingUserIDs: myBlockingUserIDs,
-                    mutingUserIDs: myMutingUserIDs
-                )
+                accountUserID: additionalAccountUserInfo
             ],
             context: context
         )[accountUserID]
+
+        _ = try await self.updateUsers(
+            ids: Set<Twitter.User.ID>(
+                [
+                    additionalAccountUserInfo.followingUserIDs,
+                    additionalAccountUserInfo.followerIDs,
+                    additionalAccountUserInfo.blockingUserIDs,
+                    additionalAccountUserInfo.mutingUserIDs
+                ].compacted().joined()
+            ),
+            accountUserID: accountUserID,
+            twitterSession: twitterSession,
+            context: context
+        )
+
+        return try await accountUserDetailChanges
     }
 }
 
