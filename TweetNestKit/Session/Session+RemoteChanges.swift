@@ -374,15 +374,24 @@ extension Session {
                         )
                     }
 
-                    Task.detached(priority: .utility) { [needsToBeRemovedObjectIDs = changes.keys.subtracting(hasChangesObjectIDs)] in
-                        let cloudKitRecordIDs = self.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
+                    let needsToBeRemovedObjectIDs = changes.keys.subtracting(hasChangesObjectIDs)
+                    Task.detached(priority: .utility) {
+                        await Task.yield()
 
-                        let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {
-                            [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                        do {
+                            try withExtendedBackgroundExecution(expirationHandler: nil) {
+                                let cloudKitRecordIDs = self.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
+
+                                let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {
+                                    [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                                }
+
+                                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: userNotificationIdentifiers)
+                                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
+                            }
+                        } catch {
+                            self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
                         }
-
-                        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: userNotificationIdentifiers)
-                        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
                     }
                 }
             }
