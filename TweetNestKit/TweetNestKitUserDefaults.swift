@@ -60,17 +60,17 @@ final public class TweetNestKitUserDefaults: UserDefaults {
 
     public override class func keyPathsForValuesAffectingValue(forKey key: String) -> Set<String> {
         switch key {
-        case "isBackgroundUpdateEnabled":
+        case String(twnk_keyPath: \TweetNestKitUserDefaults.isBackgroundUpdateEnabled):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.isBackgroundUpdateEnabled.rawValue])
-        case "downloadsDataAssetsUsingExpensiveNetworkAccess":
+        case String(twnk_keyPath: \TweetNestKitUserDefaults.downloadsDataAssetsUsingExpensiveNetworkAccess):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue])
-        case "lastPersistentHistoryTokenData":
+        case String(twnk_keyPath: \TweetNestKitUserDefaults.lastPersistentHistoryTokenData):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastPersistentHistoryTokenData.rawValue])
-        case "fetchNewDataInterval":
+        case String(twnk_keyPath: \TweetNestKitUserDefaults.fetchNewDataInterval):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.fetchNewDataInterval.rawValue])
-        case "lastFetchNewDataDate":
+        case String(twnk_keyPath: \TweetNestKitUserDefaults.lastFetchNewDataDate):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastFetchNewDataDate.rawValue])
-        case "lastCleansedDate":
+        case String(twnk_keyPath: \TweetNestKitUserDefaults.lastCleansedDate):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastCleansedDate.rawValue])
         default:
             return super.keyPathsForValuesAffectingValue(forKey: key)
