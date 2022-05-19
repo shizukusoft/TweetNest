@@ -14,7 +14,7 @@ import UnifiedLogging
 import BackgroundTask
 
 extension Session {
-    static let cleansingDataInterval: TimeInterval = 1 * 24 * 60 * 60
+    static let cleansingDataInterval: TimeInterval = 18 * 60 * 60
 
     private var persistentContainerNewBackgroundContext: NSManagedObjectContext {
         let context = persistentContainer.newBackgroundContext()
