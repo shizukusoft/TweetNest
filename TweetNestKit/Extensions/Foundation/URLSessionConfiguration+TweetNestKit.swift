@@ -38,6 +38,7 @@ extension URLSessionConfiguration {
 
         timeoutIntervalForRequest = 15
         timeoutIntervalForResource = 2 * 24 * 60 * 60
+        waitsForConnectivity = true
 
         httpCookieAcceptPolicy = .never
         httpShouldSetCookies = false
@@ -50,6 +51,10 @@ extension URLSessionConfiguration {
         sharedContainerIdentifier = Session.applicationGroupIdentifier
 
         shouldUseExtendedBackgroundIdleMode = true
+
+        #if os(iOS)
+        multipathServiceType = .handover
+        #endif
     }
 }
 

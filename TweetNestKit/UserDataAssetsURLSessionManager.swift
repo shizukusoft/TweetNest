@@ -36,7 +36,6 @@ class UserDataAssetsURLSessionManager: NSObject {
 
         urlSessionConfiguration.httpAdditionalHeaders = nil
         urlSessionConfiguration.sessionSendsLaunchEvents = true
-        urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.allowsConstrainedNetworkAccess = false
 
         return urlSessionConfiguration
