@@ -316,8 +316,10 @@ extension Session {
 
                 let context = self.persistentContainer.newBackgroundContext()
 
-                let (_userDetails, preferences): ([ManagedUserDetail], ManagedPreferences.Preferences) = try await context.perform {
-                    let preferences = ManagedPreferences.managedPreferences(for: context).preferences
+                let (_userDetails, preferences): (OrderedDictionary<NSManagedObjectID, ManagedUserDetail>, ManagedPreferences.Preferences) = try await context.perform {
+                    var preferences: ManagedPreferences.Preferences {
+                        ManagedPreferences.managedPreferences(for: context).preferences
+                    }
 
                     let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
                     accountUserIDsfetchRequest.entity = ManagedAccount.entity()
@@ -331,7 +333,7 @@ extension Session {
                     }
 
                     guard accountUserIDs.isEmpty == false else {
-                        return ([], preferences)
+                        return ([:], preferences)
                     }
 
                     let userDetailsFetchRequest = ManagedUserDetail.fetchRequest()
@@ -346,40 +348,48 @@ extension Session {
 
                     let userDetails = try context.fetch(userDetailsFetchRequest)
 
-                    return (userDetails, preferences)
+                    return (
+                        OrderedDictionary(
+                            uniqueKeysWithValues: userDetails.map { (key: $0.objectID, value: $0) }
+                        ),
+                        preferences
+                    )
                 }
 
-                try await withThrowingTaskGroup(of: (NSManagedObjectID, CKRecord.ID?, UNNotificationContent?).self) { notificationContentsTaskGroup in
-                    for _userDetail in _userDetails {
-                        notificationContentsTaskGroup.addTask {
-                            (
-                                _userDetail.objectID,
-                                self.persistentContainer.recordID(for: _userDetail.objectID),
-                                await context.perform {
-                                    self.notificationContent(for: _userDetail, preferences: preferences, context: context)
-                                }
+                try await withThrowingTaskGroup(of: (NSManagedObjectID?).self) { notificationTaskGroup in
+                    for (userDetailObjectID, _userDetail) in _userDetails {
+                        notificationTaskGroup.addTask {
+                            async let notificationContent = context.perform {
+                                self.notificationContent(for: _userDetail, preferences: preferences, context: context)
+                            }
+
+                            let cloudKitRecordID = self.persistentContainer.recordID(for: userDetailObjectID)
+
+                            guard let notificationContent = await notificationContent else {
+                                return nil
+                            }
+
+                            try await UNUserNotificationCenter.current().add(
+                                UNNotificationRequest(
+                                    identifier: cloudKitRecordID?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString,
+                                    content: notificationContent,
+                                    trigger: nil
+                                )
                             )
+
+                            return userDetailObjectID
                         }
                     }
 
-                    var hasChangesObjectIDs = OrderedSet<NSManagedObjectID>()
+                    let needsToBeRemovedObjectIDs = try await notificationTaskGroup
+                        .compactMap { $0 }
+                        .reduce(into: changes.keys) { partialResult, postedUserDetailObjectID in
+                            partialResult.remove(postedUserDetailObjectID)
+                        }
 
-                    for try await (managedObjectID, cloudKitRecordID, notificationContent) in notificationContentsTaskGroup {
-                        guard let notificationContent = notificationContent else { continue }
-
-                        hasChangesObjectIDs.append(managedObjectID)
-
-                        try await UNUserNotificationCenter.current().add(
-                            UNNotificationRequest(
-                                identifier: cloudKitRecordID?.recordName ?? managedObjectID.uriRepresentation().absoluteString,
-                                content: notificationContent,
-                                trigger: nil
-                            )
-                        )
-                    }
-
-                    let needsToBeRemovedObjectIDs = changes.keys.subtracting(hasChangesObjectIDs)
                     Task.detached(priority: .utility) {
+                        await Task.yield()
+
                         do {
                             try withExtendedBackgroundExecution(expirationHandler: nil) {
                                 let cloudKitRecordIDs = self.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
