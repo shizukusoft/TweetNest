@@ -170,7 +170,6 @@
 		19A6FF5B26D6844E00AB7B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		19A6FF5C26D6844F00AB7B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		19ABAD8326DC8D6000103F01 /* UserDetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19ABAD8226DC8D6000103F01 /* UserDetailTests.swift */; };
-		19ABAD8526DC8D7200103F01 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19ABAD8426DC8D7200103F01 /* SessionTests.swift */; };
 		19AFA14126E837B800764D79 /* BackgroundTaskScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */; };
 		19B3130426E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */; };
 		19B3130526E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */; };
@@ -496,7 +495,6 @@
 		19A6FF4726D6836100AB7B7E /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
 		19A8EC7228228919007A0EA1 /* TweetNestKitV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.xcdatamodel; sourceTree = "<group>"; };
 		19ABAD8226DC8D6000103F01 /* UserDetailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailTests.swift; sourceTree = "<group>"; };
-		19ABAD8426DC8D7200103F01 /* SessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTests.swift; sourceTree = "<group>"; };
 		19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskScheduler.swift; sourceTree = "<group>"; };
 		19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
 		19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountsView.swift; sourceTree = "<group>"; };
@@ -1012,7 +1010,6 @@
 		19C5A29526BC1F3500AB1122 /* TweetNestKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				19ABAD8426DC8D7200103F01 /* SessionTests.swift */,
 				19ABAD8226DC8D6000103F01 /* UserDetailTests.swift */,
 			);
 			path = TweetNestKitTests;
@@ -1754,7 +1751,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19ABAD8526DC8D7200103F01 /* SessionTests.swift in Sources */,
 				19ABAD8326DC8D6000103F01 /* UserDetailTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
