@@ -8,6 +8,8 @@
 import Foundation
 import UserNotifications
 import CoreData
+import CryptoKit
+import UniformTypeIdentifiers
 import Algorithms
 import OrderedCollections
 import UnifiedLogging
@@ -286,6 +288,27 @@ extension Session {
                 return
             }
 
+            // TODO: Moves to migration codes when upgrade to V4 or later.
+            if userDataAsset.dataMIMEType == nil, let data = userDataAsset.data {
+                switch data.first {
+                case 0xFF:
+                    userDataAsset.dataMIMEType = UTType.jpeg.preferredMIMEType
+                case 0x89:
+                    userDataAsset.dataMIMEType = UTType.png.preferredMIMEType
+                case 0x47:
+                    userDataAsset.dataMIMEType = UTType.gif.preferredMIMEType
+                case 0x4D, 0x49:
+                    userDataAsset.dataMIMEType = UTType.tiff.preferredMIMEType
+                default:
+                    break
+                }
+            }
+
+            // TODO: Moves to migration codes when upgrade to V4 or later.
+            if userDataAsset.dataSHA512Hash == nil, let data = userDataAsset.data {
+                userDataAsset.dataSHA512Hash = Data(SHA512.hash(data: data))
+            }
+
             let userDataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
             userDataAssetsFetchRequest.entity = ManagedUserDataAsset.entity()
             userDataAssetsFetchRequest.resultType = .managedObjectIDResultType
@@ -309,6 +332,10 @@ extension Session {
             let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(userDataAssetObjectIDs.subtracting([targetUserDataAssetObjectID])))
 
             try context.execute(batchDeleteRequest)
+
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
 
