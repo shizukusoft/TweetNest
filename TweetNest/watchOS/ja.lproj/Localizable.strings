@@ -1,7 +1,4 @@
 /* No comment provided by engineer. */
-"%@ ago" = "%@前";
-
-/* No comment provided by engineer. */
 "%@ of %@ tweets deletion requested." = "%2$@件のツイート中%1$@件のツイートの削除をリクエストしました。";
 
 /* No comment provided by engineer. */
@@ -16,7 +13,7 @@
 /* No comment provided by engineer. */
 "Account" = "アカウント";
 
-/* Navigation link for account, grouped by username. */
+/* No comment provided by engineer. */
 "Account for %@" = "%@のアカウント";
 
 /* No comment provided by engineer. */
@@ -40,7 +37,7 @@
 /* No comment provided by engineer. */
 "Blocks History" = "ブロック履歴";
 
-/* Navigation link for blocks history, grouped by username. */
+/* No comment provided by engineer. */
 "Blocks History for %@" = "%@のブロック履歴";
 
 /* No comment provided by engineer. */
@@ -80,15 +77,12 @@
 "Fetch New Data" = "データの取得";
 
 /* No comment provided by engineer. */
-"Fetch Profile Headers" = "プロフィールのヘッダーを取り込む";
-
-/* No comment provided by engineer. */
 "Followers" = "フォロワー";
 
 /* No comment provided by engineer. */
 "Followers History" = "フォロワー履歴";
 
-/* Navigation link for followers history, grouped by username. */
+/* No comment provided by engineer. */
 "Followers History for %@" = "%@のフォロワー履歴";
 
 /* No comment provided by engineer. */
@@ -97,7 +91,7 @@
 /* No comment provided by engineer. */
 "Followings History" = "フォロー履歴";
 
-/* Navigation link for followings history, grouped by username. */
+/* No comment provided by engineer. */
 "Followings History for %@" = "%@のフォロー履歴";
 
 /* No comment provided by engineer. */
@@ -128,9 +122,12 @@
 "Manually" = "手動";
 
 /* No comment provided by engineer. */
+"Muted Accounts" = "ミュートしたアカウント";
+
+/* No comment provided by engineer. */
 "Mutes History" = "ミュート履歴";
 
-/* Navigation link for mutes history, grouped by username. */
+/* No comment provided by engineer. */
 "Mutes History for %@" = "%@のミュート履歴";
 
 /* No comment provided by engineer. */
