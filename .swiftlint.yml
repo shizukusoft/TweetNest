@@ -32,6 +32,8 @@ type_name:
   max_length:
     warning: 80
     error: 100
+  allowed_symbols:
+    - '_'
   excluded:
     - ''
 
