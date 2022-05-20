@@ -8,6 +8,8 @@
 import Foundation
 import UserNotifications
 import CoreData
+import CryptoKit
+import UniformTypeIdentifiers
 import Algorithms
 import OrderedCollections
 import UnifiedLogging
@@ -80,7 +82,7 @@ extension Session {
         try await context.perform(schedule: .enqueued) {
             try withExtendedBackgroundExecution {
                 guard
-                    let account = context.object(with: accountObjectID) as? ManagedAccount,
+                    let account = try? context.existingObject(with: accountObjectID) as? ManagedAccount,
                     let accountUserID = account.userID
                 else {
                     return
@@ -158,7 +160,7 @@ extension Session {
         try await context.perform(schedule: .enqueued) {
             try withExtendedBackgroundExecution {
                 guard
-                    let user = context.object(with: userObjectID) as? ManagedUser,
+                    let user = try? context.existingObject(with: userObjectID) as? ManagedUser,
                     let userID = user.id
                 else {
                     return
@@ -280,10 +282,31 @@ extension Session {
 
         try await context.perform(schedule: .enqueued) {
             guard
-                let userDataAsset = context.object(with: userDataAssetObjectID) as? ManagedUserDataAsset,
+                let userDataAsset = try? context.existingObject(with: userDataAssetObjectID) as? ManagedUserDataAsset,
                 let userDataAssetURL = userDataAsset.url
             else {
                 return
+            }
+
+            // TODO: Moves to migration codes when upgrade to V4 or later.
+            if userDataAsset.dataMIMEType == nil, let data = userDataAsset.data {
+                switch data.first {
+                case 0xFF:
+                    userDataAsset.dataMIMEType = UTType.jpeg.preferredMIMEType
+                case 0x89:
+                    userDataAsset.dataMIMEType = UTType.png.preferredMIMEType
+                case 0x47:
+                    userDataAsset.dataMIMEType = UTType.gif.preferredMIMEType
+                case 0x4D, 0x49:
+                    userDataAsset.dataMIMEType = UTType.tiff.preferredMIMEType
+                default:
+                    break
+                }
+            }
+
+            // TODO: Moves to migration codes when upgrade to V4 or later.
+            if userDataAsset.dataSHA512Hash == nil, let data = userDataAsset.data {
+                userDataAsset.dataSHA512Hash = Data(SHA512.hash(data: data))
             }
 
             let userDataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
@@ -309,6 +332,10 @@ extension Session {
             let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(userDataAssetObjectIDs.subtracting([targetUserDataAssetObjectID])))
 
             try context.execute(batchDeleteRequest)
+
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
 

@@ -167,23 +167,14 @@ struct AppSidebarNavigation: View {
         }
 
         Task {
-            do {
-                defer {
-                    Task {
-                        await MainActor.run {
-                            withAnimation {
-                                webAuthenticationSession = nil
-                                isAddingAccount = false
-                            }
-                        }
-                    }
-// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
-//                    withAnimation {
-//                        webAuthenticationSession = nil
-//                        isAddingAccount = false
-//                    }
+            defer {
+                withAnimation {
+                    webAuthenticationSession = nil
+                    isAddingAccount = false
                 }
+            }
 
+            do {
                 try await TweetNestApp.session.authorizeNewAccount { webAuthenticationSession in
                     webAuthenticationSession.prefersEphemeralWebBrowserSession = true
 

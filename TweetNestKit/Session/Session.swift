@@ -25,6 +25,7 @@ public class Session {
 
     let isShared: Bool
 
+    let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Session.self))
     let sessionActor = SessionActor()
     public let persistentContainer: PersistentContainer
     let userDataAssetsURLSessionManager: UserDataAssetsURLSessionManager
@@ -75,7 +76,7 @@ public class Session {
         _ = self.persistentStoreRemoteChangeNotification
         _ = self.fetchNewDataIntervalObserver
 
-        self.persistentContainer.persistentStoreCoordinator.perform {
+        self.persistentContainer.persistentStoreCoordinator.perform { [logger] in
             self.persistentContainer.loadPersistentStores { result in
                 switch result {
                 case .success:
@@ -93,15 +94,13 @@ public class Session {
                             do {
                                 try self.persistentContainer.initializeCloudKitSchema(options: [])
                             } catch {
-                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                    .error("\(error as NSError, privacy: .public)")
+                                logger.error("\(error as NSError, privacy: .public)")
                             }
                         }
                         #endif
                     }
                 case .failure(let error):
-                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                        .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
+                    logger.error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
 
                     Task {
                         await MainActor.run {

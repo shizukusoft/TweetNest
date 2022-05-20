@@ -1,8 +1,8 @@
 //
-//  Session+RemoteChanges.swift
-//  Session+RemoteChanges
+//  Session+PersistentHistoryTransactions.swift
+//  TweetNestKit
 //
-//  Created by Jaehong Kang on 2021/09/01.
+//  Created by Jaehong Kang on 2022/05/20.
 //
 
 import Foundation
@@ -16,75 +16,7 @@ import BackgroundTask
 import UnifiedLogging
 
 extension Session {
-    private var logger: Logger {
-        Logger(subsystem: Bundle.tweetNestKit.bundleIdentifier!, category: "remote-changes")
-    }
-
-    private static var lastPersistentHistoryToken: NSPersistentHistoryToken? {
-        get throws {
-            try TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData.flatMap {
-                try NSKeyedUnarchiver.unarchivedObject(
-                    ofClass: NSPersistentHistoryToken.self,
-                    from: $0
-                )
-            }
-        }
-    }
-
-    private static func setLastPersistentHistoryToken(_ newValue: NSPersistentHistoryToken?) throws {
-        TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try newValue.flatMap {
-            try NSKeyedArchiver.archivedData(
-                withRootObject: $0,
-                requiringSecureCoding: true
-            )
-        }
-    }
-
-    func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?) {
-        do {
-            try withExtendedBackgroundExecution {
-                do {
-                    guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
-                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
-
-                        return
-                    }
-
-                    let context = self.persistentContainer.newBackgroundContext()
-                    let persistentHistoryResult = try context.performAndWait {
-                        try context.execute(
-                            NSPersistentHistoryChangeRequest.fetchHistory(
-                                after: lastPersistentHistoryToken
-                            )
-                        )
-                    } as? NSPersistentHistoryResult
-
-                    guard
-                        let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
-                        let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
-                    else {
-                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
-
-                        return
-                    }
-
-                    Task.detached {
-                        await self.handlePersistentHistoryTransactions(persistentHistoryTransactions)
-                    }
-
-                    try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
-                } catch {
-                    try? Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
-
-                    throw error
-                }
-            }
-        } catch {
-            self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
-        }
-    }
-
-    private func handlePersistentHistoryTransactions(_ persistentHistoryTransactions: [NSPersistentHistoryTransaction]) async {
+    func handlePersistentHistoryTransactions(_ persistentHistoryTransactions: [NSPersistentHistoryTransaction]) async {
         await withTaskGroup(of: Void.self) { taskGroup in
             taskGroup.addTask {
                 await self.updateNotifications(transactions: persistentHistoryTransactions)
@@ -109,7 +41,9 @@ extension Session {
             await taskGroup.waitForAll()
         }
     }
+}
 
+extension Session {
     private func updateAccountCredential(transactions: [NSPersistentHistoryTransaction]) async {
         let changedAccountObjectIDs = transactions.lazy
             .compactMap(\.changes)
