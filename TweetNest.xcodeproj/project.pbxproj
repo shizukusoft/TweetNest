@@ -178,6 +178,7 @@
 		19BE3E94270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
 		19BE3E95270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
 		19BE3E96270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
+		19BE6B082837B08A000EACF4 /* Session+UpdatesAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE6B072837B08A000EACF4 /* Session+UpdatesAll.swift */; };
 		19C12F8826D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
 		19C12F8926D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
 		19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
@@ -499,6 +500,7 @@
 		19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
 		19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountsView.swift; sourceTree = "<group>"; };
 		19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNotificationsView.swift; sourceTree = "<group>"; };
+		19BE6B072837B08A000EACF4 /* Session+UpdatesAll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+UpdatesAll.swift"; sourceTree = "<group>"; };
 		19C12F8726D93F9E0022793C /* TweetNestStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestStack.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TweetNestKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -785,6 +787,7 @@
 				1978AF0E280FC9C80081D481 /* Session+Support.swift */,
 				19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */,
 				19F0491B28351D750030947D /* Session+Updates.swift */,
+				19BE6B072837B08A000EACF4 /* Session+UpdatesAll.swift */,
 				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
 				1978AF12280FE1A90081D481 /* SessionActor.swift */,
 			);
@@ -1730,6 +1733,7 @@
 				196BF03C2820D1BD0030B757 /* ManagedUser+CoreDataProperties.swift in Sources */,
 				19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */,
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
+				19BE6B082837B08A000EACF4 /* Session+UpdatesAll.swift in Sources */,
 				19469AC3282FC3700011A951 /* PersistentContainer+V3_Migration.swift in Sources */,
 				19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */,
 				193B995C280E585E00A59984 /* UserDataAssetsURLSessionManager.swift in Sources */,
