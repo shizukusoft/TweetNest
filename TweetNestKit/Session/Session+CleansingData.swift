@@ -297,7 +297,7 @@ extension Session {
                     userDataAsset.dataMIMEType = UTType.png.preferredMIMEType
                 case 0x47:
                     userDataAsset.dataMIMEType = UTType.gif.preferredMIMEType
-                case 0x4D, 0x49:
+                case 0x49, 0x4D:
                     userDataAsset.dataMIMEType = UTType.tiff.preferredMIMEType
                 default:
                     break
