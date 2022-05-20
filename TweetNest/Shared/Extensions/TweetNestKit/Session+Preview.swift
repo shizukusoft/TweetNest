@@ -54,6 +54,7 @@ extension TweetNestKit.Session {
         tweetnestAccount.creationDate = Date(timeIntervalSince1970: 1628780400)
         tweetnestAccount.userID = "1352231658661920770"
         tweetnestAccount.preferences.fetchBlockingUsers = true
+        tweetnestAccount.preferences.fetchMutingUsers = true
 
         let tweetnestUser = ManagedUser(context: context)
         tweetnestUser.creationDate = Date(timeIntervalSince1970: 1628780400)
@@ -67,6 +68,8 @@ extension TweetNestKit.Session {
         tweetnestUserDetail1.followerUsersCount = 2
         tweetnestUserDetail1.followingUserIDs = ["783214", "17874544"]
         tweetnestUserDetail1.followingUsersCount = 2
+        tweetnestUserDetail1.blockingUserIDs = []
+        tweetnestUserDetail1.mutingUserIDs = []
         tweetnestUserDetail1.userCreationDate = Date(timeIntervalSince1970: 1616357217)
         tweetnestUserDetail1.location = "대한민국 서울"
         tweetnestUserDetail1.name = "TweetNest"
@@ -81,6 +84,8 @@ extension TweetNestKit.Session {
         tweetnestUserDetail2.followerUsersCount = 1
         tweetnestUserDetail2.followingUserIDs = ["783214"]
         tweetnestUserDetail2.followingUsersCount = 1
+        tweetnestUserDetail1.blockingUserIDs = []
+        tweetnestUserDetail1.mutingUserIDs = []
         tweetnestUserDetail2.userCreationDate = Date(timeIntervalSince1970: 1616357217)
         tweetnestUserDetail2.location = "대한민국 서울"
         tweetnestUserDetail2.name = "TweetNest"
@@ -95,6 +100,8 @@ extension TweetNestKit.Session {
         tweetnestUserDetail3.followerUsersCount = 2
         tweetnestUserDetail3.followingUserIDs = ["783214", "380749300"]
         tweetnestUserDetail3.followingUsersCount = 2
+        tweetnestUserDetail1.blockingUserIDs = []
+        tweetnestUserDetail1.mutingUserIDs = []
         tweetnestUserDetail3.userCreationDate = Date(timeIntervalSince1970: 1616357217)
         tweetnestUserDetail3.location = "대한민국 서울"
         tweetnestUserDetail3.name = "TweetNest"
