@@ -44,10 +44,21 @@ class UserDataAssetsURLSessionManager: NSObject {
     private let isShared: Bool
 
     private let dispatchGroup = DispatchGroup()
-    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: UserDataAssetsURLSessionManager.self))
-    private let persistentContainer: PersistentContainer
+    private lazy var dispatchQueue = DispatchQueue(label: String(reflecting: self), qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem)
+    private lazy var operationQueue: OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 1
+        operationQueue.underlyingQueue = dispatchQueue
 
-    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
+        return operationQueue
+    }()
+    private lazy var memoryPressureSource = DispatchSource.makeMemoryPressureSource(eventMask: .all, queue: dispatchQueue)
+
+    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: UserDataAssetsURLSessionManager.self))
+
+    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: operationQueue)
+
+    private let persistentContainer: PersistentContainer
     private lazy var managedObjectContext = persistentContainer.newBackgroundContext()
 
     init(isShared: Bool, persistentContainer: PersistentContainer) {
@@ -57,15 +68,54 @@ class UserDataAssetsURLSessionManager: NSObject {
         super.init()
 
         _ = urlSession
+
+        memoryPressureSource.setEventHandler(flags: [.barrier]) { [weak self] in
+            self?.didReceveMemoryPressure()
+        }
+
+        memoryPressureSource.activate()
     }
 
+    deinit {
+        invalidate()
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
+    func invalidate() {
+        urlSession.invalidateAndCancel()
+        memoryPressureSource.cancel()
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
+    private func saveManagedObjectContext() {
+        managedObjectContext.performAndWait {
+            guard managedObjectContext.hasChanges else {
+                return
+            }
+
+            do {
+                try withExtendedBackgroundExecution{
+                    try managedObjectContext.save()
+                }
+            } catch {
+                logger.error("\(error as NSError, privacy: .public)")
+            }
+        }
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
+    private func didReceveMemoryPressure() {
+        saveManagedObjectContext()
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
     @MainActor
     func handleBackgroundURLSessionEvents(completionHandler: @escaping () -> Void) {
         _backgroundURLSessionEventsCompletionHandler = completionHandler
-    }
-
-    func invalidate() {
-        urlSession.invalidateAndCancel()
     }
 }
 
@@ -137,7 +187,7 @@ extension UserDataAssetsURLSessionManager {
 
 extension UserDataAssetsURLSessionManager: URLSessionDelegate {
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        dispatchGroup.notify(queue: .global(qos: .default)) {
+        dispatchGroup.notify(queue: dispatchQueue) {
             DispatchQueue.main.async {
                 self.backgroundURLSessionEventsCompletionHandler?()
             }
@@ -168,7 +218,7 @@ extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
             let creationDate = Date()
 
             dispatchGroup.enter()
-            Task.detached { [dispatchGroup, managedObjectContext, logger] in
+            Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger] in
                 defer {
                     dispatchGroup.leave()
                 }
@@ -188,8 +238,12 @@ extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
                                 context: managedObjectContext
                             )
 
-                            if managedObjectContext.hasChanges {
-                                try managedObjectContext.save()
+                            guard managedObjectContext.hasChanges else {
+                                return
+                            }
+
+                            dispatchGroup.notify(queue: dispatchQueue) {
+                                self.saveManagedObjectContext()
                             }
                         }
                     }
