@@ -40,9 +40,13 @@ extension TweetNest.PDFView: UIViewRepresentable {
 }
 #endif
 
+#if DEBUG
 struct PDFView_Previews: PreviewProvider {
+
     static var previews: some View {
-        PDFView(document: PDFDocument())
+        PDFView(document: .init())
     }
 }
+#endif
+
 #endif

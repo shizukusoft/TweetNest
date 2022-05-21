@@ -1,38 +1,39 @@
 //
-//  TweetNestKit.Session.swift
+//  Session+Preview.swift
 //  TweetNest
 //
 //  Created by Jaehong Kang on 2021/02/23.
 //
 
-import Foundation
-#if canImport(UIKit)
-import UIKit
-#endif
-#if canImport(AppKit)
-import AppKit
-#endif
+#if DEBUG
+
 import CoreData
+import Foundation
 import TweetNestKit
 import UniformTypeIdentifiers
 
+#if canImport(AppKit)
+import AppKit
+#elseif canImport(UIKit)
+import UIKit
+#else
+#error("AppKit or UIKit required.")
+#endif
+
 extension TweetNestKit.Session {
+
     public static let preview: Session = {
         let session = Session(inMemory: true)
-
-        #if DEBUG
         do {
             try session.insertPreviewDataToPersistentContainer()
-        } catch {
-            fatalError(String(reflecting: error))
         }
-        #endif
-
+        catch let error as NSError {
+            fatalError("Unresolved error \(error), \(error.userInfo)")
+        }
         return session
     }()
 }
 
-#if DEBUG
 extension TweetNestKit.Session {
     nonisolated func insertPreviewDataToPersistentContainer() throws {
         let context = persistentContainer.newBackgroundContext()
@@ -53,6 +54,7 @@ extension TweetNestKit.Session {
         tweetnestAccount.creationDate = Date(timeIntervalSince1970: 1628780400)
         tweetnestAccount.userID = "1352231658661920770"
         tweetnestAccount.preferences.fetchBlockingUsers = true
+        tweetnestAccount.preferences.fetchMutingUsers = true
 
         let tweetnestUser = ManagedUser(context: context)
         tweetnestUser.creationDate = Date(timeIntervalSince1970: 1628780400)
@@ -66,6 +68,8 @@ extension TweetNestKit.Session {
         tweetnestUserDetail1.followerUsersCount = 2
         tweetnestUserDetail1.followingUserIDs = ["783214", "17874544"]
         tweetnestUserDetail1.followingUsersCount = 2
+        tweetnestUserDetail1.blockingUserIDs = []
+        tweetnestUserDetail1.mutingUserIDs = []
         tweetnestUserDetail1.userCreationDate = Date(timeIntervalSince1970: 1616357217)
         tweetnestUserDetail1.location = "대한민국 서울"
         tweetnestUserDetail1.name = "TweetNest"
@@ -80,6 +84,8 @@ extension TweetNestKit.Session {
         tweetnestUserDetail2.followerUsersCount = 1
         tweetnestUserDetail2.followingUserIDs = ["783214"]
         tweetnestUserDetail2.followingUsersCount = 1
+        tweetnestUserDetail1.blockingUserIDs = []
+        tweetnestUserDetail1.mutingUserIDs = []
         tweetnestUserDetail2.userCreationDate = Date(timeIntervalSince1970: 1616357217)
         tweetnestUserDetail2.location = "대한민국 서울"
         tweetnestUserDetail2.name = "TweetNest"
@@ -94,6 +100,8 @@ extension TweetNestKit.Session {
         tweetnestUserDetail3.followerUsersCount = 2
         tweetnestUserDetail3.followingUserIDs = ["783214", "380749300"]
         tweetnestUserDetail3.followingUsersCount = 2
+        tweetnestUserDetail1.blockingUserIDs = []
+        tweetnestUserDetail1.mutingUserIDs = []
         tweetnestUserDetail3.userCreationDate = Date(timeIntervalSince1970: 1616357217)
         tweetnestUserDetail3.location = "대한민국 서울"
         tweetnestUserDetail3.name = "TweetNest"
@@ -183,17 +191,5 @@ extension TweetNestKit.Session {
         appleProfileImageDataAsset.data = NSDataAsset(name: "AppleProfileImageData")?.data
     }
 }
+
 #endif
-
-extension TweetNestKit.ManagedAccount {
-    public static var preview: ManagedAccount {
-        let fetchRequest = ManagedAccount.fetchRequest()
-
-        do {
-            return try Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-    }
-}

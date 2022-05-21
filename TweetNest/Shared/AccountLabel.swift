@@ -50,8 +50,13 @@ struct AccountLabel: View {
     }
 }
 
+#if DEBUG
 struct AccountLabel_Previews: PreviewProvider {
+
     static var previews: some View {
-        AccountLabel(account: .preview)
+        List {
+            AccountLabel(account: .preview)
+        }
     }
 }
+#endif

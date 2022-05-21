@@ -50,8 +50,14 @@ struct SettingsAccountView: View {
     }
 }
 
+#if DEBUG
 struct SettingsAccountView_Previews: PreviewProvider {
+
     static var previews: some View {
-        SettingsAccountView(account: .preview)
+        NavigationView {
+            SettingsAccountView(account: .preview)
+            .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
+        }
     }
 }
+#endif

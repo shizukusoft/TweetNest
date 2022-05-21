@@ -217,9 +217,10 @@ struct AppSidebarNavigation: View {
 
 #if DEBUG
 struct AppSidebarNavigation_Previews: PreviewProvider {
+
     static var previews: some View {
         AppSidebarNavigation(isPersistentContainerLoaded: .constant(true))
-            .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
+        .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
     }
 }
 #endif

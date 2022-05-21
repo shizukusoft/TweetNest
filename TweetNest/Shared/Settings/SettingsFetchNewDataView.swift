@@ -71,8 +71,16 @@ struct SettingsFetchNewDataView: View {
     }
 }
 
+#if DEBUG
 struct SettingsFetchNewDataView_Previews: PreviewProvider {
+
     static var previews: some View {
-        SettingsFetchNewDataView()
+        NavigationView {
+            List {
+                SettingsFetchNewDataView()
+            }
+            .navigationBarHidden(true)
+        }
     }
 }
+#endif

@@ -30,8 +30,19 @@ struct AppSidebarAccountsSections: View {
     }
 }
 
+#if DEBUG
 struct AppSidebarAccountsSections_Previews: PreviewProvider {
+
     static var previews: some View {
-        AppSidebarAccountsSections(navigationItemSelection: .constant(nil))
+        NavigationView {
+            List {
+                AppSidebarAccountsSections(navigationItemSelection: .constant(nil))
+            }
+            #if os(iOS) || os(macOS)
+            .listStyle(.sidebar)
+            #endif
+            .navigationBarHidden(true)
+        }
     }
 }
+#endif

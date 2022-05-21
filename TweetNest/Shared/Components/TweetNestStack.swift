@@ -25,10 +25,39 @@ struct TweetNestStack<Content>: View where Content: View {
     }
 }
 
+#if DEBUG
 struct TweetNestStack_Previews: PreviewProvider {
-    static var previews: some View {
-        TweetNestStack {
 
+    static var previews: some View {
+        List {
+            Section {
+                Label(
+                    title: {
+                        TweetNestStack {
+                            Text(verbatim: "Title")
+                            Spacer()
+                            Text(verbatim: "Description")
+                            .foregroundColor(.secondary)
+                        }
+                    },
+                    icon: {
+                        Image(systemName: "pentagon")
+                    })
+            }
+            Section {
+                Label(
+                    title: {
+                        TweetNestStack {
+                            Text(verbatim: "John Appleseed")
+                            Text(verbatim: "@johnny")
+                            .foregroundColor(.secondary)
+                        }
+                    },
+                    icon: {
+                        Image(systemName: "circle.fill")
+                    })
+            }
         }
     }
 }
+#endif

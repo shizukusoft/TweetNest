@@ -91,10 +91,19 @@ struct BatchDeleteTweetsLoadingTwitterArchiveView: View {
     }
 }
 
+#if DEBUG
 struct BatchDeleteTweetsLoadingTwitterArchiveView_Previews: PreviewProvider {
+
     static var previews: some View {
-        BatchDeleteTweetsLoadingTwitterArchiveView(sourceTweets: .constant(nil))
+        ZStack {
+            List {
+                EmptyView()
+            }
+            BatchDeleteTweetsLoadingTwitterArchiveView(sourceTweets: .constant(nil))
+            .environment(\.account, .preview)
+        }
     }
 }
+#endif
 
 #endif

@@ -65,8 +65,19 @@ struct UsersDiffListSection: View {
     }
 }
 
-// struct UsersDiffListSection_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UsersDiffListSection()
-//    }
-// }
+#if DEBUG
+struct UsersDiffListSection_Previews: PreviewProvider {
+
+    static var previews: some View {
+        NavigationView {
+            List {
+                UsersDiffListSection(
+                    diffKeyPath: \.followingUserIDs,
+                    searchQuery: "",
+                    userDetail: .preview)
+            }
+            .navigationBarHidden(true)
+        }
+    }
+}
+#endif

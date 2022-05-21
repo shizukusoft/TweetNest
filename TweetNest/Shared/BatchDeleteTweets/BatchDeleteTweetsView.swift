@@ -134,12 +134,27 @@ struct BatchDeleteTweetsView: View {
     }
 }
 
+#if DEBUG
 struct BatchDeleteTweetsView_Previews: PreviewProvider {
-    static var previews: some View {
-        BatchDeleteTweetsView(isPresented: .constant(true), account: nil, source: .recentTweets)
 
+    // !!!: Preview updating will fail because it tooks more than 5 seconds
+    static var previews: some View {
+        NavigationView {
+            BatchDeleteTweetsView(
+                isPresented: .constant(true),
+                account: nil,
+                source: .recentTweets)
+        }
+        .previewDisplayName("Preview with Recent Tweets Source")
         #if canImport(JavaScriptCore)
-        BatchDeleteTweetsView(isPresented: .constant(true), account: nil, source: .twitterArchive)
+        NavigationView {
+            BatchDeleteTweetsView(
+                isPresented: .constant(true),
+                account: nil,
+                source: .twitterArchive)
+        }
+        .previewDisplayName("Preview with Twitter Archive Source")
         #endif
     }
 }
+#endif

@@ -47,8 +47,13 @@ struct UserRowsLabel: View {
     }
 }
 
+#if DEBUG
 struct UserRowsLabel_Previews: PreviewProvider {
+
     static var previews: some View {
-        UserRowsLabel(userID: "123456")
+        List {
+            UserRowsLabel(userID: ManagedAccount.preview.userID!)
+        }
     }
 }
+#endif
