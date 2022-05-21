@@ -28,13 +28,19 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     #if canImport(CoreSpotlight)
-    public private(set) var usersSpotlightDelegate: UsersSpotlightDelegate?
+    private lazy var _usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[0], coordinator: persistentStoreCoordinator)
+
+    public var usersSpotlightDelegate: UsersSpotlightDelegate {
+        persistentStoreCoordinator.performAndWait {
+            _usersSpotlightDelegate
+        }
+    }
     #endif
 
     @Published
     public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
 
-    init(inMemory: Bool = false, cloudKit: Bool = true, persistentStoreOptions: [String: Any?]? = nil) {
+    init(inMemory: Bool = false, persistentStoreOptions: [String: Any?]? = nil) {
         super.init(name: "\(Bundle.tweetNestKit.name!).V3", managedObjectModel: Self.V3.managedObjectModel)
 
         if !inMemory {
@@ -53,16 +59,8 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                     }
                 }
 
-                if !cloudKit {
-                    persistentStoreDescription.cloudKitContainerOptions = nil
-                }
-
                 return persistentStoreDescription
             }
-
-            #if canImport(CoreSpotlight)
-            self.usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[0], coordinator: self.persistentStoreCoordinator)
-            #endif
         } else {
             persistentStoreDescriptions.forEach {
                 $0.url = nil

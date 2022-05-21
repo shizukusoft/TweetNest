@@ -93,14 +93,7 @@ extension Session {
         _ = try await updateAccount
 
         async let updateOtherUsers = self.updateUsers(
-            ids: Set<Twitter.User.ID>(
-                [
-                    additionalAccountUserInfo.followingUserIDs,
-                    additionalAccountUserInfo.followerIDs,
-                    additionalAccountUserInfo.blockingUserIDs,
-                    additionalAccountUserInfo.mutingUserIDs
-                ].compacted().joined()
-            ),
+            ids: additionalAccountUserInfo.relatedUserIDs,
             accountObjectID: accountObjectID,
             context: context
         )
@@ -127,25 +120,23 @@ extension Session {
 
         let userIDs = Set(userIDs)
 
-        let accountUserID: Twitter.User.ID? = try await context.perform {
-            guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
+        let accountUserID: Twitter.User.ID = try await context.perform {
+            guard
+                let account = context.object(with: accountObjectID) as? ManagedAccount,
+                let accountUserID = account.userID
+            else {
                 throw SessionError.unknown
             }
 
-            return account.userID
+            return accountUserID
         }
 
-        guard let accountUserID = accountUserID else {
-            throw SessionError.unknown
-        }
+        return try await withThrowingTaskGroup(
+            of: ([TwitterV1.User], ClosedRange<Date>).self
+        ) { chunkedUsersFetchTaskGroup in
+            async let accountUpdateResult = userIDs.contains(accountUserID) ? updateAccount(accountObjectID, context: context) : nil
 
-        async let accountUpdateResult = userIDs.contains(accountUserID) ? updateAccount(accountObjectID, context: context) : nil
-
-        var updatingUsersResult = try await withThrowingTaskGroup(
-            of: ([TwitterV1.User], ClosedRange<Date>).self,
-            returning: [Twitter.User.ID: UserDetailChanges].self
-        ) { [userIDs = userIDs.subtracting([accountUserID])] chunkedUsersFetchTaskGroup in
-            let userObjectIDsByUserID = try await preflightUsersForUpdating(userIDs: userIDs, accountUserID: accountUserID, context: context)
+            let userObjectIDsByUserID = try await preflightUsersForUpdating(userIDs: userIDs.subtracting([accountUserID]), accountUserID: accountUserID, context: context)
             let twitterSession = try await self.twitterSession(for: accountObjectID)
 
             for chunkedUserIDs in userObjectIDsByUserID.keys.chunks(ofCount: 100) {
@@ -167,8 +158,9 @@ extension Session {
                 }
             }
 
-            return try await withThrowingTaskGroup(
-                of: ([(Twitter.User.ID, UserDetailChanges)], [UserDataAssetsURLSessionManager.DownloadRequest]).self
+            var updatingUsersResult = try await withThrowingTaskGroup(
+                of: ([(Twitter.User.ID, UserDetailChanges)], [UserDataAssetsURLSessionManager.DownloadRequest]).self,
+                returning: [Twitter.User.ID: UserDetailChanges].self
             ) { chunkedUsersProcessingTaskGroup in
                 for try await chunkedUsers in chunkedUsersFetchTaskGroup {
                     chunkedUsersProcessingTaskGroup.addTask {
@@ -179,9 +171,7 @@ extension Session {
                 var dataAssetsDownloadRequests = Set<UserDataAssetsURLSessionManager.DownloadRequest>()
                 do {
                     let results = try await chunkedUsersProcessingTaskGroup.reduce(into: [Twitter.User.ID: UserDetailChanges]()) { totalResults, chunkedResults in
-                        chunkedResults.0.forEach {
-                            totalResults[$0.0] = $0.1
-                        }
+                        chunkedResults.0.forEach { totalResults[$0.0] = $0.1 }
 
                         dataAssetsDownloadRequests.formUnion(chunkedResults.1)
                     }
@@ -195,11 +185,10 @@ extension Session {
                     throw error
                 }
             }
+
+            updatingUsersResult[accountUserID] = try await accountUpdateResult
+            return updatingUsersResult
         }
-
-        updatingUsersResult[accountUserID] = try await accountUpdateResult
-
-        return updatingUsersResult
     }
 }
 
@@ -283,6 +272,17 @@ extension Session {
         let followerIDs: [Twitter.User.ID]?
         let blockingUserIDs: [Twitter.User.ID]?
         let mutingUserIDs: [Twitter.User.ID]?
+
+        var relatedUserIDs: Set<Twitter.User.ID> {
+            Set(
+                [
+                    followingUserIDs,
+                    followerIDs,
+                    blockingUserIDs,
+                    mutingUserIDs
+                ].compacted().joined()
+            )
+        }
     }
 
     private func updateUsers(

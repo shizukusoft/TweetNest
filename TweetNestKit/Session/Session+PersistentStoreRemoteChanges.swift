@@ -62,6 +62,10 @@ extension Session {
                         await self.handlePersistentHistoryTransactions(persistentHistoryTransactions)
                     }
 
+                    Task.detached(priority: .utility) {
+                        await self.purgeOldPersistentHistories()
+                    }
+
                     try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
                 } catch {
                     try? Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
@@ -71,6 +75,28 @@ extension Session {
             }
         } catch {
             self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
+        }
+    }
+}
+
+extension Session {
+    private static var persistentHistoryExpiryDate: Date {
+        Date(timeIntervalSinceNow: TimeInterval(exactly: -604_800)!) // Seven Days Ago
+    }
+
+    private func purgeOldPersistentHistories() async {
+        do {
+            let context = self.persistentContainer.newBackgroundContext()
+
+            try await context.perform(schedule: .enqueued) {
+                try withExtendedBackgroundExecution {
+                    _ = try context.execute(
+                        NSPersistentHistoryChangeRequest.deleteHistory(before: Self.persistentHistoryExpiryDate)
+                    )
+                }
+            }
+        } catch {
+            self.logger.error("Error occurred while delete persistent histories: \(error as NSError, privacy: .public)")
         }
     }
 }
