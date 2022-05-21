@@ -30,22 +30,18 @@ public class Session {
     public let persistentContainer: PersistentContainer
     let userDataAssetsURLSessionManager: UserDataAssetsURLSessionManager
 
+    private lazy var persistentStoreRemoteChangeNotificationContext: NSManagedObjectContext = persistentContainer.newBackgroundContext()
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
         .map { $0.userInfo?[NSPersistentHistoryTokenKey] as? NSPersistentHistoryToken }
         .removeDuplicates()
-        .receive(on: persistentStoreRemoteChangeNotificationQueue)
         .sink { [weak self] persistentHistoryToken in
             guard let self = self else { return }
 
-            self.handlePersistentStoreRemoteChanges(persistentHistoryToken)
+            Task {
+                await self.handlePersistentStoreRemoteChanges(persistentHistoryToken, context: self.persistentStoreRemoteChangeNotificationContext)
+            }
         }
-
-    private lazy var persistentStoreRemoteChangeNotificationQueue = DispatchQueue(
-        label: [String(reflecting: self), Notification.Name.NSPersistentStoreRemoteChange.rawValue].joined(separator: "."),
-        qos: .default,
-        autoreleaseFrequency: .workItem
-    )
 
     @MainActor @Published
     public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?
