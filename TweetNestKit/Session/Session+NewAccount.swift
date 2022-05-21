@@ -20,13 +20,17 @@ extension Session {
 
         let url: URL = try await withCheckedThrowingContinuation { continuation in
             webAuthenticationSessionHandler(
-                ASWebAuthenticationSession(url: URL(twitterOAuthAuthorizeURLWithOAuthToken: requestToken.token), callbackURLScheme: "tweet-nest", completionHandler: { (url, error) in
-                    if let error = error {
-                        continuation.resume(throwing: error)
-                    } else {
-                        continuation.resume(returning: url!)
+                ASWebAuthenticationSession(
+                    url: URL(twitterOAuthAuthorizeURLWithOAuthToken: requestToken.token),
+                    callbackURLScheme: "tweet-nest",
+                    completionHandler: { (url, error) in
+                        if let error = error {
+                            continuation.resume(throwing: error)
+                        } else {
+                            continuation.resume(returning: url!)
+                        }
                     }
-                })
+                )
             )
         }
 

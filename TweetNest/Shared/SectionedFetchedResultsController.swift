@@ -59,7 +59,13 @@ class SectionedFetchedResultsController<Result>: NSObject, NSFetchedResultsContr
         }
     }
 
-    init(fetchRequest: NSFetchRequest<Result>, managedObjectContext: NSManagedObjectContext, sectionNameKeyPath: KeyPath<Result, String>, cacheName: String? = nil, onError errorHandler: ((Error) -> Void)? = nil) {
+    init(
+        fetchRequest: NSFetchRequest<Result>,
+        managedObjectContext: NSManagedObjectContext,
+        sectionNameKeyPath: KeyPath<Result, String>,
+        cacheName: String? = nil,
+        onError errorHandler: ((Error) -> Void)? = nil
+    ) {
         self.fetchRequest = fetchRequest
         self.managedObjectContext = managedObjectContext
         self.sectionNameKeyPath = sectionNameKeyPath

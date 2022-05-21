@@ -12,7 +12,9 @@ import UnifiedLogging
 extension PersistentContainer {
     struct V3 {
         static let managedObjectModel: NSManagedObjectModel = {
-            let managedObjectModel = NSManagedObjectModel(contentsOf: Bundle.tweetNestKit.url(forResource: "\(Bundle.tweetNestKit.name!)V3", withExtension: "momd")!)!
+            let managedObjectModel = NSManagedObjectModel(
+                contentsOf: Bundle.tweetNestKit.url(forResource: "\(Bundle.tweetNestKit.name!)V3", withExtension: "momd")!
+            )!
 
             guard let accountEntity = managedObjectModel.entitiesByName["Account"] else {
                 fatalError("Account entity not found.")

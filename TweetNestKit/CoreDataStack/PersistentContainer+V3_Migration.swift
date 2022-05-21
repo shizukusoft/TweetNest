@@ -81,12 +81,13 @@ extension PersistentContainer.V3 {
                 try migrateUserDataAssetsFromV1(v1PersistentContainer: v1PersistentContainer, v3PersistentContainer: v3PersistentContainer)
 
                 try v3PersistentContainer.persistentStoreCoordinator.performAndWait {
-                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try v3PersistentContainer.persistentStoreCoordinator.currentPersistentHistoryToken(
-                        fromStores: v3PersistentContainer.persistentStoreCoordinator.persistentStores
-                    )
-                    .flatMap {
-                        try NSKeyedArchiver.archivedData(withRootObject: $0, requiringSecureCoding: true)
-                    }
+                    TweetNestKitUserDefaults.standard.lastPersistentHistoryTokenData = try v3PersistentContainer.persistentStoreCoordinator
+                        .currentPersistentHistoryToken(
+                            fromStores: v3PersistentContainer.persistentStoreCoordinator.persistentStores
+                        )
+                        .flatMap {
+                            try NSKeyedArchiver.archivedData(withRootObject: $0, requiringSecureCoding: true)
+                        }
                 }
             } catch {
                 try? destoryPersistentContainer(v3PersistentContainer)
