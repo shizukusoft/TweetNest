@@ -21,13 +21,11 @@ import UIKit
 #endif
 
 extension TweetNestKit.Session {
-
     public static let preview: Session = {
         let session = Session(inMemory: true)
         do {
             try session.insertPreviewDataToPersistentContainer()
-        }
-        catch let error as NSError {
+        } catch let error as NSError {
             fatalError("Unresolved error \(error), \(error.userInfo)")
         }
         return session
