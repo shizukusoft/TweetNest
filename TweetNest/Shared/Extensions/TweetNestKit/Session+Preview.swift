@@ -60,53 +60,42 @@ extension TweetNestKit.Session {
         tweetnestUser.lastUpdateEndDate = now
         tweetnestUser.id = tweetnestAccount.userID
 
-        let tweetnestUserDetail1 = ManagedUserDetail(context: context)
-        tweetnestUserDetail1.creationDate = Date(timeIntervalSince1970: 1628780400)
-        tweetnestUserDetail1.followerUserIDs = ["783214", "17874544"]
-        tweetnestUserDetail1.followerUsersCount = 2
-        tweetnestUserDetail1.followingUserIDs = ["783214", "17874544"]
-        tweetnestUserDetail1.followingUsersCount = 2
-        tweetnestUserDetail1.blockingUserIDs = []
-        tweetnestUserDetail1.mutingUserIDs = []
-        tweetnestUserDetail1.userCreationDate = Date(timeIntervalSince1970: 1616357217)
-        tweetnestUserDetail1.location = "대한민국 서울"
-        tweetnestUserDetail1.name = "TweetNest"
-        tweetnestUserDetail1.username = "TweetNest_App"
-        tweetnestUserDetail1.profileImageURL = URL(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")
-        tweetnestUserDetail1.url = URL(string: "https://www.tweetnest.com")
-        tweetnestUserDetail1.userID = tweetnestUser.id
+        var baseTweetnestUserDetail: ManagedUserDetail {
+            let tweetnestUserDetail = ManagedUserDetail(context: context)
 
-        let tweetnestUserDetail2 = ManagedUserDetail(context: context)
+            tweetnestUserDetail.creationDate = Date(timeIntervalSince1970: 1628780400)
+            tweetnestUserDetail.followerUserIDs = ["783214", "17874544"]
+            tweetnestUserDetail.followerUsersCount = 2
+            tweetnestUserDetail.followingUserIDs = ["783214", "17874544"]
+            tweetnestUserDetail.followingUsersCount = 2
+            tweetnestUserDetail.blockingUserIDs = []
+            tweetnestUserDetail.mutingUserIDs = []
+            tweetnestUserDetail.userCreationDate = Date(timeIntervalSince1970: 1616357217)
+            tweetnestUserDetail.location = "대한민국 서울"
+            tweetnestUserDetail.name = "TweetNest"
+            tweetnestUserDetail.username = "TweetNest_App"
+            tweetnestUserDetail.profileImageURL = URL(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")
+            tweetnestUserDetail.url = URL(string: "https://www.tweetnest.com")
+            tweetnestUserDetail.userID = tweetnestUser.id
+
+            return tweetnestUserDetail
+        }
+
+        let tweetnestUserDetail1 = baseTweetnestUserDetail
+
+        let tweetnestUserDetail2 = baseTweetnestUserDetail
         tweetnestUserDetail2.creationDate = Date(timeIntervalSince1970: 1631709579)
         tweetnestUserDetail2.followerUserIDs = ["783214"]
         tweetnestUserDetail2.followerUsersCount = 1
         tweetnestUserDetail2.followingUserIDs = ["783214"]
         tweetnestUserDetail2.followingUsersCount = 1
-        tweetnestUserDetail1.blockingUserIDs = []
-        tweetnestUserDetail1.mutingUserIDs = []
-        tweetnestUserDetail2.userCreationDate = Date(timeIntervalSince1970: 1616357217)
-        tweetnestUserDetail2.location = "대한민국 서울"
-        tweetnestUserDetail2.name = "TweetNest"
-        tweetnestUserDetail2.username = "TweetNest_App"
-        tweetnestUserDetail2.profileImageURL = URL(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")
-        tweetnestUserDetail2.url = URL(string: "https://www.tweetnest.com")
-        tweetnestUserDetail2.userID = tweetnestUser.id
 
-        let tweetnestUserDetail3 = ManagedUserDetail(context: context)
+        let tweetnestUserDetail3 = baseTweetnestUserDetail
         tweetnestUserDetail3.creationDate = now
         tweetnestUserDetail3.followerUserIDs = ["783214", "380749300"]
         tweetnestUserDetail3.followerUsersCount = 2
         tweetnestUserDetail3.followingUserIDs = ["783214", "380749300"]
         tweetnestUserDetail3.followingUsersCount = 2
-        tweetnestUserDetail1.blockingUserIDs = []
-        tweetnestUserDetail1.mutingUserIDs = []
-        tweetnestUserDetail3.userCreationDate = Date(timeIntervalSince1970: 1616357217)
-        tweetnestUserDetail3.location = "대한민국 서울"
-        tweetnestUserDetail3.name = "TweetNest"
-        tweetnestUserDetail3.username = "TweetNest_App"
-        tweetnestUserDetail3.profileImageURL = URL(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")
-        tweetnestUserDetail3.url = URL(string: "https://www.tweetnest.com")
-        tweetnestUserDetail3.userID = tweetnestUser.id
 
         let tweetnestProfileImageDataAsset = ManagedUserDataAsset(context: context)
         tweetnestProfileImageDataAsset.url = tweetnestUserDetail1.profileImageURL
