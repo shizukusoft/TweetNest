@@ -81,7 +81,9 @@ struct SettingsFetchNewDataView_Previews: PreviewProvider {
             List {
                 SettingsFetchNewDataView()
             }
+            #if os(iOS) || os(watchOS)
             .navigationBarHidden(true)
+            #endif
         }
     }
 }

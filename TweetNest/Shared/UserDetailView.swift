@@ -169,7 +169,9 @@ struct UserDetailView: View {
         NavigationView {
             UserDetailView(userDetail: .preview)
             .environment(\.account, .preview)
+            #if os(iOS) || os(watchOS)
             .navigationBarHidden(true)
+            #endif
         }
     }
  }

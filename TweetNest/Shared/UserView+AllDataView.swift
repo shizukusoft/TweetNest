@@ -107,7 +107,9 @@ struct UserView_AllDataView_Previews: PreviewProvider {
                 UserView.AllDataView(userDetails: _fetchedManagedUserDetailsController.fetchedObjects)
                 .environment(\.account, .preview)
             }
+            #if os(iOS) || os(watchOS)
             .navigationBarHidden(true)
+            #endif
         }
     }
 }

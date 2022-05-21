@@ -115,7 +115,9 @@ struct UserRows_Previews: PreviewProvider {
                 UserRows(userIDs: ManagedUserDetail.preview.followingUserIDs!)
                 .environment(\.account, .preview)
             }
+            #if os(iOS) || os(watchOS)
             .navigationBarHidden(true)
+            #endif
         }
     }
 }

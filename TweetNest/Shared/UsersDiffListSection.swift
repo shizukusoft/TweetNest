@@ -76,7 +76,9 @@ struct UsersDiffListSection_Previews: PreviewProvider {
                     searchQuery: "",
                     userDetail: .preview)
             }
+            #if os(iOS) || os(watchOS)
             .navigationBarHidden(true)
+            #endif
         }
     }
 }

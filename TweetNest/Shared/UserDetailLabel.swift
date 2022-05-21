@@ -122,7 +122,9 @@ struct UserDetailLabel_Previews: PreviewProvider {
             #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
             #endif
+            #if os(iOS) || os(watchOS)
             .navigationBarHidden(true)
+            #endif
         }
     }
 }

@@ -36,7 +36,9 @@ struct UsersList_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             UsersList(userIDs: ManagedUserDetail.preview.followingUserIDs!)
+            #if os(iOS) || os(watchOS)
             .navigationBarHidden(true)
+            #endif
         }
     }
 }
