@@ -24,7 +24,7 @@ struct UsersDiffList: View {
         let userDetailPairs = userDetails
             .lazy
             .indexed()
-            .map { (index: LazySequence<[ManagedUserDetail]>.Index, element: LazySequence<[ManagedUserDetail]>.Element) -> (ManagedUserDetail, ManagedUserDetail?) in
+            .map { (index, element) -> (ManagedUserDetail, ManagedUserDetail?) in
                 let nextIndex = userDetails.index(after: index)
 
                 return (element, userDetails.indices.contains(nextIndex) ? userDetails[nextIndex] : nil)

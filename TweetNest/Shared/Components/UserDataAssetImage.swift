@@ -32,7 +32,13 @@ struct UserDataAssetImage: View {
     var body: some View {
         Group {
             #if os(macOS) || os(iOS)
-            if isExportable, let url = url, let cgImage = cgImage, let imageData = imageData, let utType = imageData.dataMIMEType.flatMap({ UTType(mimeType: $0, conformingTo: .image) }) {
+            if
+                isExportable,
+                let url = url,
+                let cgImage = cgImage,
+                let imageData = imageData
+            {
+                let utType = imageData.dataMIMEType.flatMap({ UTType(mimeType: $0, conformingTo: .image) }) ?? UTType.image
                 let filename = url.pathExtension.isEmpty ? url.appendingPathExtension(for: utType).lastPathComponent : url.lastPathComponent
 
                 Group {
@@ -199,7 +205,12 @@ struct UserDataAssetImage: View {
 
             let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
 
-            let imageDPI = [imageProperties?[kCGImagePropertyDPIWidth], imageProperties?[kCGImagePropertyDPIHeight]].compactMap { ($0 as? NSNumber)?.doubleValue }.min()
+            let imageDPI = [
+                imageProperties?[kCGImagePropertyDPIWidth],
+                imageProperties?[kCGImagePropertyDPIHeight]
+            ]
+            .compactMap { ($0 as? NSNumber)?.doubleValue }
+            .min()
 
             return (cgImage: image, imageScale: imageDPI.flatMap { $0 / 72 })
         }()

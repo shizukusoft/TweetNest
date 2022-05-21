@@ -36,7 +36,9 @@ extension AppSidebarAccountsSections {
         }
 
         @ViewBuilder var sectionRows: some View {
-            let displayAccountName = userDetailsFetchedResultsController.fetchedObjects.first?.displayUsername ?? account.userID?.displayUserID ?? account.objectID.description
+            let displayAccountName = userDetailsFetchedResultsController.fetchedObjects.first?.displayUsername ??
+                account.userID?.displayUserID ??
+                account.objectID.description
 
             if let userID = account.userID {
                 NavigationLink(

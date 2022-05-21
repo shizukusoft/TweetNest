@@ -141,8 +141,19 @@ extension BackgroundTaskScheduler {
     @available(tvOSApplicationExtension, unavailable)
     @discardableResult
     public nonisolated func registerBackgroundTasks() -> Bool {
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier, using: nil, launchHandler: handleBackgroundRefreshBackgroundTask(_:)) &&
-        BGTaskScheduler.shared.register(forTaskWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier, using: nil, launchHandler: handleDataCleansingBackgroundTask(_:))
+        [
+            BGTaskScheduler.shared.register(
+                forTaskWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier,
+                using: nil,
+                launchHandler: handleBackgroundRefreshBackgroundTask(_:)
+            ),
+            BGTaskScheduler.shared.register(
+                forTaskWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier,
+                using: nil,
+                launchHandler: handleDataCleansingBackgroundTask(_:)
+            )
+        ]
+        .allSatisfy { $0 }
     }
 
     @available(iOSApplicationExtension, unavailable)
@@ -203,7 +214,9 @@ extension BackgroundTaskScheduler {
 extension BackgroundTaskScheduler {
     @discardableResult
     public nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
-        guard let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString }) else {
+        guard
+            let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString })
+        else {
             return []
         }
 

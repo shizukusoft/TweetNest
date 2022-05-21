@@ -10,9 +10,12 @@ opt_in_rules:
   - empty_collection_literal
   - empty_string
 
-line_length:
-  warning: 220
-  error: 240
+file_length:
+  ignore_comment_only_lines: true
+
+function_body_length:
+  warning: 50
+  error: 125
 
 identifier_name:
   min_length:
@@ -23,6 +26,15 @@ identifier_name:
     error: 100
   allowed_symbols:
     - '_'
+
+line_length:
+  warning: 160
+  error: 240
+  ignores_comments: true
+
+nesting:
+  type_level: 2
+  function_level: 3
 
 type_name:
   min_length:
@@ -35,7 +47,3 @@ type_name:
     - '_'
   excluded:
     - ''
-
-nesting:
-  type_level: 2
-  function_level: 3

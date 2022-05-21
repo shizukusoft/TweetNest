@@ -28,7 +28,9 @@ struct SettingsFetchNewDataView: View {
     @ViewBuilder var fetchNewDataIntervalPicker: some View {
         Picker(selection: $fetchNewDataInterval) {
             ForEach(Self.fetchNewDataIntervalOptions.sorted(), id: \.self) { timeInterval in
-                Text("Every \(Date(timeIntervalSinceReferenceDate: 0)..<Date(timeIntervalSinceReferenceDate: timeInterval), format: .components(style: .narrow))")
+                let datesRange = Date(timeIntervalSinceReferenceDate: 0)..<Date(timeIntervalSinceReferenceDate: timeInterval)
+
+                Text("Every \(datesRange, format: .components(style: .narrow))")
             }
 
             #if os(macOS)

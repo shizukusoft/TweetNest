@@ -40,7 +40,12 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
         }
     }
 
-    init(fetchRequest: NSFetchRequest<Element>, managedObjectContext: NSManagedObjectContext, cacheName: String? = nil, onError errorHandler: (@Sendable (Error) -> Void)? = nil) {
+    init(
+        fetchRequest: NSFetchRequest<Element>,
+        managedObjectContext: NSManagedObjectContext,
+        cacheName: String? = nil,
+        onError errorHandler: (@Sendable (Error) -> Void)? = nil
+    ) {
         self.fetchRequest = fetchRequest
         self.managedObjectContext = managedObjectContext
         self.cacheName = cacheName

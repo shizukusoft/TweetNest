@@ -341,7 +341,9 @@ extension Session {
 
     public func cleansingAllPersistentStores() async throws {
         let persistentContainer = persistentContainer
-        let temporalPersistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: persistentContainer.persistentStoreCoordinator.managedObjectModel)
+        let temporalPersistentStoreCoordinator = NSPersistentStoreCoordinator(
+            managedObjectModel: persistentContainer.persistentStoreCoordinator.managedObjectModel
+        )
 
         for persistentStoreDescription in persistentContainer.persistentStoreDescriptions.lazy.compactMap({ $0.copy() as? NSPersistentStoreDescription }) {
             guard persistentStoreDescription.type == NSSQLiteStoreType else { return }

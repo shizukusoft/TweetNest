@@ -227,7 +227,9 @@ extension Session {
 
     @discardableResult
     public func fetchNewData(force: Bool = false) async throws -> Bool {
-        guard force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date() else {
+        guard
+            force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date()
+        else {
             return false
         }
 
