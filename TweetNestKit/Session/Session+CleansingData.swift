@@ -79,8 +79,8 @@ extension Session {
     public func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
-        try await context.perform(schedule: .enqueued) {
-            try withExtendedBackgroundExecution {
+        try await withExtendedBackgroundExecution {
+            try await context.perform(schedule: .enqueued) {
                 guard
                     let account = try? context.existingObject(with: accountObjectID) as? ManagedAccount,
                     let accountUserID = account.userID
@@ -157,8 +157,8 @@ extension Session {
     public func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
-        try await context.perform(schedule: .enqueued) {
-            try withExtendedBackgroundExecution {
+        try await withExtendedBackgroundExecution {
+            try await context.perform(schedule: .enqueued) {
                 guard
                     let user = try? context.existingObject(with: userObjectID) as? ManagedUser,
                     let userID = user.id
@@ -231,8 +231,8 @@ extension Session {
     func cleansingUserDetails(for userID: String) async throws {
         let context = persistentContainerNewBackgroundContext
 
-        try await context.perform(schedule: .enqueued) {
-            try withExtendedBackgroundExecution {
+        try await withExtendedBackgroundExecution {
+            try await context.perform(schedule: .enqueued) {
                 let fetchRequest = ManagedUserDetail.fetchRequest()
                 fetchRequest.predicate = NSPredicate(format: "userID == %@", userID)
                 fetchRequest.sortDescriptors = [
@@ -353,11 +353,11 @@ extension Session {
             persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteManualVacuumOption)
             persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteAnalyzeOption)
 
-            try await persistentContainer.persistentStoreCoordinator.perform {
-                try temporalPersistentStoreCoordinator.performAndWait {
-                    var error: Error?
+            try await withExtendedBackgroundExecution {
+                try await persistentContainer.persistentStoreCoordinator.perform {
+                    try temporalPersistentStoreCoordinator.performAndWait {
+                        var error: Error?
 
-                    try withExtendedBackgroundExecution {
                         let dispatchSemaphore = DispatchSemaphore(value: 0)
 
                         temporalPersistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in
@@ -375,10 +375,10 @@ extension Session {
                         }
 
                         dispatchSemaphore.wait()
-                    }
 
-                    if let error = error {
-                        throw error
+                        if let error = error {
+                            throw error
+                        }
                     }
                 }
             }

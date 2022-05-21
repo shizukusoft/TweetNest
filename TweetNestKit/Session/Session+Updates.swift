@@ -32,8 +32,8 @@ extension Session {
         let context = _context ?? newBackgroundContext()
 
         let twitterSession = try await self.twitterSession(for: accountObjectID)
-        let accountPreferences: ManagedAccount.Preferences = try await context.perform {
-            try withExtendedBackgroundExecution {
+        let accountPreferences: ManagedAccount.Preferences = try await withExtendedBackgroundExecution {
+            try await context.perform {
                 guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
                     throw SessionError.unknown
                 }
@@ -74,8 +74,8 @@ extension Session {
         let accountUserID = String(accountUser.id)
 
         async let userObjectIDsByUserID = preflightUsersForUpdating(userIDs: [accountUserID], accountUserID: accountUserID, context: context)
-        async let updateAccount: Void = context.perform(schedule: .enqueued) {
-            try withExtendedBackgroundExecution {
+        async let updateAccount: Void = withExtendedBackgroundExecution {
+            try await context.perform(schedule: .enqueued) {
                 guard
                     let account = context.object(with: accountObjectID) as? ManagedAccount,
                     account.userID != accountUserID
@@ -208,8 +208,8 @@ extension Session {
         accountUserID: String,
         context: NSManagedObjectContext
     ) async throws -> [Twitter.User.ID: NSManagedObjectID] where S: Sequence, S.Element == Twitter.User.ID {
-        try await context.perform { [userIDs = Set(userIDs)] in
-            try withExtendedBackgroundExecution {
+        try await withExtendedBackgroundExecution {
+            try await context.perform { [userIDs = Set(userIDs)] in
                 let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
                 accountUserIDsfetchRequest.entity = ManagedAccount.entity()
                 accountUserIDsfetchRequest.resultType = .dictionaryResultType

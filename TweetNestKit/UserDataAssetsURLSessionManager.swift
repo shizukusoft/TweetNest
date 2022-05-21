@@ -90,14 +90,16 @@ extension UserDataAssetsURLSessionManager {
 
 extension UserDataAssetsURLSessionManager {
     private func saveManagedObjectContext() {
-        managedObjectContext.performAndWait {
-            guard managedObjectContext.hasChanges else {
-                return
-            }
-
+        Task { [managedObjectContext] in
             do {
-                try withExtendedBackgroundExecution {
-                    try managedObjectContext.save()
+                try await withExtendedBackgroundExecution {
+                    try await managedObjectContext.perform {
+                        guard managedObjectContext.hasChanges else {
+                            return
+                        }
+
+                        try managedObjectContext.save()
+                    }
                 }
             } catch {
                 logger.error("\(error as NSError, privacy: .public)")
@@ -228,8 +230,8 @@ extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
                 }
 
                 do {
-                    try await managedObjectContext.perform(schedule: .enqueued) {
-                        try withExtendedBackgroundExecution {
+                    try await withExtendedBackgroundExecution {
+                        try await managedObjectContext.perform(schedule: .enqueued) {
                             try ManagedUserDataAsset.userDataAsset(
                                 data: data,
                                 dataMIMEType: downloadTask.response?.mimeType,

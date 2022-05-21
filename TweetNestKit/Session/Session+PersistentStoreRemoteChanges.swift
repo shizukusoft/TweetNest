@@ -31,50 +31,54 @@ extension Session {
     }
 
     func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?) {
-        do {
-            try withExtendedBackgroundExecution {
+        Task {
+            await sessionActor.run { _ in
                 do {
-                    guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
-                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+                    try await withExtendedBackgroundExecution {
+                        do {
+                            guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
+                                try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
 
-                        return
+                                return
+                            }
+
+                            let context = self.persistentContainer.newBackgroundContext()
+                            let persistentHistoryResult = try await context.perform {
+                                try context.execute(
+                                    NSPersistentHistoryChangeRequest.fetchHistory(
+                                        after: lastPersistentHistoryToken
+                                    )
+                                )
+                            } as? NSPersistentHistoryResult
+
+                            guard
+                                let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
+                                let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
+                            else {
+                                try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+
+                                return
+                            }
+
+                            Task.detached {
+                                await self.handlePersistentHistoryTransactions(persistentHistoryTransactions)
+                            }
+
+                            Task.detached(priority: .utility) {
+                                await self.purgeOldPersistentHistories()
+                            }
+
+                            try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
+                        } catch {
+                            try? Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+
+                            throw error
+                        }
                     }
-
-                    let context = self.persistentContainer.newBackgroundContext()
-                    let persistentHistoryResult = try context.performAndWait {
-                        try context.execute(
-                            NSPersistentHistoryChangeRequest.fetchHistory(
-                                after: lastPersistentHistoryToken
-                            )
-                        )
-                    } as? NSPersistentHistoryResult
-
-                    guard
-                        let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
-                        let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
-                    else {
-                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
-
-                        return
-                    }
-
-                    Task.detached {
-                        await self.handlePersistentHistoryTransactions(persistentHistoryTransactions)
-                    }
-
-                    Task.detached(priority: .utility) {
-                        await self.purgeOldPersistentHistories()
-                    }
-
-                    try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
                 } catch {
-                    try? Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
-
-                    throw error
+                    self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
                 }
             }
-        } catch {
-            self.logger.error("Error occurred while handle persistent store remote changes: \(error as NSError, privacy: .public)")
         }
     }
 }
@@ -88,8 +92,8 @@ extension Session {
         do {
             let context = self.persistentContainer.newBackgroundContext()
 
-            try await context.perform(schedule: .enqueued) {
-                try withExtendedBackgroundExecution {
+            try await withExtendedBackgroundExecution {
+                try await context.perform(schedule: .enqueued) {
                     _ = try context.execute(
                         NSPersistentHistoryChangeRequest.deleteHistory(before: Self.persistentHistoryExpiryDate)
                     )
