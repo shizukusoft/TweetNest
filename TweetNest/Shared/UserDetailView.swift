@@ -97,6 +97,31 @@ struct UserDetailView: View {
                         }
                     }
                 }
+
+                if let mutingUserIDs = userDetail.mutingUserIDs {
+                    NavigationLink(
+                        destination: {
+                            UsersList(userIDs: mutingUserIDs)
+                            .navigationTitle(Text("Muted Accounts"))
+                            .environment(\.account, account)
+                        },
+                        label: {
+                            Label(
+                                title: {
+                                    HStack {
+                                        Text("Muted Accounts")
+                                        Spacer()
+                                        Text(mutingUserIDs.count.twnk_formatted())
+                                        .allowsTightening(true)
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(1)
+                                    }
+                                },
+                                icon: {
+                                    Image(systemName: "speaker.slash")
+                                })
+                        })
+                }
             }
 
             Section {
