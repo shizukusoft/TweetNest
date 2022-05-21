@@ -240,13 +240,20 @@ extension Session {
                     uniquingKeysWith: { (_, last) in last }
                 )
 
-                guard changes.isEmpty == false else {
+                guard !changes.isEmpty else {
                     return
                 }
 
-                let updatedObjectIDs: [NSManagedObjectID] = changes.lazy
-                    .filter { $0.value.changeType == .insert || $0.value.changeType == .update }
-                    .map { $0.key }
+                let (updatedObjectIDs, removedObjectIDs) = changes.reduce(into: ([NSManagedObjectID](), [NSManagedObjectID]())) { partialResult, change in
+                    switch change.value.changeType {
+                    case .insert, .update:
+                        partialResult.0.append(change.key)
+                    case .delete:
+                        partialResult.1.append(change.key)
+                    @unknown default:
+                        break
+                    }
+                }
 
                 let context = self.persistentContainer.newBackgroundContext()
 
@@ -317,9 +324,13 @@ extension Session {
 
                     let needsToBeRemovedObjectIDs = try await notificationTaskGroup
                         .compactMap { $0 }
-                        .reduce(into: changes.keys) { partialResult, postedUserDetailObjectID in
+                        .reduce(into: _userDetails.keys.union(removedObjectIDs)) { partialResult, postedUserDetailObjectID in
                             partialResult.remove(postedUserDetailObjectID)
                         }
+
+                    guard !needsToBeRemovedObjectIDs.isEmpty else {
+                        return
+                    }
 
                     Task.detached(priority: .utility) {
                         await Task.yield()
@@ -332,7 +343,6 @@ extension Session {
                                     [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
                                 }
 
-                                UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: userNotificationIdentifiers)
                                 UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
                             }
                         } catch {
