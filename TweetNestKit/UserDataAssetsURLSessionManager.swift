@@ -96,7 +96,7 @@ extension UserDataAssetsURLSessionManager {
             }
 
             do {
-                try withExtendedBackgroundExecution{
+                try withExtendedBackgroundExecution {
                     try managedObjectContext.save()
                 }
             } catch {
