@@ -28,73 +28,15 @@ struct UserView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     #endif
 
-    var shouldCompactToolbar: Bool {
-        #if os(iOS)
-        return horizontalSizeClass == .compact
-        #else
-        return false
-        #endif
-    }
-
     #if os(iOS)
     @State var safariSheetURL: URL?
     @State var shareSheetURL: URL?
     #endif
 
-    var userProfileURL: URL {
-        URL(string: "https://twitter.com/intent/user?user_id=\(userID)")!
-    }
-
     @State var showBulkDeleteRecentTweets: Bool = false
     #if os(iOS) || os(macOS)
     @State var showBulkDeleteAllTweets: Bool = false
     #endif
-
-    @ViewBuilder
-    var deleteMenu: some View {
-        #if os(iOS) || os(macOS)
-        Menu {
-            Button(role: .destructive) {
-                showBulkDeleteRecentTweets = true
-            } label: {
-                Text("Delete Recent Tweets")
-            }
-            .accessibilityIdentifier("Delete Recent Tweets")
-
-            Button(role: .destructive) {
-                showBulkDeleteAllTweets = true
-            } label: {
-                Text("Delete All Tweets")
-            }
-            .accessibilityIdentifier("Delete All Tweets")
-        } label: {
-            Label {
-                Text("Delete")
-            } icon: {
-                Image(systemName: "trash")
-            }
-        }
-        .accessibilityIdentifier("Delete")
-        #else
-        Button(role: .destructive) {
-            showBulkDeleteRecentTweets = true
-        } label: {
-            Text("Delete Recent Tweets")
-        }
-        .accessibilityIdentifier("Delete Recent Tweets")
-        #endif
-    }
-
-    @ViewBuilder private var refreshButton: some View {
-        Button {
-            Task {
-                refresh
-            }
-        } label: {
-            Label("Refresh", systemImage: "arrow.clockwise")
-        }
-        .disabled(isRefreshing)
-    }
 
     var body: some View {
         let user = usersFetchedResultsController.fetchedObjects.first
@@ -303,6 +245,68 @@ struct UserView: View {
                 managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
             )
         )
+    }
+}
+
+extension UserView {
+    var shouldCompactToolbar: Bool {
+        #if os(iOS)
+        return horizontalSizeClass == .compact
+        #else
+        return false
+        #endif
+    }
+
+    var userProfileURL: URL {
+        URL(string: "https://twitter.com/intent/user?user_id=\(userID)")!
+    }
+}
+
+extension UserView {
+    @ViewBuilder
+    var deleteMenu: some View {
+        #if os(iOS) || os(macOS)
+        Menu {
+            Button(role: .destructive) {
+                showBulkDeleteRecentTweets = true
+            } label: {
+                Text("Delete Recent Tweets")
+            }
+            .accessibilityIdentifier("Delete Recent Tweets")
+
+            Button(role: .destructive) {
+                showBulkDeleteAllTweets = true
+            } label: {
+                Text("Delete All Tweets")
+            }
+            .accessibilityIdentifier("Delete All Tweets")
+        } label: {
+            Label {
+                Text("Delete")
+            } icon: {
+                Image(systemName: "trash")
+            }
+        }
+        .accessibilityIdentifier("Delete")
+        #else
+        Button(role: .destructive) {
+            showBulkDeleteRecentTweets = true
+        } label: {
+            Text("Delete Recent Tweets")
+        }
+        .accessibilityIdentifier("Delete Recent Tweets")
+        #endif
+    }
+
+    @ViewBuilder private var refreshButton: some View {
+        Button {
+            Task {
+                refresh
+            }
+        } label: {
+            Label("Refresh", systemImage: "arrow.clockwise")
+        }
+        .disabled(isRefreshing)
     }
 }
 
