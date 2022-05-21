@@ -94,11 +94,7 @@ struct SettingsMainView: View {
                 .contextMenu {
                     Button(
                         action: {
-                            #if canImport(AppKit)
-                            NSPasteboard.general.setString(versionString, forType: .string)
-                            #elseif canImport(UIKit)
-                            UIPasteboard.general.string = versionString
-                            #endif
+                            Pasteboard.general.string = versionString
                         },
                         label: {
                             Label("Copy", systemImage: "doc.on.doc")
