@@ -137,10 +137,15 @@ struct UserDetailView: View {
     }
 }
 
-// #if DEBUG
-// struct UserDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserDetailView()
-//    }
-// }
-// #endif
+ #if DEBUG
+ struct UserDetailView_Previews: PreviewProvider {
+
+    static var previews: some View {
+        NavigationView {
+            UserDetailView(userDetail: .preview)
+            .environment(\.account, .preview)
+            .navigationBarHidden(true)
+        }
+    }
+ }
+ #endif

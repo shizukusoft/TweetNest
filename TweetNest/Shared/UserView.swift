@@ -362,8 +362,14 @@ extension UserView {
     }
 }
 
+#if DEBUG
 struct UserView_Previews: PreviewProvider {
+
     static var previews: some View {
-        UserView(userID: ManagedAccount.preview.users!.last!.id!)
+        NavigationView {
+            UserView(userID: ManagedAccount.preview.userID!)
+            .environment(\.account, .preview)
+        }
     }
 }
+#endif

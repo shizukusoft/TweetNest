@@ -25,8 +25,30 @@ struct DateText: View {
     }
 }
 
+#if DEBUG
 struct DateText_Previews: PreviewProvider {
+
     static var previews: some View {
-        DateText(date: Date())
+        List {
+            Section(
+                content: {
+                    HStack {
+                        Label(
+                            title: {
+                                Text("Date" as String)
+                            },
+                            icon: {
+                                Image(systemName: "calendar")
+                            })
+                        Spacer()
+                        DateText(date: Date())
+                        .foregroundColor(.secondary)
+                    }
+                },
+                header: {
+                    DateText(date: Date())
+                })
+        }
     }
 }
+#endif

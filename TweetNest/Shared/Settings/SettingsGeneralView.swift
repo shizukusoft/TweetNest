@@ -69,8 +69,17 @@ struct SettingsGeneralView: View {
     }
 }
 
+#if DEBUG
 struct SettingsGeneralView_Previews: PreviewProvider {
+
     static var previews: some View {
-        SettingsGeneralView()
+        NavigationView {
+            SettingsGeneralView()
+            .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
+            #if os(iOS) || os(watchOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+        }
     }
 }
+#endif

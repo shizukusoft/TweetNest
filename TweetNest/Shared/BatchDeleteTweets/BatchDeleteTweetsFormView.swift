@@ -157,8 +157,14 @@ struct BatchDeleteTweetsFormView: View {
     }
 }
 
+#if DEBUG
 struct BatchDeleteTweetsFormView_Previews: PreviewProvider {
+
     static var previews: some View {
-        BatchDeleteTweetsFormView(sourceTweets: [:], targetTweets: .constant([:]), isBatchDeletionStarted: .constant(false))
+        BatchDeleteTweetsFormView(
+            sourceTweets: [:],
+            targetTweets: .constant([:]),
+            isBatchDeletionStarted: .constant(false))
     }
 }
+#endif

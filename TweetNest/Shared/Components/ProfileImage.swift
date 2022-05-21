@@ -27,8 +27,18 @@ struct ProfileImage: View {
 
 #if DEBUG
 struct ProfileImage_Previews: PreviewProvider {
+
+    private static let url: URL =
+        .init(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")!
+
     static var previews: some View {
-        ProfileImage(profileImageURL: nil, isExportable: false)
+        ZStack {
+            Rectangle()
+            .fill(.black)
+            .ignoresSafeArea()
+            ProfileImage(profileImageURL: url)
+            .aspectRatio(contentMode: .fit)
+        }
     }
 }
 #endif

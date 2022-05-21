@@ -90,8 +90,21 @@ struct UsersDiffList: View {
     }
 }
 
-// struct UsersDiffList_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UsersDiffList()
-//    }
-// }
+#if DEBUG
+struct UsersDiffList_Previews: PreviewProvider {
+
+    static var previews: some View {
+        #if os(macOS)
+        UsersDiffList("", userID: ManagedAccount.preview.userID!, diffKeyPath: \.followingUserIDs)
+        #else
+        NavigationView {
+            UsersDiffList("", userID: ManagedAccount.preview.userID!, diffKeyPath: \.followingUserIDs)
+            #if os(iOS)
+            .listStyle(.insetGrouped)
+            #endif
+            .navigationBarHidden(true)
+        }
+        #endif
+    }
+}
+#endif

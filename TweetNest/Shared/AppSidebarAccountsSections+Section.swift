@@ -146,10 +146,21 @@ extension AppSidebarAccountsSections {
     }
 }
 
-// #if DEBUG
-// struct AppSidebarAccountRows_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AppSidebarAccountRows()
-//    }
-// }
-// #endif
+ #if DEBUG
+ struct AppSidebarAccountsSections_Section_Previews: PreviewProvider {
+
+    static var previews: some View {
+        NavigationView {
+            List {
+                AppSidebarAccountsSections.Section(
+                    account: .preview,
+                    navigationItemSelection: .constant(nil))
+            }
+            #if os(iOS) || os(macOS)
+            .listStyle(.sidebar)
+            #endif
+            .navigationBarHidden(true)
+        }
+    }
+ }
+ #endif

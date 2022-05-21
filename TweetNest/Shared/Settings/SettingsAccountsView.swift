@@ -94,8 +94,17 @@ struct SettingsAccountsView: View {
     }
 }
 
+#if DEBUG
 struct SettingsAccountsView_Previews: PreviewProvider {
+
     static var previews: some View {
-        SettingsAccountsView()
+        NavigationView {
+            SettingsAccountsView()
+            .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
+            #if os(iOS) || os(watchOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+        }
     }
 }
+#endif

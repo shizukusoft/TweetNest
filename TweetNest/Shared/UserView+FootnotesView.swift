@@ -50,3 +50,22 @@ extension UserView.FootnotesView {
         }
     }
 }
+
+#if DEBUG
+struct UserView_FootnotesView_Preview: PreviewProvider {
+
+    static var previews: some View {
+        List {
+            Section(
+                content: {
+                    Text(verbatim: "")
+                },
+                footer: {
+                    UserView.FootnotesView(
+                        userID: ManagedUser.preview.id!,
+                        user: .preview)
+                })
+        }
+    }
+}
+#endif

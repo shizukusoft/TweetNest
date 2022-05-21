@@ -107,9 +107,28 @@ struct DetailImageView: View {
     }
 }
 
-// struct DetailImageView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        DetailImageView()
-//    }
-// }
+#if DEBUG
+struct DetailImageView_Previews: PreviewProvider {
+
+    private static let url: URL =
+        .init(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")!
+
+    static var previews: some View {
+        let data = NSDataAsset(name: "TweetNestProfileImageData")!.data
+        let imageSource = CGImageSourceCreateWithData(data as CFData, nil)!
+        let index = CGImageSourceGetPrimaryImageIndex(imageSource)
+        let properties = CGImageSourceCopyPropertiesAtIndex(imageSource, index, nil)! as NSDictionary
+        let image = CGImageSourceCreateImageAtIndex(imageSource, index, nil)!
+        let dpiWidth = (properties[kCGImagePropertyDPIWidth] as? NSNumber)?.doubleValue
+        let dpiHeight = (properties[kCGImagePropertyDPIHeight] as? NSNumber)?.doubleValue
+        let scale = CGFloat((dpiWidth ?? dpiHeight ?? 72) / 72)
+        DetailImageView(
+            imageData: data,
+            image: image,
+            imageScale: scale,
+            filename: url.lastPathComponent)
+    }
+}
+#endif
+
 #endif

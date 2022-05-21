@@ -157,10 +157,13 @@ struct UserDetailProfileView: View {
     }
 }
 
-// #if DEBUG
-// struct UserDetailProfileView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserDetailProfileView(userDetail: nil)
-//    }
-// }
-// #endif
+ #if DEBUG
+ struct UserDetailProfileView_Previews: PreviewProvider {
+
+    static var previews: some View {
+        List {
+            UserDetailProfileView(userDetail: .preview)
+        }
+    }
+ }
+ #endif

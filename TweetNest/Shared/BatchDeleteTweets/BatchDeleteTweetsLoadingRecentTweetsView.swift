@@ -63,8 +63,17 @@ struct BatchDeleteTweetsLoadingRecentTweetsView: View {
     }
 }
 
+#if DEBUG
 struct BatchDeleteTweetsLoadingRecentTweetsView_Previews: PreviewProvider {
+
     static var previews: some View {
-        BatchDeleteTweetsLoadingRecentTweetsView(sourceTweets: .constant(nil))
+        ZStack {
+            List {
+                EmptyView()
+            }
+            BatchDeleteTweetsLoadingRecentTweetsView(sourceTweets: .constant(nil))
+            .environment(\.account, .preview)
+        }
     }
 }
+#endif

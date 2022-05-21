@@ -59,8 +59,39 @@ struct AppStatusView: View {
     }
 }
 
+#if DEBUG
 struct AppStatusView_Previews: PreviewProvider {
+
     static var previews: some View {
-        AppStatusView(isPersistentContainerLoaded: false)
+        NavigationView {
+            List {
+                Section(
+                    content: {
+                        #if os(watchOS)
+                        Text(verbatim: "")
+                        #else
+                        EmptyView()
+                        #endif
+                    },
+                    footer: {
+                        #if os(watchOS)
+                        AppStatusView(isPersistentContainerLoaded: false)
+                        #else
+                        EmptyView()
+                        #endif
+                    })
+            }
+            #if os(iOS) || os(watchOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+            #if os(iOS) || os(macOS)
+            .toolbar {
+                ToolbarItemGroup(placement: .status) {
+                    AppStatusView(isPersistentContainerLoaded: false)
+                }
+            }
+            #endif
+        }
     }
 }
+#endif

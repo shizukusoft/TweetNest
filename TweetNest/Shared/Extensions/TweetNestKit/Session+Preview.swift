@@ -1,38 +1,39 @@
 //
-//  TweetNestKit.Session.swift
+//  Session+Preview.swift
 //  TweetNest
 //
 //  Created by Jaehong Kang on 2021/02/23.
 //
 
-import Foundation
-#if canImport(UIKit)
-import UIKit
-#endif
-#if canImport(AppKit)
-import AppKit
-#endif
+#if DEBUG
+
 import CoreData
+import Foundation
 import TweetNestKit
 import UniformTypeIdentifiers
 
+#if canImport(AppKit)
+import AppKit
+#elseif canImport(UIKit)
+import UIKit
+#else
+#error("AppKit or UIKit required.")
+#endif
+
 extension TweetNestKit.Session {
+
     public static let preview: Session = {
         let session = Session(inMemory: true)
-
-        #if DEBUG
         do {
             try session.insertPreviewDataToPersistentContainer()
-        } catch {
-            fatalError(String(reflecting: error))
         }
-        #endif
-
+        catch let error as NSError {
+            fatalError("Unresolved error \(error), \(error.userInfo)")
+        }
         return session
     }()
 }
 
-#if DEBUG
 extension TweetNestKit.Session {
     nonisolated func insertPreviewDataToPersistentContainer() throws {
         let context = persistentContainer.newBackgroundContext()
@@ -183,17 +184,5 @@ extension TweetNestKit.Session {
         appleProfileImageDataAsset.data = NSDataAsset(name: "AppleProfileImageData")?.data
     }
 }
+
 #endif
-
-extension TweetNestKit.ManagedAccount {
-    public static var preview: ManagedAccount {
-        let fetchRequest = ManagedAccount.fetchRequest()
-
-        do {
-            return try Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-    }
-}

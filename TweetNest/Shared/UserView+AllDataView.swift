@@ -88,8 +88,27 @@ extension UserView {
     }
 }
 
-struct UserViewAllDataView_Previews: PreviewProvider {
+#if DEBUG
+struct UserView_AllDataView_Previews: PreviewProvider {
+
+    private static let _fetchedManagedUserDetailsController: FetchedResultsController<ManagedUserDetail> = {
+        let fetchRequest = ManagedUserDetail.fetchRequest()
+        fetchRequest.predicate = .init(format: "userID == %@", ManagedAccount.preview.userID!)
+        fetchRequest.sortDescriptors = [.init(keyPath: \ManagedUserDetail.creationDate, ascending: false)]
+        return
+            .init(
+                fetchRequest: fetchRequest,
+                managedObjectContext: Session.preview.persistentContainer.viewContext)
+    }()
+
     static var previews: some View {
-        UserView.AllDataView(userDetails: [])
+        NavigationView {
+            List {
+                UserView.AllDataView(userDetails: _fetchedManagedUserDetailsController.fetchedObjects)
+                .environment(\.account, .preview)
+            }
+            .navigationBarHidden(true)
+        }
     }
 }
+#endif

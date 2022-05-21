@@ -9,7 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserDetailLabel: View {
-    private struct UserDetailLabel: View {
+    private struct _UserDetailLabel: View {
         @ObservedObject var userDetail: ManagedUserDetail
         let placeholder: String
 
@@ -59,7 +59,7 @@ struct UserDetailLabel: View {
 
     var body: some View {
         if let userDetail = userDetail {
-            UserDetailLabel(userDetail: userDetail, placeholder: placeholder, showsName: showsName, showsUsername: showsUsername)
+            _UserDetailLabel(userDetail: userDetail, placeholder: placeholder, showsName: showsName, showsUsername: showsUsername)
         } else {
             Label {
                 Text(verbatim: placeholder)
@@ -88,8 +88,42 @@ struct UserDetailLabel: View {
     }
 }
 
-// struct UserDetailLabel_Previews: PreviewProvider {
-//    static var previews: some View {
-//        UserDetailLabel()
-//    }
-// }
+#if DEBUG
+struct UserDetailLabel_Previews: PreviewProvider {
+
+    private static let _userDetail: ManagedUserDetail = ManagedAccount.preview.users!.last!.userDetails!.last!
+
+    static var previews: some View {
+        NavigationView {
+            List {
+                Section(
+                    content: {
+                        UserDetailLabel(userDetail: _userDetail, account: .preview)
+                        #if os(watchOS)
+                        .labelStyle(.userDetailLabelStyle(iconWidth: 16, iconHeight: 16))
+                        #elseif os(macOS)
+                        .labelStyle(.userDetailLabelStyle(iconWidth: 18, iconHeight: 18))
+                        #else
+                        .labelStyle(.userDetailLabelStyle(iconWidth: 24, iconHeight: 24))
+                        #endif
+                    },
+                    header: {
+                        UserDetailLabel(userDetail: _userDetail, account: .preview)
+                        #if os(watchOS)
+                        .labelStyle(.userDetailLabelStyle(iconWidth: 16, iconHeight: 16))
+                        .padding([.bottom], 2)
+                        #elseif os(macOS)
+                        .labelStyle(.userDetailLabelStyle(iconWidth: 18, iconHeight: 18))
+                        #else
+                        .labelStyle(.userDetailLabelStyle(iconWidth: 24, iconHeight: 24))
+                        #endif
+                    })
+            }
+            #if os(iOS) || os(macOS)
+            .listStyle(.sidebar)
+            #endif
+            .navigationBarHidden(true)
+        }
+    }
+}
+#endif

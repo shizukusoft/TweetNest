@@ -211,3 +211,18 @@ struct UserDataAssetImage: View {
         }
     }
 }
+
+#if DEBUG
+struct UserDataAssetImage_Previews: PreviewProvider {
+
+    static var previews: some View {
+        ZStack {
+            Rectangle()
+            .fill(.black)
+            .ignoresSafeArea()
+            UserDataAssetImage(url: .init(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png"))
+            .aspectRatio(contentMode: .fit)
+        }
+    }
+}
+#endif

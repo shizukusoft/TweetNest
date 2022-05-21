@@ -106,8 +106,17 @@ struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs
     }
 }
 
+#if DEBUG
 struct UserRows_Previews: PreviewProvider {
+
     static var previews: some View {
-        UserRows(userIDs: ["123456789"])
+        NavigationView {
+            List {
+                UserRows(userIDs: ManagedUserDetail.preview.followingUserIDs!)
+                .environment(\.account, .preview)
+            }
+            .navigationBarHidden(true)
+        }
     }
 }
+#endif

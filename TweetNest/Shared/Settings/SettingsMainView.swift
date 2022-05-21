@@ -118,8 +118,13 @@ struct SettingsMainView: View {
     #endif
 }
 
+#if DEBUG
 struct SettingsMainView_Previews: PreviewProvider {
+
     static var previews: some View {
-        SettingsMainView()
+        NavigationView {
+            SettingsMainView()
+        }
     }
 }
+#endif

@@ -143,8 +143,19 @@ struct BatchDeleteTweetsProgressView: View {
     }
 }
 
+#if DEBUG
 struct BatchDeleteTweetsProgressView_Previews: PreviewProvider {
+
     static var previews: some View {
-        BatchDeleteTweetsProgressView(targetTweets: [:], isBatchDeletionExecuting: .constant(false), isBatchDeletionFinished: .constant(false))
+        ZStack {
+            List {
+                EmptyView()
+            }
+            BatchDeleteTweetsProgressView(
+                targetTweets: [:],
+                isBatchDeletionExecuting: .constant(false),
+                isBatchDeletionFinished: .constant(false))
+        }
     }
 }
+#endif

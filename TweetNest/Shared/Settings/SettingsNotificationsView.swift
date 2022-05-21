@@ -73,8 +73,17 @@ struct SettingsNotificationsView: View {
     }
 }
 
+#if DEBUG
 struct SettingsNotificationsView_Previews: PreviewProvider {
+
     static var previews: some View {
-        SettingsNotificationsView()
+        NavigationView {
+            SettingsNotificationsView()
+            .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
+            #if os(iOS) || os(watchOS)
+            .navigationBarTitleDisplayMode(.inline)
+            #endif
+        }
     }
 }
+#endif
