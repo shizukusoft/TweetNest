@@ -390,7 +390,7 @@ extension Session {
                         await Task.yield()
 
                         do {
-                            try withExtendedBackgroundExecution(expirationHandler: nil) {
+                            try await withExtendedBackgroundExecution {
                                 let cloudKitRecordIDs = self.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
 
                                 let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {

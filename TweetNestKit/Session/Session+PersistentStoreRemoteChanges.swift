@@ -30,47 +30,46 @@ extension Session {
         }
     }
 
-    func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?) {
+    func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?, context: NSManagedObjectContext) async {
         do {
-            try withExtendedBackgroundExecution {
-                do {
-                    guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
-                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+            try await withExtendedBackgroundExecution {
+                try await context.perform(schedule: .enqueued) {
+                    do {
+                        guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
+                            try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
 
-                        return
-                    }
+                            return
+                        }
 
-                    let context = self.persistentContainer.newBackgroundContext()
-                    let persistentHistoryResult = try context.performAndWait {
-                        try context.execute(
+                        let persistentHistoryResult = try context.execute(
                             NSPersistentHistoryChangeRequest.fetchHistory(
                                 after: lastPersistentHistoryToken
                             )
-                        )
-                    } as? NSPersistentHistoryResult
+                        ) as? NSPersistentHistoryResult
 
-                    guard
-                        let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
-                        let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
-                    else {
-                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+                        guard
+                            let persistentHistoryTransactions = persistentHistoryResult?.result as? [NSPersistentHistoryTransaction],
+                            let newLastPersistentHistoryToken = persistentHistoryTransactions.last?.token
+                        else {
+                            try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
 
-                        return
+                            return
+                        }
+
+                        Task {
+                            await self.handlePersistentHistoryTransactions(persistentHistoryTransactions)
+                        }
+
+                        try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
+
+                        Task.detached(priority: .utility) {
+                            await self.purgeOldPersistentHistories(context: context)
+                        }
+                    } catch {
+                        try? Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+
+                        throw error
                     }
-
-                    Task.detached {
-                        await self.handlePersistentHistoryTransactions(persistentHistoryTransactions)
-                    }
-
-                    Task.detached(priority: .utility) {
-                        await self.purgeOldPersistentHistories()
-                    }
-
-                    try Self.setLastPersistentHistoryToken(newLastPersistentHistoryToken)
-                } catch {
-                    try? Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
-
-                    throw error
                 }
             }
         } catch {
@@ -81,15 +80,13 @@ extension Session {
 
 extension Session {
     private static var persistentHistoryExpiryDate: Date {
-        Date(timeIntervalSinceNow: TimeInterval(exactly: -604_800)!) // Seven Days Ago
+        Date(timeIntervalSinceNow: TimeInterval(exactly: -259_200)!) // Three Days Ago
     }
 
-    private func purgeOldPersistentHistories() async {
+    private func purgeOldPersistentHistories(context: NSManagedObjectContext) async {
         do {
-            let context = self.persistentContainer.newBackgroundContext()
-
-            try await context.perform(schedule: .enqueued) {
-                try withExtendedBackgroundExecution {
+            try await withExtendedBackgroundExecution {
+                try await context.perform(schedule: .enqueued) {
                     _ = try context.execute(
                         NSPersistentHistoryChangeRequest.deleteHistory(before: Self.persistentHistoryExpiryDate)
                     )
