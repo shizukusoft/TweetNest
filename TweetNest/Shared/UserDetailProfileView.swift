@@ -87,13 +87,24 @@ struct UserDetailProfileView: View {
                         }
                         .lineLimit(1)
                         .allowsTightening(true)
-                        #if os(macOS) || os(iOS)
+                        #if os(macOS)
                         .textSelection(.enabled)
                         #endif
                     }
                 } icon: {
                     Image(systemName: "location")
                 }
+                #if os(iOS)
+                .contextMenu {
+                    Button(
+                        action: {
+                            Pasteboard.general.string = location
+                        },
+                        label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        })
+                }
+                #endif
                 .accessibilityElement()
                 .accessibilityLabel(Text("Location"))
                 .accessibilityValue(Text(location))
@@ -112,13 +123,24 @@ struct UserDetailProfileView: View {
                         Link(url.absoluteString, destination: url)
                             .lineLimit(1)
                             .allowsTightening(true)
-                            #if os(macOS) || os(iOS)
+                            #if os(macOS)
                             .textSelection(.enabled)
                             #endif
                     }
                 } icon: {
                     Image(systemName: "safari")
                 }
+                #if os(iOS)
+                .contextMenu {
+                    Button(
+                        action: {
+                            Pasteboard.general.url = url
+                        },
+                        label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        })
+                }
+                #endif
                 .accessibilityElement()
                 .accessibilityLabel(Text("URL"))
                 .accessibilityValue(Text(url.absoluteString))
@@ -126,6 +148,7 @@ struct UserDetailProfileView: View {
             }
 
             if let userCreationDate = userDetail.userCreationDate {
+                let dateString = userCreationDate.twnk_formatted(shouldCompact: false)
                 Label {
                     TweetNestStack {
                         Text("Joined")
@@ -140,16 +163,27 @@ struct UserDetailProfileView: View {
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                         .allowsTightening(true)
-                        #if os(macOS) || os(iOS)
+                        #if os(macOS)
                         .textSelection(.enabled)
                         #endif
                     }
                 } icon: {
                     Image(systemName: "calendar")
                 }
+                #if os(iOS)
+                .contextMenu {
+                    Button(
+                        action: {
+                            Pasteboard.general.string = dateString
+                        },
+                        label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        })
+                }
+                #endif
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
-                .accessibilityValue(userCreationDate.twnk_formatted(shouldCompact: false))
+                .accessibilityValue(dateString)
             }
 
             if userDetail.isProtected {

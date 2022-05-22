@@ -263,6 +263,9 @@
 		663AEBB128351C84004E3491 /* ManagedAccount+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663AEBB028351C84004E3491 /* ManagedAccount+Preview.swift */; };
 		663AEBB228351C84004E3491 /* ManagedAccount+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663AEBB028351C84004E3491 /* ManagedAccount+Preview.swift */; };
 		663AEBB328351C84004E3491 /* ManagedAccount+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663AEBB028351C84004E3491 /* ManagedAccount+Preview.swift */; };
+		663E96C12838F5D60037413E /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663E96C02838F5D60037413E /* Pasteboard.swift */; };
+		663E96C22838F5D60037413E /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663E96C02838F5D60037413E /* Pasteboard.swift */; };
+		663E96C32838F5D60037413E /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663E96C02838F5D60037413E /* Pasteboard.swift */; };
 		66EE523826BF560200B721AC /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523726BF560200B721AC /* ShareView.swift */; };
 		66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523A26BF5C0E00B721AC /* ShareButton.swift */; };
 /* End PBXBuildFile section */
@@ -563,6 +566,7 @@
 		662BAFE228365876005A9CA1 /* ManagedUser+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedUser+Preview.swift"; sourceTree = "<group>"; };
 		662BAFE628365924005A9CA1 /* ManagedUserDetail+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedUserDetail+Preview.swift"; sourceTree = "<group>"; };
 		663AEBB028351C84004E3491 /* ManagedAccount+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+Preview.swift"; sourceTree = "<group>"; };
+		663E96C02838F5D60037413E /* Pasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pasteboard.swift; sourceTree = "<group>"; };
 		66EE523726BF560200B721AC /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		66EE523A26BF5C0E00B721AC /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -902,6 +906,7 @@
 				1908FBFB26F6EE020095AF77 /* BatchDeleteTweets */,
 				193AFB6726CA33D3008BFF67 /* Settings */,
 				193AB25926B6FCFA00B18D45 /* Extensions */,
+				663E96C02838F5D60037413E /* Pasteboard.swift */,
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
 				19365982260978EB00865D40 /* Preview Content */,
 			);
@@ -1547,6 +1552,7 @@
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
 				199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */,
+				663E96C12838F5D60037413E /* Pasteboard.swift in Sources */,
 				1944554628116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				190007F227E6EB4E005CFED3 /* UserRowsLabel.swift in Sources */,
@@ -1619,6 +1625,7 @@
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
 				19DB9E4D27084E96000E5FA2 /* PDFView.swift in Sources */,
 				193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
+				663E96C22838F5D60037413E /* Pasteboard.swift in Sources */,
 				662BAFE428365876005A9CA1 /* ManagedUser+Preview.swift in Sources */,
 				19FB868727E5D10C00AAC5CB /* SectionedFetchedResultsController.swift in Sources */,
 				19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
@@ -1690,6 +1697,7 @@
 				1944554428116F0900128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				19EABBCD26D6877600D3B003 /* MainView.swift in Sources */,
 				19EABBDF26D6878400D3B003 /* URL.swift in Sources */,
+				663E96C32838F5D60037413E /* Pasteboard.swift in Sources */,
 				19EABBE026D6878400D3B003 /* Session+Preview.swift in Sources */,
 				662BAFE528365876005A9CA1 /* ManagedUser+Preview.swift in Sources */,
 				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
