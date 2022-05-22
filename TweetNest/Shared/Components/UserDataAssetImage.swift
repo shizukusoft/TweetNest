@@ -48,11 +48,11 @@ struct UserDataAssetImage: View {
                             isDetailProfileImagePresented = true
                         }
                         .contextMenu {
-                            menuItems(imageData: imageData.data)
+                            menuItems(cgImage: cgImage)
                         }
                     #else
                     Menu {
-                        menuItems(imageData: imageData.data)
+                        menuItems(cgImage: cgImage)
                     } label: {
                         resizableImage(cgImage, scale: cgImageScale)
                     } primaryAction: {
@@ -161,21 +161,19 @@ struct UserDataAssetImage: View {
         }
     }
 
+    #if canImport(AppKit) || canImport(UIKit) && os(iOS)
     @ViewBuilder
-    private func menuItems(imageData: Data) -> some View {
+    private func menuItems(cgImage: CGImage) -> some View {
         Button(
             action: {
-                #if canImport(AppKit)
-                NSPasteboard.general.setData(imageData, forType: .fileContents)
-                #elseif canImport(UIKit) && !os(watchOS)
-                UIPasteboard.general.image = UIImage(data: imageData)
-                #endif
+                Pasteboard.general.image = cgImage
             },
             label: {
                 Label("Copy", systemImage: "doc.on.doc")
             }
         )
     }
+    #endif
 
     private func updateImage(from imageData: ImageData?) async {
         let cgImageAndImageScale: (cgImage: CGImage, imageScale: CGFloat?)? = {
