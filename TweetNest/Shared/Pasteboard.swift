@@ -61,8 +61,9 @@ final class Pasteboard: _PasteboardProtocol {
 
     var image: CGImage? {
         get {
-            if let nsImages = _nsPasteboard.readObjects(forClasses: [NSImage.self]) as? [NSImage],
-               let nsImage = nsImages.first
+            if
+                let nsImages = _nsPasteboard.readObjects(forClasses: [NSImage.self]) as? [NSImage],
+                let nsImage = nsImages.first
             {
                 return nsImage.cgImage(forProposedRect: nil, context: nil, hints: nil)
             }
@@ -100,8 +101,7 @@ final class Pasteboard: _PasteboardProtocol {
             if let newValue = newValue {
                 if newValue.isFileURL {
                     _nsPasteboard.setString(newValue.standardizedFileURL.absoluteString, forType: .fileURL)
-                }
-                else {
+                } else {
                     _nsPasteboard.setString(newValue.standardized.absoluteString, forType: .URL)
                 }
             }
@@ -122,8 +122,7 @@ final class Pasteboard: _PasteboardProtocol {
         set {
             if let newValue = newValue {
                 _uiPasteboard.image = .init(cgImage: newValue)
-            }
-            else {
+            } else {
                 _uiPasteboard.image = nil
             }
         }
