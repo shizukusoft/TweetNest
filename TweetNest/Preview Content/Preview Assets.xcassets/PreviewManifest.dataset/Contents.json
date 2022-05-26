@@ -1,9 +1,9 @@
 {
   "data" : [
     {
-      "filename" : "u6qfBBkF.jpg",
+      "filename" : "PreviewManifest.plist",
       "idiom" : "universal",
-      "universal-type-identifier" : "public.jpeg"
+      "universal-type-identifier" : "com.apple.property-list"
     }
   ],
   "info" : {

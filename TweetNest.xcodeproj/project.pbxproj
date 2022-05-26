@@ -11,6 +11,10 @@
 		1908F44D28A2B63800F5DF2E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
 		193A026A28C333A900B6E033 /* AppDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193A026928C333A900B6E033 /* AppDetailView.swift */; };
 		193A026B28C333A900B6E033 /* AppDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193A026928C333A900B6E033 /* AppDetailView.swift */; };
+		194535D428CF8C48002EA506 /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194535D228CF8C48002EA506 /* PersistentContainer.swift */; };
+		194535D528CF8C48002EA506 /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194535D228CF8C48002EA506 /* PersistentContainer.swift */; };
+		194535D728CF8C52002EA506 /* PreviewManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194535D628CF8C52002EA506 /* PreviewManifest.swift */; };
+		194535D828CF8C52002EA506 /* PreviewManifest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194535D628CF8C52002EA506 /* PreviewManifest.swift */; };
 		19505DDE28A1844600ADE8CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		19505DE228A1844600ADE8CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
 		19505DF628A1844700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
@@ -254,6 +258,8 @@
 
 /* Begin PBXFileReference section */
 		193A026928C333A900B6E033 /* AppDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailView.swift; sourceTree = "<group>"; };
+		194535D228CF8C48002EA506 /* PersistentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
+		194535D628CF8C52002EA506 /* PreviewManifest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewManifest.swift; sourceTree = "<group>"; };
 		19505D9528A183B800ADE8CF /* TweetNest Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TweetNest Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DA728A183B900ADE8CF /* TweetNest Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DB128A183B900ADE8CF /* TweetNest Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -501,6 +507,7 @@
 		19505DE028A1844600ADE8CF /* Preview Content */ = {
 			isa = PBXGroup;
 			children = (
+				194535D628CF8C52002EA506 /* PreviewManifest.swift */,
 				19DD482228CF89CC000D5B0E /* Extensions */,
 				19505DE128A1844600ADE8CF /* Preview Assets.xcassets */,
 			);
@@ -612,6 +619,7 @@
 				19DD482E28CF8ADA000D5B0E /* ManagedAccount.swift */,
 				19DD482B28CF8AC2000D5B0E /* ManagedUser.swift */,
 				19DD482828CF8A9F000D5B0E /* ManagedUserDetail.swift */,
+				194535D228CF8C48002EA506 /* PersistentContainer.swift */,
 				19DD482528CF89F6000D5B0E /* Session.swift */,
 			);
 			path = TweetNestKit;
@@ -901,6 +909,7 @@
 				19505F4F28A188CB00ADE8CF /* SettingsNotificationsView.swift in Sources */,
 				19505F0328A1887B00ADE8CF /* DateText.swift in Sources */,
 				19505F4B28A188CB00ADE8CF /* SettingsAccountsView.swift in Sources */,
+				194535D828CF8C52002EA506 /* PreviewManifest.swift in Sources */,
 				19505EE528A1885D00ADE8CF /* UserView+AllDataView.swift in Sources */,
 				19505F5128A188CB00ADE8CF /* SettingsGeneralView.swift in Sources */,
 				19505EFA28A1887000ADE8CF /* UserRows.swift in Sources */,
@@ -928,6 +937,7 @@
 				19505EF828A1887000ADE8CF /* UserRowsLabel.swift in Sources */,
 				19505F3A28A188A900ADE8CF /* BatchDeleteTweetsView.swift in Sources */,
 				19505ED628A1884A00ADE8CF /* TweetNestAppDelegate.swift in Sources */,
+				194535D528CF8C48002EA506 /* PersistentContainer.swift in Sources */,
 				19505ED128A1884A00ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
 				19505F1528A1889200ADE8CF /* SafariView.swift in Sources */,
 				19505F2428A188A100ADE8CF /* DetailImageView.swift in Sources */,
@@ -990,6 +1000,7 @@
 				19505F0228A1887B00ADE8CF /* DateText.swift in Sources */,
 				19505F2928A188A100ADE8CF /* PDFView.swift in Sources */,
 				19EA119B28BB52C100029075 /* AppContentView.swift in Sources */,
+				194535D728CF8C52002EA506 /* PreviewManifest.swift in Sources */,
 				19505F0828A1888200ADE8CF /* SectionedFetchedResultsController.swift in Sources */,
 				19505F2D28A188A100ADE8CF /* ProfileImage.swift in Sources */,
 				19DD482928CF8A9F000D5B0E /* ManagedUserDetail.swift in Sources */,
@@ -1020,6 +1031,7 @@
 				19505EFF28A1887700ADE8CF /* TweetNestError.swift in Sources */,
 				19DD482F28CF8ADA000D5B0E /* ManagedAccount.swift in Sources */,
 				19505F4628A188CB00ADE8CF /* SettingsAccountView.swift in Sources */,
+				194535D428CF8C48002EA506 /* PersistentContainer.swift in Sources */,
 				19505F3D28A188A900ADE8CF /* BatchDeleteTweetsFormView.swift in Sources */,
 				19505F3728A188A900ADE8CF /* BatchDeleteTweetsProgressView.swift in Sources */,
 				19505F0B28A1888600ADE8CF /* UserDetailLabel.swift in Sources */,
