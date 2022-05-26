@@ -64,7 +64,7 @@
 		192F008926FC270B000EC734 /* UserView+AllDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192F008726FC270B000EC734 /* UserView+AllDataView.swift */; };
 		192F008A26FC270B000EC734 /* UserView+AllDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 192F008726FC270B000EC734 /* UserView+AllDataView.swift */; };
 		1932FCA626F4A06900837AA9 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1932FCA826F4A06900837AA9 /* InfoPlist.strings */; };
-		19365984260978EB00865D40 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
+		19365984260978EB00865D40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Assets.xcassets */; };
 		193659AE260978F900865D40 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EB925E90ECD006AB4C0 /* MainView.swift */; };
 		193659AF260978F900865D40 /* Session+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* Session+Preview.swift */; };
 		193659B0260978F900865D40 /* TweetNestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */; };
@@ -78,7 +78,7 @@
 		19365A6726097B4800865D40 /* TweetNestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE56260802FE009FD0D8 /* TweetNestAppDelegate.swift */; };
 		19365A6826097B4800865D40 /* Session+Preview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933EE125E90F16006AB4C0 /* Session+Preview.swift */; };
 		19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */; };
-		19365A6F26097B4A00865D40 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
+		19365A6F26097B4A00865D40 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Assets.xcassets */; };
 		19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
 		193AB25D26B6FD1200B18D45 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
 		193AFB5C26CA043A008BFF67 /* ManagedAccount+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB5B26CA043A008BFF67 /* ManagedAccount+Preferences.swift */; };
@@ -162,7 +162,7 @@
 		199C7E7428364253001D8F85 /* String+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199C7E7328364253001D8F85 /* String+TweetNestKit.swift */; };
 		199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
-		19A1F1B926F38D4300A28A49 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
+		19A1F1B926F38D4300A28A49 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Assets.xcassets */; };
 		19A6FF1E26D6836000AB7B7E /* TweetNest WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */; };
 		19A6FF4826D6836100AB7B7E /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF4726D6836100AB7B7E /* TweetNestTests.swift */; };
@@ -432,7 +432,7 @@
 		1932FCA726F4A06900837AA9 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1932FCAA26F4A07100837AA9 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1936597A260978EA00865D40 /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		19365983260978EB00865D40 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		19365983260978EB00865D40 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		19365995260978EB00865D40 /* TweetNestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19365A1426097A9500865D40 /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		19365A3526097A9700865D40 /* TweetNestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -743,12 +743,13 @@
 			path = TweetNestKit;
 			sourceTree = "<group>";
 		};
-		19365982260978EB00865D40 /* Preview Content */ = {
+		19365982260978EB00865D40 /* Previews */ = {
 			isa = PBXGroup;
 			children = (
-				19365983260978EB00865D40 /* Preview Assets.xcassets */,
+				6697AF0D283EE55D00EE816D /* Extensions */,
+				19365983260978EB00865D40 /* Assets.xcassets */,
 			);
-			path = "Preview Content";
+			path = Previews;
 			sourceTree = "<group>";
 		};
 		19365998260978EB00865D40 /* iOS */ = {
@@ -770,7 +771,6 @@
 		193AB25926B6FCFA00B18D45 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				193033E526C405E7000EFBC7 /* TweetNestKit */,
 				193AB25B26B6FD0700B18D45 /* Foundation */,
 			);
 			path = Extensions;
@@ -908,7 +908,7 @@
 				193AB25926B6FCFA00B18D45 /* Extensions */,
 				663E96C02838F5D60037413E /* Pasteboard.swift */,
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
-				19365982260978EB00865D40 /* Preview Content */,
+				19365982260978EB00865D40 /* Previews */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1089,6 +1089,14 @@
 				19933ED325E90EF9006AB4C0 /* WebAuthenticationView.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		6697AF0D283EE55D00EE816D /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				193033E526C405E7000EFBC7 /* TweetNestKit */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1440,7 +1448,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19365984260978EB00865D40 /* Preview Assets.xcassets in Resources */,
+				19365984260978EB00865D40 /* Assets.xcassets in Resources */,
 				66002D7126BF897000B52E30 /* Localizable.strings in Resources */,
 				193659B3260978F900865D40 /* Assets.xcassets in Resources */,
 				66002D6E26BF896F00B52E30 /* InfoPlist.strings in Resources */,
@@ -1459,7 +1467,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				66002D7726BF897000B52E30 /* Localizable.strings in Resources */,
-				19365A6F26097B4A00865D40 /* Preview Assets.xcassets in Resources */,
+				19365A6F26097B4A00865D40 /* Assets.xcassets in Resources */,
 				19365A6626097B4800865D40 /* Assets.xcassets in Resources */,
 				66002D7426BF897000B52E30 /* InfoPlist.strings in Resources */,
 			);
@@ -1486,7 +1494,7 @@
 			files = (
 				19A6FF5C26D6844F00AB7B7E /* Assets.xcassets in Resources */,
 				1932FCA626F4A06900837AA9 /* InfoPlist.strings in Resources */,
-				19A1F1B926F38D4300A28A49 /* Preview Assets.xcassets in Resources */,
+				19A1F1B926F38D4300A28A49 /* Assets.xcassets in Resources */,
 				19C6570826DAB53100D1A272 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2070,7 +2078,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = TweetNest/Shared/Previews/Assets.xcassets;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2102,7 +2110,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = TweetNest/Shared/Previews/Assets.xcassets;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2182,7 +2190,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = TweetNest/Shared/Previews/Assets.xcassets;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2214,7 +2222,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = TweetNest/Shared/Previews/Assets.xcassets;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -2470,7 +2478,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = TweetNest/Shared/Previews/Assets.xcassets;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2498,7 +2506,7 @@
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
+				DEVELOPMENT_ASSET_PATHS = TweetNest/Shared/Previews/Assets.xcassets;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;

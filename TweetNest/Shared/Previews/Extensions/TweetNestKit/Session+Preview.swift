@@ -6,7 +6,6 @@
 //
 
 #if DEBUG
-
 import CoreData
 import Foundation
 import TweetNestKit
@@ -21,7 +20,9 @@ import UIKit
 #endif
 
 extension TweetNestKit.Session {
-    public static let preview: Session = {
+
+    @usableFromInline
+    static let preview: Session = {
         let session = Session(inMemory: true)
         do {
             try session.insertPreviewDataToPersistentContainer()
@@ -178,5 +179,4 @@ extension TweetNestKit.Session {
         appleProfileImageDataAsset.data = NSDataAsset(name: "AppleProfileImageData")?.data
     }
 }
-
 #endif

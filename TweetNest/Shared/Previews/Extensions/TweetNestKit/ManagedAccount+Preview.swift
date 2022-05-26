@@ -6,13 +6,13 @@
 //
 
 #if DEBUG
-
 import Foundation
 import TweetNestKit
 
 extension TweetNestKit.ManagedAccount {
 
-    public static var preview: ManagedAccount {
+    @usableFromInline
+    static var preview: ManagedAccount {
         let fetchRequest = ManagedAccount.fetchRequest()
         do {
             return try Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
@@ -21,5 +21,4 @@ extension TweetNestKit.ManagedAccount {
         }
     }
 }
-
 #endif
