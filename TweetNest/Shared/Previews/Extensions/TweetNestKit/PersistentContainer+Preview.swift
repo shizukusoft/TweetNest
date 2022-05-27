@@ -212,89 +212,43 @@ extension PersistentContainer {
         context.performAndWait {
             userDetail = ManagedUserDetail(context: context)
             if previewUserDetail.inherits == true, let latestUserDetail = state.userDetail {
-                userDetail.blockingUserIDs = latestUserDetail.blockingUserIDs
-                userDetail.followerUserIDs = latestUserDetail.followerUserIDs
-                userDetail.followerUsersCount = latestUserDetail.followerUsersCount
-                userDetail.followingUserIDs = latestUserDetail.followingUserIDs
-                userDetail.followingUsersCount = latestUserDetail.followingUsersCount
-                userDetail.isProtected = latestUserDetail.isProtected
-                userDetail.isVerified = latestUserDetail.isVerified
-                userDetail.listedCount = latestUserDetail.listedCount
-                userDetail.location = latestUserDetail.location
-                userDetail.mutingUserIDs = latestUserDetail.mutingUserIDs
-                userDetail.name = latestUserDetail.name
-                userDetail.profileHeaderImageURL = latestUserDetail.profileHeaderImageURL
-                userDetail.profileImageURL = latestUserDetail.profileImageURL
-                userDetail.tweetsCount = latestUserDetail.tweetsCount
-                userDetail.url = latestUserDetail.url
-                userDetail.userAttributedDescription = latestUserDetail.userAttributedDescription
-                userDetail.userCreationDate = latestUserDetail.userCreationDate
-                userDetail.userID = latestUserDetail.userID
-                userDetail.username = latestUserDetail.username
+                let attributeNames = ManagedUserDetail.entity().attributesByName.keys
+                userDetail.setValuesForKeys(.init(uniqueKeysWithValues: attributeNames.map({($0, latestUserDetail.value(forKey: $0) as Any)})))
+                userDetail.creationDate = nil
             }
-            if let blockingUserIDs = previewUserDetail.blockingUserIDs {
-                userDetail.blockingUserIDs = blockingUserIDs
+            func assign<T>(_ value: T?, to keyPath: ReferenceWritableKeyPath<ManagedUserDetail, T>) {
+                if let value = value {
+                    userDetail[keyPath: keyPath] = value
+                }
             }
-            if let creationDate = previewUserDetail.creationDate {
-                userDetail.creationDate = creationDate
+            func assign<T>(_ value: T?, to keyPath: ReferenceWritableKeyPath<ManagedUserDetail, T?>, default: T? = nil) {
+                if let value = value {
+                    userDetail[keyPath: keyPath] = value
+                }
+                else if userDetail![keyPath: keyPath] == nil, let `default` = `default` {
+                    userDetail[keyPath: keyPath] = `default`
+                }
             }
-            else {
-                userDetail.creationDate = .now
-            }
-            if let followerUserIDs = previewUserDetail.followerUserIDs {
-                userDetail.followerUserIDs = followerUserIDs
-            }
-            if let followerUsersCount = previewUserDetail.followerUsersCount {
-                userDetail.followerUsersCount = .init(followerUsersCount)
-            }
-            if let followingUserIDs = previewUserDetail.followingUserIDs {
-                userDetail.followingUserIDs = followingUserIDs
-            }
-            if let followingUsersCount = previewUserDetail.followingUsersCount {
-                userDetail.followingUsersCount = .init(followingUsersCount)
-            }
-            if let isProtected = previewUserDetail.isProtected {
-                userDetail.isProtected = isProtected
-            }
-            if let isVerified = previewUserDetail.isVerified {
-                userDetail.isVerified = isVerified
-            }
-            if let listedCount = previewUserDetail.listedCount {
-                userDetail.listedCount = .init(listedCount)
-            }
-            if let location = previewUserDetail.location {
-                userDetail.location = location
-            }
-            if let mutingUserIDs = previewUserDetail.mutingUserIDs {
-                userDetail.mutingUserIDs = mutingUserIDs
-            }
-            if let name = previewUserDetail.name {
-                userDetail.name = name
-            }
-            if let profileHeaderImageURL = previewUserDetail.profileHeaderImageURL {
-                userDetail.profileHeaderImageURL = profileHeaderImageURL
-            }
-            if let profileImageURL = previewUserDetail.profileImageURL {
-                userDetail.profileImageURL = profileImageURL
-            }
-            if let tweetsCount = previewUserDetail.tweetsCount {
-                userDetail.tweetsCount = .init(tweetsCount)
-            }
-            if let url = previewUserDetail.url {
-                userDetail.url = url
-            }
-            if let userAttributedDescription = previewUserDetail.userAttributedDescription {
-                userDetail.userAttributedDescription = .init(userAttributedDescription)
-            }
-            if let userCreationDate = previewUserDetail.userCreationDate {
-                userDetail.userCreationDate = userCreationDate
-            }
-            if let userID = previewUserDetail.userID {
-                userDetail.userID = userID
-            }
-            if let username = previewUserDetail.username {
-                userDetail.username = username
-            }
+            assign(previewUserDetail.blockingUserIDs, to: \.blockingUserIDs)
+            assign(previewUserDetail.creationDate, to: \.creationDate, default: .now)
+            assign(previewUserDetail.followerUserIDs, to: \.followerUserIDs)
+            assign(previewUserDetail.followerUsersCount.flatMap({.init($0)}), to: \.followerUsersCount)
+            assign(previewUserDetail.followingUserIDs, to: \.followingUserIDs)
+            assign(previewUserDetail.followingUsersCount.flatMap({.init($0)}), to: \.followingUsersCount)
+            assign(previewUserDetail.isProtected, to: \.isProtected)
+            assign(previewUserDetail.isVerified, to: \.isVerified)
+            assign(previewUserDetail.listedCount.flatMap({.init($0)}), to: \.listedCount)
+            assign(previewUserDetail.location, to: \.location)
+            assign(previewUserDetail.mutingUserIDs, to: \.mutingUserIDs)
+            assign(previewUserDetail.name, to: \.name)
+            assign(previewUserDetail.profileHeaderImageURL, to: \.profileHeaderImageURL)
+            assign(previewUserDetail.profileImageURL, to: \.profileImageURL)
+            assign(previewUserDetail.tweetsCount.flatMap({.init($0)}), to: \.tweetsCount)
+            assign(previewUserDetail.url, to: \.url)
+            assign(previewUserDetail.userAttributedDescription.flatMap({.init($0)}), to: \.userAttributedDescription)
+            assign(previewUserDetail.userCreationDate, to: \.userCreationDate)
+            assign(previewUserDetail.userID, to: \.userID)
+            assign(previewUserDetail.username, to: \.username)
             if save {
                 do {
                     try context.save()
