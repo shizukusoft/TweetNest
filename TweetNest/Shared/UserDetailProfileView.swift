@@ -120,7 +120,7 @@ struct UserDetailProfileView: View {
                         #if !os(watchOS)
                         Spacer()
                         #endif
-                        Link(url.absoluteString, destination: url)
+                        Link(url.simplifiedString, destination: url)
                             .lineLimit(1)
                             .allowsTightening(true)
                             #if os(macOS)
