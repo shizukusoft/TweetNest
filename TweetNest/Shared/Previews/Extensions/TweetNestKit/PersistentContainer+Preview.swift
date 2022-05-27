@@ -21,27 +21,32 @@ import TweetNestKit
 extension PersistentContainer {
 
     @inlinable
-    nonisolated func injectPreviewData(context: NSManagedObjectContext? = nil, save: Bool = false) {
+    nonisolated func injectPreviewData(
+        context: NSManagedObjectContext? = nil,
+        save: Bool = false
+    ) {
         injectPreviewData(manifest: "PreviewManifest", context: context, save: save)
     }
 
     @usableFromInline
-    nonisolated func injectPreviewData(manifest resourceName: String, bundle: Bundle = .main, context: NSManagedObjectContext? = nil, save: Bool = false) {
-        guard context != nil || save
-        else {
+    nonisolated func injectPreviewData(
+        manifest resourceName: String,
+        bundle: Bundle = .main,
+        context: NSManagedObjectContext? = nil,
+        save: Bool = false
+    ) {
+        guard context != nil || save else {
             fatalError("Should provide context parameter or set save parameter true")
         }
         let context = context ?? newBackgroundContext()
-        guard let dataAsset = NSDataAsset(name: resourceName, bundle: bundle)
-        else {
+        guard let dataAsset = NSDataAsset(name: resourceName, bundle: bundle) else {
             fatalError("Cannot find preview manifest asset with given name: \(resourceName)")
         }
         let decoder = PropertyListDecoder()
         let previewManifest: PreviewManifest
         do {
             previewManifest = try decoder.decode(PreviewManifest.self, from: dataAsset.data)
-        }
-        catch let error as NSError {
+        } catch let error as NSError {
             fatalError("Error has occurred while decoding contents of the preview manifest asset: \(resourceName) (\(error), \(error.userInfo))")
         }
         let state = _PreviewDataInjectionState(bundle: bundle)
@@ -60,16 +65,14 @@ extension PersistentContainer {
             _injectPreviewUser(id: userID, state: state, context: context)
         }
         for userID in previewManifest.accounts {
-            guard let userDetail = state.userIDToUserDetail[userID]
-            else {
+            guard let userDetail = state.userIDToUserDetail[userID] else {
                 continue
             }
             state.userDetail = userDetail
             _injectPreviewAccount(userID: userID, state: state, context: context)
         }
         for (userID, previewUserDataAssets) in previewManifest.dataAssets {
-            guard let userDetail = state.userIDToUserDetail[userID]
-            else {
+            guard let userDetail = state.userIDToUserDetail[userID] else {
                 continue
             }
             state.userDetail = userDetail
@@ -81,8 +84,7 @@ extension PersistentContainer {
             context.performAndWait {
                 do {
                     try context.save()
-                }
-                catch let error as NSError {
+                } catch let error as NSError {
                     fatalError("Cannot save context: \(context) (\(error), \(error.userInfo))")
                 }
             }
@@ -106,9 +108,13 @@ extension PersistentContainer {
     }
 
     @discardableResult
-    private nonisolated func _injectPreviewAccount(userID: String, state: _PreviewDataInjectionState, context: NSManagedObjectContext? = nil, save: Bool = false) -> ManagedAccount {
-        guard context != nil || save
-        else {
+    private nonisolated func _injectPreviewAccount(
+        userID: String,
+        state: _PreviewDataInjectionState,
+        context: NSManagedObjectContext? = nil,
+        save: Bool = false
+    ) -> ManagedAccount {
+        guard context != nil || save else {
             fatalError("Should provide context parameter or set save parameter true")
         }
         let context = context ?? newBackgroundContext()
@@ -122,8 +128,7 @@ extension PersistentContainer {
             if save {
                 do {
                     try context.save()
-                }
-                catch let error as NSError {
+                } catch let error as NSError {
                     fatalError("Cannot save context: \(context) (\(error), \(error.userInfo))")
                 }
             }
@@ -132,9 +137,13 @@ extension PersistentContainer {
     }
 
     @discardableResult
-    private nonisolated func _injectPreviewUser(id userID: String, state: _PreviewDataInjectionState, context: NSManagedObjectContext? = nil, save: Bool = false) -> ManagedUser {
-        guard context != nil || save
-        else {
+    private nonisolated func _injectPreviewUser(
+        id userID: String,
+        state: _PreviewDataInjectionState,
+        context: NSManagedObjectContext? = nil,
+        save: Bool = false
+    ) -> ManagedUser {
+        guard context != nil || save else {
             fatalError("Should provide context parameter or set save parameter true")
         }
         let context = context ?? newBackgroundContext()
@@ -148,8 +157,7 @@ extension PersistentContainer {
             if save {
                 do {
                     try context.save()
-                }
-                catch let error as NSError {
+                } catch let error as NSError {
                     fatalError("Cannot save context: \(context) (\(error), \(error.userInfo))")
                 }
             }
@@ -158,16 +166,19 @@ extension PersistentContainer {
     }
 
     @discardableResult
-    private nonisolated func _injectPreviewUserDataAsset(_ previewUserDataAsset: PreviewManifest.UserDataAsset, state: _PreviewDataInjectionState, context: NSManagedObjectContext? = nil, save: Bool = false) -> ManagedUserDataAsset {
-        guard context != nil || save
-        else {
+    private nonisolated func _injectPreviewUserDataAsset(
+        _ previewUserDataAsset: PreviewManifest.UserDataAsset,
+        state: _PreviewDataInjectionState,
+        context: NSManagedObjectContext? = nil,
+        save: Bool = false
+    ) -> ManagedUserDataAsset {
+        guard context != nil || save else {
             fatalError("Should provide context parameter or set save parameter true")
         }
         let context = context ?? newBackgroundContext()
         var userDataAsset: ManagedUserDataAsset!
         context.performAndWait {
-            guard let dataAsset = NSDataAsset(name: previewUserDataAsset.dataResourceName, bundle: state.bundle)
-            else {
+            guard let dataAsset = NSDataAsset(name: previewUserDataAsset.dataResourceName, bundle: state.bundle) else {
                 fatalError("Cannot find provided asset with given name: \(previewUserDataAsset.dataResourceName)")
             }
             userDataAsset = ManagedUserDataAsset(context: context)
@@ -178,8 +189,7 @@ extension PersistentContainer {
             if save {
                 do {
                     try context.save()
-                }
-                catch let error as NSError {
+                } catch let error as NSError {
                     fatalError("Cannot save context: \(context) (\(error), \(error.userInfo))")
                 }
             }
@@ -188,9 +198,13 @@ extension PersistentContainer {
     }
 
     @discardableResult
-    private nonisolated func _injectPreviewUserDetail(_ previewUserDetail: PreviewManifest.UserDetail, state: _PreviewDataInjectionState, context: NSManagedObjectContext? = nil, save: Bool = false) -> ManagedUserDetail {
-        guard context != nil || save
-        else {
+    private nonisolated func _injectPreviewUserDetail(
+        _ previewUserDetail: PreviewManifest.UserDetail,
+        state: _PreviewDataInjectionState,
+        context: NSManagedObjectContext? = nil,
+        save: Bool = false
+    ) -> ManagedUserDetail {
+        guard context != nil || save else {
             fatalError("Should provide context parameter or set save parameter true")
         }
         let context = context ?? newBackgroundContext()
@@ -284,8 +298,7 @@ extension PersistentContainer {
             if save {
                 do {
                     try context.save()
-                }
-                catch let error as NSError {
+                } catch let error as NSError {
                     fatalError("Cannot save context: \(context) (\(error), \(error.userInfo))")
                 }
             }
