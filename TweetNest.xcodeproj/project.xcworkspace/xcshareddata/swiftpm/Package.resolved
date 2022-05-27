@@ -68,8 +68,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-unified-log",
       "state" : {
-        "revision" : "aaa92ac8b6cada0601d19e1423169a81e4725ba8",
-        "version" : "2.0.0"
+        "revision" : "bf01306914192b2b41dd6054daa5277bca227a71",
+        "version" : "2.0.1"
       }
     },
     {
