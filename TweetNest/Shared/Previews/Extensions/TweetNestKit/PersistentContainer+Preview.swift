@@ -224,8 +224,7 @@ extension PersistentContainer {
             func assign<T>(_ value: T?, to keyPath: ReferenceWritableKeyPath<ManagedUserDetail, T?>, default: T? = nil) {
                 if let value = value {
                     userDetail[keyPath: keyPath] = value
-                }
-                else if userDetail![keyPath: keyPath] == nil, let `default` = `default` {
+                } else if userDetail![keyPath: keyPath] == nil, let `default` = `default` {
                     userDetail[keyPath: keyPath] = `default`
                 }
             }
