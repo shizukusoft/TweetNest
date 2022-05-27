@@ -10,7 +10,7 @@ import TweetNestKit
 extension TweetNestKit.Session {
     public static let preview: Session = {
         let session = Session(inMemory: true)
-        session.persistentContainer.injectPreviewData()
+        session.persistentContainer.injectPreviewData(save: true)
         return session
     }()
 }
