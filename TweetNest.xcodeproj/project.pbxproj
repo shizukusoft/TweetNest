@@ -100,6 +100,7 @@
 		1945F84226F0D3D900CE4EFB /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1945F84126F0D3D900CE4EFB /* CloudKit.framework */; };
 		1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1946203C26D68F0E003DB010 /* CloudKit.framework */; };
 		19469AC3282FC3700011A951 /* PersistentContainer+V3_Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19469AC2282FC3700011A951 /* PersistentContainer+V3_Migration.swift */; };
+		194C0E9A284357F3008B7831 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
 		194EF57E26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		194EF57F26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
@@ -1608,6 +1609,7 @@
 				663E96C22838F5D60037413E /* Pasteboard.swift in Sources */,
 				19FB868727E5D10C00AAC5CB /* SectionedFetchedResultsController.swift in Sources */,
 				19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
+				194C0E9A284357F3008B7831 /* URL.swift in Sources */,
 				1920D59827F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
