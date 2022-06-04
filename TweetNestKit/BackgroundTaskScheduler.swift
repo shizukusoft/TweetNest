@@ -164,11 +164,7 @@ extension BackgroundTaskScheduler {
                 let hasChanges = try await self.backgroundRefresh()
 
                 if hasChanges {
-                    await MainActor.run {
-                        UIApplication.shared.connectedScenes.forEach {
-                            UIApplication.shared.requestSceneSessionRefresh($0.session)
-                        }
-                    }
+                    await self.requestScenesRefresh()
                 }
 
                 backgroundTask.setTaskCompleted(success: true)
@@ -191,11 +187,7 @@ extension BackgroundTaskScheduler {
             do {
                 try await self.backgroundDataCleansing()
 
-                await MainActor.run {
-                    UIApplication.shared.connectedScenes.forEach {
-                        UIApplication.shared.requestSceneSessionRefresh($0.session)
-                    }
-                }
+                await self.requestScenesRefresh()
 
                 backgroundTask.setTaskCompleted(success: true)
             } catch {
@@ -207,6 +199,21 @@ extension BackgroundTaskScheduler {
             logger.notice("Background refresh task expired for: \(backgroundTask.identifier, privacy: .public)")
             task.cancel()
             task.waitUntilFinished()
+        }
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    @available(tvOSApplicationExtension, unavailable)
+    @MainActor
+    private func requestScenesRefresh() {
+        for connectedScene in UIApplication.shared.connectedScenes {
+            guard connectedScene.activationState == .background else {
+                continue
+            }
+
+            DispatchQueue.main.async {
+                UIApplication.shared.requestSceneSessionRefresh(connectedScene.session)
+            }
         }
     }
 }
@@ -221,7 +228,13 @@ extension BackgroundTaskScheduler {
         }
 
         let task = Task {
-            backgroundTask.setTaskCompletedWithSnapshot((try? await self.backgroundRefresh()) ?? false)
+            do {
+                let hasChanges = try await self.backgroundRefresh()
+
+                backgroundTask.setTaskCompletedWithSnapshot(hasChanges)
+            } catch {
+                backgroundTask.setTaskCompletedWithSnapshot(false)
+            }
         }
 
         backgroundTask.expirationHandler = { [logger] in
