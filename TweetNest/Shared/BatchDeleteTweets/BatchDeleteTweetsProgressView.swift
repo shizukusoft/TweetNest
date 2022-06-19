@@ -7,6 +7,7 @@
 
 import SwiftUI
 import OrderedCollections
+import Algorithms
 import BackgroundTask
 import UnifiedLogging
 import TweetNestKit
@@ -19,7 +20,7 @@ struct BatchDeleteTweetsProgressView: View {
     @Binding var isBatchDeletionExecuting: Bool
     @Binding var isBatchDeletionFinished: Bool
 
-    @State private var progress: Progress
+    @MainActor @State private var progress: Progress
     @State private var results: [Int: Result<Void, Error>] = [:]
 
     var succeedResultsCount: Int {
@@ -61,7 +62,7 @@ struct BatchDeleteTweetsProgressView: View {
         }
         .onAppear {
             withAnimation {
-                updateProgressDescription()
+                updateProgress()
             }
         }
         .task {
@@ -93,55 +94,61 @@ struct BatchDeleteTweetsProgressView: View {
             return
         }
 
-        await withTaskCancellationHandler {
-            do {
-                try await withExtendedBackgroundExecution {
-                    await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
-                        for (offset, targetTweetID) in targetTweets.keys.enumerated() {
-                            taskGroup.addTask {
-                                do {
-                                    try await Tweet.delete(targetTweetID, session: .session(for: account, session: TweetNestApp.session))
-                                    return (offset, .success(()))
-                                } catch {
-                                    return (offset, .failure(error))
-                                }
+        defer {
+            if Task.isCancelled {
+                DispatchQueue.main.async {
+                    progress.cancel()
+                }
+            }
+        }
+
+        do {
+            try await withExtendedBackgroundExecution {
+                await withTaskGroup(of: (Int, Result<Void, Error>).self) { taskGroup in
+                    for (index, targetTweetID) in targetTweets.keys.indexed() {
+                        taskGroup.addTask {
+                            do {
+                                try await Tweet.delete(targetTweetID, session: .session(for: account, session: TweetNestApp.session))
+                                return (index, .success(()))
+                            } catch {
+                                return (index, .failure(error))
                             }
                         }
-
-                        for await result in taskGroup {
-                            results[result.0] = result.1
-
-                            progress.completedUnitCount = Int64(results.count)
-                            updateProgressDescription()
-                        }
-
-                        isBatchDeletionFinished = true
                     }
+
+                    for await result in taskGroup {
+                        results[result.0] = result.1
+                        await updateProgress()
+                    }
+
+                    isBatchDeletionFinished = true
                 }
-            } catch {
-                Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
             }
-        } onCancel: {
-            progress.cancel()
+        } catch {
+            Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
         }
     }
 
-    private func updateProgressDescription() {
-        progress.localizedDescription = String(localized: "Deleting \(progress.totalUnitCount.twnk_formatted()) tweets…")
-        progress.localizedAdditionalDescription = {
-            var localizedAdditionalDescription = String(
-                localized: "\(progress.completedUnitCount.twnk_formatted()) of \(progress.totalUnitCount.twnk_formatted()) tweets deletion requested."
-            )
+    @MainActor
+    private func updateProgress() {
+        withAnimation {
+            progress.completedUnitCount = Int64(results.count)
+            progress.localizedDescription = String(localized: "Deleting \(progress.totalUnitCount.twnk_formatted()) tweets…")
+            progress.localizedAdditionalDescription = {
+                var localizedAdditionalDescription = String(
+                    localized: "\(progress.completedUnitCount.twnk_formatted()) of \(progress.totalUnitCount.twnk_formatted()) tweets deletion requested."
+                )
 
-            let failedResultsCount = failedResults.count
+                let failedResultsCount = failedResults.count
 
-            if failedResultsCount > 0 {
-                localizedAdditionalDescription.append("\n")
-                localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.twnk_formatted()) tweets failed to delete."))
-            }
+                if failedResultsCount > 0 {
+                    localizedAdditionalDescription.append("\n")
+                    localizedAdditionalDescription.append(String(localized: "\(failedResultsCount.twnk_formatted()) tweets failed to delete."))
+                }
 
-            return localizedAdditionalDescription
-        }()
+                return localizedAdditionalDescription
+            }()
+        }
     }
 }
 
