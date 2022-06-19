@@ -10,7 +10,7 @@ import XCTest
 
 class UserDetailTests: XCTestCase {
     func testFollowingUserChanges() {
-        withExtendedLifetime(Session(inMemory: true)) { session in
+        withExtendedLifetime(Session(twitterAPIConfiguration: .init(apiKey: "", apiKeySecret: ""), inMemory: true)) { session in
             let oldUserDetail = ManagedUserDetail(context: session.persistentContainer.viewContext)
             let newUserDetail = ManagedUserDetail(context: session.persistentContainer.viewContext)
 
