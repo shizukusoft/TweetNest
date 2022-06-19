@@ -68,7 +68,13 @@ struct TweetNestApp: App {
             case .active, .inactive:
                 Self.session.resumeBackgroundTaskTimers()
                 #if canImport(CoreSpotlight)
+                #if DEBUG
+                if !Self.isPreview {
+                    Self.session.persistentContainer.usersSpotlightDelegate.startSpotlightIndexing()
+                }
+                #else
                 Self.session.persistentContainer.usersSpotlightDelegate.startSpotlightIndexing()
+                #endif
                 #endif
             case .background:
                 Self.session.pauseBackgroundTaskTimers()
@@ -78,7 +84,13 @@ struct TweetNestApp: App {
                 }
                 #endif
                 #if canImport(CoreSpotlight)
+                #if DEBUG
+                if !Self.isPreview {
+                    Self.session.persistentContainer.usersSpotlightDelegate.stopSpotlightIndexing()
+                }
+                #else
                 Self.session.persistentContainer.usersSpotlightDelegate.stopSpotlightIndexing()
+                #endif
                 #endif
             @unknown default:
                 break

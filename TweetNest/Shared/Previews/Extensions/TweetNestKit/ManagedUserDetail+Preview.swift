@@ -6,21 +6,19 @@
 //
 
 #if DEBUG
-
 import Foundation
 import TweetNestKit
 
 extension TweetNestKit.ManagedUserDetail {
 
     @inlinable
-    public static var preview: ManagedUserDetail {
+    static var preview: ManagedUserDetail {
         previews.first!
     }
 
     @inlinable
-    public static var previews: [ManagedUserDetail] {
+    static var previews: [ManagedUserDetail] {
         ManagedUser.preview.userDetails!
     }
 }
-
 #endif
