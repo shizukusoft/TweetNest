@@ -74,13 +74,9 @@ public class Session {
 
         self.persistentContainer.persistentStoreCoordinator.perform { [logger] in
             self.persistentContainer.loadPersistentStores { result in
-                switch result {
-                case .success:
-                    Task {
-                        await MainActor.run {
-                            self.persistentContainerLoadingResult = .success(())
-                        }
-
+                Task {
+                    switch result {
+                    case .success:
                         #if DEBUG
                         Task.detached(priority: .utility) {
                             guard self.persistentContainer.persistentStoreDescriptions.contains(where: { $0.cloudKitContainerOptions != nil }) else {
@@ -94,14 +90,12 @@ public class Session {
                             }
                         }
                         #endif
-                    }
-                case .failure(let error):
-                    logger.error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
 
-                    Task {
-                        await MainActor.run {
-                            self.persistentContainerLoadingResult = .failure(error)
-                        }
+                        await self.setPersistentContainerLoadingResult(.success(()))
+                    case .failure(let error):
+                        logger.error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
+
+                        await self.setPersistentContainerLoadingResult(.failure(error))
                     }
                 }
             }
@@ -114,6 +108,11 @@ public class Session {
 
     deinit {
         userDataAssetsURLSessionManager.invalidate()
+    }
+
+    @MainActor
+    private func setPersistentContainerLoadingResult(_ newValue: Result<Void, Swift.Error>?) {
+        self.persistentContainerLoadingResult = newValue
     }
 }
 
