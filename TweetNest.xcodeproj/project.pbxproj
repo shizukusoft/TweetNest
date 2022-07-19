@@ -2176,7 +2176,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.tweetnest.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2208,7 +2207,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.tweetnest.TweetNest_development_macos)";
 				SDKROOT = macosx;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
