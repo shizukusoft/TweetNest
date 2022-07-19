@@ -2047,6 +2047,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2066,6 +2067,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2079,6 +2081,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2098,6 +2101,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2176,6 +2180,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2207,6 +2212,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2402,6 +2408,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2411,6 +2418,7 @@
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2423,6 +2431,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2432,6 +2441,7 @@
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2445,6 +2455,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2461,6 +2472,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "TweetNest WatchKit Extension";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2473,6 +2485,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2489,6 +2502,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "TweetNest WatchKit Extension";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
