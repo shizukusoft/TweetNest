@@ -27,6 +27,12 @@ class TweetNestScreenTests: XCTestCase {
             let allowButton = alert.buttons["Allow"]
 
             if allowButton.exists {
+                #if os(watchOS)
+                while !allowButton.isHittable {
+                    scrollUp()
+                }
+                #endif
+
                 allowButton.tap()
                 return true
             }
@@ -108,7 +114,6 @@ class TweetNestScreenTests: XCTestCase {
         takeScreenshot(name: "Followings History Screen")
     }
 
-    #if !os(watchOS)
     func testBatchDeleteTweetsForm() throws {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
@@ -136,11 +141,15 @@ class TweetNestScreenTests: XCTestCase {
             app.collectionViews.buttons.element(boundBy: 3).tap()
             app.buttons["Delete Recent Tweets"].tap()
         } else {
+            let button = app.buttons["Delete Recent Tweets"]
+
             #if os(watchOS)
-            scrollDown()
+            while !button.isHittable {
+                scrollUp()
+            }
             #endif
 
-            app.buttons["Delete Recent Tweets"].tap()
+            button.tap()
         }
 
         XCTAssertTrue(app.switches.firstMatch.waitForExistence(timeout: 5))
@@ -153,7 +162,8 @@ class TweetNestScreenTests: XCTestCase {
         takeScreenshot(name: "Batch Delete Tweets Form Screen")
     }
 
-    private func scrollDown() {
+    #if os(watchOS)
+    private func scrollUp() {
         let relativeTouchPoint = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0))
         let relativeOffset = app.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: -1.0))
         relativeTouchPoint.press(forDuration: 0, thenDragTo: relativeOffset)
