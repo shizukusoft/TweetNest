@@ -29,7 +29,7 @@ class TweetNestScreenTests: XCTestCase {
             if allowButton.exists {
                 #if os(watchOS)
                 while !allowButton.isHittable {
-                    scrollUp()
+                    self.scrollUp()
                 }
                 #endif
 
