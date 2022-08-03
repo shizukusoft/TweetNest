@@ -29,7 +29,7 @@ class TweetNestScreenTests: XCTestCase {
             if allowButton.exists {
                 #if os(watchOS)
                 while !allowButton.isHittable {
-                    self.scrollUp()
+                    self.scrollUp(element: XCUIApplication(bundleIdentifier: "com.apple.Carousel"))
                 }
                 #endif
 
@@ -162,13 +162,13 @@ class TweetNestScreenTests: XCTestCase {
         takeScreenshot(name: "Batch Delete Tweets Form Screen")
     }
 
-    #if os(watchOS)
-    private func scrollUp() {
-        let relativeTouchPoint = app.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0))
-        let relativeOffset = app.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: -1.0))
+    private func scrollUp(element: XCUIElement? = nil) {
+        let element = element ?? self.app
+
+        let relativeTouchPoint = element.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 1.0))
+        let relativeOffset = element.coordinate(withNormalizedOffset: CGVector(dx: 0.0, dy: -1.0))
         relativeTouchPoint.press(forDuration: 0, thenDragTo: relativeOffset)
     }
-    #endif
 
     private func takeScreenshot(name: String) {
         let attachment = XCTAttachment(screenshot: app.windows.firstMatch.screenshot())
