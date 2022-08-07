@@ -28,9 +28,9 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     #if canImport(CoreSpotlight)
-    private lazy var _usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[0], coordinator: persistentStoreCoordinator)
+    private var _usersSpotlightDelegate: UsersSpotlightDelegate?
 
-    public var usersSpotlightDelegate: UsersSpotlightDelegate {
+    public var usersSpotlightDelegate: UsersSpotlightDelegate? {
         persistentStoreCoordinator.performAndWait {
             _usersSpotlightDelegate
         }
@@ -61,6 +61,10 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
 
                 return persistentStoreDescription
             }
+
+            #if canImport(CoreSpotlight)
+            _usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[0], coordinator: persistentStoreCoordinator)
+            #endif
         } else {
             persistentStoreDescriptions.forEach {
                 $0.url = nil
