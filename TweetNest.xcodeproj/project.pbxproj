@@ -188,7 +188,6 @@
 		19E10D89289F8D79007CAAB6 /* TweetNestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E10BE7289F8399007CAAB6 /* TweetNestUITestsLaunchTests.swift */; };
 		19E10D8A289F8D7C007CAAB6 /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E10BE5289F8399007CAAB6 /* TweetNestUITests.swift */; };
 		19E10D92289F8E18007CAAB6 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E10D91289F8E18007CAAB6 /* SafariWebExtensionHandler.swift */; };
-		19E10DA8289F8E18007CAAB6 /* TweetNest MirrorBlock Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 19E10D8F289F8E18007CAAB6 /* TweetNest MirrorBlock Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		19E10DB6289F9074007CAAB6 /* vendor in Resources */ = {isa = PBXBuildFile; fileRef = 19E10DAE289F9074007CAAB6 /* vendor */; };
 		19E10DB7289F9074007CAAB6 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 19E10DAF289F9074007CAAB6 /* icons */; };
 		19E10DB8289F9074007CAAB6 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 19E10DB0289F9074007CAAB6 /* manifest.json */; };
@@ -285,13 +284,6 @@
 			remoteGlobalIDString = 19E10BF6289F83BA007CAAB6;
 			remoteInfo = TweetNestKit;
 		};
-		19E10DA6289F8E18007CAAB6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19E10B57289F8353007CAAB6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19E10D8E289F8E18007CAAB6;
-			remoteInfo = "TweetNest MirrorBlock Extension";
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -326,17 +318,6 @@
 				19E10D81289F8BD5007CAAB6 /* TweetNestKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19E10DAC289F8E18007CAAB6 /* Embed Foundation Extensions */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 13;
-			files = (
-				19E10DA8289F8E18007CAAB6 /* TweetNest MirrorBlock Extension.appex in Embed Foundation Extensions */,
-			);
-			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -1004,7 +985,6 @@
 				19E10BC0289F8397007CAAB6 /* Resources */,
 				19E10C11289F83BB007CAAB6 /* Embed Frameworks */,
 				19E10D4C289F89C4007CAAB6 /* Embed Watch Content */,
-				19E10DAC289F8E18007CAAB6 /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
@@ -1014,7 +994,6 @@
 				19E10D59289F89F2007CAAB6 /* PBXTargetDependency */,
 				19E10D7C289F8BA3007CAAB6 /* PBXTargetDependency */,
 				19E10D7F289F8BA8007CAAB6 /* PBXTargetDependency */,
-				19E10DA7289F8E18007CAAB6 /* PBXTargetDependency */,
 			);
 			name = TweetNest;
 			productName = TweetNest;
@@ -1572,11 +1551,6 @@
 			isa = PBXTargetDependency;
 			target = 19E10BF6289F83BA007CAAB6 /* TweetNestKit */;
 			targetProxy = 19E10D82289F8BD5007CAAB6 /* PBXContainerItemProxy */;
-		};
-		19E10DA7289F8E18007CAAB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19E10D8E289F8E18007CAAB6 /* TweetNest MirrorBlock Extension */;
-			targetProxy = 19E10DA6289F8E18007CAAB6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
