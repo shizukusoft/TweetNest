@@ -14,7 +14,7 @@ private protocol PersistentContainerMigrationProtocol {
 }
 
 @available(*, deprecated)
-extension PersistentContainer: PersistentContainerMigrationProtocol {
+extension PersistentContainer {
     fileprivate func _migrateIfNeeded() throws {
         if
             FileManager.default.fileExists(atPath: Self.V1.defaultPersistentStoreURL.path)
@@ -23,6 +23,8 @@ extension PersistentContainer: PersistentContainerMigrationProtocol {
         }
     }
 }
+
+extension PersistentContainer: PersistentContainerMigrationProtocol { }
 
 extension PersistentContainer {
     func migrateIfNeeded() throws {
