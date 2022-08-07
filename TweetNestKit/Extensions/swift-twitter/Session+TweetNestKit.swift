@@ -19,7 +19,7 @@ extension Twitter.Session {
         return urlSessionConfiguration
     }
 
-    convenience init(twitterAPIConfiguration: Session.TwitterAPIConfiguration) {
+    init(twitterAPIConfiguration: Session.TwitterAPIConfiguration) {
         self.init(
             consumerKey: twitterAPIConfiguration.apiKey,
             consumerSecret: twitterAPIConfiguration.apiKeySecret,

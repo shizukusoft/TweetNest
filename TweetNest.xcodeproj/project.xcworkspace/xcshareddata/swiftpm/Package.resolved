@@ -12,7 +12,7 @@
     {
       "identity" : "swift-background-task",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tweetnest/swift-background-task",
+      "location" : "https://github.com/shizukusoft/swift-background-task",
       "state" : {
         "revision" : "35ea5eb666a6a0308c171a968cc2f1ecbcdc9915",
         "version" : "0.2.1"
@@ -57,9 +57,8 @@
     {
       "identity" : "swift-twitter",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tweetnest/swift-twitter",
+      "location" : "https://github.com/shizukusoft/swift-twitter",
       "state" : {
-        "branch" : "develop",
         "revision" : "b004ce31d583b00fce6771fb538fbb55fdd79e4d"
       }
     },

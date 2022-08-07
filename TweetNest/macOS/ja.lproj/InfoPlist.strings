@@ -1,9 +1,0 @@
-/* Bundle display name */
-"CFBundleDisplayName" = "TweetNest";
-
-/* Bundle name */
-"CFBundleName" = "TweetNest";
-
-/* Copyright (human-readable) */
-"NSHumanReadableCopyright" = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
-
