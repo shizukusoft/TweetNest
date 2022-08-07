@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>aps-environment</key>
+	<string>development</string>
+	<key>com.apple.developer.aps-environment</key>
+	<string>development</string>
+	<key>com.apple.developer.icloud-container-identifiers</key>
+	<array>
+		<string>iCloud.com.tweetnest.TweetNestKit</string>
+		<string>iCloud.com.tweetnest.TweetNestKit.accounts</string>
+		<string>iCloud.com.tweetnest.TweetNestKit.dataAssets</string>
+		<string>iCloud.com.tweetnest.TweetNestKit.v3</string>
+		<string>iCloud.com.tweetnest.TweetNestKit.v3.userData</string>
+	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit</string>
+	</array>
+	<key>com.apple.developer.networking.multipath</key>
+	<true/>
+	<key>com.apple.developer.usernotifications.time-sensitive</key>
+	<true/>
+	<key>com.apple.security.app-sandbox</key>
+	<true/>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.tweetnest.TweetNestKit</string>
+	</array>
+	<key>com.apple.security.files.user-selected.read-only</key>
+	<true/>
+	<key>com.apple.security.network.client</key>
+	<true/>
+</dict>
+</plist>

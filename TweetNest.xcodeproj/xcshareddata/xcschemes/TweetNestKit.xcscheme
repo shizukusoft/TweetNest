@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1300"
+   LastUpgradeVersion = "1400"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19C5A28526BC1F3500AB1122"
+               BlueprintIdentifier = "19E10BF6289F83BA007CAAB6"
                BuildableName = "TweetNestKit.framework"
                BlueprintName = "TweetNestKit"
                ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19C5A28E26BC1F3500AB1122"
+               BlueprintIdentifier = "19E10BFF289F83BA007CAAB6"
                BuildableName = "TweetNestKitTests.xctest"
                BlueprintName = "TweetNestKitTests"
                ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -60,7 +60,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "19C5A28526BC1F3500AB1122"
+            BlueprintIdentifier = "19E10BF6289F83BA007CAAB6"
             BuildableName = "TweetNestKit.framework"
             BlueprintName = "TweetNestKit"
             ReferencedContainer = "container:TweetNest.xcodeproj">
