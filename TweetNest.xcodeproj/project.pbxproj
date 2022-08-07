@@ -11,6 +11,7 @@
 		19821196289F92E700EFCE05 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19821198289F92E700EFCE05 /* InfoPlist.strings */; };
 		19821199289F92EC00EFCE05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1982119C289F92EC00EFCE05 /* Localizable.strings */; };
 		1982119A289F92EC00EFCE05 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1982119C289F92EC00EFCE05 /* Localizable.strings */; };
+		198211A0289F995E00EFCE05 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19E10D70289F8B16007CAAB6 /* TweetNestKit.framework */; };
 		19E10BCE289F8398007CAAB6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E10BCD289F8398007CAAB6 /* Assets.xcassets */; };
 		19E10BD2289F8398007CAAB6 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19E10BD1289F8398007CAAB6 /* Preview Assets.xcassets */; };
 		19E10BDC289F8398007CAAB6 /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E10BDB289F8398007CAAB6 /* TweetNestTests.swift */; };
@@ -235,13 +236,6 @@
 			remoteGlobalIDString = 19E10BF6289F83BA007CAAB6;
 			remoteInfo = TweetNestKit;
 		};
-		19E10C04289F83BB007CAAB6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19E10B57289F8353007CAAB6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19E10BC1289F8397007CAAB6;
-			remoteInfo = TweetNest;
-		};
 		19E10C0A289F83BB007CAAB6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 19E10B57289F8353007CAAB6 /* Project object */;
@@ -250,27 +244,6 @@
 			remoteInfo = TweetNestKit;
 		};
 		19E10D4A289F89C4007CAAB6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19E10B57289F8353007CAAB6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19E10B84289F8355007CAAB6;
-			remoteInfo = "TweetNest Watch App";
-		};
-		19E10D58289F89F2007CAAB6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19E10B57289F8353007CAAB6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19E10BF6289F83BA007CAAB6;
-			remoteInfo = TweetNestKit;
-		};
-		19E10D7B289F8BA3007CAAB6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19E10B57289F8353007CAAB6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19E10BF6289F83BA007CAAB6;
-			remoteInfo = TweetNestKit;
-		};
-		19E10D7E289F8BA8007CAAB6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 19E10B57289F8353007CAAB6 /* Project object */;
 			proxyType = 1;
@@ -536,6 +509,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				198211A0289F995E00EFCE05 /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -991,9 +965,6 @@
 			dependencies = (
 				19E10C0B289F83BB007CAAB6 /* PBXTargetDependency */,
 				19E10D4B289F89C4007CAAB6 /* PBXTargetDependency */,
-				19E10D59289F89F2007CAAB6 /* PBXTargetDependency */,
-				19E10D7C289F8BA3007CAAB6 /* PBXTargetDependency */,
-				19E10D7F289F8BA8007CAAB6 /* PBXTargetDependency */,
 			);
 			name = TweetNest;
 			productName = TweetNest;
@@ -1074,7 +1045,6 @@
 			);
 			dependencies = (
 				19E10C03289F83BB007CAAB6 /* PBXTargetDependency */,
-				19E10C05289F83BB007CAAB6 /* PBXTargetDependency */,
 			);
 			name = TweetNestKitTests;
 			productName = TweetNestKitTests;
@@ -1136,7 +1106,6 @@
 					};
 					19E10BFF289F83BA007CAAB6 = {
 						CreatedOnToolsVersion = 14.0;
-						TestTargetID = 19E10BC1289F8397007CAAB6;
 					};
 					19E10D8E289F8E18007CAAB6 = {
 						CreatedOnToolsVersion = 14.0;
@@ -1516,11 +1485,6 @@
 			target = 19E10BF6289F83BA007CAAB6 /* TweetNestKit */;
 			targetProxy = 19E10C02289F83BB007CAAB6 /* PBXContainerItemProxy */;
 		};
-		19E10C05289F83BB007CAAB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19E10BC1289F8397007CAAB6 /* TweetNest */;
-			targetProxy = 19E10C04289F83BB007CAAB6 /* PBXContainerItemProxy */;
-		};
 		19E10C0B289F83BB007CAAB6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 19E10BF6289F83BA007CAAB6 /* TweetNestKit */;
@@ -1531,21 +1495,6 @@
 			platformFilter = ios;
 			target = 19E10B84289F8355007CAAB6 /* TweetNest Watch App */;
 			targetProxy = 19E10D4A289F89C4007CAAB6 /* PBXContainerItemProxy */;
-		};
-		19E10D59289F89F2007CAAB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19E10BF6289F83BA007CAAB6 /* TweetNestKit */;
-			targetProxy = 19E10D58289F89F2007CAAB6 /* PBXContainerItemProxy */;
-		};
-		19E10D7C289F8BA3007CAAB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19E10BF6289F83BA007CAAB6 /* TweetNestKit */;
-			targetProxy = 19E10D7B289F8BA3007CAAB6 /* PBXContainerItemProxy */;
-		};
-		19E10D7F289F8BA8007CAAB6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19E10B84289F8355007CAAB6 /* TweetNest Watch App */;
-			targetProxy = 19E10D7E289F8BA8007CAAB6 /* PBXContainerItemProxy */;
 		};
 		19E10D83289F8BD5007CAAB6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2125,12 +2074,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MACOSX_DEPLOYMENT_TARGET = 12.5;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -2138,7 +2083,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TweetNest";
 			};
 			name = Debug;
 		};
@@ -2147,12 +2091,8 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
-				MACOSX_DEPLOYMENT_TARGET = 12.5;
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKitTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
@@ -2160,7 +2100,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TweetNest.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TweetNest";
 			};
 			name = Release;
 		};
