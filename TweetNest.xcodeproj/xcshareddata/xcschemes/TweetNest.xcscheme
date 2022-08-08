@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19E10BC1289F8397007CAAB6"
+               BlueprintIdentifier = "19505DD128A1844500ADE8CF"
                BuildableName = "TweetNest.app"
                BlueprintName = "TweetNest"
                ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -33,7 +33,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19E10BD6289F8398007CAAB6"
+               BlueprintIdentifier = "19505DE628A1844600ADE8CF"
                BuildableName = "TweetNestTests.xctest"
                BlueprintName = "TweetNestTests"
                ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -44,7 +44,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19E10BE0289F8398007CAAB6"
+               BlueprintIdentifier = "19505DF028A1844700ADE8CF"
                BuildableName = "TweetNestUITests.xctest"
                BlueprintName = "TweetNestUITests"
                ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -60,7 +60,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19E10BFF289F83BA007CAAB6"
+               BlueprintIdentifier = "19505E0F28A1847C00ADE8CF"
                BuildableName = "TweetNestKitTests.xctest"
                BlueprintName = "TweetNestKitTests"
                ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -83,7 +83,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "19E10BC1289F8397007CAAB6"
+            BlueprintIdentifier = "19505DD128A1844500ADE8CF"
             BuildableName = "TweetNest.app"
             BlueprintName = "TweetNest"
             ReferencedContainer = "container:TweetNest.xcodeproj">
@@ -146,7 +146,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "19E10BC1289F8397007CAAB6"
+            BlueprintIdentifier = "19505DD128A1844500ADE8CF"
             BuildableName = "TweetNest.app"
             BlueprintName = "TweetNest"
             ReferencedContainer = "container:TweetNest.xcodeproj">

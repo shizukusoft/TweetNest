@@ -30,7 +30,7 @@
     {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections",
+      "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
         "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
         "version" : "1.0.2"
@@ -65,7 +65,7 @@
     {
       "identity" : "swift-unified-log",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sinoru/swift-unified-log",
+      "location" : "https://github.com/sinoru/swift-unified-log.git",
       "state" : {
         "revision" : "3afccfaa8ffe143ebe0d7d784c1a01b339c4d162",
         "version" : "2.0.2"
