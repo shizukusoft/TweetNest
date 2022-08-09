@@ -8,5 +8,12 @@
 		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.tweetnest.TweetNestKit.background-refresh</string>
+		<string>com.tweetnest.TweetNestKit.data-cleansing</string>
+	</array>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 </dict>
 </plist>
