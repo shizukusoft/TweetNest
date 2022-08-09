@@ -13,8 +13,18 @@ extension Session {
     static let applicationGroupIdentifier = "group.\(Bundle.tweetNestKit.bundleIdentifier!)"
 
     static let isSandbox: Bool = {
-        return CKContainer(identifier: PersistentContainer.V3.defaultCloudKitIdentifier)
-            .value(forKeyPath: "containerID.environment") as? CLongLong == 2
+        #if DEBUG
+        let isRunningOnXCTest = ProcessInfo.processInfo.environment.keys
+            .contains { $0.range(of: "XC", options: .caseInsensitive)?.lowerBound == $0.startIndex }
+
+        if isRunningOnXCTest {
+            return true
+        } else {
+            return CKContainer.default().value(forKeyPath: "containerID.environment") as? CLongLong == 2
+        }
+        #else
+        return CKContainer.default().value(forKeyPath: "containerID.environment") as? CLongLong == 2
+        #endif
     }()
 
     static var containerURL: URL {
