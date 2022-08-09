@@ -9,6 +9,8 @@
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
@@ -18,10 +20,7 @@
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UINavigationBar</key>
-		<dict>
-			<key>UIImageName</key>
-			<string></string>
-		</dict>
+		<dict/>
 	</dict>
 </dict>
 </plist>
