@@ -17,10 +17,5 @@
 		<string>processing</string>
 		<string>remote-notification</string>
 	</array>
-	<key>UILaunchScreen</key>
-	<dict>
-		<key>UINavigationBar</key>
-		<dict/>
-	</dict>
 </dict>
 </plist>

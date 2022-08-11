@@ -16,7 +16,6 @@
 		19505DF828A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */; };
 		19505E0B28A1847B00ADE8CF /* TweetNestKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19505E0A28A1847B00ADE8CF /* TweetNestKit.docc */; };
 		19505E1128A1847C00ADE8CF /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; };
-		19505E1928A1847C00ADE8CF /* TweetNestKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 19505E0928A1847B00ADE8CF /* TweetNestKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		19505E1C28A1847C00ADE8CF /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; };
 		19505E1D28A1847C00ADE8CF /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19505E2D28A184FC00ADE8CF /* BackgroundTaskScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2528A184FC00ADE8CF /* BackgroundTaskScheduler.swift */; };
@@ -318,7 +317,6 @@
 		19505DF528A1844700ADE8CF /* TweetNestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITests.swift; sourceTree = "<group>"; };
 		19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		19505E0728A1847B00ADE8CF /* TweetNestKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TweetNestKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		19505E0928A1847B00ADE8CF /* TweetNestKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TweetNestKit.h; sourceTree = "<group>"; };
 		19505E0A28A1847B00ADE8CF /* TweetNestKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = TweetNestKit.docc; sourceTree = "<group>"; };
 		19505E1028A1847C00ADE8CF /* TweetNestKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505E2528A184FC00ADE8CF /* BackgroundTaskScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTaskScheduler.swift; sourceTree = "<group>"; };
@@ -671,7 +669,6 @@
 		19505E0828A1847B00ADE8CF /* TweetNestKit */ = {
 			isa = PBXGroup;
 			children = (
-				19505E0928A1847B00ADE8CF /* TweetNestKit.h */,
 				19505E2928A184FC00ADE8CF /* AsyncLazy.swift */,
 				19505E2528A184FC00ADE8CF /* BackgroundTaskScheduler.swift */,
 				19505E2628A184FC00ADE8CF /* Lazy.swift */,
@@ -902,7 +899,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19505E1928A1847C00ADE8CF /* TweetNestKit.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1627,6 +1623,7 @@
 				CURRENT_PROJECT_VERSION = 0;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				EAGER_LINKING = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1655,7 +1652,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TVOS_DEPLOYMENT_TARGET = 15.0;
-				VERSIONING_SYSTEM = "apple-generic";
+				VERSIONING_SYSTEM = "";
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Debug;
@@ -1701,6 +1698,7 @@
 				CURRENT_PROJECT_VERSION = 0;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				EAGER_LINKING = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1723,7 +1721,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TVOS_DEPLOYMENT_TARGET = 15.0;
-				VERSIONING_SYSTEM = "apple-generic";
+				VERSIONING_SYSTEM = "";
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Release;
@@ -1880,6 +1878,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -1918,6 +1917,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents[sdk=iphoneos*]" = YES;
@@ -2015,6 +2015,7 @@
 		19505E1F28A1847C00ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
@@ -2047,6 +2048,7 @@
 		19505E2028A1847C00ADE8CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
