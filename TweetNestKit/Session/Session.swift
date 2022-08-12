@@ -23,12 +23,15 @@ public class Session {
         }
     }
 
-    let isShared: Bool
+    var isShared: Bool {
+        self === Self.shared
+    }
 
     let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Session.self))
     let sessionActor = SessionActor()
     public let persistentContainer: PersistentContainer
-    let userDataAssetsURLSessionManager: UserDataAssetsURLSessionManager
+    private(set) lazy var userDataAssetsURLSessionManager = UserDataAssetsURLSessionManager(session: self)
+    private(set) lazy var userNotificationManager = UserNotificationManager(session: self)
 
     private lazy var persistentStoreRemoteChangeNotificationContext: NSManagedObjectContext = persistentContainer.newBackgroundContext()
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
@@ -52,7 +55,6 @@ public class Session {
         }
 
     private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration?, inMemory: Bool, isShared: Bool = false) {
-        self.isShared = isShared
         _twitterAPIConfiguration = .init({
             if let twitterAPIConfiguration = try await twitterAPIConfiguration() {
                 return twitterAPIConfiguration
@@ -60,14 +62,7 @@ public class Session {
                 return try await .cloudKit
             }
         })
-        let persistentContainer = PersistentContainer(inMemory: inMemory)
-        self.persistentContainer = persistentContainer
-
-        let dataAssetsURLSessionManager = UserDataAssetsURLSessionManager(
-            isShared: isShared,
-            persistentContainer: persistentContainer
-        )
-        self.userDataAssetsURLSessionManager = dataAssetsURLSessionManager
+        self.persistentContainer = PersistentContainer(inMemory: inMemory)
 
         _ = self.persistentStoreRemoteChangeNotification
         _ = self.fetchNewDataIntervalObserver
@@ -76,24 +71,28 @@ public class Session {
             self.persistentContainer.loadPersistentStores { result in
                 switch result {
                 case .success:
+                    Task.detached(priority: .utility) {
+                        _ = try? await self.twitterAPIConfiguration
+                        _ = self.userDataAssetsURLSessionManager
+                        _ = self.userNotificationManager
+
+                        #if DEBUG
+                        guard self.persistentContainer.persistentStoreDescriptions.contains(where: { $0.cloudKitContainerOptions != nil }) else {
+                            return
+                        }
+
+                        do {
+                            try self.persistentContainer.initializeCloudKitSchema(options: [])
+                        } catch {
+                            logger.error("\(error as NSError, privacy: .public)")
+                        }
+                        #endif
+                    }
+
                     Task {
                         await MainActor.run {
                             self.persistentContainerLoadingResult = .success(())
                         }
-
-                        #if DEBUG
-                        Task.detached(priority: .utility) {
-                            guard self.persistentContainer.persistentStoreDescriptions.contains(where: { $0.cloudKitContainerOptions != nil }) else {
-                                return
-                            }
-
-                            do {
-                                try self.persistentContainer.initializeCloudKitSchema(options: [])
-                            } catch {
-                                logger.error("\(error as NSError, privacy: .public)")
-                            }
-                        }
-                        #endif
                     }
                 case .failure(let error):
                     logger.error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
@@ -105,10 +104,6 @@ public class Session {
                     }
                 }
             }
-        }
-
-        Task.detached(priority: .utility) {
-            _ = try? await self.twitterAPIConfiguration
         }
     }
 

@@ -12,6 +12,7 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         case isBackgroundUpdateEnabled = "TWNKBackgroundUpdateEnabled"
         case downloadsDataAssetsUsingExpensiveNetworkAccess = "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess"
         case lastPersistentHistoryTokenData = "TWNKLastPersistentHistoryTokenData"
+        case lastUserNotificationPersistentHistoryTokenData = "TWNKLastUserNotificationPersistentHistoryTokenData"
         case fetchNewDataInterval = "TWNKFetchNewDataInterval"
         case lastFetchNewDataDate = "TWNKLastFetchNewData"
         case lastCleansedDate = "TWNKLastCleansed"
@@ -43,6 +44,11 @@ final public class TweetNestKitUserDefaults: UserDefaults {
         set { setValue(newValue, forKey: DefaultsKeys.lastPersistentHistoryTokenData.rawValue) }
     }
 
+    @objc public dynamic var lastUserNotificationPersistentHistoryTokenData: Data? {
+        get { object(forKey: DefaultsKeys.lastUserNotificationPersistentHistoryTokenData.rawValue) as? Data }
+        set { setValue(newValue, forKey: DefaultsKeys.lastUserNotificationPersistentHistoryTokenData.rawValue) }
+    }
+
     @objc public dynamic var fetchNewDataInterval: TimeInterval {
         get { object(forKey: DefaultsKeys.fetchNewDataInterval.rawValue) as? TimeInterval ?? 10 * 60 }
         set { setValue(newValue, forKey: DefaultsKeys.fetchNewDataInterval.rawValue) }
@@ -66,6 +72,8 @@ final public class TweetNestKitUserDefaults: UserDefaults {
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.downloadsDataAssetsUsingExpensiveNetworkAccess.rawValue])
         case String(twnk_keyPath: \TweetNestKitUserDefaults.lastPersistentHistoryTokenData):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastPersistentHistoryTokenData.rawValue])
+        case String(twnk_keyPath: \TweetNestKitUserDefaults.lastUserNotificationPersistentHistoryTokenData):
+            return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.lastUserNotificationPersistentHistoryTokenData.rawValue])
         case String(twnk_keyPath: \TweetNestKitUserDefaults.fetchNewDataInterval):
             return super.keyPathsForValuesAffectingValue(forKey: key).union([DefaultsKeys.fetchNewDataInterval.rawValue])
         case String(twnk_keyPath: \TweetNestKitUserDefaults.lastFetchNewDataDate):

@@ -197,6 +197,8 @@
 		19505FA928A18C9600ADE8CF /* vendor in Resources */ = {isa = PBXBuildFile; fileRef = 19505FA128A18C9600ADE8CF /* vendor */; };
 		19505FAA28A18C9600ADE8CF /* styles in Resources */ = {isa = PBXBuildFile; fileRef = 19505FA228A18C9600ADE8CF /* styles */; };
 		19505FAB28A18C9600ADE8CF /* bundled in Resources */ = {isa = PBXBuildFile; fileRef = 19505FA328A18C9600ADE8CF /* bundled */; };
+		1963158828A679F8000AEDD6 /* UserNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1963158728A679F8000AEDD6 /* UserNotificationManager.swift */; };
+		1963158B28A67E6E000AEDD6 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 1963158A28A67E6E000AEDD6 /* AsyncAlgorithms */; };
 		1992421128A18D3F00BC57EF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1992420F28A18D3F00BC57EF /* InfoPlist.strings */; };
 		19A20A4028A18F0600FE5301 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19A20A4228A18F0600FE5301 /* InfoPlist.strings */; };
 /* End PBXBuildFile section */
@@ -450,6 +452,7 @@
 		19505FA128A18C9600ADE8CF /* vendor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = vendor; sourceTree = "<group>"; };
 		19505FA228A18C9600ADE8CF /* styles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = styles; sourceTree = "<group>"; };
 		19505FA328A18C9600ADE8CF /* bundled */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bundled; sourceTree = "<group>"; };
+		1963158728A679F8000AEDD6 /* UserNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationManager.swift; sourceTree = "<group>"; };
 		1992421028A18D3F00BC57EF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1992421228A18D4A00BC57EF /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4328A18F0900FE5301 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -512,6 +515,7 @@
 				19505EAE28A185F800ADE8CF /* Twitter in Frameworks */,
 				19505EA528A185CA00ADE8CF /* Algorithms in Frameworks */,
 				19505EB428A1861700ADE8CF /* UnifiedLogging in Frameworks */,
+				1963158B28A67E6E000AEDD6 /* AsyncAlgorithms in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -676,6 +680,7 @@
 				19505E2C28A184FC00ADE8CF /* TweetNestKitUserDefaults.swift */,
 				19505E2728A184FC00ADE8CF /* TwitterArchive.swift */,
 				19505E2828A184FC00ADE8CF /* UserDataAssetsURLSessionManager.swift */,
+				1963158728A679F8000AEDD6 /* UserNotificationManager.swift */,
 				19505E2B28A184FC00ADE8CF /* UserID.swift */,
 				19505E3528A1850700ADE8CF /* CoreDataStack */,
 				19505E6528A1851000ADE8CF /* Extensions */,
@@ -780,18 +785,18 @@
 		19505E7A28A1851500ADE8CF /* Session */ = {
 			isa = PBXGroup;
 			children = (
-				19505E7B28A1851500ADE8CF /* Session+NewAccount.swift */,
-				19505E7C28A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift */,
 				19505E7D28A1851500ADE8CF /* Session.swift */,
 				19505E7E28A1851500ADE8CF /* Session+Credential.swift */,
-				19505E7F28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift */,
-				19505E8028A1851500ADE8CF /* SessionActor.swift */,
-				19505E8128A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift */,
-				19505E8228A1851500ADE8CF /* Session+Support.swift */,
-				19505E8328A1851500ADE8CF /* SessionError.swift */,
+				19505E7B28A1851500ADE8CF /* Session+NewAccount.swift */,
 				19505E8428A1851500ADE8CF /* Session+CleansingData.swift */,
-				19505E8528A1851500ADE8CF /* Session+UpdatesAll.swift */,
+				19505E7F28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift */,
+				19505E8128A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift */,
 				19505E8628A1851500ADE8CF /* Session+Updates.swift */,
+				19505E8528A1851500ADE8CF /* Session+UpdatesAll.swift */,
+				19505E7C28A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift */,
+				19505E8228A1851500ADE8CF /* Session+Support.swift */,
+				19505E8028A1851500ADE8CF /* SessionActor.swift */,
+				19505E8328A1851500ADE8CF /* SessionError.swift */,
 			);
 			path = Session;
 			sourceTree = "<group>";
@@ -1038,6 +1043,7 @@
 				19505EAD28A185F800ADE8CF /* Twitter */,
 				19505EB028A1860800ADE8CF /* ZIP */,
 				19505EB328A1861700ADE8CF /* UnifiedLogging */,
+				1963158A28A67E6E000AEDD6 /* AsyncAlgorithms */,
 			);
 			productName = TweetNestKit;
 			productReference = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */;
@@ -1141,6 +1147,7 @@
 				19505EAC28A185F800ADE8CF /* XCRemoteSwiftPackageReference "swift-twitter" */,
 				19505EAF28A1860800ADE8CF /* XCRemoteSwiftPackageReference "swift-zip" */,
 				19505EB228A1861700ADE8CF /* XCRemoteSwiftPackageReference "swift-unified-log" */,
+				1963158928A67E6E000AEDD6 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 19505D7028A183B700ADE8CF /* Products */;
 			projectDirPath = "";
@@ -1446,6 +1453,7 @@
 				19505E5E28A1850700ADE8CF /* ManagedPreferences+Preferences.swift in Sources */,
 				19505E2E28A184FC00ADE8CF /* Lazy.swift in Sources */,
 				19505E0B28A1847B00ADE8CF /* TweetNestKit.docc in Sources */,
+				1963158828A679F8000AEDD6 /* UserNotificationManager.swift in Sources */,
 				19505E5C28A1850700ADE8CF /* ManagedUserDataAsset.swift in Sources */,
 				19505E5728A1850700ADE8CF /* PersistentContainer+V3.swift in Sources */,
 				19505E5A28A1850700ADE8CF /* ManagedAccount.swift in Sources */,
@@ -2321,6 +2329,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		1963158928A67E6E000AEDD6 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.0.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2353,6 +2369,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 19505EB228A1861700ADE8CF /* XCRemoteSwiftPackageReference "swift-unified-log" */;
 			productName = UnifiedLogging;
+		};
+		1963158A28A67E6E000AEDD6 /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 1963158928A67E6E000AEDD6 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
 		};
 /* End XCSwiftPackageProductDependency section */
 
