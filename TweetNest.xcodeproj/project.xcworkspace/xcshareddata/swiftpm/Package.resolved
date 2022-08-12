@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/shizukusoft/swift-background-task",
       "state" : {
-        "revision" : "7caf6b12a246c61821e5b946c715e35b1687f6c3",
-        "version" : "0.2.4"
+        "revision" : "662576afbd2a3ffeb5d00ee648a13cafc1f9717c",
+        "version" : "0.2.5"
       }
     },
     {
