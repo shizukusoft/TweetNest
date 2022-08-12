@@ -1152,9 +1152,9 @@
 				19505D9428A183B800ADE8CF /* TweetNest Watch App */,
 				19505DA628A183B900ADE8CF /* TweetNest Watch AppTests */,
 				19505DB028A183B900ADE8CF /* TweetNest Watch AppUITests */,
+				19505F7C28A18B8700ADE8CF /* TweetNest MirrorBlock Extension */,
 				19505E0628A1847B00ADE8CF /* TweetNestKit */,
 				19505E0F28A1847C00ADE8CF /* TweetNestKitTests */,
-				19505F7C28A18B8700ADE8CF /* TweetNest MirrorBlock Extension */,
 			);
 		};
 /* End PBXProject section */
