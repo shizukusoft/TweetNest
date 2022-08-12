@@ -542,9 +542,9 @@
 				19505D9928A183B800ADE8CF /* TweetNest Watch App */,
 				19505DAA28A183B900ADE8CF /* TweetNest Watch AppTests */,
 				19505DB428A183B900ADE8CF /* TweetNest Watch AppUITests */,
+				19505F7E28A18B8700ADE8CF /* TweetNest MirrorBlock Extension */,
 				19505E0828A1847B00ADE8CF /* TweetNestKit */,
 				19505E1628A1847C00ADE8CF /* TweetNestKitTests */,
-				19505F7E28A18B8700ADE8CF /* TweetNest MirrorBlock Extension */,
 				19505D7028A183B700ADE8CF /* Products */,
 				19505EB528A187BC00ADE8CF /* Frameworks */,
 			);
