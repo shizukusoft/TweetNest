@@ -101,7 +101,9 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     private func fetch(_ fetchedResultsController: NSFetchedResultsController<Element>) {
         do {
             if fetchedResultsController === self.fetchedResultsController {
-                self.objectWillChange.send()
+                DispatchQueue.main.async { [objectWillChange] in
+                    objectWillChange.send()
+                }
             }
 
             try fetchedResultsController.performFetch()
@@ -114,13 +116,9 @@ class FetchedResultsController<Element>: NSObject, NSFetchedResultsControllerDel
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         guard controller === self.fetchedResultsController else { return }
 
-        objectWillChange.send()
-    }
-
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        guard controller === self.fetchedResultsController else { return }
-
-        objectWillChange.send()
+        DispatchQueue.main.async { [objectWillChange] in
+            objectWillChange.send()
+        }
     }
 }
 
