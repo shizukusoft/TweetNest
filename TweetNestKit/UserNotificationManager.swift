@@ -114,124 +114,120 @@ actor UserNotificationManager {
 
     private func handlePersistentHistoryTransactions(_ persistentHistoryTransactions: [NSPersistentHistoryTransaction]) async {
         do {
-            try await withExtendedBackgroundExecution {
-                let changes = OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange>(
-                    persistentHistoryTransactions.lazy
-                        .compactMap(\.changes)
-                        .joined()
-                        .filter { $0.changedObjectID.entity == ManagedUserDetail.entity() }
-                        .map { ($0.changedObjectID, $0) },
-                    uniquingKeysWith: { (_, last) in last }
-                )
+            let changes = OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange>(
+                persistentHistoryTransactions.lazy
+                    .compactMap(\.changes)
+                    .joined()
+                    .filter { $0.changedObjectID.entity == ManagedUserDetail.entity() }
+                    .map { ($0.changedObjectID, $0) },
+                uniquingKeysWith: { (_, last) in last }
+            )
 
-                guard !changes.isEmpty else {
+            guard !changes.isEmpty else {
+                return
+            }
+
+            async let _preferences = self.session.persistentContainer.performBackgroundTask { context in
+                ManagedPreferences.managedPreferences(for: context).preferences
+            }
+
+            let (updatedObjectIDs, removedObjectIDs) = changes
+                .reduce(into: ([NSManagedObjectID](), [NSManagedObjectID]())) { partialResult, change in
+                    switch change.value.changeType {
+                    case .insert, .update:
+                        partialResult.0.append(change.key)
+                    case .delete:
+                        partialResult.1.append(change.key)
+                    @unknown default:
+                        break
+                    }
+                }
+
+            let _userDetails: OrderedDictionary<NSManagedObjectID, ManagedUserDetail> = try await managedObjectContext.perform { [managedObjectContext] in
+                let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
+                accountUserIDsfetchRequest.entity = ManagedAccount.entity()
+                accountUserIDsfetchRequest.resultType = .dictionaryResultType
+                accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
+                accountUserIDsfetchRequest.returnsDistinctResults = true
+
+                let results = try managedObjectContext.fetch(accountUserIDsfetchRequest)
+                let accountUserIDs = results.compactMap {
+                    $0["userID"] as? Twitter.User.ID
+                }
+
+                guard accountUserIDs.isEmpty == false else {
+                    return [:]
+                }
+
+                let userDetailsFetchRequest = ManagedUserDetail.fetchRequest()
+                userDetailsFetchRequest.predicate = NSCompoundPredicate(
+                    andPredicateWithSubpredicates: [
+                        NSPredicate(format: "SELF IN %@", updatedObjectIDs),
+                        NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
+                        NSPredicate(format: "userID IN %@", accountUserIDs)
+                    ]
+                )
+                userDetailsFetchRequest.returnsObjectsAsFaults = false
+
+                let userDetails = try managedObjectContext.fetch(userDetailsFetchRequest)
+
+                return OrderedDictionary(
+                    uniqueKeysWithValues: userDetails.map { (key: $0.objectID, value: $0) }
+                )
+            }
+
+            let preferences = await _preferences
+
+            try await withThrowingTaskGroup(of: (NSManagedObjectID?).self) { notificationTaskGroup in
+                for (userDetailObjectID, _userDetail) in _userDetails {
+                    notificationTaskGroup.addTask { [managedObjectContext] in
+                        async let notificationContent = managedObjectContext.perform {
+                            self.notificationContent(for: _userDetail, preferences: preferences, context: managedObjectContext)
+                        }
+
+                        let cloudKitRecordID = self.session.persistentContainer.recordID(for: userDetailObjectID)
+
+                        guard let notificationContent = await notificationContent else {
+                            return nil
+                        }
+
+                        try await UNUserNotificationCenter.current().add(
+                            UNNotificationRequest(
+                                identifier: cloudKitRecordID?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString,
+                                content: notificationContent,
+                                trigger: nil
+                            )
+                        )
+
+                        return userDetailObjectID
+                    }
+                }
+
+                let needsToBeRemovedObjectIDs = try await notificationTaskGroup
+                    .compactMap { $0 }
+                    .reduce(into: _userDetails.keys.union(removedObjectIDs)) { partialResult, postedUserDetailObjectID in
+                        partialResult.remove(postedUserDetailObjectID)
+                    }
+
+                guard !needsToBeRemovedObjectIDs.isEmpty else {
                     return
                 }
 
-                async let _preferences = self.session.persistentContainer.performBackgroundTask { context in
-                    ManagedPreferences.managedPreferences(for: context).preferences
-                }
+                Task.detached(priority: .utility) {
+                    await Task.yield()
 
-                let (updatedObjectIDs, removedObjectIDs) = changes
-                    .reduce(into: ([NSManagedObjectID](), [NSManagedObjectID]())) { partialResult, change in
-                        switch change.value.changeType {
-                        case .insert, .update:
-                            partialResult.0.append(change.key)
-                        case .delete:
-                            partialResult.1.append(change.key)
-                        @unknown default:
-                            break
-                        }
-                    }
+                    do {
+                        try await withExtendedBackgroundExecution {
+                            let cloudKitRecordIDs = self.session.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
 
-                let context = self.session.persistentContainer.newBackgroundContext()
-
-                let _userDetails: OrderedDictionary<NSManagedObjectID, ManagedUserDetail> = try await context.perform {
-                    let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
-                    accountUserIDsfetchRequest.entity = ManagedAccount.entity()
-                    accountUserIDsfetchRequest.resultType = .dictionaryResultType
-                    accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
-                    accountUserIDsfetchRequest.returnsDistinctResults = true
-
-                    let results = try context.fetch(accountUserIDsfetchRequest)
-                    let accountUserIDs = results.compactMap {
-                        $0["userID"] as? Twitter.User.ID
-                    }
-
-                    guard accountUserIDs.isEmpty == false else {
-                        return [:]
-                    }
-
-                    let userDetailsFetchRequest = ManagedUserDetail.fetchRequest()
-                    userDetailsFetchRequest.predicate = NSCompoundPredicate(
-                        andPredicateWithSubpredicates: [
-                            NSPredicate(format: "SELF IN %@", updatedObjectIDs),
-                            NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
-                            NSPredicate(format: "userID IN %@", accountUserIDs)
-                        ]
-                    )
-                    userDetailsFetchRequest.returnsObjectsAsFaults = false
-
-                    let userDetails = try context.fetch(userDetailsFetchRequest)
-
-                    return OrderedDictionary(
-                        uniqueKeysWithValues: userDetails.map { (key: $0.objectID, value: $0) }
-                    )
-                }
-
-                let preferences = await _preferences
-
-                try await withThrowingTaskGroup(of: (NSManagedObjectID?).self) { notificationTaskGroup in
-                    for (userDetailObjectID, _userDetail) in _userDetails {
-                        notificationTaskGroup.addTask {
-                            async let notificationContent = context.perform {
-                                self.notificationContent(for: _userDetail, preferences: preferences, context: context)
+                            let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {
+                                [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
                             }
 
-                            let cloudKitRecordID = self.session.persistentContainer.recordID(for: userDetailObjectID)
-
-                            guard let notificationContent = await notificationContent else {
-                                return nil
-                            }
-
-                            try await UNUserNotificationCenter.current().add(
-                                UNNotificationRequest(
-                                    identifier: cloudKitRecordID?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString,
-                                    content: notificationContent,
-                                    trigger: nil
-                                )
-                            )
-
-                            return userDetailObjectID
+                            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
                         }
-                    }
-
-                    let needsToBeRemovedObjectIDs = try await notificationTaskGroup
-                        .compactMap { $0 }
-                        .reduce(into: _userDetails.keys.union(removedObjectIDs)) { partialResult, postedUserDetailObjectID in
-                            partialResult.remove(postedUserDetailObjectID)
-                        }
-
-                    guard !needsToBeRemovedObjectIDs.isEmpty else {
-                        return
-                    }
-
-                    Task.detached(priority: .utility) {
-                        await Task.yield()
-
-                        do {
-                            try await withExtendedBackgroundExecution {
-                                let cloudKitRecordIDs = self.session.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
-
-                                let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {
-                                    [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
-                                }
-
-                                UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
-                            }
-                        } catch {
-                            self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
-                        }
+                    } catch {
+                        self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
                     }
                 }
             }
