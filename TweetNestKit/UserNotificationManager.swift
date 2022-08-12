@@ -112,6 +112,55 @@ actor UserNotificationManager {
         }
     }
 
+    private static func accountObjectIDsByUserID(managedObjectContext: NSManagedObjectContext) async throws -> [Twitter.User.ID: NSManagedObjectID] {
+        try await managedObjectContext.perform(schedule: .immediate) {
+            let accountUserIDsfetchRequest = ManagedAccount.fetchRequest()
+            accountUserIDsfetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \ManagedAccount.preferringSortOrder, ascending: true),
+                NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: false),
+            ]
+            accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
+            accountUserIDsfetchRequest.returnsObjectsAsFaults = false
+
+            let results = try managedObjectContext.fetch(accountUserIDsfetchRequest)
+
+            return Dictionary(
+                results.lazy.compactMap {
+                    guard let userID = $0.userID else {
+                        return nil
+                    }
+
+                    return (userID, $0.objectID)
+                },
+                uniquingKeysWith: { (first, _) in first }
+            )
+        }
+    }
+
+    private func removeNotifications(for objectIDs: some Collection<NSManagedObjectID>) {
+        guard !objectIDs.isEmpty else {
+            return
+        }
+
+        Task.detached(priority: .utility) {
+            await Task.yield()
+
+            do {
+                try await withExtendedBackgroundExecution {
+                    let cloudKitRecordIDs = self.session.persistentContainer.recordIDs(for: Array(objectIDs))
+
+                    let userNotificationIdentifiers = objectIDs.flatMap {
+                        [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                    }
+
+                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
+                }
+            } catch {
+                self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
+            }
+        }
+    }
+
     private func handlePersistentHistoryTransactions(_ persistentHistoryTransactions: [NSPersistentHistoryTransaction]) async {
         do {
             let changes = OrderedDictionary<NSManagedObjectID, NSPersistentHistoryChange>(
@@ -131,6 +180,8 @@ actor UserNotificationManager {
                 ManagedPreferences.managedPreferences(for: context).preferences
             }
 
+            async let _accountObjectIDsByUserID = Self.accountObjectIDsByUserID(managedObjectContext: managedObjectContext)
+
             let (updatedObjectIDs, removedObjectIDs) = changes
                 .reduce(into: ([NSManagedObjectID](), [NSManagedObjectID]())) { partialResult, change in
                     switch change.value.changeType {
@@ -143,28 +194,18 @@ actor UserNotificationManager {
                     }
                 }
 
+            let accountObjectIDsByUserID = try await _accountObjectIDsByUserID
+            guard !accountObjectIDsByUserID.isEmpty else {
+                return
+            }
+
             let _userDetails: OrderedDictionary<NSManagedObjectID, ManagedUserDetail> = try await managedObjectContext.perform { [managedObjectContext] in
-                let accountUserIDsfetchRequest = NSFetchRequest<NSDictionary>()
-                accountUserIDsfetchRequest.entity = ManagedAccount.entity()
-                accountUserIDsfetchRequest.resultType = .dictionaryResultType
-                accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
-                accountUserIDsfetchRequest.returnsDistinctResults = true
-
-                let results = try managedObjectContext.fetch(accountUserIDsfetchRequest)
-                let accountUserIDs = results.compactMap {
-                    $0["userID"] as? Twitter.User.ID
-                }
-
-                guard accountUserIDs.isEmpty == false else {
-                    return [:]
-                }
-
                 let userDetailsFetchRequest = ManagedUserDetail.fetchRequest()
                 userDetailsFetchRequest.predicate = NSCompoundPredicate(
                     andPredicateWithSubpredicates: [
                         NSPredicate(format: "SELF IN %@", updatedObjectIDs),
                         NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
-                        NSPredicate(format: "userID IN %@", accountUserIDs)
+                        NSPredicate(format: "userID IN %@", Array(accountObjectIDsByUserID.keys))
                     ]
                 )
                 userDetailsFetchRequest.returnsObjectsAsFaults = false
@@ -209,27 +250,7 @@ actor UserNotificationManager {
                         partialResult.remove(postedUserDetailObjectID)
                     }
 
-                guard !needsToBeRemovedObjectIDs.isEmpty else {
-                    return
-                }
-
-                Task.detached(priority: .utility) {
-                    await Task.yield()
-
-                    do {
-                        try await withExtendedBackgroundExecution {
-                            let cloudKitRecordIDs = self.session.persistentContainer.recordIDs(for: needsToBeRemovedObjectIDs.elements)
-
-                            let userNotificationIdentifiers = needsToBeRemovedObjectIDs.flatMap {
-                                [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
-                            }
-
-                            UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
-                        }
-                    } catch {
-                        self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
-                    }
-                }
+                removeNotifications(for: needsToBeRemovedObjectIDs)
             }
         } catch {
             self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
