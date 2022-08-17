@@ -206,11 +206,11 @@ extension Session {
         if let accountObjectID = accountObjectID {
             let context = persistentContainer.newBackgroundContext()
 
-            let userID: Twitter.User.ID? = context.performAndWait {
-                (context.object(with: accountObjectID) as? ManagedAccount)?.userID
+            let persistentID: UUID? = context.performAndWait {
+                (context.object(with: accountObjectID) as? ManagedAccount)?.persistentID
             }
 
-            notificationContent.threadIdentifier = userID ?? accountObjectID.uriRepresentation().absoluteString
+            notificationContent.threadIdentifier = persistentID?.uuidString ?? accountObjectID.uriRepresentation().absoluteString
         }
 
         return UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)

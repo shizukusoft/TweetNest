@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import CryptoKit
 
-public class ManagedUserDataAsset: NSManagedObject {
+public class ManagedUserDataAsset: ManagedObject {
 
 }
 

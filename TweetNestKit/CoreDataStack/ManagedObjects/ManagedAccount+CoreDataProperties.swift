@@ -2,7 +2,7 @@
 //  ManagedAccount+CoreDataProperties.swift
 //  TweetNestKit
 //
-//  Created by 강재홍 on 2022/05/03.
+//  Created by Jaehong Kang on 2022/05/03.
 //
 //
 

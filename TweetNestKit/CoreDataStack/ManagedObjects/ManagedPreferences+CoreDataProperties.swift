@@ -1,6 +1,6 @@
 //
 //  ManagedPreferences+CoreDataProperties.swift
-//  ManagedPreferences
+//  TweetNestKit
 //
 //  Created by Jaehong Kang on 2021/09/05.
 //
