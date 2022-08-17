@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21277" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Account" representedClassName=".ManagedAccount" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="persistentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.ManagedAccountPreferencesTransformer" customClassName="."/>
+        <attribute name="preferringSortOrder" attributeType="Integer 64" defaultValueString="-1" usesScalarValueType="YES"/>
+        <attribute name="token" optional="YES" attributeType="String"/>
+        <attribute name="tokenSecret" optional="YES" attributeType="String" allowsCloudEncryption="YES"/>
+        <attribute name="userID" optional="YES" attributeType="String"/>
+        <fetchedProperty name="users" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="User" predicateString="id == $FETCH_SOURCE.userID"/>
+        </fetchedProperty>
+        <fetchIndex name="byUserID">
+            <fetchIndexElement property="userID" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byPersistentID">
+            <fetchIndexElement property="persistentID" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="Preferences" representedClassName=".ManagedPreferences" syncable="YES">
+        <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="persistentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.ManagedPreferencesTransformer" customClassName="."/>
+        <fetchIndex name="byPersistentID">
+            <fetchIndexElement property="persistentID" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="User" representedClassName=".ManagedUser" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="lastUpdateEndDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastUpdateStartDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="persistentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <fetchedProperty name="accounts" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="Account" predicateString="userID == $FETCH_SOURCE.id"/>
+        </fetchedProperty>
+        <fetchedProperty name="userDetails" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="UserDetail" predicateString="userID == $FETCH_SOURCE.id"/>
+        </fetchedProperty>
+        <fetchIndex name="byID">
+            <fetchIndexElement property="id" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byPersistentID">
+            <fetchIndexElement property="persistentID" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="UserDataAsset" representedClassName=".ManagedUserDataAsset" syncable="YES">
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="dataMIMEType" optional="YES" attributeType="String"/>
+        <attribute name="dataSHA512Hash" optional="YES" attributeType="Binary"/>
+        <attribute name="persistentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="url" optional="YES" attributeType="URI"/>
+        <fetchIndex name="byURL">
+            <fetchIndexElement property="url" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byPersistentID">
+            <fetchIndexElement property="persistentID" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="UserDetail" representedClassName=".ManagedUserDetail" versionHashModifier="2" syncable="YES">
+        <attribute name="blockingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="followerUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="followerUsersCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="followingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="followingUsersCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="isProtected" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="isVerified" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="listedCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="mutingUserIDs" optional="YES" attributeType="Transformable" valueTransformerName="NSSecureUnarchiveFromData"/>
+        <attribute name="name" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <attribute name="persistentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="profileHeaderImageURL" optional="YES" attributeType="URI"/>
+        <attribute name="profileImageURL" optional="YES" attributeType="URI"/>
+        <attribute name="tweetsCount" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="url" optional="YES" attributeType="URI"/>
+        <attribute name="userAttributedDescription" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.SecureUnarchiveFromDataTransformer"/>
+        <attribute name="userCreationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="userID" optional="YES" attributeType="String"/>
+        <attribute name="username" optional="YES" attributeType="String" spotlightIndexingEnabled="YES"/>
+        <fetchedProperty name="users" optional="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="User" predicateString="id == $FETCH_SOURCE.userID"/>
+        </fetchedProperty>
+        <fetchIndex name="byUserIDWithCreationDate">
+            <fetchIndexElement property="userID" type="Binary" order="ascending"/>
+            <fetchIndexElement property="creationDate" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byPersistentID">
+            <fetchIndexElement property="persistentID" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <configuration name="TweetNestKit" usedWithCloudKit="YES">
+        <memberEntity name="Preferences"/>
+        <memberEntity name="Account"/>
+    </configuration>
+    <configuration name="UserData" usedWithCloudKit="YES">
+        <memberEntity name="UserDataAsset"/>
+        <memberEntity name="User"/>
+        <memberEntity name="UserDetail"/>
+    </configuration>
+</model>

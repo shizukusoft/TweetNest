@@ -9,6 +9,20 @@
 /* Begin PBXBuildFile section */
 		1908F44C28A2B63300F5DF2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		1908F44D28A2B63800F5DF2E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
+		19441B8228A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7428A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift */; };
+		19441B8328A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7528A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift */; };
+		19441B8428A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7628A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift */; };
+		19441B8528A773D800AB8B59 /* ManagedPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7728A773D800AB8B59 /* ManagedPreferences.swift */; };
+		19441B8628A773D800AB8B59 /* ManagedPreferences+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7828A773D800AB8B59 /* ManagedPreferences+Preferences.swift */; };
+		19441B8728A773D800AB8B59 /* ManagedAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7928A773D800AB8B59 /* ManagedAccount.swift */; };
+		19441B8828A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7A28A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift */; };
+		19441B8928A773D800AB8B59 /* ManagedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7B28A773D800AB8B59 /* ManagedUser.swift */; };
+		19441B8A28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7C28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift */; };
+		19441B8B28A773D800AB8B59 /* ManagedUserDataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7D28A773D800AB8B59 /* ManagedUserDataAsset.swift */; };
+		19441B8C28A773D800AB8B59 /* ManagedAccount+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7E28A773D800AB8B59 /* ManagedAccount+Preferences.swift */; };
+		19441B8D28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7F28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift */; };
+		19441B8E28A773D800AB8B59 /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B8028A773D800AB8B59 /* ManagedObject.swift */; };
+		19441B8F28A773D800AB8B59 /* ManagedUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B8128A773D800AB8B59 /* ManagedUserDetail.swift */; };
 		19505DDE28A1844600ADE8CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		19505DE228A1844600ADE8CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
 		19505DEC28A1844700ADE8CF /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DEB28A1844700ADE8CF /* TweetNestTests.swift */; };
@@ -34,18 +48,6 @@
 		19505E5628A1850700ADE8CF /* TweetNestKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 19505E3B28A1850700ADE8CF /* TweetNestKit.xcdatamodeld */; };
 		19505E5728A1850700ADE8CF /* PersistentContainer+V3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */; };
 		19505E5828A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4228A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld */; };
-		19505E5928A1850700ADE8CF /* ManagedPreferences+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4528A1850700ADE8CF /* ManagedPreferences+CoreDataProperties.swift */; };
-		19505E5A28A1850700ADE8CF /* ManagedAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4628A1850700ADE8CF /* ManagedAccount.swift */; };
-		19505E5B28A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4728A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift */; };
-		19505E5C28A1850700ADE8CF /* ManagedUserDataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4828A1850700ADE8CF /* ManagedUserDataAsset.swift */; };
-		19505E5D28A1850700ADE8CF /* ManagedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4928A1850700ADE8CF /* ManagedUser.swift */; };
-		19505E5E28A1850700ADE8CF /* ManagedPreferences+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4A28A1850700ADE8CF /* ManagedPreferences+Preferences.swift */; };
-		19505E5F28A1850700ADE8CF /* ManagedUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4B28A1850700ADE8CF /* ManagedUserDetail.swift */; };
-		19505E6028A1850700ADE8CF /* ManagedUserDetail+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4C28A1850700ADE8CF /* ManagedUserDetail+CoreDataProperties.swift */; };
-		19505E6128A1850700ADE8CF /* ManagedPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4D28A1850700ADE8CF /* ManagedPreferences.swift */; };
-		19505E6228A1850700ADE8CF /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4E28A1850700ADE8CF /* ManagedUserDataAsset+CoreDataProperties.swift */; };
-		19505E6328A1850700ADE8CF /* ManagedAccount+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4F28A1850700ADE8CF /* ManagedAccount+Preferences.swift */; };
-		19505E6428A1850700ADE8CF /* ManagedAccount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E5028A1850700ADE8CF /* ManagedAccount+CoreDataProperties.swift */; };
 		19505E7228A1851000ADE8CF /* Session+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6728A1851000ADE8CF /* Session+TweetNestKit.swift */; };
 		19505E7328A1851000ADE8CF /* URLCache+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6928A1851000ADE8CF /* URLCache+TweetNestKit.swift */; };
 		19505E7428A1851000ADE8CF /* Bundle+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6A28A1851000ADE8CF /* Bundle+TweetNestKit.swift */; };
@@ -306,6 +308,22 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		19441B7428A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedObject+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19441B7528A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19441B7628A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUserDataAsset+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19441B7728A773D800AB8B59 /* ManagedPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedPreferences.swift; sourceTree = "<group>"; };
+		19441B7828A773D800AB8B59 /* ManagedPreferences+Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+Preferences.swift"; sourceTree = "<group>"; };
+		19441B7928A773D800AB8B59 /* ManagedAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedAccount.swift; sourceTree = "<group>"; };
+		19441B7A28A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUserDetail+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19441B7B28A773D800AB8B59 /* ManagedUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUser.swift; sourceTree = "<group>"; };
+		19441B7C28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19441B7D28A773D800AB8B59 /* ManagedUserDataAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUserDataAsset.swift; sourceTree = "<group>"; };
+		19441B7E28A773D800AB8B59 /* ManagedAccount+Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+Preferences.swift"; sourceTree = "<group>"; };
+		19441B7F28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		19441B8028A773D800AB8B59 /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
+		19441B8128A773D800AB8B59 /* ManagedUserDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUserDetail.swift; sourceTree = "<group>"; };
+		194DA14028A768560004864E /* TweetNestKitV3.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.1.xcdatamodel; sourceTree = "<group>"; };
+		194DA14828A769DA0004864E /* ManagedAccount+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19505D9528A183B800ADE8CF /* TweetNest Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TweetNest Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DA728A183B900ADE8CF /* TweetNest Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DB128A183B900ADE8CF /* TweetNest Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -341,18 +359,7 @@
 		19505E4028A1850700ADE8CF /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
 		19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V3.swift"; sourceTree = "<group>"; };
 		19505E4328A1850700ADE8CF /* TweetNestKitV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.xcdatamodel; sourceTree = "<group>"; };
-		19505E4528A1850700ADE8CF /* ManagedPreferences+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19505E4628A1850700ADE8CF /* ManagedAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedAccount.swift; sourceTree = "<group>"; };
 		19505E4728A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19505E4828A1850700ADE8CF /* ManagedUserDataAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUserDataAsset.swift; sourceTree = "<group>"; };
-		19505E4928A1850700ADE8CF /* ManagedUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUser.swift; sourceTree = "<group>"; };
-		19505E4A28A1850700ADE8CF /* ManagedPreferences+Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+Preferences.swift"; sourceTree = "<group>"; };
-		19505E4B28A1850700ADE8CF /* ManagedUserDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUserDetail.swift; sourceTree = "<group>"; };
-		19505E4C28A1850700ADE8CF /* ManagedUserDetail+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUserDetail+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19505E4D28A1850700ADE8CF /* ManagedPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedPreferences.swift; sourceTree = "<group>"; };
-		19505E4E28A1850700ADE8CF /* ManagedUserDataAsset+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUserDataAsset+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19505E4F28A1850700ADE8CF /* ManagedAccount+Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+Preferences.swift"; sourceTree = "<group>"; };
-		19505E5028A1850700ADE8CF /* ManagedAccount+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19505E6728A1851000ADE8CF /* Session+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19505E6928A1851000ADE8CF /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19505E6A28A1851000ADE8CF /* Bundle+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+TweetNestKit.swift"; sourceTree = "<group>"; };
@@ -537,6 +544,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		19441B5728A76C2E00AB8B59 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				194DA14828A769DA0004864E /* ManagedAccount+CoreDataProperties.swift */,
+				19505E4728A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		19505D6628A183B700ADE8CF = {
 			isa = PBXGroup;
 			children = (
@@ -551,6 +567,7 @@
 				19505E1628A1847C00ADE8CF /* TweetNestKitTests */,
 				19505D7028A183B700ADE8CF /* Products */,
 				19505EB528A187BC00ADE8CF /* Frameworks */,
+				19441B5728A76C2E00AB8B59 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -703,13 +720,13 @@
 		19505E3528A1850700ADE8CF /* CoreDataStack */ = {
 			isa = PBXGroup;
 			children = (
+				19505E3828A1850700ADE8CF /* PersistentContainer.swift */,
 				19505E3628A1850700ADE8CF /* PersistentContainer+Migration.swift */,
 				19505E3728A1850700ADE8CF /* PersistentContainer+UsersSpotlightDelegate.swift */,
-				19505E3828A1850700ADE8CF /* PersistentContainer.swift */,
 				19505E3928A1850700ADE8CF /* PersistentContainer+V1.swift */,
+				19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */,
 				19505E3A28A1850700ADE8CF /* PersistentContainer+V3_Migration.swift */,
 				19505E3B28A1850700ADE8CF /* TweetNestKit.xcdatamodeld */,
-				19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */,
 				19505E4228A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld */,
 				19505E4428A1850700ADE8CF /* ManagedObjects */,
 			);
@@ -719,18 +736,20 @@
 		19505E4428A1850700ADE8CF /* ManagedObjects */ = {
 			isa = PBXGroup;
 			children = (
-				19505E4528A1850700ADE8CF /* ManagedPreferences+CoreDataProperties.swift */,
-				19505E4628A1850700ADE8CF /* ManagedAccount.swift */,
-				19505E4728A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift */,
-				19505E4828A1850700ADE8CF /* ManagedUserDataAsset.swift */,
-				19505E4928A1850700ADE8CF /* ManagedUser.swift */,
-				19505E4A28A1850700ADE8CF /* ManagedPreferences+Preferences.swift */,
-				19505E4B28A1850700ADE8CF /* ManagedUserDetail.swift */,
-				19505E4C28A1850700ADE8CF /* ManagedUserDetail+CoreDataProperties.swift */,
-				19505E4D28A1850700ADE8CF /* ManagedPreferences.swift */,
-				19505E4E28A1850700ADE8CF /* ManagedUserDataAsset+CoreDataProperties.swift */,
-				19505E4F28A1850700ADE8CF /* ManagedAccount+Preferences.swift */,
-				19505E5028A1850700ADE8CF /* ManagedAccount+CoreDataProperties.swift */,
+				19441B7928A773D800AB8B59 /* ManagedAccount.swift */,
+				19441B7C28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift */,
+				19441B7E28A773D800AB8B59 /* ManagedAccount+Preferences.swift */,
+				19441B8028A773D800AB8B59 /* ManagedObject.swift */,
+				19441B7428A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift */,
+				19441B7728A773D800AB8B59 /* ManagedPreferences.swift */,
+				19441B7528A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift */,
+				19441B7828A773D800AB8B59 /* ManagedPreferences+Preferences.swift */,
+				19441B7B28A773D800AB8B59 /* ManagedUser.swift */,
+				19441B7F28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift */,
+				19441B7D28A773D800AB8B59 /* ManagedUserDataAsset.swift */,
+				19441B7628A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift */,
+				19441B8128A773D800AB8B59 /* ManagedUserDetail.swift */,
+				19441B7A28A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift */,
 			);
 			path = ManagedObjects;
 			sourceTree = "<group>";
@@ -1409,22 +1428,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				19505E7928A1851000ADE8CF /* NSNumber+TwetNestKit.swift in Sources */,
+				19441B8B28A773D800AB8B59 /* ManagedUserDataAsset.swift in Sources */,
+				19441B8428A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */,
 				19505E8828A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift in Sources */,
+				19441B8C28A773D800AB8B59 /* ManagedAccount+Preferences.swift in Sources */,
 				19505E2F28A184FC00ADE8CF /* TwitterArchive.swift in Sources */,
-				19505E5F28A1850700ADE8CF /* ManagedUserDetail.swift in Sources */,
+				19441B8328A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift in Sources */,
 				19505E3028A184FC00ADE8CF /* UserDataAssetsURLSessionManager.swift in Sources */,
 				19505E3128A184FC00ADE8CF /* AsyncLazy.swift in Sources */,
 				19505E7428A1851000ADE8CF /* Bundle+TweetNestKit.swift in Sources */,
-				19505E6328A1850700ADE8CF /* ManagedAccount+Preferences.swift in Sources */,
-				19505E6128A1850700ADE8CF /* ManagedPreferences.swift in Sources */,
 				19505E3328A184FC00ADE8CF /* UserID.swift in Sources */,
 				19505E9028A1851500ADE8CF /* Session+CleansingData.swift in Sources */,
+				19441B8228A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift in Sources */,
+				19441B8828A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift in Sources */,
 				19505E7528A1851000ADE8CF /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
 				19505E7828A1851000ADE8CF /* String+TweetNestKit.swift in Sources */,
 				19505E5428A1850700ADE8CF /* PersistentContainer+V1.swift in Sources */,
 				19505E2D28A184FC00ADE8CF /* BackgroundTaskScheduler.swift in Sources */,
+				19441B8628A773D800AB8B59 /* ManagedPreferences+Preferences.swift in Sources */,
 				19505E5128A1850700ADE8CF /* PersistentContainer+Migration.swift in Sources */,
 				19505E7628A1851000ADE8CF /* NSPersistentContainer+TweetNestKit.swift in Sources */,
+				19441B8928A773D800AB8B59 /* ManagedUser.swift in Sources */,
+				19441B8E28A773D800AB8B59 /* ManagedObject.swift in Sources */,
 				19505E5628A1850700ADE8CF /* TweetNestKit.xcdatamodeld in Sources */,
 				19505E8F28A1851500ADE8CF /* SessionError.swift in Sources */,
 				19505E3428A184FC00ADE8CF /* TweetNestKitUserDefaults.swift in Sources */,
@@ -1434,29 +1459,25 @@
 				19505E8928A1851500ADE8CF /* Session.swift in Sources */,
 				19505E7228A1851000ADE8CF /* Session+TweetNestKit.swift in Sources */,
 				19505E8C28A1851500ADE8CF /* SessionActor.swift in Sources */,
-				19505E6228A1850700ADE8CF /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */,
+				19441B8D28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift in Sources */,
 				19505E3228A184FC00ADE8CF /* SecureUnarchiveFromDataTransformer.swift in Sources */,
 				19505E7328A1851000ADE8CF /* URLCache+TweetNestKit.swift in Sources */,
 				19505E8A28A1851500ADE8CF /* Session+Credential.swift in Sources */,
+				19441B8528A773D800AB8B59 /* ManagedPreferences.swift in Sources */,
 				19505E8D28A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift in Sources */,
 				19505E5828A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld in Sources */,
+				19441B8A28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift in Sources */,
+				19441B8F28A773D800AB8B59 /* ManagedUserDetail.swift in Sources */,
 				19505E8B28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift in Sources */,
 				19505E9128A1851500ADE8CF /* Session+UpdatesAll.swift in Sources */,
-				19505E5928A1850700ADE8CF /* ManagedPreferences+CoreDataProperties.swift in Sources */,
 				19505E5328A1850700ADE8CF /* PersistentContainer.swift in Sources */,
-				19505E6428A1850700ADE8CF /* ManagedAccount+CoreDataProperties.swift in Sources */,
-				19505E5B28A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift in Sources */,
 				19505E5228A1850700ADE8CF /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */,
-				19505E5D28A1850700ADE8CF /* ManagedUser.swift in Sources */,
+				19441B8728A773D800AB8B59 /* ManagedAccount.swift in Sources */,
 				19505E7728A1851000ADE8CF /* Date+TweetNestKit.swift in Sources */,
-				19505E6028A1850700ADE8CF /* ManagedUserDetail+CoreDataProperties.swift in Sources */,
-				19505E5E28A1850700ADE8CF /* ManagedPreferences+Preferences.swift in Sources */,
 				19505E2E28A184FC00ADE8CF /* Lazy.swift in Sources */,
 				19505E0B28A1847B00ADE8CF /* TweetNestKit.docc in Sources */,
 				1963158828A679F8000AEDD6 /* UserNotificationManager.swift in Sources */,
-				19505E5C28A1850700ADE8CF /* ManagedUserDataAsset.swift in Sources */,
 				19505E5728A1850700ADE8CF /* PersistentContainer+V3.swift in Sources */,
-				19505E5A28A1850700ADE8CF /* ManagedAccount.swift in Sources */,
 				19505E9228A1851500ADE8CF /* Session+Updates.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2395,9 +2416,10 @@
 		19505E4228A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				194DA14028A768560004864E /* TweetNestKitV3.1.xcdatamodel */,
 				19505E4328A1850700ADE8CF /* TweetNestKitV3.xcdatamodel */,
 			);
-			currentVersion = 19505E4328A1850700ADE8CF /* TweetNestKitV3.xcdatamodel */;
+			currentVersion = 194DA14028A768560004864E /* TweetNestKitV3.1.xcdatamodel */;
 			path = TweetNestKitV3.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

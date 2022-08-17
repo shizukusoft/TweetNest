@@ -112,25 +112,28 @@ actor UserNotificationManager {
         }
     }
 
-    private static func accountObjectIDsByUserID(managedObjectContext: NSManagedObjectContext) async throws -> [Twitter.User.ID: NSManagedObjectID] {
+    private static func accountsByUserID(managedObjectContext: NSManagedObjectContext) async throws -> [Twitter.User.ID: (objectID: NSManagedObjectID, persistentID: UUID?)] {
         try await managedObjectContext.perform(schedule: .immediate) {
             let accountUserIDsfetchRequest = ManagedAccount.fetchRequest()
             accountUserIDsfetchRequest.sortDescriptors = [
                 NSSortDescriptor(keyPath: \ManagedAccount.preferringSortOrder, ascending: true),
                 NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: false),
             ]
-            accountUserIDsfetchRequest.propertiesToFetch = ["userID"]
+            accountUserIDsfetchRequest.propertiesToFetch = ["userID", "persistentID"]
             accountUserIDsfetchRequest.returnsObjectsAsFaults = false
 
             let results = try managedObjectContext.fetch(accountUserIDsfetchRequest)
 
             return Dictionary(
                 results.lazy.compactMap {
-                    guard let userID = $0.userID else {
+                    guard
+                        let userID = $0.userID,
+                        let persistentID = $0.persistentID
+                    else {
                         return nil
                     }
 
-                    return (userID, $0.objectID)
+                    return (userID, (objectID: $0.objectID, persistentID: persistentID))
                 },
                 uniquingKeysWith: { (first, _) in first }
             )
@@ -147,13 +150,24 @@ actor UserNotificationManager {
 
             do {
                 try await withExtendedBackgroundExecution {
-                    let cloudKitRecordIDs = self.session.persistentContainer.recordIDs(for: Array(objectIDs))
+                    let persistentIDs = try await self.session.persistentContainer.performBackgroundTask { context in
+                        let fetchRequest = NSFetchRequest<NSDictionary>()
+                        fetchRequest.entity = ManagedUserDetail.entity()
+                        fetchRequest.resultType = .dictionaryResultType
+                        fetchRequest.predicate = NSPredicate(format: "SELF IN %@", Array(objectIDs))
+                        fetchRequest.propertiesToFetch = [
+                            (\ManagedObject.persistentID)._kvcKeyPathString!
+                        ]
+                        fetchRequest.returnsDistinctResults = true
 
-                    let userNotificationIdentifiers = objectIDs.flatMap {
-                        [cloudKitRecordIDs[$0]?.recordName, $0.uriRepresentation().absoluteString].compacted()
+                        let results = try context.fetch(fetchRequest)
+
+                        return results.compactMap { $0.value(forKey: (\ManagedObject.persistentID)._kvcKeyPathString!) as? UUID }
                     }
 
-                    UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: userNotificationIdentifiers)
+                    UNUserNotificationCenter.current().removeDeliveredNotifications(
+                        withIdentifiers: persistentIDs.map { $0.uuidString } + objectIDs.map { $0.uriRepresentation().absoluteString }
+                    )
                 }
             } catch {
                 self.logger.error("Error occurred while update notifications: \(error as NSError, privacy: .public)")
@@ -180,7 +194,7 @@ actor UserNotificationManager {
                 ManagedPreferences.managedPreferences(for: context).preferences
             }
 
-            async let _accountObjectIDsByUserID = Self.accountObjectIDsByUserID(managedObjectContext: managedObjectContext)
+            async let _accountsByUserID = Self.accountsByUserID(managedObjectContext: managedObjectContext)
 
             let (updatedObjectIDs, removedObjectIDs) = changes
                 .reduce(into: ([NSManagedObjectID](), [NSManagedObjectID]())) { partialResult, change in
@@ -194,8 +208,8 @@ actor UserNotificationManager {
                     }
                 }
 
-            let accountObjectIDsByUserID = try await _accountObjectIDsByUserID
-            guard !accountObjectIDsByUserID.isEmpty else {
+            let accountsByUserID = try await _accountsByUserID
+            guard !accountsByUserID.isEmpty else {
                 return
             }
 
@@ -205,7 +219,7 @@ actor UserNotificationManager {
                     andPredicateWithSubpredicates: [
                         NSPredicate(format: "SELF IN %@", updatedObjectIDs),
                         NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
-                        NSPredicate(format: "userID IN %@", Array(accountObjectIDsByUserID.keys))
+                        NSPredicate(format: "userID IN %@", Array(accountsByUserID.keys))
                     ]
                 )
                 userDetailsFetchRequest.returnsObjectsAsFaults = false
@@ -222,23 +236,27 @@ actor UserNotificationManager {
             try await withThrowingTaskGroup(of: (NSManagedObjectID?).self) { notificationTaskGroup in
                 for (userDetailObjectID, _userDetail) in _userDetails {
                     notificationTaskGroup.addTask { [managedObjectContext] in
-                        async let notificationContent = managedObjectContext.perform {
-                            self.notificationContent(for: _userDetail, preferences: preferences, context: managedObjectContext)
+                        let notificationRequest: UNNotificationRequest? = await managedObjectContext.perform {
+                            guard
+                                let userID = _userDetail.userID,
+                                let account = accountsByUserID[userID]
+                            else {
+                                return nil
+                            }
+
+                            return self.notificationRequest(
+                                for: _userDetail,
+                                threadIdentifier: account.persistentID?.uuidString ?? account.objectID.uriRepresentation().absoluteString,
+                                preferences: preferences,
+                                context: managedObjectContext
+                            )
                         }
 
-                        let cloudKitRecordID = self.session.persistentContainer.recordID(for: userDetailObjectID)
-
-                        guard let notificationContent = await notificationContent else {
+                        guard let notificationRequest = notificationRequest else {
                             return nil
                         }
 
-                        try await UNUserNotificationCenter.current().add(
-                            UNNotificationRequest(
-                                identifier: cloudKitRecordID?.recordName ?? userDetailObjectID.uriRepresentation().absoluteString,
-                                content: notificationContent,
-                                trigger: nil
-                            )
-                        )
+                        try await UNUserNotificationCenter.current().add(notificationRequest)
 
                         return userDetailObjectID
                     }
@@ -257,13 +275,15 @@ actor UserNotificationManager {
         }
     }
 
-    private nonisolated func notificationContent(
+    private nonisolated func notificationRequest(
         for newUserDetail: ManagedUserDetail,
+        threadIdentifier: String,
         preferences: ManagedPreferences.Preferences,
         context: NSManagedObjectContext
-    ) -> UNNotificationContent? {
+    ) -> UNNotificationRequest? {
         guard
             let userID = newUserDetail.userID,
+            let persistentID = newUserDetail.persistentID,
             let newUserDetailCreationDate = newUserDetail.creationDate
         else {
             return nil
@@ -291,7 +311,7 @@ actor UserNotificationManager {
             notificationContent.title = name
         }
         notificationContent.subtitle = newUserDetail.displayUsername ?? userID.displayUserID
-        notificationContent.threadIdentifier = userID
+        notificationContent.threadIdentifier = threadIdentifier
         notificationContent.categoryIdentifier = "NewAccountData"
         notificationContent.sound = .default
         notificationContent.interruptionLevel = .timeSensitive
@@ -308,7 +328,11 @@ actor UserNotificationManager {
 
         notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
 
-        return notificationContent
+        return UNNotificationRequest(
+            identifier: persistentID.uuidString,
+            content: notificationContent,
+            trigger: nil
+        )
     }
 
     private nonisolated func changes(

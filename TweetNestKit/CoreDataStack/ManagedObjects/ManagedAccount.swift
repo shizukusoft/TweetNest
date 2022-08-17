@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import Twitter
 
-public class ManagedAccount: NSManagedObject {
+public class ManagedAccount: ManagedObject {
 
 }
 
