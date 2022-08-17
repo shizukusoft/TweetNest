@@ -125,7 +125,7 @@ extension UserDataAssetsURLSessionManager {
         dataAssetFetchRequest.propertiesToFetch = [
             (\ManagedUserDataAsset.dataMIMEType)._kvcKeyPathString!,
             (\ManagedUserDataAsset.dataSHA512Hash)._kvcKeyPathString!,
-            (\ManagedUserDataAsset.lastFetchedDate)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.lastResponseEndDate)._kvcKeyPathString!,
             (\ManagedUserDataAsset.lastModifiedDate)._kvcKeyPathString!,
         ]
         dataAssetFetchRequest.returnsObjectsAsFaults = false
@@ -141,7 +141,7 @@ extension UserDataAssetsURLSessionManager {
         dataAssetFetchRequest.propertiesToFetch = [
             (\ManagedUserDataAsset.dataMIMEType)._kvcKeyPathString!,
             (\ManagedUserDataAsset.dataSHA512Hash)._kvcKeyPathString!,
-            (\ManagedUserDataAsset.lastFetchedDate)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.lastResponseEndDate)._kvcKeyPathString!,
             (\ManagedUserDataAsset.lastModifiedDate)._kvcKeyPathString!,
         ]
         dataAssetFetchRequest.returnsObjectsAsFaults = false
@@ -190,7 +190,7 @@ extension UserDataAssetsURLSessionManager {
                         guard
                             let url = $0.url,
                             let lastModifiedDate = $0.lastModifiedDate,
-                            ($0.lastFetchedDate ?? .distantPast) > Date(timeIntervalSinceNow: -Self.cacheExpirationTimeInterval)
+                            ($0.lastResponseEndDate ?? .distantPast) > Date(timeIntervalSinceNow: -Self.cacheExpirationTimeInterval)
                         else {
                             return nil
                         }
@@ -308,7 +308,7 @@ extension UserDataAssetsURLSessionManager: URLSessionTaskDelegate {
                             return
                         }
 
-                        latestUserDataAsset.lastFetchedDate = metrics.transactionMetrics.compactMap { $0.responseEndDate }.max()
+                        latestUserDataAsset.lastResponseEndDate = metrics.transactionMetrics.compactMap { $0.responseEndDate }.max()
 
                         dispatchGroup.notify(queue: dispatchQueue) {
                             self.saveManagedObjectContext()
