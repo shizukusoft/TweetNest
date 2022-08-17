@@ -325,7 +325,6 @@
 		19441B8028A773D800AB8B59 /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
 		19441B8128A773D800AB8B59 /* ManagedUserDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUserDetail.swift; sourceTree = "<group>"; };
 		194DA14028A768560004864E /* TweetNestKitV3.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.1.xcdatamodel; sourceTree = "<group>"; };
-		194DA14828A769DA0004864E /* ManagedAccount+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19505D9528A183B800ADE8CF /* TweetNest Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TweetNest Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DA728A183B900ADE8CF /* TweetNest Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DB128A183B900ADE8CF /* TweetNest Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -361,7 +360,6 @@
 		19505E4028A1850700ADE8CF /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
 		19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V3.swift"; sourceTree = "<group>"; };
 		19505E4328A1850700ADE8CF /* TweetNestKitV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.xcdatamodel; sourceTree = "<group>"; };
-		19505E4728A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19505E6728A1851000ADE8CF /* Session+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19505E6928A1851000ADE8CF /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19505E6A28A1851000ADE8CF /* Bundle+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+TweetNestKit.swift"; sourceTree = "<group>"; };
@@ -548,15 +546,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		19441B5728A76C2E00AB8B59 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-				194DA14828A769DA0004864E /* ManagedAccount+CoreDataProperties.swift */,
-				19505E4728A1850700ADE8CF /* ManagedUser+CoreDataProperties.swift */,
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		19505D6628A183B700ADE8CF = {
 			isa = PBXGroup;
 			children = (
@@ -571,7 +560,6 @@
 				19505E1628A1847C00ADE8CF /* TweetNestKitTests */,
 				19505D7028A183B700ADE8CF /* Products */,
 				19505EB528A187BC00ADE8CF /* Frameworks */,
-				19441B5728A76C2E00AB8B59 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
