@@ -20,6 +20,8 @@ extension ManagedUserDataAsset {
     @NSManaged public var dataMIMEType: String?
     @NSManaged public var dataSHA512Hash: Data?
     @NSManaged public var url: URL?
+    @NSManaged public var lastFetchedDate: Date?
+    @NSManaged public var lastModifiedDate: Date?
 
 }
 

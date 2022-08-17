@@ -2,7 +2,7 @@
 //  UserDataAssetsURLSessionManager.swift
 //  TweetNestKit
 //
-//  Created by 강재홍 on 2022/04/19.
+//  Created by Jaehong Kang on 2022/04/19.
 //
 
 import Foundation
@@ -10,8 +10,11 @@ import BackgroundTask
 import UnifiedLogging
 import OrderedCollections
 import CoreData
+import CryptoKit
 
 class UserDataAssetsURLSessionManager: NSObject {
+    static let cacheExpirationTimeInterval: TimeInterval = 60 * 60 * 12
+
     static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".user-data-assets"
 
     @MainActor
@@ -42,6 +45,8 @@ class UserDataAssetsURLSessionManager: NSObject {
     }
 
     private unowned let session: Session
+
+    private let dateFormatterForHTTPHeader: DateFormatter = .http
 
     private let dispatchGroup = DispatchGroup()
     private lazy var dispatchQueue = DispatchQueue(label: String(reflecting: self), qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem)
@@ -113,6 +118,43 @@ extension UserDataAssetsURLSessionManager {
 }
 
 extension UserDataAssetsURLSessionManager {
+    private func latestUserDataAsset(for url: URL) throws -> ManagedUserDataAsset? {
+        let dataAssetFetchRequest = ManagedUserDataAsset.fetchRequest()
+        dataAssetFetchRequest.predicate = NSPredicate(format: "url == %@", url as NSURL)
+        dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        dataAssetFetchRequest.propertiesToFetch = [
+            (\ManagedUserDataAsset.dataMIMEType)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.dataSHA512Hash)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.lastFetchedDate)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.lastModifiedDate)._kvcKeyPathString!,
+        ]
+        dataAssetFetchRequest.returnsObjectsAsFaults = false
+        dataAssetFetchRequest.fetchLimit = 1
+
+        return try managedObjectContext.fetch(dataAssetFetchRequest).first
+    }
+
+    private func latestUserDataAssets(for urls: some Sequence<URL>) throws -> OrderedSet<ManagedUserDataAsset> {
+        let dataAssetFetchRequest = ManagedUserDataAsset.fetchRequest()
+        dataAssetFetchRequest.predicate = NSPredicate(format: "url IN %@", Array(urls))
+        dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        dataAssetFetchRequest.propertiesToFetch = [
+            (\ManagedUserDataAsset.dataMIMEType)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.dataSHA512Hash)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.lastFetchedDate)._kvcKeyPathString!,
+            (\ManagedUserDataAsset.lastModifiedDate)._kvcKeyPathString!,
+        ]
+        dataAssetFetchRequest.returnsObjectsAsFaults = false
+
+        return OrderedSet(
+            try managedObjectContext.fetch(dataAssetFetchRequest)
+                .lazy
+                .uniqued(on: \.url)
+        )
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
     @MainActor
     func handleBackgroundURLSessionEvents(completionHandler: @escaping () -> Void) {
         _backgroundURLSessionEventsCompletionHandler = completionHandler
@@ -139,8 +181,27 @@ extension UserDataAssetsURLSessionManager {
     }
 
     func download<S>(_ downloadRequests: S) async where S: Sequence, S.Element == DownloadRequest {
+        let lastModifiedDates: [URL: Date]? = try? await managedObjectContext.perform(schedule: .immediate) {
+            let latestUserDataAssets = try self.latestUserDataAssets(for: downloadRequests.lazy.compactMap { $0.urlRequest.url })
+
+            return Dictionary(
+                uniqueKeysWithValues: latestUserDataAssets
+                    .compactMap {
+                        guard
+                            let url = $0.url,
+                            let lastModifiedDate = $0.lastModifiedDate,
+                            ($0.lastFetchedDate ?? .distantPast) > Date(timeIntervalSinceNow: -Self.cacheExpirationTimeInterval)
+                        else {
+                            return nil
+                        }
+
+                        return (url, lastModifiedDate)
+                    }
+            )
+        }
+
         return await withCheckedContinuation { [urlSession] continuation in
-            urlSession.getTasksWithCompletionHandler { _, _, downloadTasks in
+            urlSession.getTasksWithCompletionHandler { [dateFormatterForHTTPHeader] _, _, downloadTasks in
                 let pendingDownloadTasks = Dictionary(
                     grouping: downloadTasks
                         .lazy
@@ -162,6 +223,10 @@ extension UserDataAssetsURLSessionManager {
                     .compactMap {
                         var urlRequest = $0.urlRequest
                         urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+                        urlRequest.setValue(
+                            $0.urlRequest.url.flatMap { lastModifiedDates?[$0].flatMap { dateFormatterForHTTPHeader.string(from: $0) } },
+                            forHTTPHeaderField: "If-Modified-Since"
+                        )
 
                         guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
                             return nil
@@ -202,23 +267,87 @@ extension UserDataAssetsURLSessionManager: URLSessionDelegate {
 }
 
 extension UserDataAssetsURLSessionManager: URLSessionTaskDelegate {
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        if let error = error {
-            logger.error("\(error as NSError, privacy: .public)")
+    func urlSession(_ session: URLSession, task: URLSessionTask, didFinishCollecting metrics: URLSessionTaskMetrics) {
+        guard let originalRequestURL = task.originalRequest?.url else {
+            logger.error("originalRequest.url not found in \(task, privacy: .public)")
+            return
+        }
+
+        guard let httpURLResponse = task.response as? HTTPURLResponse else {
+            logger.error("response is not HTTPURLResponse in \(task, privacy: .public)")
+            return
+        }
+
+        switch httpURLResponse.statusCode {
+        case 200..<300:
+            break
+        case 304:
+            logger.info("Cache hit for \(task, privacy: .public)")
+            return
+        default:
+            logger.warning("Status code \(httpURLResponse.statusCode) found in \(task, privacy: .public)")
+            return
+        }
+
+        dispatchGroup.enter()
+        Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger] in
+            defer {
+                dispatchGroup.leave()
+            }
+
+            while managedObjectContext.persistentStoreCoordinator?.persistentStores.isEmpty != false {
+                await Task.yield()
+            }
+
+            do {
+                try await withExtendedBackgroundExecution {
+                    try await managedObjectContext.perform(schedule: .enqueued) {
+                        guard let latestUserDataAsset = try self.latestUserDataAsset(for: originalRequestURL) else {
+                            return
+                        }
+
+                        latestUserDataAsset.lastFetchedDate = metrics.transactionMetrics.compactMap { $0.responseEndDate }.max()
+
+                        dispatchGroup.notify(queue: dispatchQueue) {
+                            self.saveManagedObjectContext()
+                        }
+                    }
+                }
+            } catch {
+                logger.error("\(error as NSError, privacy: .public)")
+            }
         }
     }
 }
 
 extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-        guard let originalRequestURL = downloadTask.originalRequest?.url else { return }
+        guard let originalRequestURL = downloadTask.originalRequest?.url else {
+            logger.error("originalRequest.url not found in \(downloadTask, privacy: .public)")
+            return
+        }
+
+        guard let httpURLResponse = downloadTask.response as? HTTPURLResponse else {
+            logger.error("response is not HTTPURLResponse in \(downloadTask, privacy: .public)")
+            return
+        }
+
+        switch httpURLResponse.statusCode {
+        case 200..<300:
+            break
+        case 304:
+            logger.info("Cache hit for \(downloadTask, privacy: .public)")
+            return
+        default:
+            logger.warning("Status code \(httpURLResponse.statusCode) found in \(downloadTask, privacy: .public)")
+            return
+        }
 
         do {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
-            let creationDate = Date()
 
             dispatchGroup.enter()
-            Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger] in
+            Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger, dateFormatterForHTTPHeader] in
                 defer {
                     dispatchGroup.leave()
                 }
@@ -227,19 +356,45 @@ extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
                     await Task.yield()
                 }
 
+                let dataSHA512Hash = Data(SHA512.hash(data: data))
+                let dataMIMEType = downloadTask.response?.mimeType
+                let lastModifiedDate = (downloadTask.response as? HTTPURLResponse)
+                    .flatMap {
+                        $0.value(forHTTPHeaderField: "Last-Modified")
+                    }
+                    .flatMap {
+                        dateFormatterForHTTPHeader.date(from: $0)
+                    }
+
                 do {
                     try await withExtendedBackgroundExecution {
                         try await managedObjectContext.perform(schedule: .enqueued) {
-                            try ManagedUserDataAsset.userDataAsset(
-                                data: data,
-                                dataMIMEType: downloadTask.response?.mimeType,
-                                url: originalRequestURL,
-                                creationDate: creationDate,
-                                context: managedObjectContext
-                            )
+                            let lastestDataAsset = try self.latestUserDataAsset(for: originalRequestURL)
 
-                            guard managedObjectContext.hasChanges else {
-                                return
+                            if
+                                let lastestDataAsset = lastestDataAsset,
+                                lastestDataAsset.dataSHA512Hash == dataSHA512Hash
+                            {
+                                if
+                                    let dataMIMEType = dataMIMEType,
+                                    lastestDataAsset.dataMIMEType != dataMIMEType
+                                {
+                                    lastestDataAsset.dataMIMEType = dataMIMEType
+                                }
+
+                                if
+                                    let lastModifiedDate = lastModifiedDate,
+                                    lastestDataAsset.lastModifiedDate != lastModifiedDate
+                                {
+                                    lastestDataAsset.lastModifiedDate = lastModifiedDate
+                                }
+                            } else {
+                                let newDataAsset = ManagedUserDataAsset(context: managedObjectContext)
+                                newDataAsset.data = data
+                                newDataAsset.dataSHA512Hash = dataSHA512Hash
+                                newDataAsset.dataMIMEType = dataMIMEType
+                                newDataAsset.url = originalRequestURL
+                                newDataAsset.lastModifiedDate = lastModifiedDate
                             }
 
                             dispatchGroup.notify(queue: dispatchQueue) {

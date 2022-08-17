@@ -50,10 +50,13 @@
         <attribute name="data" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
         <attribute name="dataMIMEType" optional="YES" attributeType="String"/>
         <attribute name="dataSHA512Hash" optional="YES" attributeType="Binary"/>
+        <attribute name="lastFetchedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="lastModifiedDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="persistentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="url" optional="YES" attributeType="URI"/>
-        <fetchIndex name="byURL">
+        <fetchIndex name="byURLWithCreationDate">
             <fetchIndexElement property="url" type="Binary" order="ascending"/>
+            <fetchIndexElement property="creationDate" type="Binary" order="ascending"/>
         </fetchIndex>
         <fetchIndex name="byPersistentID">
             <fetchIndexElement property="persistentID" type="Binary" order="ascending"/>
