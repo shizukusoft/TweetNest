@@ -70,7 +70,9 @@ actor UserNotificationManager {
             _ = await handlingPersistentStoreRemoteChangeNotificationTask
         }
     }
+}
 
+extension UserNotificationManager {
     private func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?) async {
         do {
             try await withExtendedBackgroundExecution {
@@ -112,7 +114,9 @@ actor UserNotificationManager {
         }
     }
 
-    private static func accountsByUserID(managedObjectContext: NSManagedObjectContext) async throws -> [Twitter.User.ID: (objectID: NSManagedObjectID, persistentID: UUID?)] {
+    private static func accountsByUserID(
+        managedObjectContext: NSManagedObjectContext
+    ) async throws -> [Twitter.User.ID: (objectID: NSManagedObjectID, persistentID: UUID?)] {
         try await managedObjectContext.perform(schedule: .immediate) {
             let accountUserIDsfetchRequest = ManagedAccount.fetchRequest()
             accountUserIDsfetchRequest.sortDescriptors = [
