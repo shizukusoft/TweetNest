@@ -28,7 +28,7 @@ class UserDataAssetsURLSessionManager: NSObject {
     private var urlSessionConfiguration: URLSessionConfiguration {
         var urlSessionConfiguration: URLSessionConfiguration
 
-        if isShared {
+        if session.isShared {
             urlSessionConfiguration = .twnk_background(withIdentifier: Self.backgroundURLSessionIdentifier)
         } else {
             urlSessionConfiguration = .twnk_default
@@ -41,7 +41,7 @@ class UserDataAssetsURLSessionManager: NSObject {
         return urlSessionConfiguration
     }
 
-    private let isShared: Bool
+    private unowned let session: Session
 
     private let dispatchGroup = DispatchGroup()
     private lazy var dispatchQueue = DispatchQueue(label: String(reflecting: self), qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem)
@@ -58,12 +58,10 @@ class UserDataAssetsURLSessionManager: NSObject {
 
     private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: operationQueue)
 
-    private let persistentContainer: PersistentContainer
-    private lazy var managedObjectContext = persistentContainer.newBackgroundContext()
+    private lazy var managedObjectContext = session.persistentContainer.newBackgroundContext()
 
-    init(isShared: Bool, persistentContainer: PersistentContainer) {
-        self.isShared = isShared
-        self.persistentContainer = persistentContainer
+    init(session: Session) {
+        self.session = session
 
         super.init()
 
