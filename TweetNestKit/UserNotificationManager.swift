@@ -296,6 +296,26 @@ actor UserNotificationManager {
         notificationContent.sound = .default
         notificationContent.interruptionLevel = .timeSensitive
 
+        let changes = changes(
+            oldUserDetail: oldUserDetail,
+            newUserDetail: newUserDetail,
+            preferences: preferences
+        )
+
+        guard changes.isEmpty == false else {
+            return nil
+        }
+
+        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+
+        return notificationContent
+    }
+
+    private nonisolated func changes(
+        oldUserDetail: ManagedUserDetail,
+        newUserDetail: ManagedUserDetail,
+        preferences: ManagedPreferences.Preferences
+    ) -> [String] {
         var changes: [String] = []
 
         if preferences.notifyProfileChanges {
@@ -390,12 +410,6 @@ actor UserNotificationManager {
             }
         }
 
-        guard changes.isEmpty == false else {
-            return nil
-        }
-
-        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
-
-        return notificationContent
+        return changes
     }
 }
