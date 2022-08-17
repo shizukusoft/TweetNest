@@ -15,7 +15,7 @@ public enum PersistentContainerError: Error {
     case persistentStoresLoadingFailure([NSPersistentStoreDescription: Error])
 }
 
-public class PersistentContainer: NSPersistentCloudKitContainer {
+public final class PersistentContainer: NSPersistentCloudKitContainer {
     public override class func defaultDirectoryURL() -> URL {
         Session.containerApplicationSupportURL
     }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-final public class TweetNestKitUserDefaults: UserDefaults {
+public final class TweetNestKitUserDefaults: UserDefaults {
     public enum DefaultsKeys: String {
         case isBackgroundUpdateEnabled = "TWNKBackgroundUpdateEnabled"
         case downloadsDataAssetsUsingExpensiveNetworkAccess = "TWNKDownloadsDataAssetsUsingExpensiveNetworkAccess"

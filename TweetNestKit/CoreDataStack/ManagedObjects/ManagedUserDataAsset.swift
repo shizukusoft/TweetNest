@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import CryptoKit
 
-public class ManagedUserDataAsset: ManagedObject {
+public final class ManagedUserDataAsset: ManagedObject {
     public override func awakeFromInsert() {
         super.awakeFromInsert()
 

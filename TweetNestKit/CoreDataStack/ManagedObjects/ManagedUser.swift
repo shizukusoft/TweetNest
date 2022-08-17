@@ -9,7 +9,7 @@
 import Foundation
 import CoreData
 
-public class ManagedUser: ManagedObject {
+public final class ManagedUser: ManagedObject {
 
 }
 

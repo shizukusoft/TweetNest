@@ -13,7 +13,7 @@ import UnifiedLogging
 import BackgroundTask
 import Twitter
 
-public class Session {
+public final class Session {
     public static let shared = Session(twitterAPIConfiguration: { nil }, inMemory: false)
 
     private let _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>

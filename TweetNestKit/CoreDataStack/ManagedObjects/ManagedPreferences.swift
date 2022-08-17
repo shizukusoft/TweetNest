@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 
 @dynamicMemberLookup
-public class ManagedPreferences: ManagedObject {
+public final class ManagedPreferences: ManagedObject {
     public subscript<T>(dynamicMember keyPath: WritableKeyPath<Preferences, T>) -> T {
         get {
             preferences[keyPath: keyPath]

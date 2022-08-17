@@ -12,7 +12,7 @@ import CoreSpotlight
 import Algorithms
 
 extension PersistentContainer {
-    public class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
+    public final class UsersSpotlightDelegate: NSCoreDataCoreSpotlightDelegate {
         public override func domainIdentifier() -> String {
             "\(Bundle.tweetNestKit.bundleIdentifier!).users"
         }

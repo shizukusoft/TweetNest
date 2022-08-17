@@ -11,7 +11,7 @@ import CoreData
 import TwitterV1
 import OrderedCollections
 
-public class ManagedUserDetail: ManagedObject {
+public final class ManagedUserDetail: ManagedObject {
 
 }
 
