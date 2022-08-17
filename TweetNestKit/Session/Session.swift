@@ -216,6 +216,42 @@ extension Session {
         return UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
     }
 
+    private func postUserNotification(error: Error, accountObjectID: NSManagedObjectID? = nil) async throws {
+        switch error {
+        case is CancellationError, URLError.cancelled:
+            break
+        default:
+            let notificationContent = UNMutableNotificationContent()
+            notificationContent.title = String(localized: "Fetch New Data Error", bundle: .tweetNestKit, comment: "fetch-new-data-error notification title.")
+            notificationContent.interruptionLevel = .active
+            notificationContent.sound = .default
+
+            if
+                let localizedError = error as? LocalizedError,
+                let errorDescription = localizedError.errorDescription,
+                let failureReason = localizedError.failureReason
+            {
+                notificationContent.subtitle = errorDescription
+                notificationContent.body = failureReason
+            } else {
+                notificationContent.body = error.localizedDescription
+            }
+
+            if let accountObjectID = accountObjectID {
+                let context = persistentContainer.newBackgroundContext()
+
+                let persistentID: UUID? = context.performAndWait {
+                    (context.object(with: accountObjectID) as? ManagedAccount)?.persistentID
+                }
+
+                notificationContent.threadIdentifier = persistentID?.uuidString ?? accountObjectID.uriRepresentation().absoluteString
+            }
+
+            let request = UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
+            try await UNUserNotificationCenter.current().add(request)
+        }
+    }
+
     @discardableResult
     public func fetchNewData(force: Bool = false) async throws -> Bool {
         guard
@@ -239,7 +275,7 @@ extension Session {
                 } catch {
                     logger.error("Error occurred while update account \(accountObjectID, privacy: .public): \(error as NSError, privacy: .public)")
 
-                    try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error, for: accountObjectID))
+                    try await postUserNotification(error: error, accountObjectID: accountObjectID)
                 }
             }
 
@@ -247,7 +283,7 @@ extension Session {
         } catch {
             logger.error("Error occurred while update accounts: \(error as NSError, privacy: .public)")
 
-            try await UNUserNotificationCenter.current().add(self.errorNotificationRequest(error))
+            try await postUserNotification(error: error)
 
             return false
         }
