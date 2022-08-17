@@ -87,11 +87,6 @@
                BlueprintName = "TweetNest Tests (iOS)"
                ReferencedContainer = "container:TweetNest.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "TweetNestScreenTests">
-               </Test>
-            </SkippedTests>
          </TestableReference>
          <TestableReference
             skipped = "NO">
