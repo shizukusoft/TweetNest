@@ -28,12 +28,10 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
     }
 
     #if canImport(CoreSpotlight)
-    private var _usersSpotlightDelegate: UsersSpotlightDelegate?
+    public private(set) var usersSpotlightDelegate: UsersSpotlightDelegate?
 
-    public var usersSpotlightDelegate: UsersSpotlightDelegate? {
-        persistentStoreCoordinator.performAndWait {
-            _usersSpotlightDelegate
-        }
+    private var usersSpotlightPersistentStoreDescription: NSPersistentStoreDescription {
+        persistentStoreDescriptions[0]
     }
     #endif
 
@@ -61,10 +59,6 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
 
                 return persistentStoreDescription
             }
-
-            #if canImport(CoreSpotlight)
-            _usersSpotlightDelegate = UsersSpotlightDelegate(forStoreWith: persistentStoreDescriptions[0], coordinator: persistentStoreCoordinator)
-            #endif
         } else {
             persistentStoreDescriptions.forEach {
                 $0.url = nil
@@ -98,6 +92,18 @@ public class PersistentContainer: NSPersistentCloudKitContainer {
                 try self.migrateIfNeeded()
 
                 super.loadPersistentStores(completionHandler: block)
+
+                #if canImport(CoreSpotlight)
+                if
+                    usersSpotlightPersistentStoreDescription.type == NSSQLiteStoreType,
+                    usersSpotlightPersistentStoreDescription.options[NSPersistentHistoryTrackingKey] == true as NSNumber
+                {
+                    self.usersSpotlightDelegate = UsersSpotlightDelegate(
+                        forStoreWith: self.usersSpotlightPersistentStoreDescription,
+                        coordinator: self.persistentStoreCoordinator
+                    )
+                }
+                #endif
             } catch {
                 self.persistentStoreDescriptions.forEach {
                     block($0, error)
