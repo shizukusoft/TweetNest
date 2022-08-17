@@ -203,6 +203,8 @@
 		1963158B28A67E6E000AEDD6 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 1963158A28A67E6E000AEDD6 /* AsyncAlgorithms */; };
 		1992421128A18D3F00BC57EF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1992420F28A18D3F00BC57EF /* InfoPlist.strings */; };
 		19A20A4028A18F0600FE5301 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19A20A4228A18F0600FE5301 /* InfoPlist.strings */; };
+		19B5E5F628AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B5E5F528AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift */; };
+		19B5E5F828AC98B9006E0CC1 /* DateFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B5E5F728AC98B9006E0CC1 /* DateFormatterTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -465,6 +467,8 @@
 		19A20A4328A18F0900FE5301 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4428A18F0A00FE5301 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4528A18F4700FE5301 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		19B5E5F528AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+TweetNestKit.swift"; sourceTree = "<group>"; };
+		19B5E5F728AC98B9006E0CC1 /* DateFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -713,6 +717,7 @@
 			isa = PBXGroup;
 			children = (
 				19505EA128A1857400ADE8CF /* UserDetailTests.swift */,
+				19B5E5F728AC98B9006E0CC1 /* DateFormatterTests.swift */,
 			);
 			path = TweetNestKitTests;
 			sourceTree = "<group>";
@@ -779,6 +784,7 @@
 				19505E6928A1851000ADE8CF /* URLCache+TweetNestKit.swift */,
 				19505E6A28A1851000ADE8CF /* Bundle+TweetNestKit.swift */,
 				19505E6B28A1851000ADE8CF /* URLSessionConfiguration+TweetNestKit.swift */,
+				19B5E5F528AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -1429,6 +1435,7 @@
 			files = (
 				19505E7928A1851000ADE8CF /* NSNumber+TwetNestKit.swift in Sources */,
 				19441B8B28A773D800AB8B59 /* ManagedUserDataAsset.swift in Sources */,
+				19B5E5F628AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift in Sources */,
 				19441B8428A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */,
 				19505E8828A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift in Sources */,
 				19441B8C28A773D800AB8B59 /* ManagedAccount+Preferences.swift in Sources */,
@@ -1486,6 +1493,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19B5E5F828AC98B9006E0CC1 /* DateFormatterTests.swift in Sources */,
 				19505EA228A1857400ADE8CF /* UserDetailTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
