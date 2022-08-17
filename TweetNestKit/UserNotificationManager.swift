@@ -76,13 +76,13 @@ extension UserNotificationManager {
     private func handlePersistentStoreRemoteChanges(_ currentPersistentHistoryToken: NSPersistentHistoryToken?) async {
         do {
             try await withExtendedBackgroundExecution {
-                guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
-                    try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
-
-                    return
-                }
-
                 do {
+                    guard let lastPersistentHistoryToken = try Self.lastPersistentHistoryToken else {
+                        try Self.setLastPersistentHistoryToken(currentPersistentHistoryToken)
+
+                        return
+                    }
+
                     let persistentHistoryResult = try await self.managedObjectContext.perform(schedule: .immediate) {
                         try self.managedObjectContext.execute(
                             NSPersistentHistoryChangeRequest.fetchHistory(
