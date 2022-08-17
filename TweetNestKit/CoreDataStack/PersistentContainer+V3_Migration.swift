@@ -324,7 +324,7 @@ extension PersistentContainer.V3 {
     }
 
     private static func deleteV1CloudKitPrivateRecordZones() {
-        let containers: [CKContainer] = [
+        let containers: ContiguousArray<CKContainer> = [
             .init(identifier: PersistentContainer.V1.defaultCloudKitIdentifier),
             .init(identifier: PersistentContainer.V1.accountsCloudKitIdentifier),
             .init(identifier: PersistentContainer.V1.dataAssetsCloudKitIdentifier),

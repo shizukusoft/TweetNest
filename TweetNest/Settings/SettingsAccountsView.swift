@@ -76,7 +76,7 @@ struct SettingsAccountsView: View {
 
     private func moveAccounts(fromOffsets source: IndexSet, toOffset destination: Int) {
         withAnimation {
-            var accounts = Array(accounts)
+            var accounts = ContiguousArray(accounts)
             accounts.move(fromOffsets: source, toOffset: destination)
             accounts.enumerated().forEach {
                 $0.element.preferringSortOrder = Int64($0.offset)

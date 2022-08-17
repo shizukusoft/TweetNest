@@ -218,27 +218,29 @@ extension UserDataAssetsURLSessionManager {
                     by: \.originalRequest
                 )
 
-                let newDownloadTasks: [URLSessionDownloadTask] = downloadRequests.lazy
-                    .uniqued()
-                    .compactMap {
-                        var urlRequest = $0.urlRequest
-                        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
-                        urlRequest.setValue(
-                            $0.urlRequest.url.flatMap { lastModifiedDates?[$0].flatMap { dateFormatterForHTTPHeader.string(from: $0) } },
-                            forHTTPHeaderField: "If-Modified-Since"
-                        )
+                let newDownloadTasks: ContiguousArray<URLSessionDownloadTask> = .init(
+                    downloadRequests.lazy
+                        .uniqued()
+                        .compactMap {
+                            var urlRequest = $0.urlRequest
+                            urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+                            urlRequest.setValue(
+                                $0.urlRequest.url.flatMap { lastModifiedDates?[$0].flatMap { dateFormatterForHTTPHeader.string(from: $0) } },
+                                forHTTPHeaderField: "If-Modified-Since"
+                            )
 
-                        guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
-                            return nil
+                            guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
+                                return nil
+                            }
+
+                            let downloadTask = urlSession.downloadTask(with: urlRequest)
+                            downloadTask.countOfBytesClientExpectsToSend = 1024
+                            downloadTask.countOfBytesClientExpectsToReceive = $0.expectsToReceiveFileSize
+                            downloadTask.priority = $0.priority
+
+                            return downloadTask
                         }
-
-                        let downloadTask = urlSession.downloadTask(with: urlRequest)
-                        downloadTask.countOfBytesClientExpectsToSend = 1024
-                        downloadTask.countOfBytesClientExpectsToReceive = $0.expectsToReceiveFileSize
-                        downloadTask.priority = $0.priority
-
-                        return downloadTask
-                    }
+                )
 
                 newDownloadTasks.forEach {
                     $0.resume()
