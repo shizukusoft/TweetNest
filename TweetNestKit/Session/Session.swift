@@ -14,7 +14,7 @@ import BackgroundTask
 import Twitter
 
 public class Session {
-    public static let shared = Session(twitterAPIConfiguration: { nil }, inMemory: false, isShared: true)
+    public static let shared = Session(twitterAPIConfiguration: { nil }, inMemory: false)
 
     private let _twitterAPIConfiguration: AsyncLazy<TwitterAPIConfiguration>
     public var twitterAPIConfiguration: TwitterAPIConfiguration {
@@ -54,7 +54,7 @@ public class Session {
             self?.fetchNewDataIntervalDidChange(changes.newValue ?? userDefaults.fetchNewDataInterval)
         }
 
-    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration?, inMemory: Bool, isShared: Bool = false) {
+    private init(twitterAPIConfiguration: @escaping () async throws -> TwitterAPIConfiguration?, inMemory: Bool) {
         _twitterAPIConfiguration = .init({
             if let twitterAPIConfiguration = try await twitterAPIConfiguration() {
                 return twitterAPIConfiguration
