@@ -98,11 +98,19 @@ extension UserDataAssetsURLSessionManager {
 }
 
 extension UserDataAssetsURLSessionManager {
-    private func saveManagedObjectContext() {
+    private func saveManagedObjectContext(schedule: NSManagedObjectContext.ScheduledTaskType = .immediate) {
         Task { [managedObjectContext] in
+            let hasChanges = await managedObjectContext.perform(schedule: schedule) {
+                managedObjectContext.hasChanges
+            }
+
+            guard hasChanges else {
+                return
+            }
+
             do {
                 try await withExtendedBackgroundExecution {
-                    try await managedObjectContext.perform {
+                    try await managedObjectContext.perform(schedule: schedule) {
                         guard managedObjectContext.hasChanges else {
                             return
                         }
