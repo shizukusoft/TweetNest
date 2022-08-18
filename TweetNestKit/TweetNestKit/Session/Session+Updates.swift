@@ -295,6 +295,42 @@ extension Session {
         }
     }
 
+    private static func downloadRequests(for twitterUser: TwitterV1.User) -> some Collection<UserDataAssetsURLSessionManager.DownloadRequest> {
+        [
+            twitterUser.profileImageOriginalURL.flatMap {
+                UserDataAssetsURLSessionManager.DownloadRequest(
+                    url: $0,
+                    priority: URLSessionTask.defaultPriority,
+                    expectsToReceiveFileSize: 1 * 1024 * 1024
+                )
+            },
+            twitterUser.profileBannerOriginalURL.flatMap {
+                UserDataAssetsURLSessionManager.DownloadRequest(
+                    url: $0,
+                    priority: URLSessionTask.lowPriority,
+                    expectsToReceiveFileSize: 5 * 1024 * 1024
+                )
+            },
+        ].compacted()
+    }
+
+    private static func updateLastUpdateDates(
+        for userManagedObjectID: some Sequence<NSManagedObjectID>,
+        usersFetchDates: ClosedRange<Date>,
+        managedObjectContext: NSManagedObjectContext
+    ) throws {
+        let userFetchRequest = ManagedUser.fetchRequest()
+        userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", Array(userManagedObjectID))
+        userFetchRequest.returnsObjectsAsFaults = false
+
+        let users = try managedObjectContext.fetch(userFetchRequest)
+
+        for user in users {
+            user.lastUpdateStartDate = usersFetchDates.lowerBound
+            user.lastUpdateEndDate = usersFetchDates.upperBound
+        }
+    }
+
     private func updateUsers(
         _ users: [TwitterV1.User],
         usersFetchDates: ClosedRange<Date>,
@@ -341,22 +377,7 @@ extension Session {
                             return (previousUserDetail?.objectID, userDetail.objectID)
                         }
 
-                        let downloadRequests = [
-                            twitterUser.profileImageOriginalURL.flatMap {
-                                UserDataAssetsURLSessionManager.DownloadRequest(
-                                    url: $0,
-                                    priority: URLSessionTask.defaultPriority,
-                                    expectsToReceiveFileSize: 1 * 1024 * 1024
-                                )
-                            },
-                            twitterUser.profileBannerOriginalURL.flatMap {
-                                UserDataAssetsURLSessionManager.DownloadRequest(
-                                    url: $0,
-                                    priority: URLSessionTask.lowPriority,
-                                    expectsToReceiveFileSize: 5 * 1024 * 1024
-                                )
-                            },
-                        ].compacted()
+                        let downloadRequests = Self.downloadRequests(for: twitterUser)
 
                         return try await (userID, userDetailChanges, Array(downloadRequests))
                     }
@@ -377,16 +398,11 @@ extension Session {
                             try chunkedUsersProcessingContext.save()
                         }
 
-                        let userFetchRequest = ManagedUser.fetchRequest()
-                        userFetchRequest.predicate = NSPredicate(format: "SELF IN %@", results.0.compactMap { userObjectIDsByUserID[$0.0] })
-                        userFetchRequest.returnsObjectsAsFaults = false
-
-                        let users = try context.fetch(userFetchRequest)
-
-                        for user in users {
-                            user.lastUpdateStartDate = usersFetchDates.lowerBound
-                            user.lastUpdateEndDate = usersFetchDates.upperBound
-                        }
+                        try Self.updateLastUpdateDates(
+                            for: results.0.lazy.compactMap { userObjectIDsByUserID[$0.0] },
+                            usersFetchDates: usersFetchDates,
+                            managedObjectContext: context
+                        )
 
                         if context.hasChanges {
                             try context.save()
