@@ -365,11 +365,8 @@ extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
                 }
 
                 let dataSHA512Hash = Data(SHA512.hash(data: data))
-                let dataMIMEType = downloadTask.response?.mimeType
-                let lastModifiedDate = (downloadTask.response as? HTTPURLResponse)
-                    .flatMap {
-                        $0.value(forHTTPHeaderField: "Last-Modified")
-                    }
+                let dataMIMEType = httpURLResponse.mimeType
+                let lastModifiedDate = httpURLResponse.value(forHTTPHeaderField: "Last-Modified")
                     .flatMap {
                         dateFormatterForHTTPHeader.date(from: $0)
                     }
