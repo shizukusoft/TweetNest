@@ -258,6 +258,99 @@ extension UserDataAssetsURLSessionManager {
     }
 }
 
+extension UserDataAssetsURLSessionManager {
+    private func updateUserDataAssets(for url: URL, data: Data, httpURLResponse: HTTPURLResponse) {
+        dispatchGroup.enter()
+        Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger, dateFormatterForHTTPHeader] in
+            defer {
+                dispatchGroup.leave()
+            }
+
+            while managedObjectContext.persistentStoreCoordinator?.persistentStores.isEmpty != false {
+                await Task.yield()
+            }
+
+            let dataSHA512Hash = Data(SHA512.hash(data: data))
+            let dataMIMEType = httpURLResponse.mimeType
+            let lastModifiedDate = httpURLResponse.value(forHTTPHeaderField: "Last-Modified")
+                .flatMap {
+                    dateFormatterForHTTPHeader.date(from: $0)
+                }
+
+            do {
+                try await withExtendedBackgroundExecution {
+                    try await managedObjectContext.perform(schedule: .enqueued) {
+                        let lastestDataAsset = try self.latestUserDataAsset(for: url)
+
+                        if
+                            let lastestDataAsset = lastestDataAsset,
+                            lastestDataAsset.dataSHA512Hash == dataSHA512Hash
+                        {
+                            if
+                                let dataMIMEType = dataMIMEType,
+                                lastestDataAsset.dataMIMEType != dataMIMEType
+                            {
+                                lastestDataAsset.dataMIMEType = dataMIMEType
+                            }
+
+                            if
+                                let lastModifiedDate = lastModifiedDate,
+                                lastestDataAsset.lastModifiedDate != lastModifiedDate
+                            {
+                                lastestDataAsset.lastModifiedDate = lastModifiedDate
+                            }
+                        } else {
+                            let newDataAsset = ManagedUserDataAsset(context: managedObjectContext)
+                            newDataAsset.data = data
+                            newDataAsset.dataSHA512Hash = dataSHA512Hash
+                            newDataAsset.dataMIMEType = dataMIMEType
+                            newDataAsset.url = url
+                            newDataAsset.lastModifiedDate = lastModifiedDate
+                        }
+
+                        dispatchGroup.notify(queue: dispatchQueue) {
+                            self.saveManagedObjectContext()
+                        }
+                    }
+                }
+            } catch {
+                logger.error("\(error as NSError, privacy: .public)")
+            }
+        }
+    }
+
+    private func updateUserDataAssets(for url: URL, responseEndDate: Date) {
+        dispatchGroup.enter()
+        Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger] in
+            defer {
+                dispatchGroup.leave()
+            }
+
+            while managedObjectContext.persistentStoreCoordinator?.persistentStores.isEmpty != false {
+                await Task.yield()
+            }
+
+            do {
+                try await withExtendedBackgroundExecution {
+                    try await managedObjectContext.perform(schedule: .enqueued) {
+                        guard let latestUserDataAsset = try self.latestUserDataAsset(for: url) else {
+                            return
+                        }
+
+                        latestUserDataAsset.lastResponseEndDate = responseEndDate
+
+                        dispatchGroup.notify(queue: dispatchQueue) {
+                            self.saveManagedObjectContext()
+                        }
+                    }
+                }
+            } catch {
+                logger.error("\(error as NSError, privacy: .public)")
+            }
+        }
+    }
+}
+
 extension UserDataAssetsURLSessionManager: URLSessionDelegate {
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
         dispatchGroup.notify(queue: dispatchQueue) {
@@ -297,34 +390,11 @@ extension UserDataAssetsURLSessionManager: URLSessionTaskDelegate {
             return
         }
 
-        dispatchGroup.enter()
-        Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger] in
-            defer {
-                dispatchGroup.leave()
-            }
-
-            while managedObjectContext.persistentStoreCoordinator?.persistentStores.isEmpty != false {
-                await Task.yield()
-            }
-
-            do {
-                try await withExtendedBackgroundExecution {
-                    try await managedObjectContext.perform(schedule: .enqueued) {
-                        guard let latestUserDataAsset = try self.latestUserDataAsset(for: originalRequestURL) else {
-                            return
-                        }
-
-                        latestUserDataAsset.lastResponseEndDate = metrics.transactionMetrics.compactMap { $0.responseEndDate }.max()
-
-                        dispatchGroup.notify(queue: dispatchQueue) {
-                            self.saveManagedObjectContext()
-                        }
-                    }
-                }
-            } catch {
-                logger.error("\(error as NSError, privacy: .public)")
-            }
+        guard let responseEndDate = metrics.transactionMetrics.compactMap({ $0.responseEndDate }).max() else {
+            return
         }
+
+        updateUserDataAssets(for: originalRequestURL, responseEndDate: responseEndDate)
     }
 }
 
@@ -354,63 +424,7 @@ extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
         do {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
 
-            dispatchGroup.enter()
-            Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger, dateFormatterForHTTPHeader] in
-                defer {
-                    dispatchGroup.leave()
-                }
-
-                while managedObjectContext.persistentStoreCoordinator?.persistentStores.isEmpty != false {
-                    await Task.yield()
-                }
-
-                let dataSHA512Hash = Data(SHA512.hash(data: data))
-                let dataMIMEType = httpURLResponse.mimeType
-                let lastModifiedDate = httpURLResponse.value(forHTTPHeaderField: "Last-Modified")
-                    .flatMap {
-                        dateFormatterForHTTPHeader.date(from: $0)
-                    }
-
-                do {
-                    try await withExtendedBackgroundExecution {
-                        try await managedObjectContext.perform(schedule: .enqueued) {
-                            let lastestDataAsset = try self.latestUserDataAsset(for: originalRequestURL)
-
-                            if
-                                let lastestDataAsset = lastestDataAsset,
-                                lastestDataAsset.dataSHA512Hash == dataSHA512Hash
-                            {
-                                if
-                                    let dataMIMEType = dataMIMEType,
-                                    lastestDataAsset.dataMIMEType != dataMIMEType
-                                {
-                                    lastestDataAsset.dataMIMEType = dataMIMEType
-                                }
-
-                                if
-                                    let lastModifiedDate = lastModifiedDate,
-                                    lastestDataAsset.lastModifiedDate != lastModifiedDate
-                                {
-                                    lastestDataAsset.lastModifiedDate = lastModifiedDate
-                                }
-                            } else {
-                                let newDataAsset = ManagedUserDataAsset(context: managedObjectContext)
-                                newDataAsset.data = data
-                                newDataAsset.dataSHA512Hash = dataSHA512Hash
-                                newDataAsset.dataMIMEType = dataMIMEType
-                                newDataAsset.url = originalRequestURL
-                                newDataAsset.lastModifiedDate = lastModifiedDate
-                            }
-
-                            dispatchGroup.notify(queue: dispatchQueue) {
-                                self.saveManagedObjectContext()
-                            }
-                        }
-                    }
-                } catch {
-                    logger.error("\(error as NSError, privacy: .public)")
-                }
-            }
+            updateUserDataAssets(for: originalRequestURL, data: data, httpURLResponse: httpURLResponse)
         } catch {
             logger.error("\(error as NSError, privacy: .public)")
         }
