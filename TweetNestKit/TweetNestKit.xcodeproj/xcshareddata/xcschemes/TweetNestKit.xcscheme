@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19505E0628A1847B00ADE8CF"
+               BlueprintIdentifier = "1914CD0328AE9A2800F7C398"
                BuildableName = "TweetNestKit.framework"
                BlueprintName = "TweetNestKit"
-               ReferencedContainer = "container:TweetNest.xcodeproj">
+               ReferencedContainer = "container:TweetNestKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -29,13 +29,14 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19505E0F28A1847C00ADE8CF"
+               BlueprintIdentifier = "1914CD0D28AE9A2800F7C398"
                BuildableName = "TweetNestKitTests.xctest"
                BlueprintName = "TweetNestKitTests"
-               ReferencedContainer = "container:TweetNest.xcodeproj">
+               ReferencedContainer = "container:TweetNestKit.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -60,10 +61,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "19505E0628A1847B00ADE8CF"
+            BlueprintIdentifier = "1914CD0328AE9A2800F7C398"
             BuildableName = "TweetNestKit.framework"
             BlueprintName = "TweetNestKit"
-            ReferencedContainer = "container:TweetNest.xcodeproj">
+            ReferencedContainer = "container:TweetNestKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

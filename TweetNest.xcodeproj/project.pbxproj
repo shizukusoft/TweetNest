@@ -9,77 +9,12 @@
 /* Begin PBXBuildFile section */
 		1908F44C28A2B63300F5DF2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		1908F44D28A2B63800F5DF2E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
-		19441B8228A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7428A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift */; };
-		19441B8328A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7528A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift */; };
-		19441B8428A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7628A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift */; };
-		19441B8528A773D800AB8B59 /* ManagedPreferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7728A773D800AB8B59 /* ManagedPreferences.swift */; };
-		19441B8628A773D800AB8B59 /* ManagedPreferences+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7828A773D800AB8B59 /* ManagedPreferences+Preferences.swift */; };
-		19441B8728A773D800AB8B59 /* ManagedAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7928A773D800AB8B59 /* ManagedAccount.swift */; };
-		19441B8828A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7A28A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift */; };
-		19441B8928A773D800AB8B59 /* ManagedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7B28A773D800AB8B59 /* ManagedUser.swift */; };
-		19441B8A28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7C28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift */; };
-		19441B8B28A773D800AB8B59 /* ManagedUserDataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7D28A773D800AB8B59 /* ManagedUserDataAsset.swift */; };
-		19441B8C28A773D800AB8B59 /* ManagedAccount+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7E28A773D800AB8B59 /* ManagedAccount+Preferences.swift */; };
-		19441B8D28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B7F28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift */; };
-		19441B8E28A773D800AB8B59 /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B8028A773D800AB8B59 /* ManagedObject.swift */; };
-		19441B8F28A773D800AB8B59 /* ManagedUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19441B8128A773D800AB8B59 /* ManagedUserDetail.swift */; };
 		19505DDE28A1844600ADE8CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		19505DE228A1844600ADE8CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
 		19505DEC28A1844700ADE8CF /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DEB28A1844700ADE8CF /* TweetNestTests.swift */; };
 		19505DF628A1844700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
 		19505DF828A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */; };
-		19505E0B28A1847B00ADE8CF /* TweetNestKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19505E0A28A1847B00ADE8CF /* TweetNestKit.docc */; };
-		19505E1128A1847C00ADE8CF /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; };
-		19505E1C28A1847C00ADE8CF /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; };
-		19505E1D28A1847C00ADE8CF /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		19505E2D28A184FC00ADE8CF /* BackgroundTaskScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2528A184FC00ADE8CF /* BackgroundTaskScheduler.swift */; };
-		19505E2E28A184FC00ADE8CF /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2628A184FC00ADE8CF /* Lazy.swift */; };
-		19505E2F28A184FC00ADE8CF /* TwitterArchive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2728A184FC00ADE8CF /* TwitterArchive.swift */; };
-		19505E3028A184FC00ADE8CF /* UserDataAssetsURLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2828A184FC00ADE8CF /* UserDataAssetsURLSessionManager.swift */; };
-		19505E3128A184FC00ADE8CF /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2928A184FC00ADE8CF /* AsyncLazy.swift */; };
-		19505E3228A184FC00ADE8CF /* SecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2A28A184FC00ADE8CF /* SecureUnarchiveFromDataTransformer.swift */; };
-		19505E3328A184FC00ADE8CF /* UserID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2B28A184FC00ADE8CF /* UserID.swift */; };
-		19505E3428A184FC00ADE8CF /* TweetNestKitUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E2C28A184FC00ADE8CF /* TweetNestKitUserDefaults.swift */; };
-		19505E5128A1850700ADE8CF /* PersistentContainer+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E3628A1850700ADE8CF /* PersistentContainer+Migration.swift */; };
-		19505E5228A1850700ADE8CF /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E3728A1850700ADE8CF /* PersistentContainer+UsersSpotlightDelegate.swift */; };
-		19505E5328A1850700ADE8CF /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E3828A1850700ADE8CF /* PersistentContainer.swift */; };
-		19505E5428A1850700ADE8CF /* PersistentContainer+V1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E3928A1850700ADE8CF /* PersistentContainer+V1.swift */; };
-		19505E5528A1850700ADE8CF /* PersistentContainer+V3_Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E3A28A1850700ADE8CF /* PersistentContainer+V3_Migration.swift */; };
-		19505E5628A1850700ADE8CF /* TweetNestKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 19505E3B28A1850700ADE8CF /* TweetNestKit.xcdatamodeld */; };
-		19505E5728A1850700ADE8CF /* PersistentContainer+V3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */; };
-		19505E5828A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 19505E4228A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld */; };
-		19505E7228A1851000ADE8CF /* Session+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6728A1851000ADE8CF /* Session+TweetNestKit.swift */; };
-		19505E7328A1851000ADE8CF /* URLCache+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6928A1851000ADE8CF /* URLCache+TweetNestKit.swift */; };
-		19505E7428A1851000ADE8CF /* Bundle+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6A28A1851000ADE8CF /* Bundle+TweetNestKit.swift */; };
-		19505E7528A1851000ADE8CF /* URLSessionConfiguration+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6B28A1851000ADE8CF /* URLSessionConfiguration+TweetNestKit.swift */; };
-		19505E7628A1851000ADE8CF /* NSPersistentContainer+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6D28A1851000ADE8CF /* NSPersistentContainer+TweetNestKit.swift */; };
-		19505E7728A1851000ADE8CF /* Date+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E6F28A1851000ADE8CF /* Date+TweetNestKit.swift */; };
-		19505E7828A1851000ADE8CF /* String+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E7028A1851000ADE8CF /* String+TweetNestKit.swift */; };
-		19505E7928A1851000ADE8CF /* NSNumber+TwetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E7128A1851000ADE8CF /* NSNumber+TwetNestKit.swift */; };
-		19505E8728A1851500ADE8CF /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E7B28A1851500ADE8CF /* Session+NewAccount.swift */; };
-		19505E8828A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E7C28A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift */; };
-		19505E8928A1851500ADE8CF /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E7D28A1851500ADE8CF /* Session.swift */; };
-		19505E8A28A1851500ADE8CF /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E7E28A1851500ADE8CF /* Session+Credential.swift */; };
-		19505E8B28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E7F28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift */; };
-		19505E8C28A1851500ADE8CF /* SessionActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E8028A1851500ADE8CF /* SessionActor.swift */; };
-		19505E8D28A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E8128A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift */; };
-		19505E8E28A1851500ADE8CF /* Session+Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E8228A1851500ADE8CF /* Session+Support.swift */; };
-		19505E8F28A1851500ADE8CF /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E8328A1851500ADE8CF /* SessionError.swift */; };
-		19505E9028A1851500ADE8CF /* Session+CleansingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E8428A1851500ADE8CF /* Session+CleansingData.swift */; };
-		19505E9128A1851500ADE8CF /* Session+UpdatesAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E8528A1851500ADE8CF /* Session+UpdatesAll.swift */; };
-		19505E9228A1851500ADE8CF /* Session+Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505E8628A1851500ADE8CF /* Session+Updates.swift */; };
-		19505E9528A1852C00ADE8CF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19505E9728A1852C00ADE8CF /* Localizable.strings */; };
-		19505E9C28A1853900ADE8CF /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = 19505E9E28A1853900ADE8CF /* Localizable.stringsdict */; };
-		19505EA228A1857400ADE8CF /* UserDetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EA128A1857400ADE8CF /* UserDetailTests.swift */; };
-		19505EA528A185CA00ADE8CF /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 19505EA428A185CA00ADE8CF /* Algorithms */; };
-		19505EA828A185D700ADE8CF /* OrderedCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 19505EA728A185D700ADE8CF /* OrderedCollections */; };
-		19505EAB28A185E800ADE8CF /* BackgroundTask in Frameworks */ = {isa = PBXBuildFile; productRef = 19505EAA28A185E800ADE8CF /* BackgroundTask */; };
-		19505EAE28A185F800ADE8CF /* Twitter in Frameworks */ = {isa = PBXBuildFile; productRef = 19505EAD28A185F800ADE8CF /* Twitter */; };
-		19505EB128A1860800ADE8CF /* ZIP in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, macos, tvos, ); productRef = 19505EB028A1860800ADE8CF /* ZIP */; };
-		19505EB428A1861700ADE8CF /* UnifiedLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 19505EB328A1861700ADE8CF /* UnifiedLogging */; };
 		19505EB628A187BC00ADE8CF /* TweetNest Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 19505D9528A183B800ADE8CF /* TweetNest Watch App.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		19505EBA28A187D300ADE8CF /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; };
-		19505EBB28A187D300ADE8CF /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19505EC328A1883800ADE8CF /* TweetNestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EBF28A1883800ADE8CF /* TweetNestAppDelegate.swift */; };
 		19505EC428A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
 		19505EC528A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC128A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift */; };
@@ -199,12 +134,12 @@
 		19505FA928A18C9600ADE8CF /* vendor in Resources */ = {isa = PBXBuildFile; fileRef = 19505FA128A18C9600ADE8CF /* vendor */; };
 		19505FAA28A18C9600ADE8CF /* styles in Resources */ = {isa = PBXBuildFile; fileRef = 19505FA228A18C9600ADE8CF /* styles */; };
 		19505FAB28A18C9600ADE8CF /* bundled in Resources */ = {isa = PBXBuildFile; fileRef = 19505FA328A18C9600ADE8CF /* bundled */; };
-		1963158828A679F8000AEDD6 /* UserNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1963158728A679F8000AEDD6 /* UserNotificationManager.swift */; };
-		1963158B28A67E6E000AEDD6 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 1963158A28A67E6E000AEDD6 /* AsyncAlgorithms */; };
 		1992421128A18D3F00BC57EF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1992420F28A18D3F00BC57EF /* InfoPlist.strings */; };
 		19A20A4028A18F0600FE5301 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19A20A4228A18F0600FE5301 /* InfoPlist.strings */; };
-		19B5E5F628AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B5E5F528AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift */; };
-		19B5E5F828AC98B9006E0CC1 /* DateFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B5E5F728AC98B9006E0CC1 /* DateFormatterTests.swift */; };
+		19C4E65328AE9E32008FFCB1 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; };
+		19C4E65428AE9E32008FFCB1 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		19C4E65528AE9E40008FFCB1 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; };
+		19C4E65628AE9E41008FFCB1 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -236,27 +171,6 @@
 			remoteGlobalIDString = 19505DD128A1844500ADE8CF;
 			remoteInfo = TweetNest;
 		};
-		19505E1228A1847C00ADE8CF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19505D6728A183B700ADE8CF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19505E0628A1847B00ADE8CF;
-			remoteInfo = TweetNestKit;
-		};
-		19505E1428A1847C00ADE8CF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19505D6728A183B700ADE8CF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19505DD128A1844500ADE8CF;
-			remoteInfo = TweetNest;
-		};
-		19505E1A28A1847C00ADE8CF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 19505D6728A183B700ADE8CF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19505E0628A1847B00ADE8CF;
-			remoteInfo = TweetNestKit;
-		};
 		19505EB728A187BC00ADE8CF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 19505D6728A183B700ADE8CF /* Project object */;
@@ -264,12 +178,19 @@
 			remoteGlobalIDString = 19505D9428A183B800ADE8CF;
 			remoteInfo = "TweetNest Watch App";
 		};
-		19505EBC28A187D300ADE8CF /* PBXContainerItemProxy */ = {
+		19C4E64F28AE9E1A008FFCB1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 19505D6728A183B700ADE8CF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 19505E0628A1847B00ADE8CF;
+			containerPortal = 19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1914CD0428AE9A2800F7C398;
 			remoteInfo = TweetNestKit;
+		};
+		19C4E65128AE9E1A008FFCB1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1914CD0E28AE9A2800F7C398;
+			remoteInfo = TweetNestKitTests;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -280,7 +201,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				19505E1D28A1847C00ADE8CF /* TweetNestKit.framework in Embed Frameworks */,
+				19C4E65628AE9E41008FFCB1 /* TweetNestKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -302,7 +223,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				19505EBB28A187D300ADE8CF /* TweetNestKit.framework in Embed Frameworks */,
+				19C4E65428AE9E32008FFCB1 /* TweetNestKit.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -310,21 +231,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		19441B7428A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedObject+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19441B7528A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19441B7628A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUserDataAsset+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19441B7728A773D800AB8B59 /* ManagedPreferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedPreferences.swift; sourceTree = "<group>"; };
-		19441B7828A773D800AB8B59 /* ManagedPreferences+Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedPreferences+Preferences.swift"; sourceTree = "<group>"; };
-		19441B7928A773D800AB8B59 /* ManagedAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedAccount.swift; sourceTree = "<group>"; };
-		19441B7A28A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUserDetail+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19441B7B28A773D800AB8B59 /* ManagedUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUser.swift; sourceTree = "<group>"; };
-		19441B7C28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19441B7D28A773D800AB8B59 /* ManagedUserDataAsset.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUserDataAsset.swift; sourceTree = "<group>"; };
-		19441B7E28A773D800AB8B59 /* ManagedAccount+Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+Preferences.swift"; sourceTree = "<group>"; };
-		19441B7F28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		19441B8028A773D800AB8B59 /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
-		19441B8128A773D800AB8B59 /* ManagedUserDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedUserDetail.swift; sourceTree = "<group>"; };
-		194DA14028A768560004864E /* TweetNestKitV3.1.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.1.xcdatamodel; sourceTree = "<group>"; };
 		19505D9528A183B800ADE8CF /* TweetNest Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TweetNest Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DA728A183B900ADE8CF /* TweetNest Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DB128A183B900ADE8CF /* TweetNest Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -337,56 +243,6 @@
 		19505DF128A1844700ADE8CF /* TweetNestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DF528A1844700ADE8CF /* TweetNestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITests.swift; sourceTree = "<group>"; };
 		19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		19505E0728A1847B00ADE8CF /* TweetNestKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TweetNestKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		19505E0A28A1847B00ADE8CF /* TweetNestKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = TweetNestKit.docc; sourceTree = "<group>"; };
-		19505E1028A1847C00ADE8CF /* TweetNestKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		19505E2528A184FC00ADE8CF /* BackgroundTaskScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackgroundTaskScheduler.swift; sourceTree = "<group>"; };
-		19505E2628A184FC00ADE8CF /* Lazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
-		19505E2728A184FC00ADE8CF /* TwitterArchive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitterArchive.swift; sourceTree = "<group>"; };
-		19505E2828A184FC00ADE8CF /* UserDataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
-		19505E2928A184FC00ADE8CF /* AsyncLazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
-		19505E2A28A184FC00ADE8CF /* SecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
-		19505E2B28A184FC00ADE8CF /* UserID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserID.swift; sourceTree = "<group>"; };
-		19505E2C28A184FC00ADE8CF /* TweetNestKitUserDefaults.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetNestKitUserDefaults.swift; sourceTree = "<group>"; };
-		19505E3628A1850700ADE8CF /* PersistentContainer+Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+Migration.swift"; sourceTree = "<group>"; };
-		19505E3728A1850700ADE8CF /* PersistentContainer+UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+UsersSpotlightDelegate.swift"; sourceTree = "<group>"; };
-		19505E3828A1850700ADE8CF /* PersistentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
-		19505E3928A1850700ADE8CF /* PersistentContainer+V1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V1.swift"; sourceTree = "<group>"; };
-		19505E3A28A1850700ADE8CF /* PersistentContainer+V3_Migration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V3_Migration.swift"; sourceTree = "<group>"; };
-		19505E3C28A1850700ADE8CF /* TweetNestKit 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 4.xcdatamodel"; sourceTree = "<group>"; };
-		19505E3D28A1850700ADE8CF /* TweetNestKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKit.xcdatamodel; sourceTree = "<group>"; };
-		19505E3E28A1850700ADE8CF /* TweetNestKit 2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 2.xcdatamodel"; sourceTree = "<group>"; };
-		19505E3F28A1850700ADE8CF /* TweetNestKit 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 5.xcdatamodel"; sourceTree = "<group>"; };
-		19505E4028A1850700ADE8CF /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
-		19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V3.swift"; sourceTree = "<group>"; };
-		19505E4328A1850700ADE8CF /* TweetNestKitV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.xcdatamodel; sourceTree = "<group>"; };
-		19505E6728A1851000ADE8CF /* Session+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19505E6928A1851000ADE8CF /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19505E6A28A1851000ADE8CF /* Bundle+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Bundle+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19505E6B28A1851000ADE8CF /* URLSessionConfiguration+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLSessionConfiguration+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19505E6D28A1851000ADE8CF /* NSPersistentContainer+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSPersistentContainer+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19505E6F28A1851000ADE8CF /* Date+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Date+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19505E7028A1851000ADE8CF /* String+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19505E7128A1851000ADE8CF /* NSNumber+TwetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSNumber+TwetNestKit.swift"; sourceTree = "<group>"; };
-		19505E7B28A1851500ADE8CF /* Session+NewAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
-		19505E7C28A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TwitterAPIConfiguration.swift"; sourceTree = "<group>"; };
-		19505E7D28A1851500ADE8CF /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		19505E7E28A1851500ADE8CF /* Session+Credential.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
-		19505E7F28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+PersistentHistoryTransactions.swift"; sourceTree = "<group>"; };
-		19505E8028A1851500ADE8CF /* SessionActor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionActor.swift; sourceTree = "<group>"; };
-		19505E8128A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+PersistentStoreRemoteChanges.swift"; sourceTree = "<group>"; };
-		19505E8228A1851500ADE8CF /* Session+Support.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+Support.swift"; sourceTree = "<group>"; };
-		19505E8328A1851500ADE8CF /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
-		19505E8428A1851500ADE8CF /* Session+CleansingData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+CleansingData.swift"; sourceTree = "<group>"; };
-		19505E8528A1851500ADE8CF /* Session+UpdatesAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+UpdatesAll.swift"; sourceTree = "<group>"; };
-		19505E8628A1851500ADE8CF /* Session+Updates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+Updates.swift"; sourceTree = "<group>"; };
-		19505E9628A1852C00ADE8CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		19505E9828A1852F00ADE8CF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		19505E9928A1853000ADE8CF /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		19505E9D28A1853900ADE8CF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = en; path = en.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		19505E9F28A1853D00ADE8CF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		19505EA028A1853D00ADE8CF /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
-		19505EA128A1857400ADE8CF /* UserDetailTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailTests.swift; sourceTree = "<group>"; };
 		19505EBF28A1883800ADE8CF /* TweetNestAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetNestAppDelegate.swift; sourceTree = "<group>"; };
 		19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
 		19505EC128A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
@@ -459,14 +315,12 @@
 		19505FA128A18C9600ADE8CF /* vendor */ = {isa = PBXFileReference; lastKnownFileType = folder; path = vendor; sourceTree = "<group>"; };
 		19505FA228A18C9600ADE8CF /* styles */ = {isa = PBXFileReference; lastKnownFileType = folder; path = styles; sourceTree = "<group>"; };
 		19505FA328A18C9600ADE8CF /* bundled */ = {isa = PBXFileReference; lastKnownFileType = folder; path = bundled; sourceTree = "<group>"; };
-		1963158728A679F8000AEDD6 /* UserNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNotificationManager.swift; sourceTree = "<group>"; };
 		1992421028A18D3F00BC57EF /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1992421228A18D4A00BC57EF /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4328A18F0900FE5301 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4428A18F0A00FE5301 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4528A18F4700FE5301 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		19B5E5F528AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+TweetNestKit.swift"; sourceTree = "<group>"; };
-		19B5E5F728AC98B9006E0CC1 /* DateFormatterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateFormatterTests.swift; sourceTree = "<group>"; };
+		19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TweetNestKit.xcodeproj; path = TweetNestKit/TweetNestKit.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -474,7 +328,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19505EBA28A187D300ADE8CF /* TweetNestKit.framework in Frameworks */,
+				19C4E65328AE9E32008FFCB1 /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -496,7 +350,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19505E1C28A1847C00ADE8CF /* TweetNestKit.framework in Frameworks */,
+				19C4E65528AE9E40008FFCB1 /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,28 +365,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19505E0428A1847B00ADE8CF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19505EB128A1860800ADE8CF /* ZIP in Frameworks */,
-				19505EAB28A185E800ADE8CF /* BackgroundTask in Frameworks */,
-				19505EA828A185D700ADE8CF /* OrderedCollections in Frameworks */,
-				19505EAE28A185F800ADE8CF /* Twitter in Frameworks */,
-				19505EA528A185CA00ADE8CF /* Algorithms in Frameworks */,
-				19505EB428A1861700ADE8CF /* UnifiedLogging in Frameworks */,
-				1963158B28A67E6E000AEDD6 /* AsyncAlgorithms in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19505E0D28A1847C00ADE8CF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19505E1128A1847C00ADE8CF /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -556,8 +388,7 @@
 				19505DAA28A183B900ADE8CF /* TweetNest Watch AppTests */,
 				19505DB428A183B900ADE8CF /* TweetNest Watch AppUITests */,
 				19505F7E28A18B8700ADE8CF /* TweetNest MirrorBlock Extension */,
-				19505E0828A1847B00ADE8CF /* TweetNestKit */,
-				19505E1628A1847C00ADE8CF /* TweetNestKitTests */,
+				19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */,
 				19505D7028A183B700ADE8CF /* Products */,
 				19505EB528A187BC00ADE8CF /* Frameworks */,
 			);
@@ -572,8 +403,6 @@
 				19505DD228A1844600ADE8CF /* TweetNest.app */,
 				19505DE728A1844600ADE8CF /* TweetNestTests.xctest */,
 				19505DF128A1844700ADE8CF /* TweetNestUITests.xctest */,
-				19505E0728A1847B00ADE8CF /* TweetNestKit.framework */,
-				19505E1028A1847C00ADE8CF /* TweetNestKitTests.xctest */,
 				19505F7D28A18B8700ADE8CF /* TweetNest MirrorBlock Extension.appex */,
 			);
 			name = Products;
@@ -679,141 +508,6 @@
 			path = TweetNestUITests;
 			sourceTree = "<group>";
 		};
-		19505E0828A1847B00ADE8CF /* TweetNestKit */ = {
-			isa = PBXGroup;
-			children = (
-				19505E2928A184FC00ADE8CF /* AsyncLazy.swift */,
-				19505E2528A184FC00ADE8CF /* BackgroundTaskScheduler.swift */,
-				19505E2628A184FC00ADE8CF /* Lazy.swift */,
-				19505E2A28A184FC00ADE8CF /* SecureUnarchiveFromDataTransformer.swift */,
-				19505E2C28A184FC00ADE8CF /* TweetNestKitUserDefaults.swift */,
-				19505E2728A184FC00ADE8CF /* TwitterArchive.swift */,
-				19505E2828A184FC00ADE8CF /* UserDataAssetsURLSessionManager.swift */,
-				1963158728A679F8000AEDD6 /* UserNotificationManager.swift */,
-				19505E2B28A184FC00ADE8CF /* UserID.swift */,
-				19505E3528A1850700ADE8CF /* CoreDataStack */,
-				19505E6528A1851000ADE8CF /* Extensions */,
-				19505E7A28A1851500ADE8CF /* Session */,
-				19505E9728A1852C00ADE8CF /* Localizable.strings */,
-				19505E9E28A1853900ADE8CF /* Localizable.stringsdict */,
-				19505E0A28A1847B00ADE8CF /* TweetNestKit.docc */,
-			);
-			path = TweetNestKit;
-			sourceTree = "<group>";
-		};
-		19505E1628A1847C00ADE8CF /* TweetNestKitTests */ = {
-			isa = PBXGroup;
-			children = (
-				19505EA128A1857400ADE8CF /* UserDetailTests.swift */,
-				19B5E5F728AC98B9006E0CC1 /* DateFormatterTests.swift */,
-			);
-			path = TweetNestKitTests;
-			sourceTree = "<group>";
-		};
-		19505E3528A1850700ADE8CF /* CoreDataStack */ = {
-			isa = PBXGroup;
-			children = (
-				19505E3828A1850700ADE8CF /* PersistentContainer.swift */,
-				19505E3628A1850700ADE8CF /* PersistentContainer+Migration.swift */,
-				19505E3728A1850700ADE8CF /* PersistentContainer+UsersSpotlightDelegate.swift */,
-				19505E3928A1850700ADE8CF /* PersistentContainer+V1.swift */,
-				19505E4128A1850700ADE8CF /* PersistentContainer+V3.swift */,
-				19505E3A28A1850700ADE8CF /* PersistentContainer+V3_Migration.swift */,
-				19505E3B28A1850700ADE8CF /* TweetNestKit.xcdatamodeld */,
-				19505E4228A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld */,
-				19505E4428A1850700ADE8CF /* ManagedObjects */,
-			);
-			path = CoreDataStack;
-			sourceTree = "<group>";
-		};
-		19505E4428A1850700ADE8CF /* ManagedObjects */ = {
-			isa = PBXGroup;
-			children = (
-				19441B7928A773D800AB8B59 /* ManagedAccount.swift */,
-				19441B7C28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift */,
-				19441B7E28A773D800AB8B59 /* ManagedAccount+Preferences.swift */,
-				19441B8028A773D800AB8B59 /* ManagedObject.swift */,
-				19441B7428A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift */,
-				19441B7728A773D800AB8B59 /* ManagedPreferences.swift */,
-				19441B7528A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift */,
-				19441B7828A773D800AB8B59 /* ManagedPreferences+Preferences.swift */,
-				19441B7B28A773D800AB8B59 /* ManagedUser.swift */,
-				19441B7F28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift */,
-				19441B7D28A773D800AB8B59 /* ManagedUserDataAsset.swift */,
-				19441B7628A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift */,
-				19441B8128A773D800AB8B59 /* ManagedUserDetail.swift */,
-				19441B7A28A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift */,
-			);
-			path = ManagedObjects;
-			sourceTree = "<group>";
-		};
-		19505E6528A1851000ADE8CF /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				19505E6628A1851000ADE8CF /* swift-twitter */,
-				19505E6828A1851000ADE8CF /* Foundation */,
-				19505E6C28A1851000ADE8CF /* CoreData */,
-				19505E6E28A1851000ADE8CF /* Swift */,
-			);
-			path = Extensions;
-			sourceTree = "<group>";
-		};
-		19505E6628A1851000ADE8CF /* swift-twitter */ = {
-			isa = PBXGroup;
-			children = (
-				19505E6728A1851000ADE8CF /* Session+TweetNestKit.swift */,
-			);
-			path = "swift-twitter";
-			sourceTree = "<group>";
-		};
-		19505E6828A1851000ADE8CF /* Foundation */ = {
-			isa = PBXGroup;
-			children = (
-				19505E6928A1851000ADE8CF /* URLCache+TweetNestKit.swift */,
-				19505E6A28A1851000ADE8CF /* Bundle+TweetNestKit.swift */,
-				19505E6B28A1851000ADE8CF /* URLSessionConfiguration+TweetNestKit.swift */,
-				19B5E5F528AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift */,
-			);
-			path = Foundation;
-			sourceTree = "<group>";
-		};
-		19505E6C28A1851000ADE8CF /* CoreData */ = {
-			isa = PBXGroup;
-			children = (
-				19505E6D28A1851000ADE8CF /* NSPersistentContainer+TweetNestKit.swift */,
-			);
-			path = CoreData;
-			sourceTree = "<group>";
-		};
-		19505E6E28A1851000ADE8CF /* Swift */ = {
-			isa = PBXGroup;
-			children = (
-				19505E6F28A1851000ADE8CF /* Date+TweetNestKit.swift */,
-				19505E7028A1851000ADE8CF /* String+TweetNestKit.swift */,
-				19505E7128A1851000ADE8CF /* NSNumber+TwetNestKit.swift */,
-			);
-			path = Swift;
-			sourceTree = "<group>";
-		};
-		19505E7A28A1851500ADE8CF /* Session */ = {
-			isa = PBXGroup;
-			children = (
-				19505E7D28A1851500ADE8CF /* Session.swift */,
-				19505E7E28A1851500ADE8CF /* Session+Credential.swift */,
-				19505E7B28A1851500ADE8CF /* Session+NewAccount.swift */,
-				19505E8428A1851500ADE8CF /* Session+CleansingData.swift */,
-				19505E7F28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift */,
-				19505E8128A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift */,
-				19505E8628A1851500ADE8CF /* Session+Updates.swift */,
-				19505E8528A1851500ADE8CF /* Session+UpdatesAll.swift */,
-				19505E7C28A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift */,
-				19505E8228A1851500ADE8CF /* Session+Support.swift */,
-				19505E8028A1851500ADE8CF /* SessionActor.swift */,
-				19505E8328A1851500ADE8CF /* SessionError.swift */,
-			);
-			path = Session;
-			sourceTree = "<group>";
-		};
 		19505EB528A187BC00ADE8CF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -910,17 +604,16 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-/* End PBXGroup section */
-
-/* Begin PBXHeadersBuildPhase section */
-		19505E0228A1847B00ADE8CF /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
+		19C4E64B28AE9E1A008FFCB1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */,
+				19C4E65228AE9E1A008FFCB1 /* TweetNestKitTests.xctest */,
 			);
-			runOnlyForDeploymentPostprocessing = 0;
+			name = Products;
+			sourceTree = "<group>";
 		};
-/* End PBXHeadersBuildPhase section */
+/* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
 		19505D9428A183B800ADE8CF /* TweetNest Watch App */ = {
@@ -935,7 +628,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				19505EBD28A187D300ADE8CF /* PBXTargetDependency */,
 			);
 			name = "TweetNest Watch App";
 			productName = "TweetNest Watch App";
@@ -991,7 +683,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				19505E1B28A1847C00ADE8CF /* PBXTargetDependency */,
 				19505EB828A187BC00ADE8CF /* PBXTargetDependency */,
 			);
 			name = TweetNest;
@@ -1034,52 +725,6 @@
 			productName = TweetNestUITests;
 			productReference = 19505DF128A1844700ADE8CF /* TweetNestUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
-		};
-		19505E0628A1847B00ADE8CF /* TweetNestKit */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 19505E1E28A1847C00ADE8CF /* Build configuration list for PBXNativeTarget "TweetNestKit" */;
-			buildPhases = (
-				19505E0228A1847B00ADE8CF /* Headers */,
-				19505E0328A1847B00ADE8CF /* Sources */,
-				19505E0428A1847B00ADE8CF /* Frameworks */,
-				19505E0528A1847B00ADE8CF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = TweetNestKit;
-			packageProductDependencies = (
-				19505EA428A185CA00ADE8CF /* Algorithms */,
-				19505EA728A185D700ADE8CF /* OrderedCollections */,
-				19505EAA28A185E800ADE8CF /* BackgroundTask */,
-				19505EAD28A185F800ADE8CF /* Twitter */,
-				19505EB028A1860800ADE8CF /* ZIP */,
-				19505EB328A1861700ADE8CF /* UnifiedLogging */,
-				1963158A28A67E6E000AEDD6 /* AsyncAlgorithms */,
-			);
-			productName = TweetNestKit;
-			productReference = 19505E0728A1847B00ADE8CF /* TweetNestKit.framework */;
-			productType = "com.apple.product-type.framework";
-		};
-		19505E0F28A1847C00ADE8CF /* TweetNestKitTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 19505E2228A1847C00ADE8CF /* Build configuration list for PBXNativeTarget "TweetNestKitTests" */;
-			buildPhases = (
-				19505E0C28A1847C00ADE8CF /* Sources */,
-				19505E0D28A1847C00ADE8CF /* Frameworks */,
-				19505E0E28A1847C00ADE8CF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				19505E1328A1847C00ADE8CF /* PBXTargetDependency */,
-				19505E1528A1847C00ADE8CF /* PBXTargetDependency */,
-			);
-			name = TweetNestKitTests;
-			productName = TweetNestKitTests;
-			productReference = 19505E1028A1847C00ADE8CF /* TweetNestKitTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		19505F7C28A18B8700ADE8CF /* TweetNest MirrorBlock Extension */ = {
 			isa = PBXNativeTarget;
@@ -1131,12 +776,6 @@
 						CreatedOnToolsVersion = 14.0;
 						TestTargetID = 19505DD128A1844500ADE8CF;
 					};
-					19505E0628A1847B00ADE8CF = {
-						CreatedOnToolsVersion = 14.0;
-					};
-					19505E0F28A1847C00ADE8CF = {
-						CreatedOnToolsVersion = 14.0;
-					};
 					19505F7C28A18B8700ADE8CF = {
 						CreatedOnToolsVersion = 14.0;
 					};
@@ -1154,16 +793,15 @@
 			);
 			mainGroup = 19505D6628A183B700ADE8CF;
 			packageReferences = (
-				19505EA328A185CA00ADE8CF /* XCRemoteSwiftPackageReference "swift-algorithms" */,
-				19505EA628A185D700ADE8CF /* XCRemoteSwiftPackageReference "swift-collections" */,
-				19505EA928A185E800ADE8CF /* XCRemoteSwiftPackageReference "swift-background-task" */,
-				19505EAC28A185F800ADE8CF /* XCRemoteSwiftPackageReference "swift-twitter" */,
-				19505EAF28A1860800ADE8CF /* XCRemoteSwiftPackageReference "swift-zip" */,
-				19505EB228A1861700ADE8CF /* XCRemoteSwiftPackageReference "swift-unified-log" */,
-				1963158928A67E6E000AEDD6 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */,
 			);
 			productRefGroup = 19505D7028A183B700ADE8CF /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 19C4E64B28AE9E1A008FFCB1 /* Products */;
+					ProjectRef = 19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				19505DD128A1844500ADE8CF /* TweetNest */,
@@ -1173,11 +811,26 @@
 				19505DA628A183B900ADE8CF /* TweetNest Watch AppTests */,
 				19505DB028A183B900ADE8CF /* TweetNest Watch AppUITests */,
 				19505F7C28A18B8700ADE8CF /* TweetNest MirrorBlock Extension */,
-				19505E0628A1847B00ADE8CF /* TweetNestKit */,
-				19505E0F28A1847C00ADE8CF /* TweetNestKitTests */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = TweetNestKit.framework;
+			remoteRef = 19C4E64F28AE9E1A008FFCB1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		19C4E65228AE9E1A008FFCB1 /* TweetNestKitTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = TweetNestKitTests.xctest;
+			remoteRef = 19C4E65128AE9E1A008FFCB1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		19505D9328A183B800ADE8CF /* Resources */ = {
@@ -1224,22 +877,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		19505DEF28A1844700ADE8CF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19505E0528A1847B00ADE8CF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19505E9528A1852C00ADE8CF /* Localizable.strings in Resources */,
-				19505E9C28A1853900ADE8CF /* Localizable.stringsdict in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19505E0E28A1847C00ADE8CF /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1417,75 +1054,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		19505E0328A1847B00ADE8CF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19505E7928A1851000ADE8CF /* NSNumber+TwetNestKit.swift in Sources */,
-				19441B8B28A773D800AB8B59 /* ManagedUserDataAsset.swift in Sources */,
-				19B5E5F628AC9832006E0CC1 /* DateFormatter+TweetNestKit.swift in Sources */,
-				19441B8428A773D800AB8B59 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */,
-				19505E8828A1851500ADE8CF /* Session+TwitterAPIConfiguration.swift in Sources */,
-				19441B8C28A773D800AB8B59 /* ManagedAccount+Preferences.swift in Sources */,
-				19505E2F28A184FC00ADE8CF /* TwitterArchive.swift in Sources */,
-				19441B8328A773D800AB8B59 /* ManagedPreferences+CoreDataProperties.swift in Sources */,
-				19505E3028A184FC00ADE8CF /* UserDataAssetsURLSessionManager.swift in Sources */,
-				19505E3128A184FC00ADE8CF /* AsyncLazy.swift in Sources */,
-				19505E7428A1851000ADE8CF /* Bundle+TweetNestKit.swift in Sources */,
-				19505E3328A184FC00ADE8CF /* UserID.swift in Sources */,
-				19505E9028A1851500ADE8CF /* Session+CleansingData.swift in Sources */,
-				19441B8228A773D800AB8B59 /* ManagedObject+CoreDataProperties.swift in Sources */,
-				19441B8828A773D800AB8B59 /* ManagedUserDetail+CoreDataProperties.swift in Sources */,
-				19505E7528A1851000ADE8CF /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
-				19505E7828A1851000ADE8CF /* String+TweetNestKit.swift in Sources */,
-				19505E5428A1850700ADE8CF /* PersistentContainer+V1.swift in Sources */,
-				19505E2D28A184FC00ADE8CF /* BackgroundTaskScheduler.swift in Sources */,
-				19441B8628A773D800AB8B59 /* ManagedPreferences+Preferences.swift in Sources */,
-				19505E5128A1850700ADE8CF /* PersistentContainer+Migration.swift in Sources */,
-				19505E7628A1851000ADE8CF /* NSPersistentContainer+TweetNestKit.swift in Sources */,
-				19441B8928A773D800AB8B59 /* ManagedUser.swift in Sources */,
-				19441B8E28A773D800AB8B59 /* ManagedObject.swift in Sources */,
-				19505E5628A1850700ADE8CF /* TweetNestKit.xcdatamodeld in Sources */,
-				19505E8F28A1851500ADE8CF /* SessionError.swift in Sources */,
-				19505E3428A184FC00ADE8CF /* TweetNestKitUserDefaults.swift in Sources */,
-				19505E8E28A1851500ADE8CF /* Session+Support.swift in Sources */,
-				19505E8728A1851500ADE8CF /* Session+NewAccount.swift in Sources */,
-				19505E5528A1850700ADE8CF /* PersistentContainer+V3_Migration.swift in Sources */,
-				19505E8928A1851500ADE8CF /* Session.swift in Sources */,
-				19505E7228A1851000ADE8CF /* Session+TweetNestKit.swift in Sources */,
-				19505E8C28A1851500ADE8CF /* SessionActor.swift in Sources */,
-				19441B8D28A773D800AB8B59 /* ManagedUser+CoreDataProperties.swift in Sources */,
-				19505E3228A184FC00ADE8CF /* SecureUnarchiveFromDataTransformer.swift in Sources */,
-				19505E7328A1851000ADE8CF /* URLCache+TweetNestKit.swift in Sources */,
-				19505E8A28A1851500ADE8CF /* Session+Credential.swift in Sources */,
-				19441B8528A773D800AB8B59 /* ManagedPreferences.swift in Sources */,
-				19505E8D28A1851500ADE8CF /* Session+PersistentStoreRemoteChanges.swift in Sources */,
-				19505E5828A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld in Sources */,
-				19441B8A28A773D800AB8B59 /* ManagedAccount+CoreDataProperties.swift in Sources */,
-				19441B8F28A773D800AB8B59 /* ManagedUserDetail.swift in Sources */,
-				19505E8B28A1851500ADE8CF /* Session+PersistentHistoryTransactions.swift in Sources */,
-				19505E9128A1851500ADE8CF /* Session+UpdatesAll.swift in Sources */,
-				19505E5328A1850700ADE8CF /* PersistentContainer.swift in Sources */,
-				19505E5228A1850700ADE8CF /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */,
-				19441B8728A773D800AB8B59 /* ManagedAccount.swift in Sources */,
-				19505E7728A1851000ADE8CF /* Date+TweetNestKit.swift in Sources */,
-				19505E2E28A184FC00ADE8CF /* Lazy.swift in Sources */,
-				19505E0B28A1847B00ADE8CF /* TweetNestKit.docc in Sources */,
-				1963158828A679F8000AEDD6 /* UserNotificationManager.swift in Sources */,
-				19505E5728A1850700ADE8CF /* PersistentContainer+V3.swift in Sources */,
-				19505E9228A1851500ADE8CF /* Session+Updates.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		19505E0C28A1847C00ADE8CF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				19B5E5F828AC98B9006E0CC1 /* DateFormatterTests.swift in Sources */,
-				19505EA228A1857400ADE8CF /* UserDetailTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		19505F7928A18B8700ADE8CF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1517,55 +1085,15 @@
 			target = 19505DD128A1844500ADE8CF /* TweetNest */;
 			targetProxy = 19505DF228A1844700ADE8CF /* PBXContainerItemProxy */;
 		};
-		19505E1328A1847C00ADE8CF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19505E0628A1847B00ADE8CF /* TweetNestKit */;
-			targetProxy = 19505E1228A1847C00ADE8CF /* PBXContainerItemProxy */;
-		};
-		19505E1528A1847C00ADE8CF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19505DD128A1844500ADE8CF /* TweetNest */;
-			targetProxy = 19505E1428A1847C00ADE8CF /* PBXContainerItemProxy */;
-		};
-		19505E1B28A1847C00ADE8CF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19505E0628A1847B00ADE8CF /* TweetNestKit */;
-			targetProxy = 19505E1A28A1847C00ADE8CF /* PBXContainerItemProxy */;
-		};
 		19505EB828A187BC00ADE8CF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			platformFilter = ios;
 			target = 19505D9428A183B800ADE8CF /* TweetNest Watch App */;
 			targetProxy = 19505EB728A187BC00ADE8CF /* PBXContainerItemProxy */;
 		};
-		19505EBD28A187D300ADE8CF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 19505E0628A1847B00ADE8CF /* TweetNestKit */;
-			targetProxy = 19505EBC28A187D300ADE8CF /* PBXContainerItemProxy */;
-		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		19505E9728A1852C00ADE8CF /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				19505E9628A1852C00ADE8CF /* en */,
-				19505E9828A1852F00ADE8CF /* ja */,
-				19505E9928A1853000ADE8CF /* ko */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		19505E9E28A1853900ADE8CF /* Localizable.stringsdict */ = {
-			isa = PBXVariantGroup;
-			children = (
-				19505E9D28A1853900ADE8CF /* en */,
-				19505E9F28A1853D00ADE8CF /* ja */,
-				19505EA028A1853D00ADE8CF /* ko */,
-			);
-			name = Localizable.stringsdict;
-			sourceTree = "<group>";
-		};
 		19505F6328A1895700ADE8CF /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -2037,110 +1565,6 @@
 			};
 			name = Release;
 		};
-		19505E1F28A1847C00ADE8CF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = SYA56G458A;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKit;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,4";
-			};
-			name = Debug;
-		};
-		19505E2028A1847C00ADE8CF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
-				APPLICATION_EXTENSION_API_ONLY = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = SYA56G458A;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = (
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKit;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,4";
-			};
-			name = Release;
-		};
-		19505E2328A1847C00ADE8CF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SYA56G458A;
-				GENERATE_INFOPLIST_FILE = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,4";
-			};
-			name = Debug;
-		};
-		19505E2428A1847C00ADE8CF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = SYA56G458A;
-				GENERATE_INFOPLIST_FILE = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKitTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx watchos watchsimulator";
-				SUPPORTS_MACCATALYST = YES;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2,3,4";
-			};
-			name = Release;
-		};
 		19505F9728A18B8700ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2268,24 +1692,6 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		19505E1E28A1847C00ADE8CF /* Build configuration list for PBXNativeTarget "TweetNestKit" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				19505E1F28A1847C00ADE8CF /* Debug */,
-				19505E2028A1847C00ADE8CF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		19505E2228A1847C00ADE8CF /* Build configuration list for PBXNativeTarget "TweetNestKitTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				19505E2328A1847C00ADE8CF /* Debug */,
-				19505E2428A1847C00ADE8CF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		19505F9628A18B8700ADE8CF /* Build configuration list for PBXNativeTarget "TweetNest MirrorBlock Extension" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -2296,131 +1702,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		19505EA328A185CA00ADE8CF /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-algorithms.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		19505EA628A185D700ADE8CF /* XCRemoteSwiftPackageReference "swift-collections" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-collections.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
-		19505EA928A185E800ADE8CF /* XCRemoteSwiftPackageReference "swift-background-task" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/shizukusoft/swift-background-task";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 0.2.0;
-			};
-		};
-		19505EAC28A185F800ADE8CF /* XCRemoteSwiftPackageReference "swift-twitter" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/shizukusoft/swift-twitter";
-			requirement = {
-				kind = revision;
-				revision = b004ce31d583b00fce6771fb538fbb55fdd79e4d;
-			};
-		};
-		19505EAF28A1860800ADE8CF /* XCRemoteSwiftPackageReference "swift-zip" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sinoru/swift-zip.git";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 0.0.1;
-			};
-		};
-		19505EB228A1861700ADE8CF /* XCRemoteSwiftPackageReference "swift-unified-log" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sinoru/swift-unified-log";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
-		1963158928A67E6E000AEDD6 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/apple/swift-async-algorithms.git";
-			requirement = {
-				kind = upToNextMinorVersion;
-				minimumVersion = 0.0.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		19505EA428A185CA00ADE8CF /* Algorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19505EA328A185CA00ADE8CF /* XCRemoteSwiftPackageReference "swift-algorithms" */;
-			productName = Algorithms;
-		};
-		19505EA728A185D700ADE8CF /* OrderedCollections */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19505EA628A185D700ADE8CF /* XCRemoteSwiftPackageReference "swift-collections" */;
-			productName = OrderedCollections;
-		};
-		19505EAA28A185E800ADE8CF /* BackgroundTask */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19505EA928A185E800ADE8CF /* XCRemoteSwiftPackageReference "swift-background-task" */;
-			productName = BackgroundTask;
-		};
-		19505EAD28A185F800ADE8CF /* Twitter */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19505EAC28A185F800ADE8CF /* XCRemoteSwiftPackageReference "swift-twitter" */;
-			productName = Twitter;
-		};
-		19505EB028A1860800ADE8CF /* ZIP */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19505EAF28A1860800ADE8CF /* XCRemoteSwiftPackageReference "swift-zip" */;
-			productName = ZIP;
-		};
-		19505EB328A1861700ADE8CF /* UnifiedLogging */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 19505EB228A1861700ADE8CF /* XCRemoteSwiftPackageReference "swift-unified-log" */;
-			productName = UnifiedLogging;
-		};
-		1963158A28A67E6E000AEDD6 /* AsyncAlgorithms */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 1963158928A67E6E000AEDD6 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
-			productName = AsyncAlgorithms;
-		};
-/* End XCSwiftPackageProductDependency section */
-
-/* Begin XCVersionGroup section */
-		19505E3B28A1850700ADE8CF /* TweetNestKit.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				19505E3C28A1850700ADE8CF /* TweetNestKit 4.xcdatamodel */,
-				19505E3D28A1850700ADE8CF /* TweetNestKit.xcdatamodel */,
-				19505E3E28A1850700ADE8CF /* TweetNestKit 2.xcdatamodel */,
-				19505E3F28A1850700ADE8CF /* TweetNestKit 5.xcdatamodel */,
-				19505E4028A1850700ADE8CF /* TweetNestKit 3.xcdatamodel */,
-			);
-			currentVersion = 19505E3F28A1850700ADE8CF /* TweetNestKit 5.xcdatamodel */;
-			path = TweetNestKit.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-		19505E4228A1850700ADE8CF /* TweetNestKitV3.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				194DA14028A768560004864E /* TweetNestKitV3.1.xcdatamodel */,
-				19505E4328A1850700ADE8CF /* TweetNestKitV3.xcdatamodel */,
-			);
-			currentVersion = 194DA14028A768560004864E /* TweetNestKitV3.1.xcdatamodel */;
-			path = TweetNestKitV3.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 19505D6728A183B700ADE8CF /* Project object */;
 }

@@ -34,6 +34,20 @@
                ReferencedContainer = "container:TweetNest.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "1914CD0D28AE9A2800F7C398"
+               BuildableName = "TweetNestKitTests.xctest"
+               BlueprintName = "TweetNestKitTests"
+               ReferencedContainer = "container:TweetNestKit/TweetNestKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -83,17 +97,6 @@
                BlueprintIdentifier = "19505DB028A183B900ADE8CF"
                BuildableName = "TweetNest Watch AppUITests.xctest"
                BlueprintName = "TweetNest Watch AppUITests"
-               ReferencedContainer = "container:TweetNest.xcodeproj">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "19505E0F28A1847C00ADE8CF"
-               BuildableName = "TweetNestKitTests.xctest"
-               BlueprintName = "TweetNestKitTests"
                ReferencedContainer = "container:TweetNest.xcodeproj">
             </BuildableReference>
          </TestableReference>
