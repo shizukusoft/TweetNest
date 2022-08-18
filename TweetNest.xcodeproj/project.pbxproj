@@ -11,9 +11,7 @@
 		1908F44D28A2B63800F5DF2E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
 		19505DDE28A1844600ADE8CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		19505DE228A1844600ADE8CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
-		19505DEC28A1844700ADE8CF /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DEB28A1844700ADE8CF /* TweetNestTests.swift */; };
 		19505DF628A1844700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
-		19505DF828A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */; };
 		19505EB628A187BC00ADE8CF /* TweetNest Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 19505D9528A183B800ADE8CF /* TweetNest Watch App.app */; platformFilter = ios; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		19505EC328A1883800ADE8CF /* TweetNestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EBF28A1883800ADE8CF /* TweetNestAppDelegate.swift */; };
 		19505EC428A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
@@ -119,10 +117,8 @@
 		19505F6628A1896000ADE8CF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19505F6928A1896000ADE8CF /* Localizable.strings */; };
 		19505F6728A1896000ADE8CF /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19505F6928A1896000ADE8CF /* Localizable.strings */; };
 		19505F6D28A189D500ADE8CF /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F6C28A189D500ADE8CF /* TweetNestScreenTests.swift */; };
-		19505F6E28A189DA00ADE8CF /* TweetNestUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */; };
 		19505F7128A189E800ADE8CF /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F6F28A189E800ADE8CF /* TweetNestAppDelegate+WKExtensionDelegate.swift */; };
 		19505F7228A189E800ADE8CF /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F7028A189E800ADE8CF /* ComplicationController.swift */; };
-		19505F7328A18A3300ADE8CF /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DEB28A1844700ADE8CF /* TweetNestTests.swift */; };
 		19505F7428A18A3700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
 		19505F7528A18A3A00ADE8CF /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F6C28A189D500ADE8CF /* TweetNestScreenTests.swift */; };
 		19505F8028A18B8700ADE8CF /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F7F28A18B8700ADE8CF /* SafariWebExtensionHandler.swift */; };
@@ -140,6 +136,8 @@
 		19C4E65428AE9E32008FFCB1 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19C4E65528AE9E40008FFCB1 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; };
 		19C4E65628AE9E41008FFCB1 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		19E5F41F28AEAA44002107D5 /* URLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F41E28AEAA44002107D5 /* URLTests.swift */; };
+		19E5F42528AEAD78002107D5 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F42428AEAD78002107D5 /* UIApplication.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -239,10 +237,8 @@
 		19505DDF28A1844600ADE8CF /* TweetNest.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = TweetNest.entitlements; sourceTree = "<group>"; };
 		19505DE128A1844600ADE8CF /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		19505DE728A1844600ADE8CF /* TweetNestTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		19505DEB28A1844700ADE8CF /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
 		19505DF128A1844700ADE8CF /* TweetNestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DF528A1844700ADE8CF /* TweetNestUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITests.swift; sourceTree = "<group>"; };
-		19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		19505EBF28A1883800ADE8CF /* TweetNestAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetNestAppDelegate.swift; sourceTree = "<group>"; };
 		19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
 		19505EC128A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
@@ -321,6 +317,8 @@
 		19A20A4428A18F0A00FE5301 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4528A18F4700FE5301 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TweetNestKit.xcodeproj; path = TweetNestKit/TweetNestKit.xcodeproj; sourceTree = "<group>"; };
+		19E5F41E28AEAA44002107D5 /* URLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLTests.swift; sourceTree = "<group>"; };
+		19E5F42428AEAD78002107D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -493,7 +491,7 @@
 		19505DEA28A1844700ADE8CF /* TweetNestTests */ = {
 			isa = PBXGroup;
 			children = (
-				19505DEB28A1844700ADE8CF /* TweetNestTests.swift */,
+				19E5F41E28AEAA44002107D5 /* URLTests.swift */,
 			);
 			path = TweetNestTests;
 			sourceTree = "<group>";
@@ -502,8 +500,8 @@
 			isa = PBXGroup;
 			children = (
 				19505DF528A1844700ADE8CF /* TweetNestUITests.swift */,
-				19505DF728A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift */,
 				19505F6C28A189D500ADE8CF /* TweetNestScreenTests.swift */,
+				19E5F42428AEAD78002107D5 /* UIApplication.swift */,
 			);
 			path = TweetNestUITests;
 			sourceTree = "<group>";
@@ -965,7 +963,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19505F7328A18A3300ADE8CF /* TweetNestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -975,7 +972,6 @@
 			files = (
 				19505F7428A18A3700ADE8CF /* TweetNestUITests.swift in Sources */,
 				19505F7528A18A3A00ADE8CF /* TweetNestScreenTests.swift in Sources */,
-				19505F6E28A189DA00ADE8CF /* TweetNestUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1040,7 +1036,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19505DEC28A1844700ADE8CF /* TweetNestTests.swift in Sources */,
+				19E5F41F28AEAA44002107D5 /* URLTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1048,8 +1044,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19505DF828A1844700ADE8CF /* TweetNestUITestsLaunchTests.swift in Sources */,
 				19505DF628A1844700ADE8CF /* TweetNestUITests.swift in Sources */,
+				19E5F42528AEAD78002107D5 /* UIApplication.swift in Sources */,
 				19505F6D28A189D500ADE8CF /* TweetNestScreenTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

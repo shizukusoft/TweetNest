@@ -10,7 +10,7 @@ import XCTest
 class TweetNestScreenTests: XCTestCase {
     static let dispalyUserName = "@TweetNest_App"
 
-    let app = XCUIApplication()
+    let app = UIApplication()
 
     private var systemAlertsUIInterruptionMonitorToken: NSObjectProtocol?
 
@@ -21,7 +21,7 @@ class TweetNestScreenTests: XCTestCase {
     override func setUpWithError() throws {
         continueAfterFailure = false
 
-        app.launchArguments = ["-com.tweetnest.TweetNest.Preview"]
+        app.isPreview = true
 
         self.systemAlertsUIInterruptionMonitorToken = addUIInterruptionMonitor(withDescription: "System Alerts") { (alert) -> Bool in
             let allowButton = alert.buttons["Allow"]
