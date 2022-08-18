@@ -114,32 +114,55 @@ extension UserNotificationManager {
         }
     }
 
-    private static func accountsByUserID(
-        managedObjectContext: NSManagedObjectContext
-    ) async throws -> [Twitter.User.ID: (objectID: NSManagedObjectID, persistentID: UUID?)] {
-        try await managedObjectContext.perform(schedule: .immediate) {
-            let accountUserIDsfetchRequest = ManagedAccount.fetchRequest()
-            accountUserIDsfetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \ManagedAccount.preferringSortOrder, ascending: true),
-                NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: false),
-            ]
-            accountUserIDsfetchRequest.propertiesToFetch = ["userID", "persistentID"]
-            accountUserIDsfetchRequest.returnsObjectsAsFaults = false
+    private var accountsByUserID: [Twitter.User.ID: (objectID: NSManagedObjectID, persistentID: UUID?)] {
+        get async throws {
+            try await managedObjectContext.perform(schedule: .immediate) { [managedObjectContext] in
+                let accountUserIDsfetchRequest = ManagedAccount.fetchRequest()
+                accountUserIDsfetchRequest.sortDescriptors = [
+                    NSSortDescriptor(keyPath: \ManagedAccount.preferringSortOrder, ascending: true),
+                    NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: false),
+                ]
+                accountUserIDsfetchRequest.propertiesToFetch = ["userID", "persistentID"]
+                accountUserIDsfetchRequest.returnsObjectsAsFaults = false
 
-            let results = try managedObjectContext.fetch(accountUserIDsfetchRequest)
+                let results = try managedObjectContext.fetch(accountUserIDsfetchRequest)
+
+                return Dictionary(
+                    results.lazy.compactMap {
+                        guard
+                            let userID = $0.userID,
+                            let persistentID = $0.persistentID
+                        else {
+                            return nil
+                        }
+
+                        return (userID, (objectID: $0.objectID, persistentID: persistentID))
+                    },
+                    uniquingKeysWith: { (first, _) in first }
+                )
+            }
+        }
+    }
+
+    private func userDetails(
+        userDetailObjectIDs: some Sequence<NSManagedObjectID>,
+        userIDs: some Sequence<Twitter.User.ID>
+    ) async throws -> [NSManagedObjectID: ManagedUserDetail] {
+        try await managedObjectContext.perform { [managedObjectContext] in
+            let userDetailsFetchRequest = ManagedUserDetail.fetchRequest()
+            userDetailsFetchRequest.predicate = NSCompoundPredicate(
+                andPredicateWithSubpredicates: [
+                    NSPredicate(format: "SELF IN %@", Array(userDetailObjectIDs)),
+                    NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
+                    NSPredicate(format: "userID IN %@", Array(userIDs))
+                ]
+            )
+            userDetailsFetchRequest.returnsObjectsAsFaults = false
+
+            let userDetails = try managedObjectContext.fetch(userDetailsFetchRequest)
 
             return Dictionary(
-                results.lazy.compactMap {
-                    guard
-                        let userID = $0.userID,
-                        let persistentID = $0.persistentID
-                    else {
-                        return nil
-                    }
-
-                    return (userID, (objectID: $0.objectID, persistentID: persistentID))
-                },
-                uniquingKeysWith: { (first, _) in first }
+                uniqueKeysWithValues: userDetails.map { (key: $0.objectID, value: $0) }
             )
         }
     }
@@ -198,7 +221,7 @@ extension UserNotificationManager {
                 ManagedPreferences.managedPreferences(for: context).preferences
             }
 
-            async let _accountsByUserID = Self.accountsByUserID(managedObjectContext: managedObjectContext)
+            async let _accountsByUserID = accountsByUserID
 
             let (updatedObjectIDs, removedObjectIDs) = changes
                 .reduce(into: ([NSManagedObjectID](), [NSManagedObjectID]())) { partialResult, change in
@@ -217,23 +240,7 @@ extension UserNotificationManager {
                 return
             }
 
-            let _userDetails: OrderedDictionary<NSManagedObjectID, ManagedUserDetail> = try await managedObjectContext.perform { [managedObjectContext] in
-                let userDetailsFetchRequest = ManagedUserDetail.fetchRequest()
-                userDetailsFetchRequest.predicate = NSCompoundPredicate(
-                    andPredicateWithSubpredicates: [
-                        NSPredicate(format: "SELF IN %@", updatedObjectIDs),
-                        NSPredicate(format: "creationDate >= %@", Date(timeIntervalSinceNow: -(60 * 60)) as NSDate),
-                        NSPredicate(format: "userID IN %@", Array(accountsByUserID.keys))
-                    ]
-                )
-                userDetailsFetchRequest.returnsObjectsAsFaults = false
-
-                let userDetails = try managedObjectContext.fetch(userDetailsFetchRequest)
-
-                return OrderedDictionary(
-                    uniqueKeysWithValues: userDetails.map { (key: $0.objectID, value: $0) }
-                )
-            }
+            let _userDetails = try await userDetails(userDetailObjectIDs: updatedObjectIDs, userIDs: accountsByUserID.keys)
 
             let preferences = await _preferences
 
@@ -268,7 +275,7 @@ extension UserNotificationManager {
 
                 let needsToBeRemovedObjectIDs = try await notificationTaskGroup
                     .compactMap { $0 }
-                    .reduce(into: _userDetails.keys.union(removedObjectIDs)) { partialResult, postedUserDetailObjectID in
+                    .reduce(into: Set(_userDetails.keys).union(removedObjectIDs)) { partialResult, postedUserDetailObjectID in
                         partialResult.remove(postedUserDetailObjectID)
                     }
 
