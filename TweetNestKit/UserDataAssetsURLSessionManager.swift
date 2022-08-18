@@ -61,7 +61,13 @@ class UserDataAssetsURLSessionManager: NSObject {
 
     private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: UserDataAssetsURLSessionManager.self))
 
-    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: operationQueue)
+    private lazy var urlSession: URLSession = {
+        let urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: operationQueue)
+
+        urlSession.sessionDescription = String(reflecting: self)
+
+        return urlSession
+    }()
 
     private lazy var managedObjectContext = session.persistentContainer.newBackgroundContext()
 
@@ -181,7 +187,7 @@ extension UserDataAssetsURLSessionManager {
     }
 
     func download<S>(_ downloadRequests: S) async where S: Sequence, S.Element == DownloadRequest {
-        let lastModifiedDates: [URL: Date]? = try? await managedObjectContext.perform(schedule: .immediate) {
+        async let _lastModifiedDates: [URL: Date] = managedObjectContext.perform(schedule: .immediate) {
             let latestUserDataAssets = try self.latestUserDataAssets(for: downloadRequests.lazy.compactMap { $0.urlRequest.url })
 
             return Dictionary(
@@ -200,53 +206,53 @@ extension UserDataAssetsURLSessionManager {
             )
         }
 
-        return await withCheckedContinuation { [urlSession] continuation in
-            urlSession.getTasksWithCompletionHandler { [dateFormatterForHTTPHeader] _, _, downloadTasks in
-                let pendingDownloadTasks = Dictionary(
-                    grouping: downloadTasks
-                        .lazy
-                        .filter {
-                            switch $0.state {
-                            case .running, .suspended:
-                                return true
-                            case .canceling, .completed:
-                                return false
-                            @unknown default:
-                                return false
-                            }
-                        },
-                    by: \.originalRequest
-                )
+        let downloadTasks = await urlSession.tasks.2
 
-                let newDownloadTasks: ContiguousArray<URLSessionDownloadTask> = .init(
-                    downloadRequests.lazy
-                        .uniqued()
-                        .compactMap {
-                            var urlRequest = $0.urlRequest
-                            urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
-                            urlRequest.setValue(
-                                $0.urlRequest.url.flatMap { lastModifiedDates?[$0].flatMap { dateFormatterForHTTPHeader.string(from: $0) } },
-                                forHTTPHeaderField: "If-Modified-Since"
-                            )
+        let pendingDownloadTasks = Dictionary(
+            grouping: downloadTasks
+                .lazy
+                .filter {
+                    switch $0.state {
+                    case .running, .suspended:
+                        return true
+                    case .canceling, .completed:
+                        return false
+                    @unknown default:
+                        return false
+                    }
+                },
+            by: \.originalRequest
+        )
 
-                            guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
-                                return nil
-                            }
+        let lastModifiedDates = try? await _lastModifiedDates
 
-                            let downloadTask = urlSession.downloadTask(with: urlRequest)
-                            downloadTask.countOfBytesClientExpectsToSend = 1024
-                            downloadTask.countOfBytesClientExpectsToReceive = $0.expectsToReceiveFileSize
-                            downloadTask.priority = $0.priority
+        await withTaskGroup(of: URLSessionDownloadTask?.self) { taskGroup in
+            for downloadRequest in downloadRequests {
+                taskGroup.addTask { [urlSession, dateFormatterForHTTPHeader] in
+                    var urlRequest = downloadRequest.urlRequest
+                    urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+                    urlRequest.setValue(
+                        downloadRequest.urlRequest.url.flatMap { lastModifiedDates?[$0].flatMap { dateFormatterForHTTPHeader.string(from: $0) } },
+                        forHTTPHeaderField: "If-Modified-Since"
+                    )
 
-                            return downloadTask
-                        }
-                )
+                    guard pendingDownloadTasks[urlRequest]?.contains(where: { [.running, .suspended].contains($0.state) }) != true else {
+                        return nil
+                    }
 
-                newDownloadTasks.forEach {
-                    $0.resume()
+                    let downloadTask = urlSession.downloadTask(with: urlRequest)
+                    downloadTask.countOfBytesClientExpectsToSend = 1024
+                    downloadTask.countOfBytesClientExpectsToReceive = downloadRequest.expectsToReceiveFileSize
+                    downloadTask.priority = downloadRequest.priority
+
+                    return downloadTask
                 }
+            }
 
-                continuation.resume()
+            for await downloadTask in taskGroup {
+                guard let downloadTask else { continue }
+
+                downloadTask.resume()
             }
         }
     }
