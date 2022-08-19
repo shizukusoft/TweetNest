@@ -11,6 +11,7 @@ import UnifiedLogging
 import OrderedCollections
 import CoreData
 import CryptoKit
+import AsyncAlgorithms
 
 class UserDataAssetsURLSessionManager: NSObject {
     static let cacheExpirationTimeInterval: TimeInterval = 60 * 60 * 12
@@ -214,10 +215,8 @@ extension UserDataAssetsURLSessionManager {
             )
         }
 
-        let downloadTasks = await urlSession.tasks.2
-
-        let pendingDownloadTasks = Dictionary(
-            grouping: downloadTasks
+        let pendingDownloadTasks = await Dictionary(
+            grouping: urlSession.tasks.2
                 .lazy
                 .filter {
                     switch $0.state {
@@ -257,9 +256,7 @@ extension UserDataAssetsURLSessionManager {
                 }
             }
 
-            for await downloadTask in taskGroup {
-                guard let downloadTask else { continue }
-
+            for downloadTask in await Array(taskGroup.compacted()) {
                 downloadTask.resume()
             }
         }
