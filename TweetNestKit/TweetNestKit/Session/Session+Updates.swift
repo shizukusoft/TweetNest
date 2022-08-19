@@ -141,7 +141,7 @@ extension Session {
         accountManagedObjectID: NSManagedObjectID,
         userDataAssetsDownloadRequests: inout [UserDataAssetsURLSessionManager.DownloadRequest],
         managedObjectContext: NSManagedObjectContext
-    ) async throws -> Dictionary<Twitter.User.ID, UserDetailChanges> {
+    ) async throws -> [Twitter.User.ID: UserDetailChanges] {
         let (accountUserID, accountPreferences) = try await withExtendedBackgroundExecution {
             try await managedObjectContext.perform {
                 guard let account = managedObjectContext.object(with: accountManagedObjectID) as? ManagedAccount else {
