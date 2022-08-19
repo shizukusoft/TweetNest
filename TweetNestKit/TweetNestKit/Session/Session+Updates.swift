@@ -233,7 +233,6 @@ extension Session {
         }
     }
 
-
     private func preflightUsersForUpdating<S>(
         userIDs: S,
         accountUserID: String,
