@@ -11,6 +11,7 @@ import BackgroundTask
 import Twitter
 import TwitterV1
 import UnifiedLogging
+import AsyncAlgorithms
 
 extension Session {
     private func newBackgroundContext() -> NSManagedObjectContext {
@@ -25,16 +26,125 @@ extension Session {
     public typealias UserDetailChanges = (oldUserDetailObjectID: NSManagedObjectID?, newUserDetailObjectID: NSManagedObjectID?)
 
     @discardableResult
-    public func updateAccount(
-        _ accountObjectID: NSManagedObjectID,
-        context _context: NSManagedObjectContext? = nil
-    ) async throws -> UserDetailChanges? {
-        let context = _context ?? newBackgroundContext()
+    public func updateAllUsers() async throws -> [NSManagedObjectID: Result<UserDetailChanges, Error>] {
+        let managedObjectContext = newBackgroundContext()
 
-        let twitterSession = try await self.twitterSession(for: accountObjectID)
+        let accountObjectIDs: [NSManagedObjectID] = try await managedObjectContext.perform {
+            let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: ManagedAccount.entity().name!)
+            fetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \ManagedAccount.preferringSortOrder, ascending: true),
+                NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: false),
+            ]
+            fetchRequest.resultType = .managedObjectIDResultType
+
+            return try managedObjectContext.fetch(fetchRequest)
+        }
+
+        return await updateUsers(for: accountObjectIDs, managedObjectContext: managedObjectContext)
+    }
+
+    @discardableResult
+    public func updateUsers(
+        for accountManagedObjectIDs: some Collection<NSManagedObjectID>,
+        managedObjectContext _managedObjectContext: NSManagedObjectContext? = nil
+    ) async -> [NSManagedObjectID: Result<UserDetailChanges, Error>] {
+        let managedObjectContext = _managedObjectContext ?? newBackgroundContext()
+
+        return await withTaskGroup(
+            of: (NSManagedObjectID, Result<UserDetailChanges, Error>?, [UserDataAssetsURLSessionManager.DownloadRequest]).self
+        ) { taskGroup in
+            accountManagedObjectIDs.forEach { accountManagedObjectID in
+                taskGroup.addTask {
+                    var userDataAssetDownloadRequests: [UserDataAssetsURLSessionManager.DownloadRequest] = .init()
+
+                    do {
+                        let results = try await self.updateUser(
+                            accountManagedObjectID: accountManagedObjectID,
+                            userDataAssetDownloadRequests: &userDataAssetDownloadRequests,
+                            managedObjectContext: managedObjectContext
+                        )
+
+                        return (accountManagedObjectID, results.flatMap { .success($0) }, userDataAssetDownloadRequests)
+                    } catch {
+                        return (accountManagedObjectID, .failure(error), userDataAssetDownloadRequests)
+                    }
+                }
+            }
+
+            var userDataAssetDownloadRequests: [UserDataAssetsURLSessionManager.DownloadRequest] = .init()
+
+            let results = await taskGroup
+                .reduce(into: [NSManagedObjectID: Result<UserDetailChanges, Error>]()) { partialResult, element in
+                    partialResult[element.0] = element.1
+
+                    userDataAssetDownloadRequests.append(contentsOf: element.2)
+                }
+
+            await self.userDataAssetsURLSessionManager.download(userDataAssetDownloadRequests)
+
+            return results
+        }
+    }
+
+    private func updateUser(
+        accountManagedObjectID: NSManagedObjectID,
+        userDataAssetDownloadRequests: inout [UserDataAssetsURLSessionManager.DownloadRequest],
+        managedObjectContext: NSManagedObjectContext
+    ) async throws -> UserDetailChanges? {
+        let results = try await updateUsers(
+            for: nil,
+            accountManagedObjectID: accountManagedObjectID,
+            userDataAssetsDownloadRequests: &userDataAssetDownloadRequests,
+            managedObjectContext: managedObjectContext
+        )
+
+        return results.first?.value
+    }
+
+    @discardableResult
+    public func updateUsers(
+        for userIDs: some Collection<Twitter.User.ID>,
+        accountManagedObjectID: NSManagedObjectID,
+        managedObjectContext _managedObjectContext: NSManagedObjectContext? = nil
+    ) async throws -> [Twitter.User.ID: UserDetailChanges] {
+        guard !userIDs.isEmpty else {
+            return [:]
+        }
+
+        let managedObjectContext = _managedObjectContext ?? newBackgroundContext()
+
+        var userDataAssetsDownloadRequests: [UserDataAssetsURLSessionManager.DownloadRequest] = .init()
+
+        do {
+            let results = try await updateUsers(
+                for: Set(userIDs),
+                accountManagedObjectID: accountManagedObjectID,
+                userDataAssetsDownloadRequests: &userDataAssetsDownloadRequests,
+                managedObjectContext: managedObjectContext
+            )
+
+            await self.userDataAssetsURLSessionManager.download(userDataAssetsDownloadRequests)
+
+            return results
+        } catch {
+            await self.userDataAssetsURLSessionManager.download(userDataAssetsDownloadRequests)
+
+            throw error
+        }
+    }
+}
+
+extension Session {
+    @discardableResult
+    private func updateUsers(
+        for userIDs: Set<Twitter.User.ID>?,
+        accountManagedObjectID: NSManagedObjectID,
+        userDataAssetsDownloadRequests: inout [UserDataAssetsURLSessionManager.DownloadRequest],
+        managedObjectContext: NSManagedObjectContext
+    ) async throws -> Dictionary<Twitter.User.ID, UserDetailChanges> {
         let (accountUserID, accountPreferences) = try await withExtendedBackgroundExecution {
-            try await context.perform {
-                guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
+            try await managedObjectContext.perform {
+                guard let account = managedObjectContext.object(with: accountManagedObjectID) as? ManagedAccount else {
                     throw SessionError.unknown
                 }
 
@@ -43,166 +153,97 @@ extension Session {
         }
 
         guard let accountUserID = accountUserID else {
-            try await updateUserID(managedAccountObjectID: accountObjectID, managedObjectContext: context)
+            try await updateUserID(
+                accountManagedObjectID: accountManagedObjectID,
+                managedObjectContext: managedObjectContext
+            )
 
-            return try await updateAccount(
-                accountObjectID,
-                context: _context
+            return try await updateUsers(
+                for: userIDs,
+                accountManagedObjectID: accountManagedObjectID,
+                userDataAssetsDownloadRequests: &userDataAssetsDownloadRequests,
+                managedObjectContext: managedObjectContext
             )
         }
 
-        async let results = withExtendedBackgroundExecution { () -> (TwitterV1.User, AdditionalUserInfo, ClosedRange<Date>) in
-            let fetchStartDate = Date()
+        let userIDs = userIDs ?? [accountUserID]
 
-            async let accountUser = TwitterV1.User.me(session: twitterSession)
-            async let followingUserIDs = Twitter.User.followingUserIDs(forUserID: accountUserID, session: twitterSession).userIDs
-            async let followerIDs = Twitter.User.followerIDs(forUserID: accountUserID, session: twitterSession).userIDs
-            async let myBlockingUserIDs = accountPreferences.fetchBlockingUsers ?
-                Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
-            async let myMutingUserIDs = accountPreferences.fetchMutingUsers ?
-                Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
-
-            let additionalAccountUserInfo = try await AdditionalUserInfo(
-                followingUserIDs: followingUserIDs,
-                followerIDs: followerIDs,
-                blockingUserIDs: myBlockingUserIDs,
-                mutingUserIDs: myMutingUserIDs
-            )
-
-            let fetchEndDate = Date()
-
-            return try await (accountUser, additionalAccountUserInfo, fetchStartDate...fetchEndDate)
+        guard !userIDs.isEmpty else {
+            return [:]
         }
 
-        let accountUser = try await results.0
-        let additionalAccountUserInfo = try await results.1
-        let usersFetchDates = try await results.2
+        let twitterSession = try await self.twitterSession(for: accountManagedObjectID)
 
-        async let userObjectIDsByUserID = preflightUsersForUpdating(userIDs: [accountUserID], accountUserID: accountUserID, context: context)
-        async let updateAccount: Void = withExtendedBackgroundExecution {
-            try await context.perform(schedule: .enqueued) {
-                guard
-                    let account = context.object(with: accountObjectID) as? ManagedAccount,
-                    account.userID != accountUserID
-                else {
-                    return
-                }
-
-                account.userID = accountUserID
-
-                try context.save()
-            }
-        }
-
-        let accountUserDetailChanges = try await updateUsers(
-            [accountUser],
-            usersFetchDates: usersFetchDates,
-            userObjectIDsByUserID: userObjectIDsByUserID,
-            addtionalUserInfos: [
-                accountUserID: additionalAccountUserInfo
-            ],
-            context: context
+        let userObjectIDsByUserID = try await Self.preflightUsersForUpdating(
+            userIDs: userIDs,
+            accountUserID: accountUserID,
+            context: managedObjectContext
         )
 
-        _ = try await updateAccount
-
-        async let updateOtherUsers = self.updateUsers(ids: additionalAccountUserInfo.relatedUserIDs, accountObjectID: accountObjectID, context: context)
-
-        await self.userDataAssetsURLSessionManager.download(accountUserDetailChanges.1)
-
-        _ = try await updateOtherUsers
-
-        return accountUserDetailChanges.0.first?.1
-    }
-
-    @discardableResult
-    public func updateUsers<S>(
-        ids userIDs: S,
-        accountObjectID: NSManagedObjectID,
-        context: NSManagedObjectContext? = nil
-    ) async throws -> [Twitter.User.ID: UserDetailChanges] where S: Sequence, S.Element == Twitter.User.ID {
-        let context = context ?? newBackgroundContext()
-
-        let userIDs = Set(userIDs)
-
-        let accountUserID: Twitter.User.ID = try await context.perform {
-            guard
-                let account = context.object(with: accountObjectID) as? ManagedAccount,
-                let accountUserID = account.userID
-            else {
-                throw SessionError.unknown
-            }
-
-            return accountUserID
-        }
+        let chunkedUserIDs = userObjectIDsByUserID.keys.chunks(ofCount: 100)
 
         return try await withThrowingTaskGroup(
-            of: ([TwitterV1.User], ClosedRange<Date>).self
-        ) { chunkedUsersFetchTaskGroup in
-            async let accountUpdateResult = userIDs.contains(accountUserID) ? updateAccount(accountObjectID, context: context) : nil
-
-            let userObjectIDsByUserID = try await preflightUsersForUpdating(
-                userIDs: userIDs.subtracting([accountUserID]),
-                accountUserID: accountUserID,
-                context: context
-            )
-
-            for chunkedUserIDs in userObjectIDsByUserID.keys.chunks(ofCount: 100) {
-                chunkedUsersFetchTaskGroup.addTask {
+            of: ([TwitterV1.User], [Twitter.User.ID: AdditionalUserInfo], ClosedRange<Date>).self
+        ) { taskGroup in
+            for userIDs in chunkedUserIDs {
+                taskGroup.addTask {
                     try await withExtendedBackgroundExecution {
-                        let twitterSession = try await self.twitterSession(for: accountObjectID)
-
                         let fetchStartDate = Date()
 
-                        let users: [TwitterV1.User]
-                        if userObjectIDsByUserID.count == 1 && chunkedUserIDs.count == 1 {
-                            users = try await [TwitterV1.User(id: chunkedUserIDs[chunkedUserIDs.startIndex], session: twitterSession)]
-                        } else {
-                            users = try await TwitterV1.User.users(ids: Array(chunkedUserIDs), session: twitterSession)
-                        }
-
-                        let fetchEndDate = Date()
-
-                        return (users, fetchStartDate...fetchEndDate)
-                    }
-                }
-            }
-
-            var updatingUsersResult: [Twitter.User.ID: UserDetailChanges] = try await withThrowingTaskGroup(
-                of: ([(Twitter.User.ID, UserDetailChanges)], [UserDataAssetsURLSessionManager.DownloadRequest]).self
-            ) { chunkedUsersProcessingTaskGroup in
-                for try await (chunkedUsers, usersFetchDates) in chunkedUsersFetchTaskGroup {
-                    chunkedUsersProcessingTaskGroup.addTask {
-                        try await self.updateUsers(
-                            chunkedUsers,
-                            usersFetchDates: usersFetchDates,
-                            userObjectIDsByUserID: userObjectIDsByUserID,
-                            context: context
+                        async let additionalUserInfos = Self.fetchAdditionalUserInfos(
+                            for: userIDs,
+                            accountUserID: accountUserID,
+                            accountPreferences: accountPreferences,
+                            twitterSession: twitterSession
                         )
-                    }
-                }
 
-                var dataAssetsDownloadRequests = Set<UserDataAssetsURLSessionManager.DownloadRequest>()
-                do {
-                    let results = try await chunkedUsersProcessingTaskGroup
-                        .reduce(into: [Twitter.User.ID: UserDetailChanges]()) { totalResults, chunkedResults in
-                            chunkedResults.0.forEach { totalResults[$0.0] = $0.1 }
-
-                            dataAssetsDownloadRequests.formUnion(chunkedResults.1)
+                        let users: [TwitterV1.User]
+                        if chunkedUserIDs.count == 1 && userIDs.count == 1 {
+                            users = try await [TwitterV1.User(id: userIDs[userIDs.startIndex], session: twitterSession)]
+                        } else {
+                            users = try await TwitterV1.User.users(ids: Array(userIDs), session: twitterSession)
                         }
 
-                    await self.userDataAssetsURLSessionManager.download(dataAssetsDownloadRequests)
-
-                    return results
-                } catch {
-                    await self.userDataAssetsURLSessionManager.download(dataAssetsDownloadRequests)
-
-                    throw error
+                        return try await (users, additionalUserInfos, fetchStartDate...Date())
+                    }
                 }
             }
 
-            updatingUsersResult[accountUserID] = try await accountUpdateResult
-            return updatingUsersResult
+            return try await taskGroup
+                .map { element in
+                    let results = try await self.updateUsers(
+                        element.0,
+                        usersFetchDates: element.2,
+                        userObjectIDsByUserID: userObjectIDsByUserID,
+                        addtionalUserInfos: element.1,
+                        context: managedObjectContext
+                    )
+
+                    let relatedUserIDs = Set(
+                        element.1
+                            .lazy
+                            .filter {
+                                $0.key == accountUserID
+                            }
+                            .flatMap {
+                                $0.value.relatedUserIDs
+                            }
+                    )
+
+                    return (results, relatedUserIDs)
+                }
+                .reduce(into: [Twitter.User.ID: UserDetailChanges]()) { totalResults, chunkedResults in
+                    chunkedResults.0.0.forEach { totalResults[$0.0] = $0.1 }
+
+                    userDataAssetsDownloadRequests.append(contentsOf: chunkedResults.0.1)
+
+                    _ = try await updateUsers(
+                        for: chunkedResults.1.subtracting([accountUserID]),
+                        accountManagedObjectID: accountManagedObjectID,
+                        userDataAssetsDownloadRequests: &userDataAssetsDownloadRequests,
+                        managedObjectContext: managedObjectContext
+                    )
+                }
         }
     }
 }
@@ -210,14 +251,14 @@ extension Session {
 extension Session {
     @discardableResult
     private func updateUserID(
-        managedAccountObjectID: NSManagedObjectID,
+        accountManagedObjectID: NSManagedObjectID,
         managedObjectContext: NSManagedObjectContext
     ) async throws -> Twitter.User.ID {
-        let twitterSession = try await self.twitterSession(for: managedAccountObjectID)
+        let twitterSession = try await self.twitterSession(for: accountManagedObjectID)
         let accountUser = try await TwitterV1.User.me(session: twitterSession)
 
         return try await managedObjectContext.perform(schedule: .immediate) {
-            guard let account = managedObjectContext.object(with: managedAccountObjectID) as? ManagedAccount else {
+            guard let account = managedObjectContext.object(with: accountManagedObjectID) as? ManagedAccount else {
                 throw SessionError.unknown
             }
 
@@ -233,7 +274,7 @@ extension Session {
         }
     }
 
-    private func preflightUsersForUpdating<S>(
+    private static func preflightUsersForUpdating<S>(
         userIDs: S,
         accountUserID: String,
         context: NSManagedObjectContext
@@ -325,6 +366,67 @@ extension Session {
         }
     }
 
+    private static func fetchAdditionalUserInfos(
+        for userIDs: some Sequence<Twitter.User.ID>,
+        accountUserID: Twitter.User.ID,
+        accountPreferences: ManagedAccount.Preferences,
+        twitterSession: Twitter.Session
+    ) async throws -> [Twitter.User.ID: AdditionalUserInfo] {
+        try await withThrowingTaskGroup(
+            of: (Twitter.User.ID, AdditionalUserInfo?).self
+        ) { taskGroup in
+            for userID in userIDs {
+                taskGroup.addTask {
+                    guard userID == accountUserID else {
+                        return (userID, nil)
+                    }
+
+                    async let followingUserIDs = Twitter.User.followingUserIDs(forUserID: accountUserID, session: twitterSession).userIDs
+                    async let followerIDs = Twitter.User.followerIDs(forUserID: accountUserID, session: twitterSession).userIDs
+                    async let myBlockingUserIDs = accountPreferences.fetchBlockingUsers ?
+                        Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
+                    async let myMutingUserIDs = accountPreferences.fetchMutingUsers ?
+                        Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
+
+                    return (
+                        userID,
+                        try await AdditionalUserInfo(
+                            followingUserIDs: followingUserIDs,
+                            followerIDs: followerIDs,
+                            blockingUserIDs: myBlockingUserIDs,
+                            mutingUserIDs: myMutingUserIDs
+                        )
+                    )
+                }
+            }
+
+            return try await taskGroup.reduce(into: [:]) { partialResult, element in
+                guard let additionalUserInfo = element.1 else {
+                    return
+                }
+
+                partialResult[element.0] = additionalUserInfo
+            }
+        }
+    }
+}
+
+extension Session {
+    private static func previousUserDetail(
+        for userID: Twitter.User.ID,
+        managedObjectContext: NSManagedObjectContext
+    ) throws -> ManagedUserDetail? {
+        let previousUserDetailFetchRequest = ManagedUserDetail.fetchRequest()
+        previousUserDetailFetchRequest.predicate = NSPredicate(format: "userID == %@", userID)
+        previousUserDetailFetchRequest.sortDescriptors = [
+            NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false)
+        ]
+        previousUserDetailFetchRequest.fetchLimit = 1
+        previousUserDetailFetchRequest.returnsObjectsAsFaults = false
+
+        return try managedObjectContext.fetch(previousUserDetailFetchRequest).first
+    }
+
     private static func downloadRequests(for twitterUser: TwitterV1.User) -> some Collection<UserDataAssetsURLSessionManager.DownloadRequest> {
         [
             twitterUser.profileImageOriginalURL.flatMap {
@@ -383,15 +485,7 @@ extension Session {
 
                     userProcessingTaskGroup.addTask {
                         async let userDetailChanges: UserDetailChanges = chunkedUsersProcessingContext.perform(schedule: .enqueued) {
-                            let previousUserDetailFetchRequest = ManagedUserDetail.fetchRequest()
-                            previousUserDetailFetchRequest.predicate = NSPredicate(format: "userID == %@", userID)
-                            previousUserDetailFetchRequest.sortDescriptors = [
-                                NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false)
-                            ]
-                            previousUserDetailFetchRequest.fetchLimit = 1
-                            previousUserDetailFetchRequest.returnsObjectsAsFaults = false
-
-                            let previousUserDetail = try chunkedUsersProcessingContext.fetch(previousUserDetailFetchRequest).first
+                            let previousUserDetail = try Self.previousUserDetail(for: userID, managedObjectContext: chunkedUsersProcessingContext)
 
                             let userDetail = try ManagedUserDetail.createOrUpdate(
                                 twitterUser: twitterUser,

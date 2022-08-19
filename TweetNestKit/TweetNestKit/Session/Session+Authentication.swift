@@ -85,7 +85,10 @@ extension Session {
 
         Task.detached(priority: .utility) { [self] in
             do {
-                try await updateAccount(managedAccountObjectID)
+                try await updateUsers(for: [managedAccountObjectID])
+                    .forEach {
+                        _ = try $0.value.get()
+                    }
             } catch {
                 logger.error("Error occurred while update account \(managedAccountObjectID, privacy: .public): \(error as NSError, privacy: .public)")
 

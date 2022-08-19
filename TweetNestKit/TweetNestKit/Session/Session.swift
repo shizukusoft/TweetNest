@@ -267,11 +267,11 @@ extension Session {
         do {
             var hasChanges = false
 
-            for result in try await updateAllAccounts() {
+            for result in try await updateAllUsers() {
                 let accountObjectID = result.0
 
                 do {
-                    hasChanges = try hasChanges || result.1.get()
+                    hasChanges = try hasChanges || result.value.map { $0.oldUserDetailObjectID != $0.newUserDetailObjectID }.get()
                 } catch {
                     logger.error("Error occurred while update account \(accountObjectID, privacy: .public): \(error as NSError, privacy: .public)")
 

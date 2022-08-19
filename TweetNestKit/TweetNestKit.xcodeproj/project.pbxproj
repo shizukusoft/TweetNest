@@ -49,7 +49,6 @@
 		1967468728AE9BDE00863E43 /* Session+Support.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467B28AE9BDE00863E43 /* Session+Support.swift */; };
 		1967468828AE9BDE00863E43 /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467C28AE9BDE00863E43 /* SessionError.swift */; };
 		1967468928AE9BDE00863E43 /* Session+CleansingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467D28AE9BDE00863E43 /* Session+CleansingData.swift */; };
-		1967468A28AE9BDE00863E43 /* Session+UpdatesAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467E28AE9BDE00863E43 /* Session+UpdatesAll.swift */; };
 		1967468B28AE9BDE00863E43 /* Session+Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467F28AE9BDE00863E43 /* Session+Updates.swift */; };
 		1967469A28AE9BE700863E43 /* Session+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967468E28AE9BE700863E43 /* Session+TweetNestKit.swift */; };
 		1967469B28AE9BE700863E43 /* URLCache+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967469028AE9BE700863E43 /* URLCache+TweetNestKit.swift */; };
@@ -133,7 +132,6 @@
 		1967467B28AE9BDE00863E43 /* Session+Support.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+Support.swift"; sourceTree = "<group>"; };
 		1967467C28AE9BDE00863E43 /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
 		1967467D28AE9BDE00863E43 /* Session+CleansingData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+CleansingData.swift"; sourceTree = "<group>"; };
-		1967467E28AE9BDE00863E43 /* Session+UpdatesAll.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+UpdatesAll.swift"; sourceTree = "<group>"; };
 		1967467F28AE9BDE00863E43 /* Session+Updates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+Updates.swift"; sourceTree = "<group>"; };
 		1967468E28AE9BE700863E43 /* Session+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TweetNestKit.swift"; sourceTree = "<group>"; };
 		1967469028AE9BE700863E43 /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
@@ -277,7 +275,6 @@
 				1967467828AE9BDE00863E43 /* Session+PersistentHistoryTransactions.swift */,
 				1967467A28AE9BDE00863E43 /* Session+PersistentStoreRemoteChanges.swift */,
 				1967467F28AE9BDE00863E43 /* Session+Updates.swift */,
-				1967467E28AE9BDE00863E43 /* Session+UpdatesAll.swift */,
 				1967467528AE9BDE00863E43 /* Session+TwitterAPIConfiguration.swift */,
 				1967467B28AE9BDE00863E43 /* Session+Support.swift */,
 				1967467928AE9BDE00863E43 /* SessionActor.swift */,
@@ -513,7 +510,6 @@
 				1967466028AE9BD600863E43 /* PersistentContainer+V1.swift in Sources */,
 				1914CD0928AE9A2800F7C398 /* TweetNestKit.docc in Sources */,
 				1967469E28AE9BE700863E43 /* DateFormatter+TweetNestKit.swift in Sources */,
-				1967468A28AE9BDE00863E43 /* Session+UpdatesAll.swift in Sources */,
 				1967465D28AE9BD600863E43 /* PersistentContainer+Migration.swift in Sources */,
 				1967467028AE9BD600863E43 /* ManagedAccount+Preferences.swift in Sources */,
 				1967469F28AE9BE700863E43 /* NSPersistentContainer+TweetNestKit.swift in Sources */,
