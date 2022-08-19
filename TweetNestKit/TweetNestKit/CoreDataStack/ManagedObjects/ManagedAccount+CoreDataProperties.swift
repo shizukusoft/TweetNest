@@ -16,6 +16,7 @@ extension ManagedAccount {
     }
 
     @NSManaged public var creationDate: Date?
+    @NSManaged public var modificationDate: Date?
     @NSManaged public var preferringSortOrder: Int64
     @NSManaged public var token: String?
     @NSManaged public var tokenSecret: String?

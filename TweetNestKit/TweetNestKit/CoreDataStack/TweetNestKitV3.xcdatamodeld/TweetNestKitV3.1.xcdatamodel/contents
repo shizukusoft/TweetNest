@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21277" systemVersion="21G72" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21277" systemVersion="21G83" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Account" representedClassName=".ManagedAccount" syncable="YES">
         <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="modificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="persistentID" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="preferences" optional="YES" attributeType="Transformable" valueTransformerName="TweetNestKit.ManagedAccountPreferencesTransformer" customClassName="."/>
         <attribute name="preferringSortOrder" attributeType="Integer 64" defaultValueString="-1" usesScalarValueType="YES"/>

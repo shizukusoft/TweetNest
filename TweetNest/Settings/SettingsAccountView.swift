@@ -17,18 +17,26 @@ struct SettingsAccountView: View {
 
     var body: some View {
         Form {
-            Toggle(isOn: $account.preferences.fetchBlockingUsers) {
-                Text("Fetch Blocking Users")
-            }
-            .onChange(of: account.preferences.fetchBlockingUsers) { _ in
-                save()
+            Section {
+                Toggle(isOn: $account.preferences.fetchBlockingUsers) {
+                    Text("Fetch Blocking Users")
+                }
+                .onChange(of: account.preferences.fetchBlockingUsers) { _ in
+                    save()
+                }
+
+                Toggle(isOn: $account.preferences.fetchMutingUsers) {
+                    Text("Fetch Muting Users")
+                }
+                .onChange(of: account.preferences.fetchMutingUsers) { _ in
+                    save()
+                }
             }
 
-            Toggle(isOn: $account.preferences.fetchMutingUsers) {
-                Text("Fetch Muting Users")
-            }
-            .onChange(of: account.preferences.fetchMutingUsers) { _ in
-                save()
+            Section {
+                TwitterAuthenticationButton(managedAccountObjectID: account.objectID, role: .destructive) {
+                    Text("Re-authenticate Account")
+                }
             }
         }
         .navigationTitle(

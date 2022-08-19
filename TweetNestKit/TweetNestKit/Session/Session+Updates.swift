@@ -32,28 +32,35 @@ extension Session {
         let context = _context ?? newBackgroundContext()
 
         let twitterSession = try await self.twitterSession(for: accountObjectID)
-        let accountPreferences: ManagedAccount.Preferences = try await withExtendedBackgroundExecution {
+        let (accountUserID, accountPreferences) = try await withExtendedBackgroundExecution {
             try await context.perform {
                 guard let account = context.object(with: accountObjectID) as? ManagedAccount else {
                     throw SessionError.unknown
                 }
 
-                return account.preferences
+                return (account.userID, account.preferences)
             }
+        }
+
+        guard let accountUserID = accountUserID else {
+            try await updateUserID(managedAccountObjectID: accountObjectID, managedObjectContext: context)
+
+            return try await updateAccount(
+                accountObjectID,
+                context: _context
+            )
         }
 
         async let results = withExtendedBackgroundExecution { () -> (TwitterV1.User, AdditionalUserInfo, ClosedRange<Date>) in
             let fetchStartDate = Date()
 
             async let accountUser = TwitterV1.User.me(session: twitterSession)
-            async let myBlockingUserIDs = accountPreferences.fetchBlockingUsers ?
-                try await Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
-            async let myMutingUserIDs = accountPreferences.fetchMutingUsers ?
-                try await Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
-
-            let accountUserID = try await String(accountUser.id)
             async let followingUserIDs = Twitter.User.followingUserIDs(forUserID: accountUserID, session: twitterSession).userIDs
             async let followerIDs = Twitter.User.followerIDs(forUserID: accountUserID, session: twitterSession).userIDs
+            async let myBlockingUserIDs = accountPreferences.fetchBlockingUsers ?
+                Twitter.User.myBlockingUserIDs(session: twitterSession).userIDs : nil
+            async let myMutingUserIDs = accountPreferences.fetchMutingUsers ?
+                Twitter.User.myMutingUserIDs(session: twitterSession).userIDs : nil
 
             let additionalAccountUserInfo = try await AdditionalUserInfo(
                 followingUserIDs: followingUserIDs,
@@ -70,8 +77,6 @@ extension Session {
         let accountUser = try await results.0
         let additionalAccountUserInfo = try await results.1
         let usersFetchDates = try await results.2
-
-        let accountUserID = String(accountUser.id)
 
         async let userObjectIDsByUserID = preflightUsersForUpdating(userIDs: [accountUserID], accountUserID: accountUserID, context: context)
         async let updateAccount: Void = withExtendedBackgroundExecution {
@@ -203,6 +208,32 @@ extension Session {
 }
 
 extension Session {
+    @discardableResult
+    private func updateUserID(
+        managedAccountObjectID: NSManagedObjectID,
+        managedObjectContext: NSManagedObjectContext
+    ) async throws -> Twitter.User.ID {
+        let twitterSession = try await self.twitterSession(for: managedAccountObjectID)
+        let accountUser = try await TwitterV1.User.me(session: twitterSession)
+
+        return try await managedObjectContext.perform(schedule: .immediate) {
+            guard let account = managedObjectContext.object(with: managedAccountObjectID) as? ManagedAccount else {
+                throw SessionError.unknown
+            }
+
+            if account.userID == nil {
+                account.userID = String(accountUser.id)
+            }
+
+            if managedObjectContext.hasChanges {
+                try managedObjectContext.save()
+            }
+
+            return account.userID ?? String(accountUser.id)
+        }
+    }
+
+
     private func preflightUsersForUpdating<S>(
         userIDs: S,
         accountUserID: String,

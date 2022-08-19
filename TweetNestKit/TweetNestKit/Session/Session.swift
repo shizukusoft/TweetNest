@@ -216,7 +216,7 @@ extension Session {
         return UNNotificationRequest(identifier: UUID().uuidString, content: notificationContent, trigger: nil)
     }
 
-    private func postUserNotification(error: Error, accountObjectID: NSManagedObjectID? = nil) async throws {
+    func postUserNotification(error: Error, accountObjectID: NSManagedObjectID? = nil) async throws {
         switch error {
         case is CancellationError, URLError.cancelled:
             break

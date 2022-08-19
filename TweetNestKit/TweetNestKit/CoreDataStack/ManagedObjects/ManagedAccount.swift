@@ -11,7 +11,19 @@ import CoreData
 import Twitter
 
 public final class ManagedAccount: ManagedObject {
+    public override func awakeFromInsert() {
+        super.awakeFromInsert()
 
+        setPrimitiveValue(Date(), forKey: (\ManagedAccount.creationDate)._kvcKeyPathString!)
+    }
+
+    public override func willSave() {
+        super.willSave()
+
+        if !changedValues().keys.contains((\ManagedAccount.modificationDate)._kvcKeyPathString!) {
+            self.modificationDate = Date()
+        }
+    }
 }
 
 extension ManagedAccount {

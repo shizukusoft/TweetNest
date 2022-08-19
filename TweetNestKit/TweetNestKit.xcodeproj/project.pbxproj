@@ -40,7 +40,6 @@
 		1967467028AE9BD600863E43 /* ManagedAccount+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967465A28AE9BD600863E43 /* ManagedAccount+Preferences.swift */; };
 		1967467128AE9BD600863E43 /* ManagedAccount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967465B28AE9BD600863E43 /* ManagedAccount+CoreDataProperties.swift */; };
 		1967467228AE9BD600863E43 /* ManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967465C28AE9BD600863E43 /* ManagedObject.swift */; };
-		1967468028AE9BDE00863E43 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467428AE9BDE00863E43 /* Session+NewAccount.swift */; };
 		1967468128AE9BDE00863E43 /* Session+TwitterAPIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467528AE9BDE00863E43 /* Session+TwitterAPIConfiguration.swift */; };
 		1967468228AE9BDE00863E43 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467628AE9BDE00863E43 /* Session.swift */; };
 		1967468328AE9BDE00863E43 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967467728AE9BDE00863E43 /* Session+Credential.swift */; };
@@ -72,6 +71,7 @@
 		196746C328AE9D3F00863E43 /* ZIP in Frameworks */ = {isa = PBXBuildFile; platformFilters = (ios, maccatalyst, macos, tvos, ); productRef = 196746C228AE9D3F00863E43 /* ZIP */; };
 		196746C628AE9D5400863E43 /* UnifiedLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 196746C528AE9D5400863E43 /* UnifiedLogging */; };
 		196746C928AE9D6C00863E43 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 196746C828AE9D6C00863E43 /* AsyncAlgorithms */; };
+		19B7E61928AF6D45002E8213 /* Session+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61828AF6D45002E8213 /* Session+Authentication.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -124,7 +124,6 @@
 		1967465A28AE9BD600863E43 /* ManagedAccount+Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+Preferences.swift"; sourceTree = "<group>"; };
 		1967465B28AE9BD600863E43 /* ManagedAccount+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		1967465C28AE9BD600863E43 /* ManagedObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ManagedObject.swift; sourceTree = "<group>"; };
-		1967467428AE9BDE00863E43 /* Session+NewAccount.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		1967467528AE9BDE00863E43 /* Session+TwitterAPIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TwitterAPIConfiguration.swift"; sourceTree = "<group>"; };
 		1967467628AE9BDE00863E43 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
 		1967467728AE9BDE00863E43 /* Session+Credential.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
@@ -153,6 +152,7 @@
 		196746B028AE9C1000863E43 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		196746B128AE9C4000863E43 /* DateFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatterTests.swift; sourceTree = "<group>"; };
 		196746B228AE9C4000863E43 /* UserDetailTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailTests.swift; sourceTree = "<group>"; };
+		19B7E61828AF6D45002E8213 /* Session+Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Authentication.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -271,8 +271,8 @@
 			isa = PBXGroup;
 			children = (
 				1967467628AE9BDE00863E43 /* Session.swift */,
+				19B7E61828AF6D45002E8213 /* Session+Authentication.swift */,
 				1967467728AE9BDE00863E43 /* Session+Credential.swift */,
-				1967467428AE9BDE00863E43 /* Session+NewAccount.swift */,
 				1967467D28AE9BDE00863E43 /* Session+CleansingData.swift */,
 				1967467828AE9BDE00863E43 /* Session+PersistentHistoryTransactions.swift */,
 				1967467A28AE9BDE00863E43 /* Session+PersistentStoreRemoteChanges.swift */,
@@ -469,7 +469,6 @@
 				1967468828AE9BDE00863E43 /* SessionError.swift in Sources */,
 				1967463728AE9BB300863E43 /* SecureUnarchiveFromDataTransformer.swift in Sources */,
 				1967466628AE9BD600863E43 /* ManagedAccount.swift in Sources */,
-				1967468028AE9BDE00863E43 /* Session+NewAccount.swift in Sources */,
 				196746A228AE9BE700863E43 /* NSNumber+TwetNestKit.swift in Sources */,
 				1967463D28AE9BB300863E43 /* TweetNestKitUserDefaults.swift in Sources */,
 				1967466C28AE9BD600863E43 /* ManagedUserDetail+CoreDataProperties.swift in Sources */,
@@ -483,6 +482,7 @@
 				1967463C28AE9BB300863E43 /* UserNotificationManager.swift in Sources */,
 				1967466528AE9BD600863E43 /* ManagedPreferences+CoreDataProperties.swift in Sources */,
 				1967468328AE9BDE00863E43 /* Session+Credential.swift in Sources */,
+				19B7E61928AF6D45002E8213 /* Session+Authentication.swift in Sources */,
 				1967466928AE9BD600863E43 /* ManagedUser.swift in Sources */,
 				1967469C28AE9BE700863E43 /* Bundle+TweetNestKit.swift in Sources */,
 				1967468628AE9BDE00863E43 /* Session+PersistentStoreRemoteChanges.swift in Sources */,

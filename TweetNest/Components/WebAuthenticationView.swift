@@ -12,17 +12,25 @@ struct WebAuthenticationView {
     let webAuthenticationSession: ASWebAuthenticationSession
 }
 
+#if os(macOS) || os(iOS)
+private protocol WebAuthenticationSessionView {
+    var webAuthenticationSession: ASWebAuthenticationSession { get }
+
+    var window: ASPresentationAnchor? { get }
+}
+#endif
+
 #if os(macOS)
 extension WebAuthenticationView: NSViewRepresentable {
-    class View: NSView {
-        private let authenticationSession: ASWebAuthenticationSession
+    class View: NSView, WebAuthenticationSessionView {
+        let webAuthenticationSession: ASWebAuthenticationSession
 
-        init(authenticationSession: ASWebAuthenticationSession) {
-            self.authenticationSession = authenticationSession
+        init(webAuthenticationSession: ASWebAuthenticationSession) {
+            self.webAuthenticationSession = webAuthenticationSession
 
             super.init(frame: .zero)
 
-            self.authenticationSession.presentationContextProvider = self
+            self.webAuthenticationSession.presentationContextProvider = self
         }
 
         required init?(coder: NSCoder) {
@@ -33,23 +41,10 @@ extension WebAuthenticationView: NSViewRepresentable {
             NSColor.clear.setFill()
             dirtyRect.fill()
         }
-
-        func start() {
-            guard window != nil else {
-                DispatchQueue.main.async { self.start() }
-                return
-            }
-
-            authenticationSession.start()
-        }
-
-        func cancel() {
-            authenticationSession.cancel()
-        }
     }
 
     func makeNSView(context: Context) -> View {
-        let view = View(authenticationSession: webAuthenticationSession)
+        let view = View(webAuthenticationSession: webAuthenticationSession)
 
         return view
     }
@@ -64,38 +59,25 @@ extension WebAuthenticationView: NSViewRepresentable {
 }
 #elseif os(iOS)
 extension WebAuthenticationView: UIViewRepresentable {
-    class View: UIView {
-        private let authenticationSession: ASWebAuthenticationSession
+    class View: UIView, WebAuthenticationSessionView {
+        let webAuthenticationSession: ASWebAuthenticationSession
 
-        init(authenticationSession: ASWebAuthenticationSession) {
-            self.authenticationSession = authenticationSession
+        init(webAuthenticationSession: ASWebAuthenticationSession) {
+            self.webAuthenticationSession = webAuthenticationSession
 
             super.init(frame: .zero)
 
             self.backgroundColor = .clear
-            self.authenticationSession.presentationContextProvider = self
+            self.webAuthenticationSession.presentationContextProvider = self
         }
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) has not been implemented")
         }
-
-        func start() {
-            guard window != nil else {
-                DispatchQueue.main.async { self.start() }
-                return
-            }
-
-            authenticationSession.start()
-        }
-
-        func cancel() {
-            authenticationSession.cancel()
-        }
     }
 
     func makeUIView(context: Context) -> View {
-        let view = View(authenticationSession: webAuthenticationSession)
+        let view = View(webAuthenticationSession: webAuthenticationSession)
 
         return view
     }
@@ -125,6 +107,21 @@ extension WebAuthenticationView: View {
 extension WebAuthenticationView.View: ASWebAuthenticationPresentationContextProviding {
     func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
         return window!
+    }
+}
+
+extension WebAuthenticationSessionView {
+    func start() {
+        guard window != nil else {
+            DispatchQueue.main.async { self.start() }
+            return
+        }
+
+        webAuthenticationSession.start()
+    }
+
+    func cancel() {
+        webAuthenticationSession.cancel()
     }
 }
 #endif

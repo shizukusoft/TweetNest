@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import AuthenticationServices
 import TweetNestKit
 import BackgroundTask
 import UnifiedLogging
@@ -28,9 +27,6 @@ struct AppSidebarNavigation: View {
 
     @State private var navigationItemSelection: AppSidebarNavigationItem?
 
-    @State private var webAuthenticationSession: ASWebAuthenticationSession?
-    @State private var isAddingAccount: Bool = false
-
     @State private var isRefreshing: Bool = false
 
     @State private var showErrorAlert: Bool = false
@@ -49,10 +45,10 @@ struct AppSidebarNavigation: View {
 
     @ViewBuilder
     var addAccountButton: some View {
-        Button(action: addAccount) {
+        TwitterAuthenticationButton {
             Label("Add Account", systemImage: "plus")
         }
-        .disabled(isPersistentContainerLoaded == false || isAddingAccount)
+        .disabled(isPersistentContainerLoaded == false)
     }
 
     #if os(macOS) || os(watchOS)
@@ -102,11 +98,6 @@ struct AppSidebarNavigation: View {
                 #if os(macOS)
                 .frame(minWidth: 182)
                 #endif
-
-                if let webAuthenticationSession = webAuthenticationSession {
-                    WebAuthenticationView(webAuthenticationSession: webAuthenticationSession)
-                        .zIndex(-1)
-                }
             }
             #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
@@ -158,37 +149,6 @@ struct AppSidebarNavigation: View {
                 }
             }
             #endif
-        }
-    }
-
-    private func addAccount() {
-        withAnimation {
-            isAddingAccount = true
-        }
-
-        Task {
-            defer {
-                withAnimation {
-                    webAuthenticationSession = nil
-                    isAddingAccount = false
-                }
-            }
-
-            do {
-                try await TweetNestApp.session.authorizeNewAccount { webAuthenticationSession in
-                    webAuthenticationSession.prefersEphemeralWebBrowserSession = true
-
-                    self.webAuthenticationSession = webAuthenticationSession
-                }
-            } catch ASWebAuthenticationSessionError.canceledLogin {
-                Logger().error("Error occurred: \(String(reflecting: ASWebAuthenticationSessionError.canceledLogin), privacy: .public)")
-            } catch {
-                withAnimation {
-                    Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
-                    self.error = TweetNestError(error)
-                    showErrorAlert = true
-                }
-            }
         }
     }
 
