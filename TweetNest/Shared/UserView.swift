@@ -14,10 +14,10 @@ import UnifiedLogging
 struct UserView: View {
     let userID: String
 
-    @Environment(\.account) var account: Account?
+    @Environment(\.account) var account: ManagedAccount?
 
-    @StateObject private var usersFetchedResultsController: FetchedResultsController<User>
-    @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<UserDetail>
+    @StateObject private var usersFetchedResultsController: FetchedResultsController<ManagedUser>
+    @StateObject private var userDetailsFetchedResultsController: FetchedResultsController<ManagedUserDetail>
 
     @State var isRefreshing: Bool = false
 
@@ -28,78 +28,20 @@ struct UserView: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     #endif
 
-    var shouldCompactToolbar: Bool {
-        #if os(iOS)
-        return horizontalSizeClass == .compact
-        #else
-        return false
-        #endif
-    }
-
     #if os(iOS)
     @State var safariSheetURL: URL?
     @State var shareSheetURL: URL?
     #endif
-
-    var userProfileURL: URL {
-        URL(string: "https://twitter.com/intent/user?user_id=\(userID)")!
-    }
 
     @State var showBulkDeleteRecentTweets: Bool = false
     #if os(iOS) || os(macOS)
     @State var showBulkDeleteAllTweets: Bool = false
     #endif
 
-    @ViewBuilder
-    var deleteMenu: some View {
-        #if os(iOS) || os(macOS)
-        Menu {
-            Button(role: .destructive) {
-                showBulkDeleteRecentTweets = true
-            } label: {
-                Text("Delete Recent Tweets")
-            }
-            .accessibilityIdentifier("Delete Recent Tweets")
-
-            Button(role: .destructive) {
-                showBulkDeleteAllTweets = true
-            } label: {
-                Text("Delete All Tweets")
-            }
-            .accessibilityIdentifier("Delete All Tweets")
-        } label: {
-            Label {
-                Text("Delete")
-            } icon: {
-                Image(systemName: "trash")
-            }
-        }
-        .accessibilityIdentifier("Delete")
-        #else
-        Button(role: .destructive) {
-            showBulkDeleteRecentTweets = true
-        } label: {
-            Text("Delete Recent Tweets")
-        }
-        .accessibilityIdentifier("Delete Recent Tweets")
-        #endif
-    }
-
-    @ViewBuilder private var refreshButton: some View {
-        Button {
-            Task {
-                refresh
-            }
-        } label: {
-            Label("Refresh", systemImage: "arrow.clockwise")
-        }
-        .disabled(isRefreshing)
-    }
-
     var body: some View {
         let user = usersFetchedResultsController.fetchedObjects.first
-        let userDetails = userDetailsFetchedResultsController.fetchedObjects.lazy.filter { $0.user?.objectID == user?.objectID }
-        let latestUserDetail: UserDetail? = userDetails.first
+        let userDetails = userDetailsFetchedResultsController.fetchedObjects
+        let latestUserDetail: ManagedUserDetail? = userDetails.first
 
         Group {
             #if os(macOS)
@@ -271,11 +213,10 @@ struct UserView: View {
         self._usersFetchedResultsController = StateObject(
             wrappedValue: FetchedResultsController(
                 fetchRequest: {
-                    let fetchRequest = User.fetchRequest()
+                    let fetchRequest = ManagedUser.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "id == %@", userID)
                     fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-                        NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: false),
                     ]
                     fetchRequest.fetchLimit = 1
                     fetchRequest.propertiesToFetch = ["id", "lastUpdateStartDate", "lastUpdateEndDate"]
@@ -291,10 +232,10 @@ struct UserView: View {
         self._userDetailsFetchedResultsController = StateObject(
             wrappedValue: FetchedResultsController(
                 fetchRequest: {
-                    let fetchRequest = UserDetail.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "user.id == %@", userID)
+                    let fetchRequest = ManagedUserDetail.fetchRequest()
+                    fetchRequest.predicate = NSPredicate(format: "userID == %@", userID)
                     fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: false),
                     ]
                     fetchRequest.returnsObjectsAsFaults = false
 
@@ -304,6 +245,68 @@ struct UserView: View {
                 managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
             )
         )
+    }
+}
+
+extension UserView {
+    var shouldCompactToolbar: Bool {
+        #if os(iOS)
+        return horizontalSizeClass == .compact
+        #else
+        return false
+        #endif
+    }
+
+    var userProfileURL: URL {
+        URL(string: "https://twitter.com/intent/user?user_id=\(userID)")!
+    }
+}
+
+extension UserView {
+    @ViewBuilder
+    var deleteMenu: some View {
+        #if os(iOS) || os(macOS)
+        Menu {
+            Button(role: .destructive) {
+                showBulkDeleteRecentTweets = true
+            } label: {
+                Text("Delete Recent Tweets")
+            }
+            .accessibilityIdentifier("Delete Recent Tweets")
+
+            Button(role: .destructive) {
+                showBulkDeleteAllTweets = true
+            } label: {
+                Text("Delete All Tweets")
+            }
+            .accessibilityIdentifier("Delete All Tweets")
+        } label: {
+            Label {
+                Text("Delete")
+            } icon: {
+                Image(systemName: "trash")
+            }
+        }
+        .accessibilityIdentifier("Delete")
+        #else
+        Button(role: .destructive) {
+            showBulkDeleteRecentTweets = true
+        } label: {
+            Text("Delete Recent Tweets")
+        }
+        .accessibilityIdentifier("Delete Recent Tweets")
+        #endif
+    }
+
+    @ViewBuilder private var refreshButton: some View {
+        Button {
+            Task {
+                refresh
+            }
+        } label: {
+            Label("Refresh", systemImage: "arrow.clockwise")
+        }
+        .disabled(isRefreshing)
     }
 }
 
@@ -365,6 +368,6 @@ extension UserView {
 
 struct UserView_Previews: PreviewProvider {
     static var previews: some View {
-        UserView(userID: Account.preview.users!.last!.id!)
+        UserView(userID: ManagedAccount.preview.users!.last!.id!)
     }
 }

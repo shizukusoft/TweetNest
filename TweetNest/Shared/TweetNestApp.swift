@@ -61,27 +61,28 @@ struct TweetNestApp: App {
                 SettingsMainView()
                     .environment(\.managedObjectContext, Self.session.persistentContainer.viewContext)
             }
-            #elseif os(watchOS)
-            WKNotificationScene(controller: NotificationController.self, category: "NewAccountData")
             #endif
         }
         .onChange(of: scenePhase) { phase in
             switch phase {
             case .active, .inactive:
                 Self.session.resumeBackgroundTaskTimers()
-                #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
-                BackgroundTaskScheduler.shared.cancelBackgroundTasks()
-                #endif
                 #if canImport(CoreSpotlight)
-                Self.session.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                Self.session.persistentContainer.persistentStoreCoordinator.perform {
+                    Self.session.persistentContainer.usersSpotlightDelegate?.startSpotlightIndexing()
+                }
                 #endif
             case .background:
                 Self.session.pauseBackgroundTaskTimers()
                 #if (canImport(BackgroundTasks) && !os(macOS)) || canImport(WatchKit)
-                BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
+                Task {
+                    await BackgroundTaskScheduler.shared.scheduleBackgroundTasks()
+                }
                 #endif
                 #if canImport(CoreSpotlight)
-                Self.session.persistentContainer.usersSpotlightDelegate?.stopSpotlightIndexing()
+                Self.session.persistentContainer.persistentStoreCoordinator.performAndWait {
+                    Self.session.persistentContainer.usersSpotlightDelegate?.stopSpotlightIndexing()
+                }
                 #endif
             @unknown default:
                 break

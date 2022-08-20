@@ -21,21 +21,26 @@ extension Session {
 }
 
 extension Session.TwitterAPIConfiguration {
-    static var iCloud: Self {
+    static var cloudKit: Self {
         get async throws {
-            let container = CKContainer(identifier: Session.cloudKitIdentifier)
+            let container = CKContainer(identifier: PersistentContainer.V3.defaultCloudKitIdentifier)
             let database = container.publicCloudDatabase
 
             let query = CKQuery(recordType: "TwitterAPIConfiguration", predicate: NSPredicate(value: true))
-            query.sortDescriptors = [NSSortDescriptor(key: "modificationDate", ascending: false)]
+            query.sortDescriptors = [
+                NSSortDescriptor(key: "modificationDate", ascending: false),
+                NSSortDescriptor(key: "creationDate", ascending: false)
+            ]
 
-            let record = try await database.records(matching: query, resultsLimit: 1).matchResults.first?.1.get()
+            guard let record = try await database.records(matching: query, resultsLimit: 1).matchResults.first?.1.get() else {
+                throw SessionError.noCloudKitRecord
+            }
 
-            guard let apiKey: String = record?["apiKey"] else {
+            guard let apiKey: String = record["apiKey"] else {
                 throw SessionError.noAPIKey
             }
 
-            guard let apiKeySecret: String = record?["apiKeySecret"] else {
+            guard let apiKeySecret: String = record["apiKeySecret"] else {
                 throw SessionError.noAPIKeySecret
             }
 

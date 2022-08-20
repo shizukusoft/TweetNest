@@ -13,7 +13,7 @@ import Twitter
 struct BatchDeleteTweetsView: View {
     @Binding var isPresented: Bool
 
-    let account: TweetNestKit.Account?
+    let account: ManagedAccount?
 
     enum Source {
         case recentTweets

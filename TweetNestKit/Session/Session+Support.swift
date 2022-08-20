@@ -10,13 +10,15 @@ import CloudKit
 import UnifiedLogging
 
 extension Session {
-    static let cloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!)"
-    static let accountsCloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!).accounts"
-    static let dataAssetsCloudKitIdentifier = "iCloud.\(Bundle.tweetNestKit.bundleIdentifier!).dataAssets"
     static let applicationGroupIdentifier = "group.\(Bundle.tweetNestKit.bundleIdentifier!)"
 
     static let isSandbox: Bool = {
-        CKContainer.default().value(forKeyPath: "containerID.environment") as? CLongLong == 2
+        switch Bundle.main.infoDictionary?["CFBundlePackageType"] as? String {
+        case "FMWK", "BNDL", nil:
+            return true
+        default:
+            return CKContainer.default().value(forKeyPath: "containerID.environment") as? CLongLong == 2
+        }
     }()
 
     static var containerURL: URL {

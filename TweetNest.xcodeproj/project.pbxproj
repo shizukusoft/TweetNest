@@ -31,7 +31,6 @@
 		1908FC0F26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1908FC0C26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift */; };
 		190D12F226B682C20090E474 /* UsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12F126B682C20090E474 /* UsersList.swift */; };
 		190D12F326B682C20090E474 /* UsersList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190D12F126B682C20090E474 /* UsersList.swift */; };
-		190DF4C126BCF1B700E1F062 /* Session+UpdateUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 190DF4C026BCF1B700E1F062 /* Session+UpdateUser.swift */; };
 		1912A73526B7DC6900A191E4 /* _locales in Resources */ = {isa = PBXBuildFile; fileRef = 1912A73426B7DC6900A191E4 /* _locales */; };
 		1912A73726B7DC6900A191E4 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 1912A73626B7DC6900A191E4 /* icons */; };
 		1912A73926B7DC6900A191E4 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 1912A73826B7DC6900A191E4 /* manifest.json */; };
@@ -55,7 +54,7 @@
 		1920D59727F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
 		1920D59827F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
 		1920D59927F82CAE0083C23A /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1920D59627F82CAE0083C23A /* AppStatusView.swift */; };
-		1923216B26DF998A00E140C5 /* Session+RemoteChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */; };
+		1923216B26DF998A00E140C5 /* Session+PersistentStoreRemoteChanges.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1923216A26DF998A00E140C5 /* Session+PersistentStoreRemoteChanges.swift */; };
 		1924170826F2F25200DFEF34 /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */; };
 		1924170926F2F25200DFEF34 /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */; };
 		1924170A26F2F25200DFEF34 /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */; };
@@ -82,26 +81,26 @@
 		19365A6F26097B4A00865D40 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
 		19365AC926097C1A00865D40 /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
 		193AB25D26B6FD1200B18D45 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
-		193AFB5C26CA043A008BFF67 /* Account+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB5B26CA043A008BFF67 /* Account+Preferences.swift */; };
-		193AFB6626CA310E008BFF67 /* Session+UpdateAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */; };
+		193AFB5C26CA043A008BFF67 /* ManagedAccount+Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB5B26CA043A008BFF67 /* ManagedAccount+Preferences.swift */; };
 		193AFB6926CA3411008BFF67 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
 		193AFB6A26CA3411008BFF67 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
 		193AFB6F26CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
-		193B995C280E585E00A59984 /* DataAssetsURLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */; };
+		193B995C280E585E00A59984 /* UserDataAssetsURLSessionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995B280E585E00A59984 /* UserDataAssetsURLSessionManager.swift */; };
 		193B995E280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */; };
 		193B995F280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */; };
 		193B9960280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */; };
 		194360FF280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436100280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
 		19436101280BFB83008C2764 /* UserView+FootnotesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */; };
-		1944554128116D4600128A22 /* PersistentContainer+Supports.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554028116D4600128A22 /* PersistentContainer+Supports.swift */; };
 		1944554428116F0900128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
 		1944554528116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
 		1944554628116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */; };
 		1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */; };
 		1945F84226F0D3D900CE4EFB /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1945F84126F0D3D900CE4EFB /* CloudKit.framework */; };
 		1946203D26D68F0E003DB010 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1946203C26D68F0E003DB010 /* CloudKit.framework */; };
+		19469AC3282FC3700011A951 /* PersistentContainer+V3_Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19469AC2282FC3700011A951 /* PersistentContainer+V3_Migration.swift */; };
+		194C0E9A284357F3008B7831 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
 		194EF57E26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		194EF57F26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		1951EBEB270850FC00311B3C /* DetailImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1951EBEA270850FC00311B3C /* DetailImageView.swift */; };
@@ -112,14 +111,24 @@
 		195392C327E636130042B1CA /* UserRows.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195392C027E636130042B1CA /* UserRows.swift */; };
 		195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */; };
 		195DD4B026BEE7EC008F0309 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 195DD4B226BEE7EC008F0309 /* Localizable.strings */; };
-		195DD4BA26BEF09D008F0309 /* DataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4B826BEF09D008F0309 /* DataAsset.swift */; };
-		195DD4BB26BEF09D008F0309 /* DataAsset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4B926BEF09D008F0309 /* DataAsset+CoreDataProperties.swift */; };
-		195DD4BF26BEF6B2008F0309 /* DataAssetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */; };
-		195DD4C026BEF6B3008F0309 /* DataAssetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */; };
+		195DD4BF26BEF6B2008F0309 /* UserDataAssetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* UserDataAssetImage.swift */; };
+		195DD4C026BEF6B3008F0309 /* UserDataAssetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* UserDataAssetImage.swift */; };
 		195DD4C226BEF91C008F0309 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C126BEF91C008F0309 /* ProfileImage.swift */; };
 		195DD4C326BEF91C008F0309 /* ProfileImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C126BEF91C008F0309 /* ProfileImage.swift */; };
 		195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */; };
 		195E783E26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */; };
+		196BF0352820D1BD0030B757 /* ManagedUserDataAsset.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF02D2820D1BD0030B757 /* ManagedUserDataAsset.swift */; };
+		196BF0362820D1BD0030B757 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF02E2820D1BD0030B757 /* ManagedUserDataAsset+CoreDataProperties.swift */; };
+		196BF0372820D1BD0030B757 /* ManagedUserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF02F2820D1BD0030B757 /* ManagedUserDetail.swift */; };
+		196BF0382820D1BD0030B757 /* ManagedUserDetail+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF0302820D1BD0030B757 /* ManagedUserDetail+CoreDataProperties.swift */; };
+		196BF0392820D1BD0030B757 /* ManagedAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF0312820D1BD0030B757 /* ManagedAccount.swift */; };
+		196BF03A2820D1BD0030B757 /* ManagedAccount+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF0322820D1BD0030B757 /* ManagedAccount+CoreDataProperties.swift */; };
+		196BF03B2820D1BD0030B757 /* ManagedUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF0332820D1BD0030B757 /* ManagedUser.swift */; };
+		196BF03C2820D1BD0030B757 /* ManagedUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF0342820D1BD0030B757 /* ManagedUser+CoreDataProperties.swift */; };
+		196BF0402820EFF50030B757 /* PersistentContainer+V1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF03F2820EFF50030B757 /* PersistentContainer+V1.swift */; };
+		196BF0422820F0F80030B757 /* PersistentContainer+V3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF0412820F0F80030B757 /* PersistentContainer+V3.swift */; };
+		196BF0442820FA510030B757 /* PersistentContainer+Migration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196BF0432820FA510030B757 /* PersistentContainer+Migration.swift */; };
+		196BF0462820FFEE0030B757 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 196BF0452820FFEE0030B757 /* CloudKit.framework */; };
 		1970663B26E7043500D7F21D /* SettingsGeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663A26E7043500D7F21D /* SettingsGeneralView.swift */; };
 		1970663C26E7043500D7F21D /* SettingsGeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663A26E7043500D7F21D /* SettingsGeneralView.swift */; };
 		1970663D26E7043500D7F21D /* SettingsGeneralView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970663A26E7043500D7F21D /* SettingsGeneralView.swift */; };
@@ -140,6 +149,7 @@
 		19861E3E26C8FDB200073431 /* AccountEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */; };
 		1989B75626BA537900755B1E /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
 		1989B75726BA537900755B1E /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
+		198CC4B82820244600D3C7EA /* TweetNestKitV3.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 198CC4B62820244600D3C7EA /* TweetNestKitV3.xcdatamodeld */; };
 		198E9D16280BF9210064CBD8 /* UserID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 198E9D15280BF9210064CBD8 /* UserID.swift */; };
 		1995B92C26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
 		1995B92D26B6F1ED00AFCC9E /* UserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1995B92B26B6F1ED00AFCC9E /* UserView.swift */; };
@@ -150,19 +160,17 @@
 		1997BF69280B501A009ABA72 /* UserDetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1997BF68280B501A009ABA72 /* UserDetailLabel.swift */; };
 		1997BF6A280B501A009ABA72 /* UserDetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1997BF68280B501A009ABA72 /* UserDetailLabel.swift */; };
 		1997BF6B280B501A009ABA72 /* UserDetailLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1997BF68280B501A009ABA72 /* UserDetailLabel.swift */; };
+		199C7E7428364253001D8F85 /* String+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199C7E7328364253001D8F85 /* String+TweetNestKit.swift */; };
 		199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		199CAA5C26CA6C6F000CA732 /* TweetNestError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */; };
 		19A1F1B926F38D4300A28A49 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19365983260978EB00865D40 /* Preview Assets.xcassets */; };
 		19A6FF1E26D6836000AB7B7E /* TweetNest WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		19A6FF2726D6836000AB7B7E /* NotificationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2626D6836000AB7B7E /* NotificationController.swift */; };
-		19A6FF2926D6836000AB7B7E /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2826D6836000AB7B7E /* NotificationView.swift */; };
 		19A6FF2B26D6836000AB7B7E /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */; };
 		19A6FF4826D6836100AB7B7E /* TweetNestTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19A6FF4726D6836100AB7B7E /* TweetNestTests.swift */; };
 		19A6FF4B26D6836100AB7B7E /* TweetNest.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 19A6FF1526D6835F00AB7B7E /* TweetNest.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		19A6FF5B26D6844E00AB7B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		19A6FF5C26D6844F00AB7B7E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19933D2E25E901F4006AB4C0 /* Assets.xcassets */; };
 		19ABAD8326DC8D6000103F01 /* UserDetailTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19ABAD8226DC8D6000103F01 /* UserDetailTests.swift */; };
-		19ABAD8526DC8D7200103F01 /* SessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19ABAD8426DC8D7200103F01 /* SessionTests.swift */; };
 		19AFA14126E837B800764D79 /* BackgroundTaskScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */; };
 		19B3130426E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */; };
 		19B3130526E6E81E0051EEC5 /* SettingsAccountsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */; };
@@ -171,6 +179,8 @@
 		19BE3E94270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
 		19BE3E95270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
 		19BE3E96270ACEF000162DCC /* SettingsNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */; };
+		19BE6B082837B08A000EACF4 /* Session+UpdatesAll.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE6B072837B08A000EACF4 /* Session+UpdatesAll.swift */; };
+		19BE6B0A2837B2EA000EACF4 /* Session+PersistentHistoryTransactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19BE6B092837B2EA000EACF4 /* Session+PersistentHistoryTransactions.swift */; };
 		19C12F8826D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
 		19C12F8926D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
 		19C12F8A26D93F9E0022793C /* TweetNestStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C12F8726D93F9E0022793C /* TweetNestStack.swift */; };
@@ -180,17 +190,11 @@
 		19C5A29026BC1F3500AB1122 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; };
 		19C5A29B26BC1F3500AB1122 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; };
 		19C5A29C26BC1F3500AB1122 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		19C5A2B126BC1F8A00AB1122 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A326BC1F8800AB1122 /* Account.swift */; };
-		19C5A2B226BC1F8A00AB1122 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A426BC1F8900AB1122 /* User.swift */; };
 		19C5A2B326BC1F8A00AB1122 /* SecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */; };
-		19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A626BC1F8900AB1122 /* UserDetail+CoreDataProperties.swift */; };
 		19C5A2B526BC1F8A00AB1122 /* PersistentContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */; };
-		19C5A2B626BC1F8A00AB1122 /* User+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */; };
 		19C5A2B726BC1F8A00AB1122 /* SessionError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2A926BC1F8900AB1122 /* SessionError.swift */; };
-		19C5A2BA26BC1F8A00AB1122 /* Account+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */; };
 		19C5A2BB26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */; };
 		19C5A2BD26BC1F8A00AB1122 /* Session.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2AF26BC1F8A00AB1122 /* Session.swift */; };
-		19C5A2BE26BC1F8A00AB1122 /* UserDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2B026BC1F8A00AB1122 /* UserDetail.swift */; };
 		19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */; };
 		19C5A2C426BC1FD600AB1122 /* Twitter in Frameworks */ = {isa = PBXBuildFile; productRef = 19C5A2C326BC1FD600AB1122 /* Twitter */; };
 		19C5A2C526BC1FFA00AB1122 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */; };
@@ -223,7 +227,7 @@
 		19EABBD126D6877600D3B003 /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */; };
 		19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1989B75526BA537900755B1E /* UserDetailView.swift */; };
 		19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19861E3C26C8FDB200073431 /* AccountEnvironmentKey.swift */; };
-		19EABBD626D6877600D3B003 /* DataAssetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */; };
+		19EABBD626D6877600D3B003 /* UserDataAssetImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 195DD4BE26BEF6B2008F0309 /* UserDataAssetImage.swift */; };
 		19EABBD826D6877A00D3B003 /* SettingsMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6826CA3411008BFF67 /* SettingsMainView.swift */; };
 		19EABBDA26D6877A00D3B003 /* SettingsAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */; };
 		19EABBDF26D6878400D3B003 /* URL.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193AB25C26B6FD1200B18D45 /* URL.swift */; };
@@ -235,6 +239,7 @@
 		19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
 		19EE473326C144A2007D2814 /* UsersDiffList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE473126C144A2007D2814 /* UsersDiffList.swift */; };
 		19EE519E280D110B0068CBCB /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EE519D280D110B0068CBCB /* Lazy.swift */; };
+		19F0491C28351D750030947D /* Session+Updates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F0491B28351D750030947D /* Session+Updates.swift */; };
 		19F1117726DD2845004D6DE3 /* Session+NewAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */; };
 		19F1117926DD28A1004D6DE3 /* Session+Credential.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19F1117826DD28A1004D6DE3 /* Session+Credential.swift */; };
 		19F7914627F8A472008F9FC0 /* BackgroundTask in Frameworks */ = {isa = PBXBuildFile; productRef = 19F7914527F8A472008F9FC0 /* BackgroundTask */; };
@@ -250,6 +255,9 @@
 		66002D7726BF897000B52E30 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 66002D7526BF897000B52E30 /* Localizable.strings */; };
 		6601075826BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075626BEC58A0088E240 /* InfoPlist.strings */; };
 		6601075B26BEC58A0088E240 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6601075926BEC58A0088E240 /* InfoPlist.strings */; };
+		663E96C12838F5D60037413E /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663E96C02838F5D60037413E /* Pasteboard.swift */; };
+		663E96C22838F5D60037413E /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663E96C02838F5D60037413E /* Pasteboard.swift */; };
+		663E96C32838F5D60037413E /* Pasteboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663E96C02838F5D60037413E /* Pasteboard.swift */; };
 		66EE523826BF560200B721AC /* ShareView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523726BF560200B721AC /* ShareView.swift */; };
 		66EE523B26BF5C0E00B721AC /* ShareButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EE523A26BF5C0E00B721AC /* ShareButton.swift */; };
 /* End PBXBuildFile section */
@@ -387,7 +395,6 @@
 		1908FC0826F6F1D90095AF77 /* BatchDeleteTweetsFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDeleteTweetsFormView.swift; sourceTree = "<group>"; };
 		1908FC0C26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BatchDeleteTweetsProgressView.swift; sourceTree = "<group>"; };
 		190D12F126B682C20090E474 /* UsersList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersList.swift; sourceTree = "<group>"; };
-		190DF4C026BCF1B700E1F062 /* Session+UpdateUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+UpdateUser.swift"; sourceTree = "<group>"; };
 		1912A72F26B7DC6900A191E4 /* TweetNest MirrorBlock Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest MirrorBlock Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1912A73426B7DC6900A191E4 /* _locales */ = {isa = PBXFileReference; lastKnownFileType = folder; path = _locales; sourceTree = "<group>"; };
 		1912A73626B7DC6900A191E4 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = icons; sourceTree = "<group>"; };
@@ -409,7 +416,7 @@
 		1918DE6A2608032D009FD0D8 /* TweetNestAppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
 		1920D59627F82CAE0083C23A /* AppStatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStatusView.swift; sourceTree = "<group>"; };
 		1920F6A328111392001D9528 /* TweetNestKit 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 4.xcdatamodel"; sourceTree = "<group>"; };
-		1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+RemoteChanges.swift"; sourceTree = "<group>"; };
+		1923216A26DF998A00E140C5 /* Session+PersistentStoreRemoteChanges.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+PersistentStoreRemoteChanges.swift"; sourceTree = "<group>"; };
 		1924170726F2F25200DFEF34 /* TweetNestScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestScreenTests.swift; sourceTree = "<group>"; };
 		1924170F26F2F2C400DFEF34 /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
 		1924171126F2F2D300DFEF34 /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
@@ -422,29 +429,39 @@
 		19365A1426097A9500865D40 /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		19365A3526097A9700865D40 /* TweetNestUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		193AB25C26B6FD1200B18D45 /* URL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URL.swift; sourceTree = "<group>"; };
-		193AFB5B26CA043A008BFF67 /* Account+Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Account+Preferences.swift"; sourceTree = "<group>"; };
-		193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+UpdateAccount.swift"; sourceTree = "<group>"; };
+		193AFB5B26CA043A008BFF67 /* ManagedAccount+Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+Preferences.swift"; sourceTree = "<group>"; };
 		193AFB6826CA3411008BFF67 /* SettingsMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMainView.swift; sourceTree = "<group>"; };
 		193AFB6E26CA36F6008BFF67 /* SettingsAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountView.swift; sourceTree = "<group>"; };
-		193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
+		193B995B280E585E00A59984 /* UserDataAssetsURLSessionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataAssetsURLSessionManager.swift; sourceTree = "<group>"; };
 		193B995D280FADB200A59984 /* SettingsFetchNewDataView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsFetchNewDataView.swift; sourceTree = "<group>"; };
 		194360FE280BFB83008C2764 /* UserView+FootnotesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserView+FootnotesView.swift"; sourceTree = "<group>"; };
-		1944554028116D4600128A22 /* PersistentContainer+Supports.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+Supports.swift"; sourceTree = "<group>"; };
 		1944554228116F0300128A22 /* AppSidebarAccountsSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSections.swift; sourceTree = "<group>"; };
 		1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1945F84126F0D3D900CE4EFB /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		1946203C26D68F0E003DB010 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS8.0.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
+		19469AC2282FC3700011A951 /* PersistentContainer+V3_Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V3_Migration.swift"; sourceTree = "<group>"; };
 		194EF57D26BBFD190020939F /* AppSidebarAccountsSections+Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AppSidebarAccountsSections+Section.swift"; sourceTree = "<group>"; };
 		1951EBEA270850FC00311B3C /* DetailImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageView.swift; sourceTree = "<group>"; };
 		195392C027E636130042B1CA /* UserRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserRows.swift; sourceTree = "<group>"; };
 		195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestKitUserDefaults.swift; sourceTree = "<group>"; };
 		195DD4B326BEE7ED008F0309 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
-		195DD4B826BEF09D008F0309 /* DataAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAsset.swift; sourceTree = "<group>"; };
-		195DD4B926BEF09D008F0309 /* DataAsset+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DataAsset+CoreDataProperties.swift"; sourceTree = "<group>"; };
-		195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataAssetImage.swift; sourceTree = "<group>"; };
+		195DD4BE26BEF6B2008F0309 /* UserDataAssetImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDataAssetImage.swift; sourceTree = "<group>"; };
 		195DD4C126BEF91C008F0309 /* ProfileImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImage.swift; sourceTree = "<group>"; };
 		195DD4C926C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessionConfiguration+TweetNestKit.swift"; sourceTree = "<group>"; };
 		195E783D26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLCache+TweetNestKit.swift"; sourceTree = "<group>"; };
+		196BF02C2820D09B0030B757 /* TweetNestKit 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 5.xcdatamodel"; sourceTree = "<group>"; };
+		196BF02D2820D1BD0030B757 /* ManagedUserDataAsset.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedUserDataAsset.swift; sourceTree = "<group>"; };
+		196BF02E2820D1BD0030B757 /* ManagedUserDataAsset+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedUserDataAsset+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		196BF02F2820D1BD0030B757 /* ManagedUserDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedUserDetail.swift; sourceTree = "<group>"; };
+		196BF0302820D1BD0030B757 /* ManagedUserDetail+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedUserDetail+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		196BF0312820D1BD0030B757 /* ManagedAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedAccount.swift; sourceTree = "<group>"; };
+		196BF0322820D1BD0030B757 /* ManagedAccount+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedAccount+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		196BF0332820D1BD0030B757 /* ManagedUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManagedUser.swift; sourceTree = "<group>"; };
+		196BF0342820D1BD0030B757 /* ManagedUser+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		196BF03F2820EFF50030B757 /* PersistentContainer+V1.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V1.swift"; sourceTree = "<group>"; };
+		196BF0412820F0F80030B757 /* PersistentContainer+V3.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+V3.swift"; sourceTree = "<group>"; };
+		196BF0432820FA510030B757 /* PersistentContainer+Migration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+Migration.swift"; sourceTree = "<group>"; };
+		196BF0452820FFEE0030B757 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS15.4.sdk/System/Library/Frameworks/CloudKit.framework; sourceTree = DEVELOPER_DIR; };
 		1970663A26E7043500D7F21D /* SettingsGeneralView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsGeneralView.swift; sourceTree = "<group>"; };
 		1970663E26E709FE00D7F21D /* AccountLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountLabel.swift; sourceTree = "<group>"; };
 		1970CAD9281D6FA8006A6943 /* NSPersistentContainer+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentContainer+TweetNestKit.swift"; sourceTree = "<group>"; };
@@ -473,38 +490,33 @@
 		1995B93526B6F9E000AFCC9E /* SafariView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariView.swift; sourceTree = "<group>"; };
 		19960CD328294067002D4956 /* UserDetailLabelStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailLabelStyle.swift; sourceTree = "<group>"; };
 		1997BF68280B501A009ABA72 /* UserDetailLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailLabel.swift; sourceTree = "<group>"; };
+		199C7E7328364253001D8F85 /* String+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+TweetNestKit.swift"; sourceTree = "<group>"; };
 		199CAA5A26CA6C6F000CA732 /* TweetNestError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestError.swift; sourceTree = "<group>"; };
 		19A6FF1526D6835F00AB7B7E /* TweetNest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TweetNest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		19A6FF1D26D6836000AB7B7E /* TweetNest WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "TweetNest WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		19A6FF2626D6836000AB7B7E /* NotificationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationController.swift; sourceTree = "<group>"; };
-		19A6FF2826D6836000AB7B7E /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
 		19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationController.swift; sourceTree = "<group>"; };
 		19A6FF3126D6836100AB7B7E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		19A6FF3226D6836100AB7B7E /* PushNotificationPayload.apns */ = {isa = PBXFileReference; lastKnownFileType = text; path = PushNotificationPayload.apns; sourceTree = "<group>"; };
 		19A6FF4126D6836100AB7B7E /* TweetNest Tests (watchOS).xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Tests (watchOS).xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19A6FF4726D6836100AB7B7E /* TweetNestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestTests.swift; sourceTree = "<group>"; };
+		19A8EC7228228919007A0EA1 /* TweetNestKitV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKitV3.xcdatamodel; sourceTree = "<group>"; };
 		19ABAD8226DC8D6000103F01 /* UserDetailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetailTests.swift; sourceTree = "<group>"; };
-		19ABAD8426DC8D7200103F01 /* SessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionTests.swift; sourceTree = "<group>"; };
 		19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackgroundTaskScheduler.swift; sourceTree = "<group>"; };
 		19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "TweetNestKit 3.xcdatamodel"; sourceTree = "<group>"; };
 		19B3130326E6E81E0051EEC5 /* SettingsAccountsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountsView.swift; sourceTree = "<group>"; };
 		19BE3E93270ACEF000162DCC /* SettingsNotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsNotificationsView.swift; sourceTree = "<group>"; };
+		19BE6B072837B08A000EACF4 /* Session+UpdatesAll.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+UpdatesAll.swift"; sourceTree = "<group>"; };
+		19BE6B092837B2EA000EACF4 /* Session+PersistentHistoryTransactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+PersistentHistoryTransactions.swift"; sourceTree = "<group>"; };
 		19C12F8726D93F9E0022793C /* TweetNestStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetNestStack.swift; sourceTree = "<group>"; };
 		19C3AAE226B567750093D223 /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
 		19C5A28626BC1F3500AB1122 /* TweetNestKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TweetNestKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		19C5A28926BC1F3500AB1122 /* TweetNestKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = TweetNestKit.docc; sourceTree = "<group>"; };
 		19C5A28F26BC1F3500AB1122 /* TweetNestKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		19C5A2A326BC1F8800AB1122 /* Account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
-		19C5A2A426BC1F8900AB1122 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
-		19C5A2A626BC1F8900AB1122 /* UserDetail+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserDetail+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistentContainer.swift; sourceTree = "<group>"; };
-		19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "User+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19C5A2A926BC1F8900AB1122 /* SessionError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionError.swift; sourceTree = "<group>"; };
-		19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Account+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Session+TwitterAPIConfiguration.swift"; sourceTree = "<group>"; };
 		19C5A2AF26BC1F8A00AB1122 /* Session.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Session.swift; sourceTree = "<group>"; };
-		19C5A2B026BC1F8A00AB1122 /* UserDetail.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetail.swift; sourceTree = "<group>"; };
 		19C5A2C026BC1F9800AB1122 /* TweetNestKit.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = TweetNestKit.xcdatamodel; sourceTree = "<group>"; };
 		19C5A2D326BC219200AB1122 /* Bundle+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bundle+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+UsersSpotlightDelegate.swift"; sourceTree = "<group>"; };
@@ -522,6 +534,7 @@
 		19EE473B26C15439007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19EE473C26C1543E007D2814 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19EE519D280D110B0068CBCB /* Lazy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
+		19F0491B28351D750030947D /* Session+Updates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Updates.swift"; sourceTree = "<group>"; };
 		19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+NewAccount.swift"; sourceTree = "<group>"; };
 		19F1117826DD28A1004D6DE3 /* Session+Credential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Credential.swift"; sourceTree = "<group>"; };
 		19FB868127E5B1E500AAC5CB /* FetchedResultsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchedResultsController.swift; sourceTree = "<group>"; };
@@ -542,6 +555,7 @@
 		6625C8ED26F8C3E800B0AEA2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6625C8EE26F8C3E800B0AEA2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		6625C8EF26F8C43700B0AEA2 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		663E96C02838F5D60037413E /* Pasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pasteboard.swift; sourceTree = "<group>"; };
 		66EE523726BF560200B721AC /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		66EE523A26BF5C0E00B721AC /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -566,6 +580,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				19C5A2C526BC1FFA00AB1122 /* TweetNestKit.framework in Frameworks */,
+				196BF0462820FFEE0030B757 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -768,25 +783,6 @@
 			path = Settings;
 			sourceTree = "<group>";
 		};
-		1945CED226BE6CD700FBAE51 /* ManagedObjects */ = {
-			isa = PBXGroup;
-			children = (
-				19C5A2A326BC1F8800AB1122 /* Account.swift */,
-				19C5A2AC26BC1F8900AB1122 /* Account+CoreDataProperties.swift */,
-				193AFB5B26CA043A008BFF67 /* Account+Preferences.swift */,
-				195DD4B826BEF09D008F0309 /* DataAsset.swift */,
-				195DD4B926BEF09D008F0309 /* DataAsset+CoreDataProperties.swift */,
-				1985B42A26E49A01000C6126 /* ManagedPreferences.swift */,
-				1978AF1A280FEFEE0081D481 /* ManagedPreferences+Preferences.swift */,
-				1985B42B26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift */,
-				19C5A2A426BC1F8900AB1122 /* User.swift */,
-				19C5A2A826BC1F8900AB1122 /* User+CoreDataProperties.swift */,
-				19C5A2B026BC1F8A00AB1122 /* UserDetail.swift */,
-				19C5A2A626BC1F8900AB1122 /* UserDetail+CoreDataProperties.swift */,
-			);
-			path = ManagedObjects;
-			sourceTree = "<group>";
-		};
 		195D1EC726EB171F00999EB7 /* Session */ = {
 			isa = PBXGroup;
 			children = (
@@ -794,11 +790,12 @@
 				19F1117826DD28A1004D6DE3 /* Session+Credential.swift */,
 				197190B026DAE2A5001AC3E8 /* Session+CleansingData.swift */,
 				19F1117626DD2845004D6DE3 /* Session+NewAccount.swift */,
-				1923216A26DF998A00E140C5 /* Session+RemoteChanges.swift */,
+				1923216A26DF998A00E140C5 /* Session+PersistentStoreRemoteChanges.swift */,
+				19BE6B092837B2EA000EACF4 /* Session+PersistentHistoryTransactions.swift */,
 				1978AF0E280FC9C80081D481 /* Session+Support.swift */,
 				19C5A2AD26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift */,
-				190DF4C026BCF1B700E1F062 /* Session+UpdateUser.swift */,
-				193AFB6526CA310E008BFF67 /* Session+UpdateAccount.swift */,
+				19F0491B28351D750030947D /* Session+Updates.swift */,
+				19BE6B072837B08A000EACF4 /* Session+UpdatesAll.swift */,
 				19C5A2A926BC1F8900AB1122 /* SessionError.swift */,
 				1978AF12280FE1A90081D481 /* SessionActor.swift */,
 			);
@@ -810,8 +807,28 @@
 			children = (
 				197190AE26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift */,
 				19718875270022BB000840C7 /* Date+TweetNestKit.swift */,
+				199C7E7328364253001D8F85 /* String+TweetNestKit.swift */,
 			);
 			path = Swift;
+			sourceTree = "<group>";
+		};
+		196BF02B2820D0540030B757 /* ManagedObjects */ = {
+			isa = PBXGroup;
+			children = (
+				196BF0312820D1BD0030B757 /* ManagedAccount.swift */,
+				196BF0322820D1BD0030B757 /* ManagedAccount+CoreDataProperties.swift */,
+				193AFB5B26CA043A008BFF67 /* ManagedAccount+Preferences.swift */,
+				1985B42A26E49A01000C6126 /* ManagedPreferences.swift */,
+				1985B42B26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift */,
+				1978AF1A280FEFEE0081D481 /* ManagedPreferences+Preferences.swift */,
+				196BF0332820D1BD0030B757 /* ManagedUser.swift */,
+				196BF0342820D1BD0030B757 /* ManagedUser+CoreDataProperties.swift */,
+				196BF02D2820D1BD0030B757 /* ManagedUserDataAsset.swift */,
+				196BF02E2820D1BD0030B757 /* ManagedUserDataAsset+CoreDataProperties.swift */,
+				196BF02F2820D1BD0030B757 /* ManagedUserDetail.swift */,
+				196BF0302820D1BD0030B757 /* ManagedUserDetail+CoreDataProperties.swift */,
+			);
+			path = ManagedObjects;
 			sourceTree = "<group>";
 		};
 		1970CAD8281D6F8F006A6943 /* CoreData */ = {
@@ -875,6 +892,7 @@
 				1908FBFB26F6EE020095AF77 /* BatchDeleteTweets */,
 				193AFB6726CA33D3008BFF67 /* Settings */,
 				193AB25926B6FCFA00B18D45 /* Extensions */,
+				663E96C02838F5D60037413E /* Pasteboard.swift */,
 				19933D2E25E901F4006AB4C0 /* Assets.xcassets */,
 				19365982260978EB00865D40 /* Preview Content */,
 			);
@@ -929,6 +947,7 @@
 		19933E5B25E90E02006AB4C0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				196BF0452820FFEE0030B757 /* CloudKit.framework */,
 				1945F84126F0D3D900CE4EFB /* CloudKit.framework */,
 				1946203C26D68F0E003DB010 /* CloudKit.framework */,
 			);
@@ -939,8 +958,6 @@
 			isa = PBXGroup;
 			children = (
 				19EABBEC26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift */,
-				19A6FF2626D6836000AB7B7E /* NotificationController.swift */,
-				19A6FF2826D6836000AB7B7E /* NotificationView.swift */,
 				19A6FF2A26D6836000AB7B7E /* ComplicationController.swift */,
 				19A6FF3126D6836100AB7B7E /* Info.plist */,
 				19C6570626DAB53100D1A272 /* Localizable.strings */,
@@ -986,22 +1003,18 @@
 			children = (
 				1945CED026BE6B2B00FBAE51 /* AsyncLazy.swift */,
 				19AFA14026E837B800764D79 /* BackgroundTaskScheduler.swift */,
-				193B995B280E585E00A59984 /* DataAssetsURLSessionManager.swift */,
+				193B995B280E585E00A59984 /* UserDataAssetsURLSessionManager.swift */,
 				19EE519D280D110B0068CBCB /* Lazy.swift */,
-				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
-				1944554028116D4600128A22 /* PersistentContainer+Supports.swift */,
-				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
 				19C5A2A526BC1F8900AB1122 /* SecureUnarchiveFromDataTransformer.swift */,
 				19EBA45226CD53CC000AEFE3 /* TwitterArchive.swift */,
 				195D1EC526EB128700999EB7 /* TweetNestKitUserDefaults.swift */,
 				198E9D15280BF9210064CBD8 /* UserID.swift */,
+				19D192A228202669006ED961 /* CoreDataStack */,
 				19C5A2D126BC217900AB1122 /* Extensions */,
-				1945CED226BE6CD700FBAE51 /* ManagedObjects */,
 				195D1EC726EB171F00999EB7 /* Session */,
 				195DD4B226BEE7EC008F0309 /* Localizable.strings */,
 				19E0040E26DBF41600A55963 /* Localizable.stringsdict */,
 				19C5A28926BC1F3500AB1122 /* TweetNestKit.docc */,
-				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
 			);
 			path = TweetNestKit;
 			sourceTree = "<group>";
@@ -1009,7 +1022,6 @@
 		19C5A29526BC1F3500AB1122 /* TweetNestKitTests */ = {
 			isa = PBXGroup;
 			children = (
-				19ABAD8426DC8D7200103F01 /* SessionTests.swift */,
 				19ABAD8226DC8D6000103F01 /* UserDetailTests.swift */,
 			);
 			path = TweetNestKitTests;
@@ -1036,10 +1048,26 @@
 			path = Foundation;
 			sourceTree = "<group>";
 		};
+		19D192A228202669006ED961 /* CoreDataStack */ = {
+			isa = PBXGroup;
+			children = (
+				196BF02B2820D0540030B757 /* ManagedObjects */,
+				19C5A2A726BC1F8900AB1122 /* PersistentContainer.swift */,
+				196BF0432820FA510030B757 /* PersistentContainer+Migration.swift */,
+				19C5A2D526BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift */,
+				196BF03F2820EFF50030B757 /* PersistentContainer+V1.swift */,
+				196BF0412820F0F80030B757 /* PersistentContainer+V3.swift */,
+				19469AC2282FC3700011A951 /* PersistentContainer+V3_Migration.swift */,
+				19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */,
+				198CC4B62820244600D3C7EA /* TweetNestKitV3.xcdatamodeld */,
+			);
+			path = CoreDataStack;
+			sourceTree = "<group>";
+		};
 		19DB9E4A27084E5C000E5FA2 /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				195DD4BE26BEF6B2008F0309 /* DataAssetImage.swift */,
+				195DD4BE26BEF6B2008F0309 /* UserDataAssetImage.swift */,
 				1951EBEA270850FC00311B3C /* DetailImageView.swift */,
 				19DB9E4B27084E96000E5FA2 /* PDFView.swift */,
 				195DD4C126BEF91C008F0309 /* ProfileImage.swift */,
@@ -1510,6 +1538,7 @@
 				193AB25D26B6FD1200B18D45 /* URL.swift in Sources */,
 				190D12F226B682C20090E474 /* UsersList.swift in Sources */,
 				199CAA5B26CA6C6F000CA732 /* TweetNestError.swift in Sources */,
+				663E96C12838F5D60037413E /* Pasteboard.swift in Sources */,
 				1944554628116F0A00128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				193659AE260978F900865D40 /* MainView.swift in Sources */,
 				190007F227E6EB4E005CFED3 /* UserRowsLabel.swift in Sources */,
@@ -1529,7 +1558,7 @@
 				1970663F26E709FE00D7F21D /* AccountLabel.swift in Sources */,
 				1908FC0526F6EFFD0095AF77 /* BatchDeleteTweetsLoadingTwitterArchiveView.swift in Sources */,
 				19FB868627E5D10C00AAC5CB /* SectionedFetchedResultsController.swift in Sources */,
-				195DD4BF26BEF6B2008F0309 /* DataAssetImage.swift in Sources */,
+				195DD4BF26BEF6B2008F0309 /* UserDataAssetImage.swift in Sources */,
 				19EE473226C144A2007D2814 /* UsersDiffList.swift in Sources */,
 				1989B75626BA537900755B1E /* UserDetailView.swift in Sources */,
 				194EF57E26BBFD190020939F /* AppSidebarAccountsSections+Section.swift in Sources */,
@@ -1577,8 +1606,10 @@
 				19365A6326097B4800865D40 /* MainView.swift in Sources */,
 				19DB9E4D27084E96000E5FA2 /* PDFView.swift in Sources */,
 				193AFB7026CA36F6008BFF67 /* SettingsAccountView.swift in Sources */,
+				663E96C22838F5D60037413E /* Pasteboard.swift in Sources */,
 				19FB868727E5D10C00AAC5CB /* SectionedFetchedResultsController.swift in Sources */,
 				19FB868327E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
+				194C0E9A284357F3008B7831 /* URL.swift in Sources */,
 				1920D59827F82CAE0083C23A /* AppStatusView.swift in Sources */,
 				190D12F326B682C20090E474 /* UsersList.swift in Sources */,
 				19365A6926097B4800865D40 /* WebAuthenticationView.swift in Sources */,
@@ -1601,7 +1632,7 @@
 				1970664026E709FE00D7F21D /* AccountLabel.swift in Sources */,
 				1997BF6A280B501A009ABA72 /* UserDetailLabel.swift in Sources */,
 				19365A6126097B4800865D40 /* TweetNestApp.swift in Sources */,
-				195DD4C026BEF6B3008F0309 /* DataAssetImage.swift in Sources */,
+				195DD4C026BEF6B3008F0309 /* UserDataAssetImage.swift in Sources */,
 				193B995F280FADB200A59984 /* SettingsFetchNewDataView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1621,11 +1652,10 @@
 			files = (
 				19EABBCA26D6877600D3B003 /* AppSidebarNavigation.swift in Sources */,
 				1908FC0F26F6F1E40095AF77 /* BatchDeleteTweetsProgressView.swift in Sources */,
-				19A6FF2726D6836000AB7B7E /* NotificationController.swift in Sources */,
 				19EABBC626D6877600D3B003 /* TweetNestApp.swift in Sources */,
 				19EABBDA26D6877A00D3B003 /* SettingsAccountView.swift in Sources */,
 				19FB868427E5B1E500AAC5CB /* FetchedResultsController.swift in Sources */,
-				19EABBD626D6877600D3B003 /* DataAssetImage.swift in Sources */,
+				19EABBD626D6877600D3B003 /* UserDataAssetImage.swift in Sources */,
 				19EABBD326D6877600D3B003 /* UserDetailView.swift in Sources */,
 				19EABBD026D6877600D3B003 /* UsersDiffList.swift in Sources */,
 				19EABBCE26D6877600D3B003 /* WebAuthenticationView.swift in Sources */,
@@ -1647,6 +1677,7 @@
 				1944554428116F0900128A22 /* AppSidebarAccountsSections.swift in Sources */,
 				19EABBCD26D6877600D3B003 /* MainView.swift in Sources */,
 				19EABBDF26D6878400D3B003 /* URL.swift in Sources */,
+				663E96C32838F5D60037413E /* Pasteboard.swift in Sources */,
 				19EABBE026D6878400D3B003 /* Session.swift in Sources */,
 				19EABBED26D688B800D3B003 /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
 				1997BF6B280B501A009ABA72 /* UserDetailLabel.swift in Sources */,
@@ -1665,7 +1696,6 @@
 				19EABBD426D6877600D3B003 /* AccountEnvironmentKey.swift in Sources */,
 				19EABBCF26D6877600D3B003 /* TweetNestError.swift in Sources */,
 				1970664126E709FE00D7F21D /* AccountLabel.swift in Sources */,
-				19A6FF2926D6836000AB7B7E /* NotificationView.swift in Sources */,
 				1908FBFF26F6EE150095AF77 /* BatchDeleteTweetsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1685,16 +1715,19 @@
 			files = (
 				19C5A2BD26BC1F8A00AB1122 /* Session.swift in Sources */,
 				195E783E26E1EDCB00B019B7 /* URLCache+TweetNestKit.swift in Sources */,
+				198CC4B82820244600D3C7EA /* TweetNestKitV3.xcdatamodeld in Sources */,
+				196BF03A2820D1BD0030B757 /* ManagedAccount+CoreDataProperties.swift in Sources */,
+				196BF03B2820D1BD0030B757 /* ManagedUser.swift in Sources */,
+				196BF0352820D1BD0030B757 /* ManagedUserDataAsset.swift in Sources */,
 				19C5A2B326BC1F8A00AB1122 /* SecureUnarchiveFromDataTransformer.swift in Sources */,
-				195DD4BB26BEF09D008F0309 /* DataAsset+CoreDataProperties.swift in Sources */,
+				196BF0402820EFF50030B757 /* PersistentContainer+V1.swift in Sources */,
 				19EE519E280D110B0068CBCB /* Lazy.swift in Sources */,
-				19C5A2BA26BC1F8A00AB1122 /* Account+CoreDataProperties.swift in Sources */,
-				190DF4C126BCF1B700E1F062 /* Session+UpdateUser.swift in Sources */,
 				19C5A2D426BC219200AB1122 /* Bundle+TweetNestKit.swift in Sources */,
-				19C5A2BE26BC1F8A00AB1122 /* UserDetail.swift in Sources */,
+				196BF0422820F0F80030B757 /* PersistentContainer+V3.swift in Sources */,
 				1970CADA281D6FA8006A6943 /* NSPersistentContainer+TweetNestKit.swift in Sources */,
+				199C7E7428364253001D8F85 /* String+TweetNestKit.swift in Sources */,
+				19BE6B0A2837B2EA000EACF4 /* Session+PersistentHistoryTransactions.swift in Sources */,
 				198E9D16280BF9210064CBD8 /* UserID.swift in Sources */,
-				19C5A2B426BC1F8A00AB1122 /* UserDetail+CoreDataProperties.swift in Sources */,
 				195D1EC626EB128700999EB7 /* TweetNestKitUserDefaults.swift in Sources */,
 				1985B42C26E49A01000C6126 /* ManagedPreferences.swift in Sources */,
 				1978AF1B280FEFEE0081D481 /* ManagedPreferences+Preferences.swift in Sources */,
@@ -1703,21 +1736,22 @@
 				19C5A28A26BC1F3500AB1122 /* TweetNestKit.docc in Sources */,
 				19C5A2BB26BC1F8A00AB1122 /* Session+TwitterAPIConfiguration.swift in Sources */,
 				197190AF26DAD794001AC3E8 /* NSNumber+TwetNestKit.swift in Sources */,
-				1923216B26DF998A00E140C5 /* Session+RemoteChanges.swift in Sources */,
-				195DD4BA26BEF09D008F0309 /* DataAsset.swift in Sources */,
-				193AFB6626CA310E008BFF67 /* Session+UpdateAccount.swift in Sources */,
+				1923216B26DF998A00E140C5 /* Session+PersistentStoreRemoteChanges.swift in Sources */,
 				19C5A2B726BC1F8A00AB1122 /* SessionError.swift in Sources */,
 				197190B126DAE2A5001AC3E8 /* Session+CleansingData.swift in Sources */,
-				19C5A2B626BC1F8A00AB1122 /* User+CoreDataProperties.swift in Sources */,
-				1944554128116D4600128A22 /* PersistentContainer+Supports.swift in Sources */,
-				19C5A2B126BC1F8A00AB1122 /* Account.swift in Sources */,
-				19C5A2B226BC1F8A00AB1122 /* User.swift in Sources */,
+				196BF0392820D1BD0030B757 /* ManagedAccount.swift in Sources */,
+				196BF0372820D1BD0030B757 /* ManagedUserDetail.swift in Sources */,
+				196BF0382820D1BD0030B757 /* ManagedUserDetail+CoreDataProperties.swift in Sources */,
 				19C5A2C126BC1F9800AB1122 /* TweetNestKit.xcdatamodeld in Sources */,
 				1978AF0F280FC9C80081D481 /* Session+Support.swift in Sources */,
+				196BF03C2820D1BD0030B757 /* ManagedUser+CoreDataProperties.swift in Sources */,
 				19EBA45326CD53CC000AEFE3 /* TwitterArchive.swift in Sources */,
 				195DD4CA26C010C7008F0309 /* URLSessionConfiguration+TweetNestKit.swift in Sources */,
+				19BE6B082837B08A000EACF4 /* Session+UpdatesAll.swift in Sources */,
+				19469AC3282FC3700011A951 /* PersistentContainer+V3_Migration.swift in Sources */,
 				19718876270022BB000840C7 /* Date+TweetNestKit.swift in Sources */,
-				193B995C280E585E00A59984 /* DataAssetsURLSessionManager.swift in Sources */,
+				193B995C280E585E00A59984 /* UserDataAssetsURLSessionManager.swift in Sources */,
+				19F0491C28351D750030947D /* Session+Updates.swift in Sources */,
 				1985B42D26E49A01000C6126 /* ManagedPreferences+CoreDataProperties.swift in Sources */,
 				19AFA14126E837B800764D79 /* BackgroundTaskScheduler.swift in Sources */,
 				1978AF13280FE1A90081D481 /* SessionActor.swift in Sources */,
@@ -1725,7 +1759,9 @@
 				19861E3B26C8F82400073431 /* Session+TweetNestKit.swift in Sources */,
 				19C5A2D626BC34A600AB1122 /* PersistentContainer+UsersSpotlightDelegate.swift in Sources */,
 				1945CED126BE6B2B00FBAE51 /* AsyncLazy.swift in Sources */,
-				193AFB5C26CA043A008BFF67 /* Account+Preferences.swift in Sources */,
+				196BF0362820D1BD0030B757 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */,
+				193AFB5C26CA043A008BFF67 /* ManagedAccount+Preferences.swift in Sources */,
+				196BF0442820FA510030B757 /* PersistentContainer+Migration.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1733,7 +1769,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				19ABAD8526DC8D7200103F01 /* SessionTests.swift in Sources */,
 				19ABAD8326DC8D6000103F01 /* UserDetailTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2012,6 +2047,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2019,7 +2055,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -2031,6 +2067,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2044,6 +2081,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/iOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2051,7 +2089,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TweetNest/iOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UIRequiredDeviceCapabilities = armv7;
@@ -2063,6 +2101,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2078,7 +2117,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2100,7 +2139,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2134,14 +2173,14 @@
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.tweetnest.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2166,14 +2205,14 @@
 				INFOPLIST_FILE = TweetNest/macOS/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.social-networking";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest;
 				PRODUCT_NAME = TweetNest;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.tweetnest.TweetNest_development_macos)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				STRIP_STYLE = all;
 				SWIFT_VERSION = 5.0;
@@ -2188,7 +2227,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2210,7 +2249,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2235,6 +2274,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_STATIC_ANALYZER_MODE = deep;
 				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_INTEGER = YES;
 				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -2261,7 +2301,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.9.58;
+				CURRENT_PROJECT_VERSION = 0;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -2281,7 +2321,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2292,7 +2332,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_OPTIMIZE_OBJECT_LIFETIME = YES;
 				TVOS_DEPLOYMENT_TARGET = 15.0;
-				VERSIONING_SYSTEM = "apple-generic";
+				VERSIONING_SYSTEM = "";
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Debug;
@@ -2308,6 +2348,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_STATIC_ANALYZER_MODE = deep;
 				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_INTEGER = YES;
 				CLANG_UNDEFINED_BEHAVIOR_SANITIZER_NULLABILITY = YES;
 				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
@@ -2334,7 +2375,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1.9.58;
+				CURRENT_PROJECT_VERSION = 0;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -2350,7 +2391,7 @@
 				LLVM_LTO = YES;
 				LOCALIZED_STRING_SWIFTUI_SUPPORT = YES;
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.5;
+				MARKETING_VERSION = 1.6;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				RUN_CLANG_STATIC_ANALYZER = YES;
@@ -2359,7 +2400,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZE_OBJECT_LIFETIME = YES;
 				TVOS_DEPLOYMENT_TARGET = 15.0;
-				VERSIONING_SYSTEM = "apple-generic";
+				VERSIONING_SYSTEM = "";
 				WATCHOS_DEPLOYMENT_TARGET = 8.0;
 			};
 			name = Release;
@@ -2369,6 +2410,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2378,6 +2420,7 @@
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2390,6 +2433,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -2399,6 +2443,7 @@
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = com.tweetnest.TweetNest;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp;
 				PRODUCT_NAME = TweetNest;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2412,6 +2457,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2428,6 +2474,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "TweetNest WatchKit Extension";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2440,6 +2487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_COMPLICATION_NAME = Complication;
 				CODE_SIGN_ENTITLEMENTS = TweetNest/watchOS/TweetNest.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "TweetNest/Shared/Preview\\ Content/Preview\\ Assets.xcassets";
 				DEVELOPMENT_TEAM = SYA56G458A;
@@ -2456,6 +2504,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNest.watchkitapp.watchkitextension;
 				PRODUCT_NAME = "TweetNest WatchKit Extension";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -2471,7 +2520,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2493,7 +2542,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2522,7 +2571,7 @@
 				DYLIB_CURRENT_VERSION = 9;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2532,7 +2581,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2551,7 +2600,7 @@
 				DYLIB_CURRENT_VERSION = 9;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2561,7 +2610,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestKit;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
-				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos driverkit appletvsimulator appletvos";
+				SUPPORTED_PLATFORMS = "watchsimulator watchos macosx iphonesimulator iphoneos appletvsimulator appletvos";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 			};
@@ -2577,7 +2626,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2601,7 +2650,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 TweetNest LLC. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 ShizukuSoft LLC. All rights reserved.";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -2774,7 +2823,7 @@
 			repositoryURL = "https://github.com/tweetnest/swift-background-task";
 			requirement = {
 				kind = upToNextMinorVersion;
-				minimumVersion = 0.1.0;
+				minimumVersion = 0.2.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2813,15 +2862,26 @@
 /* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
+		198CC4B62820244600D3C7EA /* TweetNestKitV3.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				19A8EC7228228919007A0EA1 /* TweetNestKitV3.xcdatamodel */,
+			);
+			currentVersion = 19A8EC7228228919007A0EA1 /* TweetNestKitV3.xcdatamodel */;
+			path = TweetNestKitV3.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
 		19C5A2BF26BC1F9800AB1122 /* TweetNestKit.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				196BF02C2820D09B0030B757 /* TweetNestKit 5.xcdatamodel */,
 				1920F6A328111392001D9528 /* TweetNestKit 4.xcdatamodel */,
 				19B1E6032709963F007BFDD2 /* TweetNestKit 3.xcdatamodel */,
 				19131AB726F0332C0063984B /* TweetNestKit 2.xcdatamodel */,
 				19C5A2C026BC1F9800AB1122 /* TweetNestKit.xcdatamodel */,
 			);
-			currentVersion = 1920F6A328111392001D9528 /* TweetNestKit 4.xcdatamodel */;
+			currentVersion = 196BF02C2820D09B0030B757 /* TweetNestKit 5.xcdatamodel */;
 			path = TweetNestKit.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

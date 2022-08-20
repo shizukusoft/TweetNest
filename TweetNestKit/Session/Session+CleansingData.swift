@@ -8,13 +8,15 @@
 import Foundation
 import UserNotifications
 import CoreData
+import CryptoKit
+import UniformTypeIdentifiers
 import Algorithms
 import OrderedCollections
 import UnifiedLogging
 import BackgroundTask
 
 extension Session {
-    static let cleansingDataInterval: TimeInterval = 1 * 24 * 60 * 60
+    static let cleansingDataInterval: TimeInterval = 18 * 60 * 60
 
     private var persistentContainerNewBackgroundContext: NSManagedObjectContext {
         let context = persistentContainer.newBackgroundContext()
@@ -37,11 +39,15 @@ extension Session {
             }
 
             taskGroup.addTask {
-                try await self.cleansingAllUsersAndUserDetails(context: self.persistentContainerNewBackgroundContext)
+                try await self.cleansingAllUsers(context: self.persistentContainerNewBackgroundContext)
             }
 
             taskGroup.addTask {
-                try await self.cleansingAllDataAssets(context: self.persistentContainerNewBackgroundContext)
+                try await self.cleansingAllUserDetails(context: self.persistentContainerNewBackgroundContext)
+            }
+
+            taskGroup.addTask {
+                try await self.cleansingAllUserDataAssets(context: self.persistentContainerNewBackgroundContext)
             }
 
             try await taskGroup.waitForAll()
@@ -54,9 +60,10 @@ extension Session {
         let context = context ?? persistentContainerNewBackgroundContext
 
         let accountObjectIDs: [NSManagedObjectID] = try await context.perform {
-            let fetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: Account.entity().name!)
+            let fetchRequest = NSFetchRequest<NSManagedObjectID>()
+            fetchRequest.entity = ManagedAccount.entity()
             fetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \Account.creationDate, ascending: false),
+                NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: false),
             ]
             fetchRequest.resultType = .managedObjectIDResultType
 
@@ -72,27 +79,25 @@ extension Session {
     public func cleansingAccount(for accountObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
-        try await context.perform(schedule: .enqueued) {
-            try withExtendedBackgroundExecution {
+        try await withExtendedBackgroundExecution {
+            try await context.perform(schedule: .enqueued) {
                 guard
-                    let account = try? context.existingObject(with: accountObjectID) as? Account,
-                    let accountToken = account.token,
-                    let accountTokenSecret = account.tokenSecret
+                    let account = try? context.existingObject(with: accountObjectID) as? ManagedAccount,
+                    let accountUserID = account.userID
                 else {
                     return
                 }
 
-                let accountFetchRequest: NSFetchRequest<Account> = Account.fetchRequest()
+                let accountFetchRequest = ManagedAccount.fetchRequest()
                 accountFetchRequest.predicate = NSCompoundPredicate(
                     andPredicateWithSubpredicates: [
-                        NSPredicate(format: "token == %@", accountToken),
-                        NSPredicate(format: "tokenSecret == %@", accountTokenSecret),
+                        NSPredicate(format: "userID == %@", accountUserID)
                     ]
                 )
                 accountFetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \Account.creationDate, ascending: true),
+                    NSSortDescriptor(keyPath: \ManagedAccount.creationDate, ascending: true),
                 ]
-                accountFetchRequest.propertiesToFetch = ["creationDate", "preferringSortOrder", "userID", "preferences"]
+                accountFetchRequest.propertiesToFetch = ["creationDate", "preferringSortOrder", "token", "tokenSecret", "preferences"]
                 accountFetchRequest.returnsObjectsAsFaults = false
 
                 let accounts = try context.fetch(accountFetchRequest)
@@ -103,13 +108,18 @@ extension Session {
 
                 targetAccount.creationDate = accounts.first?.creationDate ?? account.creationDate
                 targetAccount.preferringSortOrder = accounts.first?.preferringSortOrder ?? account.preferringSortOrder
-                targetAccount.userID = accounts.last?.userID ?? account.userID
 
                 for account in accounts {
                     guard account != targetAccount else { continue }
 
+                    if let token = account.tokenSecret, let tokenSecret = account.tokenSecret {
+                        targetAccount.token = token
+                        targetAccount.tokenSecret = tokenSecret
+                    }
+
                     targetAccount.preferences = .init(
-                        fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers
+                        fetchBlockingUsers: targetAccount.preferences.fetchBlockingUsers || account.preferences.fetchBlockingUsers,
+                        fetchMutingUsers: targetAccount.preferences.fetchMutingUsers || account.preferences.fetchMutingUsers
                     )
 
                     context.delete(account)
@@ -122,12 +132,13 @@ extension Session {
         }
     }
 
-    func cleansingAllUsersAndUserDetails(context: NSManagedObjectContext) async throws {
+    func cleansingAllUsers(context: NSManagedObjectContext) async throws {
         let userObjectIDs: [NSManagedObjectID] = try await context.perform {
-            let userFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: User.entity().name!)
+            let userFetchRequest = NSFetchRequest<NSManagedObjectID>()
+            userFetchRequest.entity = ManagedUser.entity()
             userFetchRequest.resultType = .managedObjectIDResultType
             userFetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \User.creationDate, ascending: true),
+                NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: true),
             ]
 
             return try context.fetch(userFetchRequest)
@@ -137,10 +148,6 @@ extension Session {
             for userObjectID in userObjectIDs {
                 try Task.checkCancellation()
                 try await self.cleansingUser(for: userObjectID, context: context)
-
-                cleansingUserDetailsTaskGroup.addTask {
-                    try await self.cleansingUserDetails(for: userObjectID)
-                }
             }
 
             try await cleansingUserDetailsTaskGroup.waitForAll()
@@ -150,26 +157,25 @@ extension Session {
     public func cleansingUser(for userObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
-        try await context.perform(schedule: .enqueued) {
-            try withExtendedBackgroundExecution {
+        try await withExtendedBackgroundExecution {
+            try await context.perform(schedule: .enqueued) {
                 guard
-                    let user = try? context.existingObject(with: userObjectID) as? User,
+                    let user = try? context.existingObject(with: userObjectID) as? ManagedUser,
                     let userID = user.id
                 else {
                     return
                 }
 
-                let userFetchRequest: NSFetchRequest<User> = User.fetchRequest()
+                let userFetchRequest = ManagedUser.fetchRequest()
                 userFetchRequest.predicate = NSCompoundPredicate(
                     andPredicateWithSubpredicates: [
                         NSPredicate(format: "id == %@", userID),
                     ]
                 )
                 userFetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \User.creationDate, ascending: true),
+                    NSSortDescriptor(keyPath: \ManagedUser.creationDate, ascending: true),
                 ]
-                userFetchRequest.propertiesToFetch = ["creationDate", "lastUpdateEndDate", "lastUpdateStartDate", "modificationDate"]
-                userFetchRequest.relationshipKeyPathsForPrefetching = ["userDetails"]
+                userFetchRequest.propertiesToFetch = ["creationDate", "lastUpdateEndDate", "lastUpdateStartDate"]
                 userFetchRequest.returnsObjectsAsFaults = false
 
                 let users = try context.fetch(userFetchRequest)
@@ -184,9 +190,6 @@ extension Session {
                     targetUser.creationDate = [targetUser.creationDate, user.creationDate].lazy.compacted().min()
                     targetUser.lastUpdateEndDate = [targetUser.lastUpdateEndDate, user.lastUpdateEndDate].lazy.compacted().max()
                     targetUser.lastUpdateStartDate = [targetUser.lastUpdateStartDate, user.lastUpdateStartDate].lazy.compacted().max()
-                    targetUser.modificationDate = [targetUser.modificationDate, user.modificationDate].lazy.compacted().max()
-
-                    targetUser.addToUserDetails(user.userDetails ?? [])
 
                     context.delete(user)
                 }
@@ -198,15 +201,42 @@ extension Session {
         }
     }
 
-    func cleansingUserDetails(for userObjectID: NSManagedObjectID) async throws {
+    func cleansingAllUserDetails(context: NSManagedObjectContext) async throws {
+        let userIDs: [String] = try await context.perform {
+            let userIDFetchRequest = NSFetchRequest<NSDictionary>()
+            userIDFetchRequest.entity = ManagedUserDetail.entity()
+            userIDFetchRequest.resultType = .dictionaryResultType
+            userIDFetchRequest.propertiesToFetch = [
+                (\ManagedUserDetail.userID)._kvcKeyPathString!
+            ]
+            userIDFetchRequest.returnsDistinctResults = true
+
+            return try context.fetch(userIDFetchRequest)
+                .compactMap {
+                    $0.object(forKey: "userID") as? String
+                }
+        }
+
+        try await withThrowingTaskGroup(of: Void.self) { cleansingUserDetailsTaskGroup in
+            for userID in userIDs {
+                cleansingUserDetailsTaskGroup.addTask {
+                    try await self.cleansingUserDetails(for: userID)
+                }
+            }
+
+            try await cleansingUserDetailsTaskGroup.waitForAll()
+        }
+    }
+
+    func cleansingUserDetails(for userID: String) async throws {
         let context = persistentContainerNewBackgroundContext
 
-        try await context.perform(schedule: .enqueued) {
-            try withExtendedBackgroundExecution {
-                let fetchRequest = UserDetail.fetchRequest()
-                fetchRequest.predicate = NSPredicate(format: "user == %@", userObjectID)
+        try await withExtendedBackgroundExecution {
+            try await context.perform(schedule: .enqueued) {
+                let fetchRequest = ManagedUserDetail.fetchRequest()
+                fetchRequest.predicate = NSPredicate(format: "userID == %@", userID)
                 fetchRequest.sortDescriptors = [
-                    NSSortDescriptor(keyPath: \UserDetail.creationDate, ascending: true)
+                    NSSortDescriptor(keyPath: \ManagedUserDetail.creationDate, ascending: true)
                 ]
                 fetchRequest.returnsObjectsAsFaults = false
 
@@ -218,7 +248,6 @@ extension Session {
 
                     if previousUserDetail ~= userDetail {
                         userDetails.remove(userDetail)
-                        userDetail.user = nil
                         context.delete(userDetail)
                     }
                 }
@@ -230,61 +259,91 @@ extension Session {
         }
     }
 
-    func cleansingAllDataAssets(context: NSManagedObjectContext) async throws {
-        let dataAssetObjectIDs: [NSManagedObjectID] = try await context.perform {
-            let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>(entityName: DataAsset.entity().name!)
-            dataAssetsFetchRequest.resultType = .managedObjectIDResultType
-            dataAssetsFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+    func cleansingAllUserDataAssets(context: NSManagedObjectContext) async throws {
+        let userDataAssetObjectIDs: [NSManagedObjectID] = try await context.perform {
+            let userDataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
+            userDataAssetsFetchRequest.entity = ManagedUserDataAsset.entity()
+            userDataAssetsFetchRequest.resultType = .managedObjectIDResultType
+            userDataAssetsFetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: true)
+            ]
 
-            return try context.fetch(dataAssetsFetchRequest)
+            return try context.fetch(userDataAssetsFetchRequest)
         }
 
-        for dataAssetObjectID in dataAssetObjectIDs {
+        for userDataAssetObjectID in userDataAssetObjectIDs {
             try Task.checkCancellation()
-            try await self.cleansingDataAsset(for: dataAssetObjectID, context: context)
+            try await self.cleansingUserDataAsset(for: userDataAssetObjectID, context: context)
         }
     }
 
-    public func cleansingDataAsset(for dataAssetObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
+    public func cleansingUserDataAsset(for userDataAssetObjectID: NSManagedObjectID, context: NSManagedObjectContext? = nil) async throws {
         let context = context ?? persistentContainerNewBackgroundContext
 
         try await context.perform(schedule: .enqueued) {
             guard
-                let dataAsset = try? context.existingObject(with: dataAssetObjectID) as? DataAsset,
-                let dataAssetURL = dataAsset.url,
-                let dataAssetDataSHA512Hash = dataAsset.dataSHA512Hash
+                let userDataAsset = try? context.existingObject(with: userDataAssetObjectID) as? ManagedUserDataAsset,
+                let userDataAssetURL = userDataAsset.url
             else {
                 return
             }
 
-            let dataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
-            dataAssetsFetchRequest.entity = DataAsset.entity()
-            dataAssetsFetchRequest.resultType = .managedObjectIDResultType
-            dataAssetsFetchRequest.predicate = NSCompoundPredicate(
+            // TODO: Moves to migration codes when upgrade to V4 or later.
+            if userDataAsset.dataMIMEType == nil, let data = userDataAsset.data {
+                switch data.first {
+                case 0xFF:
+                    userDataAsset.dataMIMEType = UTType.jpeg.preferredMIMEType
+                case 0x89:
+                    userDataAsset.dataMIMEType = UTType.png.preferredMIMEType
+                case 0x47:
+                    userDataAsset.dataMIMEType = UTType.gif.preferredMIMEType
+                case 0x49, 0x4D:
+                    userDataAsset.dataMIMEType = UTType.tiff.preferredMIMEType
+                default:
+                    break
+                }
+            }
+
+            // TODO: Moves to migration codes when upgrade to V4 or later.
+            if userDataAsset.dataSHA512Hash == nil, let data = userDataAsset.data {
+                userDataAsset.dataSHA512Hash = Data(SHA512.hash(data: data))
+            }
+
+            let userDataAssetsFetchRequest = NSFetchRequest<NSManagedObjectID>()
+            userDataAssetsFetchRequest.entity = ManagedUserDataAsset.entity()
+            userDataAssetsFetchRequest.resultType = .managedObjectIDResultType
+            userDataAssetsFetchRequest.predicate = NSCompoundPredicate(
                 andPredicateWithSubpredicates: [
-                    NSPredicate(format: "url == %@", dataAssetURL as NSURL),
-                    NSPredicate(format: "dataSHA512Hash == %@", dataAssetDataSHA512Hash as NSData),
+                    NSPredicate(format: "url == %@", userDataAssetURL as NSURL),
+                    NSPredicate(format: "dataMIMEType == %@", userDataAsset.dataMIMEType as? NSString ?? NSNull()),
+                    NSPredicate(format: "dataSHA512Hash == %@", userDataAsset.dataSHA512Hash as? NSData ?? NSNull()),
                 ]
             )
-            dataAssetsFetchRequest.sortDescriptors = [
-                NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: true),
+            userDataAssetsFetchRequest.sortDescriptors = [
+                NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: true),
             ]
 
-            let dataAssetObjectIDs = OrderedSet(try context.fetch(dataAssetsFetchRequest))
+            let userDataAssetObjectIDs = OrderedSet(try context.fetch(userDataAssetsFetchRequest))
 
-            guard dataAssetObjectIDs.count > 1 else { return }
+            guard userDataAssetObjectIDs.count > 1 else { return }
 
-            let targetDataAssetObjectID = dataAssetObjectIDs.first ?? dataAsset.objectID
+            let targetUserDataAssetObjectID = userDataAssetObjectIDs.first ?? userDataAsset.objectID
 
-            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(dataAssetObjectIDs.subtracting([targetDataAssetObjectID])))
+            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: Array(userDataAssetObjectIDs.subtracting([targetUserDataAssetObjectID])))
 
             try context.execute(batchDeleteRequest)
+
+            if context.hasChanges {
+                try context.save()
+            }
         }
     }
 
     public func cleansingAllPersistentStores() async throws {
         let persistentContainer = persistentContainer
-        let temporalPersistentStoreCoordinator = NSPersistentStoreCoordinator(managedObjectModel: PersistentContainer.managedObjectModel)
+        let temporalPersistentStoreCoordinator = NSPersistentStoreCoordinator(
+            managedObjectModel: persistentContainer.persistentStoreCoordinator.managedObjectModel
+        )
 
         for persistentStoreDescription in persistentContainer.persistentStoreDescriptions.lazy.compactMap({ $0.copy() as? NSPersistentStoreDescription }) {
             guard persistentStoreDescription.type == NSSQLiteStoreType else { return }
@@ -294,11 +353,11 @@ extension Session {
             persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteManualVacuumOption)
             persistentStoreDescription.setOption(true as NSNumber, forKey: NSSQLiteAnalyzeOption)
 
-            try await persistentContainer.persistentStoreCoordinator.perform {
-                try temporalPersistentStoreCoordinator.performAndWait {
-                    var error: Error?
+            try await withExtendedBackgroundExecution {
+                try await persistentContainer.persistentStoreCoordinator.perform {
+                    try temporalPersistentStoreCoordinator.performAndWait {
+                        var error: Error?
 
-                    try withExtendedBackgroundExecution {
                         let dispatchSemaphore = DispatchSemaphore(value: 0)
 
                         temporalPersistentStoreCoordinator.addPersistentStore(with: persistentStoreDescription) { _, _error in
@@ -316,10 +375,10 @@ extension Session {
                         }
 
                         dispatchSemaphore.wait()
-                    }
 
-                    if let error = error {
-                        throw error
+                        if let error = error {
+                            throw error
+                        }
                     }
                 }
             }

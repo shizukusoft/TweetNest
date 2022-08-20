@@ -1,8 +1,8 @@
 //
-//  DataAsset.swift
-//  DataAsset
+//  ManagedUserDataAsset+CoreDataClass.swift
+//  TweetNestKit
 //
-//  Created by Jaehong Kang on 2021/08/08.
+//  Created by 강재홍 on 2022/05/03.
 //
 //
 
@@ -10,23 +10,22 @@ import Foundation
 import CoreData
 import CryptoKit
 
-public class DataAsset: NSManagedObject {
-    public override func awakeFromInsert() {
-        setPrimitiveValue(Date(), forKey: "creationDate")
-    }
+public class ManagedUserDataAsset: NSManagedObject {
+
 }
 
-extension DataAsset {
+extension ManagedUserDataAsset {
     @discardableResult
-    static func dataAsset(
+    static func userDataAsset(
         data: Data,
         dataMIMEType: String?,
         url: URL,
+        creationDate: Date = Date(),
         context: NSManagedObjectContext
-    ) throws -> DataAsset {
+    ) throws -> ManagedUserDataAsset {
         let dataSHA512Hash = Data(SHA512.hash(data: data))
 
-        let dataAssetFetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
+        let dataAssetFetchRequest = ManagedUserDataAsset.fetchRequest()
         dataAssetFetchRequest.predicate = NSPredicate(format: "url == %@", url as NSURL)
         dataAssetFetchRequest.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         dataAssetFetchRequest.propertiesToFetch = ["dataMIMEType", "dataSHA512Hash"]
@@ -38,11 +37,12 @@ extension DataAsset {
         if let lastDataAsset = lastDataAsset, lastDataAsset.dataSHA512Hash == dataSHA512Hash, lastDataAsset.dataMIMEType == dataMIMEType {
             return lastDataAsset
         } else {
-            let newDataAsset = DataAsset(context: context)
+            let newDataAsset = ManagedUserDataAsset(context: context)
             newDataAsset.data = data
             newDataAsset.dataSHA512Hash = dataSHA512Hash
             newDataAsset.dataMIMEType = dataMIMEType
             newDataAsset.url = url
+            newDataAsset.creationDate = creationDate
 
             return newDataAsset
         }

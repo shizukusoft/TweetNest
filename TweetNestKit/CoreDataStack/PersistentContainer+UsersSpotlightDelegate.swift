@@ -22,19 +22,17 @@ extension PersistentContainer {
         }
 
         public override func attributeSet(for object: NSManagedObject) -> CSSearchableItemAttributeSet? {
-            if let user = object as? User {
+            if let user = object as? ManagedUser {
                 let attributeSet = CSSearchableItemAttributeSet(contentType: .contact)
 
-                let sortedUserDetails = user.sortedUserDetails
-
                 attributeSet.identifier = user.id
-                attributeSet.displayName = sortedUserDetails?.last?.name
-                attributeSet.alternateNames = sortedUserDetails?.last?.username.flatMap { ["@\($0)"] }
-                attributeSet.thumbnailData = try? sortedUserDetails?.last?.profileImageURL.flatMap {
-                    let fetchRequest = DataAsset.fetchRequest()
+                attributeSet.displayName = user.userDetails?.last?.name
+                attributeSet.alternateNames = user.userDetails?.last?.username.flatMap { ["@\($0)"] }
+                attributeSet.thumbnailData = try? user.userDetails?.last?.profileImageURL.flatMap {
+                    let fetchRequest = ManagedUserDataAsset.fetchRequest()
                     fetchRequest.predicate = NSPredicate(format: "url == %@", $0 as NSURL)
                     fetchRequest.sortDescriptors =  [
-                        NSSortDescriptor(keyPath: \DataAsset.creationDate, ascending: false),
+                        NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: false),
                     ]
                     fetchRequest.fetchLimit = 1
 
@@ -45,7 +43,7 @@ extension PersistentContainer {
                 if let displayUserID = user.id?.displayUserID {
                     keywords.append(displayUserID)
                 }
-                if let names = sortedUserDetails?.lazy.flatMap({ [$0.name, $0.username] }).compacted() {
+                if let names = user.userDetails?.lazy.flatMap({ [$0.name, $0.username] }).compacted() {
                     keywords.append(contentsOf: Set(names))
                 }
 

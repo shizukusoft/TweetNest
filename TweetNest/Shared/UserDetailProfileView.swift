@@ -9,7 +9,7 @@ import SwiftUI
 import TweetNestKit
 
 struct UserDetailProfileView: View {
-    @ObservedObject var userDetail: UserDetail
+    @ObservedObject var userDetail: ManagedUserDetail
 
     @Environment(\.openURL) private var openURL
 
@@ -17,7 +17,7 @@ struct UserDetailProfileView: View {
         Group {
             #if os(iOS) || os(macOS)
             if let profileHeaderImageURL = userDetail.profileHeaderImageURL {
-                DataAssetImage(url: profileHeaderImageURL, isExportable: true)
+                UserDataAssetImage(url: profileHeaderImageURL, isExportable: true)
                     .aspectRatio(3, contentMode: .fill)
                     #if os(iOS)
                     .listRowSeparator(.hidden)
@@ -36,23 +36,39 @@ struct UserDetailProfileView: View {
                         #endif
 
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(verbatim: userDetail.name ?? userDetail.user?.id?.displayUserID ?? "")
-                        if let username = userDetail.username {
-                            Text(verbatim: "@\(username)")
+                        Text(verbatim: userDetail.name ?? userDetail.userID?.displayUserID ?? "")
+                            #if os(macOS) || os(iOS)
+                            .textSelection(.enabled)
+                            #endif
+
+                        if let displayUsername = userDetail.displayUsername {
+                            Text(verbatim: displayUsername)
+                                #if os(macOS) || os(iOS)
+                                .textSelection(.enabled)
+                                #endif
                                 .foregroundColor(.secondary)
                         }
                     }
                 }
 
-                if let userAttributedDescription = userDetail.userAttributedDescription.flatMap({AttributedString($0)}), userAttributedDescription.startIndex != userAttributedDescription.endIndex {
+                if
+                    let userAttributedDescription = userDetail.userAttributedDescription.flatMap(AttributedString.init),
+                    userAttributedDescription.startIndex != userAttributedDescription.endIndex
+                {
                     Text(userAttributedDescription)
+                        #if os(macOS) || os(iOS)
+                        .textSelection(.enabled)
+                        #endif
                         .layoutPriority(1)
                 }
             }
             .padding([.top, .bottom], 8)
 
-            if let location = userDetail.location {
-                let locationQueryURL = location.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed).flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
+            if let location = userDetail.location, !location.isEmpty {
+                let locationQueryURL = location
+                .addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+                .flatMap({ URL(string: "http://maps.apple.com/?q=\($0)") })
+
                 Label {
                     TweetNestStack {
                         Text("Location")
@@ -71,10 +87,24 @@ struct UserDetailProfileView: View {
                         }
                         .lineLimit(1)
                         .allowsTightening(true)
+                        #if os(macOS)
+                        .textSelection(.enabled)
+                        #endif
                     }
                 } icon: {
                     Image(systemName: "location")
                 }
+                #if os(iOS)
+                .contextMenu {
+                    Button(
+                        action: {
+                            Pasteboard.general.string = location
+                        },
+                        label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        })
+                }
+                #endif
                 .accessibilityElement()
                 .accessibilityLabel(Text("Location"))
                 .accessibilityValue(Text(location))
@@ -90,13 +120,27 @@ struct UserDetailProfileView: View {
                         #if !os(watchOS)
                         Spacer()
                         #endif
-                        Link(url.absoluteString, destination: url)
+                        Link(url.simplifiedString, destination: url)
                             .lineLimit(1)
                             .allowsTightening(true)
+                            #if os(macOS)
+                            .textSelection(.enabled)
+                            #endif
                     }
                 } icon: {
                     Image(systemName: "safari")
                 }
+                #if os(iOS)
+                .contextMenu {
+                    Button(
+                        action: {
+                            Pasteboard.general.url = url
+                        },
+                        label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        })
+                }
+                #endif
                 .accessibilityElement()
                 .accessibilityLabel(Text("URL"))
                 .accessibilityValue(Text(url.absoluteString))
@@ -104,6 +148,7 @@ struct UserDetailProfileView: View {
             }
 
             if let userCreationDate = userDetail.userCreationDate {
+                let dateString = userCreationDate.twnk_formatted(shouldCompact: false)
                 Label {
                     TweetNestStack {
                         Text("Joined")
@@ -118,13 +163,27 @@ struct UserDetailProfileView: View {
                         .foregroundColor(.secondary)
                         .lineLimit(1)
                         .allowsTightening(true)
+                        #if os(macOS)
+                        .textSelection(.enabled)
+                        #endif
                     }
                 } icon: {
                     Image(systemName: "calendar")
                 }
+                #if os(iOS)
+                .contextMenu {
+                    Button(
+                        action: {
+                            Pasteboard.general.string = dateString
+                        },
+                        label: {
+                            Label("Copy", systemImage: "doc.on.doc")
+                        })
+                }
+                #endif
                 .accessibilityElement()
                 .accessibilityLabel(Text("Joined"))
-                .accessibilityValue(userCreationDate.twnk_formatted(shouldCompact: false))
+                .accessibilityValue(dateString)
             }
 
             if userDetail.isProtected {
@@ -138,10 +197,10 @@ struct UserDetailProfileView: View {
     }
 }
 
-//#if DEBUG
-//struct UserDetailProfileView_Previews: PreviewProvider {
+// #if DEBUG
+// struct UserDetailProfileView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        UserDetailProfileView(userDetail: nil)
 //    }
-//}
-//#endif
+// }
+// #endif

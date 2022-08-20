@@ -1,8 +1,8 @@
 //
-//  UserDetail.swift
-//  TweetNest
+//  ManagedUserDetail+CoreDataClass.swift
+//  TweetNestKit
 //
-//  Created by Jaehong Kang on 2021/02/26.
+//  Created by 강재홍 on 2022/05/03.
 //
 //
 
@@ -11,11 +11,11 @@ import CoreData
 import TwitterV1
 import OrderedCollections
 
-public class UserDetail: NSManagedObject {
+public class ManagedUserDetail: NSManagedObject {
 
 }
 
-extension UserDetail {
+extension ManagedUserDetail {
     @discardableResult
     static func createOrUpdate(
         twitterUser: TwitterV1.User,
@@ -24,13 +24,12 @@ extension UserDetail {
         blockingUserIDs: [String]? = nil,
         mutingUserIDs: [String]? = nil,
         creationDate: Date = Date(),
-        user: User,
-        previousUserDetail: UserDetail? = nil,
+        previousUserDetail: ManagedUserDetail? = nil,
         context: NSManagedObjectContext
-    ) throws -> UserDetail {
-        let previousUserDetail = previousUserDetail ?? user.sortedUserDetails?.last
+    ) throws -> ManagedUserDetail {
+        let newUserDetail = ManagedUserDetail(context: context)
+        newUserDetail.userID = String(twitterUser.id)
 
-        let newUserDetail = UserDetail(context: context)
         newUserDetail.blockingUserIDs = blockingUserIDs
         newUserDetail.followingUserIDs = followingUserIDs
         newUserDetail.followerUserIDs = followerUserIDs
@@ -57,15 +56,13 @@ extension UserDetail {
             return previousUserDetail
         } else {
             newUserDetail.creationDate = creationDate
-            newUserDetail.user = user
-            newUserDetail.user!.modificationDate = creationDate
 
             return newUserDetail
         }
     }
 }
 
-extension UserDetail {
+extension ManagedUserDetail {
     public var displayUsername: String? {
         username.flatMap {
             "@\($0)"
@@ -73,8 +70,8 @@ extension UserDetail {
     }
 }
 
-extension UserDetail {
-    static func ~= (lhs: UserDetail, rhs: UserDetail) -> Bool {
+extension ManagedUserDetail {
+    static func ~= (lhs: ManagedUserDetail, rhs: ManagedUserDetail) -> Bool {
         lhs.isProfileEqual(to: rhs) &&
         lhs.followerUsersCount == rhs.followerUsersCount &&
         lhs.followingUsersCount == rhs.followingUsersCount &&
@@ -87,8 +84,8 @@ extension UserDetail {
     }
 }
 
-extension Optional where Wrapped == UserDetail {
-    static func ~= (lhs: UserDetail?, rhs: UserDetail?) -> Bool {
+extension Optional where Wrapped == ManagedUserDetail {
+    static func ~= (lhs: ManagedUserDetail?, rhs: ManagedUserDetail?) -> Bool {
         switch (lhs, rhs) {
         case (.some, .none), (.none, .some):
             return false
@@ -100,8 +97,8 @@ extension Optional where Wrapped == UserDetail {
     }
 }
 
-extension UserDetail {
-    func isProfileEqual(to userDetail: UserDetail) -> Bool {
+extension ManagedUserDetail {
+    func isProfileEqual(to userDetail: ManagedUserDetail) -> Bool {
         isProtected == userDetail.isProtected &&
         isVerified == userDetail.isVerified &&
         location == userDetail.location &&
@@ -115,13 +112,13 @@ extension UserDetail {
     }
 }
 
-extension UserDetail {
+extension ManagedUserDetail {
     struct UserIDsChange {
         let addedUserIDs: OrderedSet<String>
         let removedUserIDs: OrderedSet<String>
     }
 
-    func userIDsChange(from oldUserDetail: UserDetail?, for keyPath: KeyPath<UserDetail, [String]?>) -> UserIDsChange? {
+    func userIDsChange(from oldUserDetail: ManagedUserDetail?, for keyPath: KeyPath<ManagedUserDetail, [String]?>) -> UserIDsChange? {
         let previousUserIDs = oldUserDetail == nil ? [] : oldUserDetail?[keyPath: keyPath].flatMap { OrderedSet($0) }
         let latestUserIDs = self[keyPath: keyPath].flatMap { OrderedSet($0) }
 

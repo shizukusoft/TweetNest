@@ -11,7 +11,7 @@ import TweetNestKit
 import Twitter
 
 struct BatchDeleteTweetsLoadingRecentTweetsView: View {
-    @Environment(\.account) private var account: TweetNestKit.Account?
+    @Environment(\.account) private var account: ManagedAccount?
 
     @Binding var sourceTweets: OrderedDictionary<Tweet.ID, Tweet>?
 

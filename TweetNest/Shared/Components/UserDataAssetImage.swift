@@ -1,6 +1,6 @@
 //
-//  DataAssetImage.swift
-//  DataAssetImage
+//  UserDataAssetImage.swift
+//  UserDataAssetImage
 //
 //  Created by Jaehong Kang on 2021/08/08.
 //
@@ -12,11 +12,11 @@ import CoreData
 import TweetNestKit
 import UnifiedLogging
 
-struct DataAssetImage: View {
+struct UserDataAssetImage: View {
     let url: URL?
     let isExportable: Bool
 
-    @State private var dataAssetsFetchedResultsController: FetchedResultsController<DataAsset>
+    @State private var dataAssetsFetchedResultsController: FetchedResultsController<ManagedUserDataAsset>
 
     struct ImageData: Equatable {
         var data: Data
@@ -32,7 +32,13 @@ struct DataAssetImage: View {
     var body: some View {
         Group {
             #if os(macOS) || os(iOS)
-            if isExportable, let url = url, let cgImage = cgImage, let imageData = imageData, let utType = imageData.dataMIMEType.flatMap({ UTType(mimeType: $0, conformingTo: .image) }) {
+            if
+                isExportable,
+                let url = url,
+                let cgImage = cgImage,
+                let imageData = imageData
+            {
+                let utType = imageData.dataMIMEType.flatMap({ UTType(mimeType: $0, conformingTo: .image) }) ?? UTType.image
                 let filename = url.pathExtension.isEmpty ? url.appendingPathExtension(for: utType).lastPathComponent : url.lastPathComponent
 
                 Group {
@@ -42,11 +48,11 @@ struct DataAssetImage: View {
                             isDetailProfileImagePresented = true
                         }
                         .contextMenu {
-                            menuItems(imageData: imageData.data)
+                            menuItems(cgImage: cgImage)
                         }
                     #else
                     Menu {
-                        menuItems(imageData: imageData.data)
+                        menuItems(cgImage: cgImage)
                     } label: {
                         resizableImage(cgImage, scale: cgImageScale)
                     } primaryAction: {
@@ -124,10 +130,10 @@ struct DataAssetImage: View {
         self.isExportable = isExportable
 
         self._dataAssetsFetchedResultsController = State(
-            wrappedValue: FetchedResultsController<DataAsset>(
+            wrappedValue: FetchedResultsController<ManagedUserDataAsset>(
                 fetchRequest: {
-                    let fetchRequest: NSFetchRequest<DataAsset> = DataAsset.fetchRequest()
-                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \TweetNestKit.DataAsset.creationDate, ascending: false)]
+                    let fetchRequest = ManagedUserDataAsset.fetchRequest()
+                    fetchRequest.sortDescriptors = [NSSortDescriptor(keyPath: \ManagedUserDataAsset.creationDate, ascending: false)]
                     fetchRequest.predicate = url.flatMap { NSPredicate(format: "url == %@", $0 as NSURL) } ?? NSPredicate(value: false)
                     fetchRequest.propertiesToFetch = ["data", "dataMIMEType"]
                     fetchRequest.returnsObjectsAsFaults = false
@@ -155,21 +161,19 @@ struct DataAssetImage: View {
         }
     }
 
+    #if canImport(AppKit) || canImport(UIKit) && os(iOS)
     @ViewBuilder
-    private func menuItems(imageData: Data) -> some View {
+    private func menuItems(cgImage: CGImage) -> some View {
         Button(
             action: {
-                #if canImport(AppKit)
-                NSPasteboard.general.setData(imageData, forType: .fileContents)
-                #elseif canImport(UIKit) && !os(watchOS)
-                UIPasteboard.general.image = UIImage(data: imageData)
-                #endif
+                Pasteboard.general.image = cgImage
             },
             label: {
                 Label("Copy", systemImage: "doc.on.doc")
             }
         )
     }
+    #endif
 
     private func updateImage(from imageData: ImageData?) async {
         let cgImageAndImageScale: (cgImage: CGImage, imageScale: CGFloat?)? = {
@@ -199,7 +203,12 @@ struct DataAssetImage: View {
 
             let imageProperties = CGImageSourceCopyPropertiesAtIndex(imageSource, 0, nil) as? [CFString: Any]
 
-            let imageDPI = [imageProperties?[kCGImagePropertyDPIWidth], imageProperties?[kCGImagePropertyDPIHeight]].compactMap { ($0 as? NSNumber)?.doubleValue }.min()
+            let imageDPI = [
+                imageProperties?[kCGImagePropertyDPIWidth],
+                imageProperties?[kCGImagePropertyDPIHeight]
+            ]
+            .compactMap { ($0 as? NSNumber)?.doubleValue }
+            .min()
 
             return (cgImage: image, imageScale: imageDPI.flatMap { $0 / 72 })
         }()

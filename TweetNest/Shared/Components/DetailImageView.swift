@@ -107,9 +107,9 @@ struct DetailImageView: View {
     }
 }
 
-//struct DetailImageView_Previews: PreviewProvider {
+// struct DetailImageView_Previews: PreviewProvider {
 //    static var previews: some View {
 //        DetailImageView()
 //    }
-//}
+// }
 #endif

@@ -43,6 +43,7 @@ struct SettingsGeneralView: View {
             Section {
                 Toggle("Download Images Using Cellular", isOn: $downloadsImagesUsingExpensiveNetworkAccess)
             } footer: {
+                // swiftlint:disable:next line_length
                 Text("Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If “Allow More Data on 5G” is turned on this device, this option will be ignored.")
             }
             #endif

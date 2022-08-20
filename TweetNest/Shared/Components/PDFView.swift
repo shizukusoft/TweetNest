@@ -12,15 +12,20 @@ import class PDFKit.PDFDocument
 
 struct PDFView {
     let document: PDFDocument
+
+    func makeView() -> PDFKit.PDFView {
+        let view = PDFKit.PDFView()
+        view.document = document
+        view.autoScales = true
+
+        return view
+    }
 }
 
 #if os(macOS)
 extension TweetNest.PDFView: NSViewRepresentable {
     func makeNSView(context: Context) -> PDFKit.PDFView {
-        let view = PDFKit.PDFView()
-        view.document = document
-
-        return view
+        return makeView()
     }
 
     func updateNSView(_ nsView: PDFKit.PDFView, context: Context) { }
@@ -28,10 +33,7 @@ extension TweetNest.PDFView: NSViewRepresentable {
 #elseif os(iOS)
 extension TweetNest.PDFView: UIViewRepresentable {
     func makeUIView(context: Context) -> PDFKit.PDFView {
-        let view = PDFKit.PDFView()
-        view.document = document
-
-        return view
+        return makeView()
     }
 
     func updateUIView(_ nsView: PDFKit.PDFView, context: Context) { }

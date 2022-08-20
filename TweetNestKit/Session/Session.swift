@@ -25,26 +25,23 @@ public class Session {
 
     let isShared: Bool
 
+    let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Session.self))
     let sessionActor = SessionActor()
     public let persistentContainer: PersistentContainer
-    let dataAssetsURLSessionManager: DataAssetsURLSessionManager
+    let userDataAssetsURLSessionManager: UserDataAssetsURLSessionManager
 
+    private lazy var persistentStoreRemoteChangeNotificationContext: NSManagedObjectContext = persistentContainer.newBackgroundContext()
     private lazy var persistentStoreRemoteChangeNotification = NotificationCenter.default
         .publisher(for: .NSPersistentStoreRemoteChange, object: persistentContainer.persistentStoreCoordinator)
         .map { $0.userInfo?[NSPersistentHistoryTokenKey] as? NSPersistentHistoryToken }
         .removeDuplicates()
-        .receive(on: persistentStoreRemoteChangeNotificationQueue)
         .sink { [weak self] persistentHistoryToken in
             guard let self = self else { return }
 
-            self.handlePersistentStoreRemoteChanges(persistentHistoryToken)
+            Task {
+                await self.handlePersistentStoreRemoteChanges(persistentHistoryToken, context: self.persistentStoreRemoteChangeNotificationContext)
+            }
         }
-
-    private lazy var persistentStoreRemoteChangeNotificationQueue = DispatchQueue(
-        label: [String(reflecting: self), Notification.Name.NSPersistentStoreRemoteChange.rawValue].joined(separator: "."),
-        qos: .default,
-        autoreleaseFrequency: .workItem
-    )
 
     @MainActor @Published
     public private(set) var persistentContainerLoadingResult: Result<Void, Swift.Error>?
@@ -60,22 +57,22 @@ public class Session {
             if let twitterAPIConfiguration = try await twitterAPIConfiguration() {
                 return twitterAPIConfiguration
             } else {
-                return try await .iCloud
+                return try await .cloudKit
             }
         })
         let persistentContainer = PersistentContainer(inMemory: inMemory)
         self.persistentContainer = persistentContainer
 
-        let dataAssetsURLSessionManager = DataAssetsURLSessionManager(
+        let dataAssetsURLSessionManager = UserDataAssetsURLSessionManager(
             isShared: isShared,
             persistentContainer: persistentContainer
         )
-        self.dataAssetsURLSessionManager = dataAssetsURLSessionManager
+        self.userDataAssetsURLSessionManager = dataAssetsURLSessionManager
 
         _ = self.persistentStoreRemoteChangeNotification
         _ = self.fetchNewDataIntervalObserver
 
-        self.persistentContainer.persistentStoreCoordinator.perform {
+        self.persistentContainer.persistentStoreCoordinator.perform { [logger] in
             self.persistentContainer.loadPersistentStores { result in
                 switch result {
                 case .success:
@@ -93,15 +90,13 @@ public class Session {
                             do {
                                 try self.persistentContainer.initializeCloudKitSchema(options: [])
                             } catch {
-                                Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                                    .error("\(error as NSError, privacy: .public)")
+                                logger.error("\(error as NSError, privacy: .public)")
                             }
                         }
                         #endif
                     }
                 case .failure(let error):
-                    Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: Self.self))
-                        .error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
+                    logger.error("Error occurred while load persistent stores: \(error as NSError, privacy: .public)")
 
                     Task {
                         await MainActor.run {
@@ -118,7 +113,7 @@ public class Session {
     }
 
     deinit {
-        dataAssetsURLSessionManager.invalidate()
+        userDataAssetsURLSessionManager.invalidate()
     }
 }
 
@@ -162,9 +157,9 @@ extension Session {
     @discardableResult
     public static func handleEventsForBackgroundURLSession(_ identifier: String, completionHandler: @escaping () -> Void) -> Bool {
         switch identifier {
-        case DataAssetsURLSessionManager.backgroundURLSessionIdentifier:
+        case UserDataAssetsURLSessionManager.backgroundURLSessionIdentifier:
             Task {
-                await Session.shared.dataAssetsURLSessionManager.handleBackgroundURLSessionEvents(completionHandler: completionHandler)
+                await Session.shared.userDataAssetsURLSessionManager.handleBackgroundURLSessionEvents(completionHandler: completionHandler)
             }
             return true
         default:
@@ -217,7 +212,7 @@ extension Session {
             let context = persistentContainer.newBackgroundContext()
 
             let userID: Twitter.User.ID? = context.performAndWait {
-                (context.object(with: accountObjectID) as? Account)?.userID
+                (context.object(with: accountObjectID) as? ManagedAccount)?.userID
             }
 
             notificationContent.threadIdentifier = userID ?? accountObjectID.uriRepresentation().absoluteString
@@ -228,7 +223,9 @@ extension Session {
 
     @discardableResult
     public func fetchNewData(force: Bool = false) async throws -> Bool {
-        guard force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date() else {
+        guard
+            force || TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval) < Date()
+        else {
             return false
         }
 

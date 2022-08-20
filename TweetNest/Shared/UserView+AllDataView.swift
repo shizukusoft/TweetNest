@@ -9,11 +9,11 @@ import SwiftUI
 import TweetNestKit
 
 extension UserView {
-    struct AllDataView<UserDetails: RandomAccessCollection>: View where UserDetails.Element == UserDetail {
-        @Environment(\.account) var account: Account?
+    struct AllDataView<UserDetails: RandomAccessCollection>: View where UserDetails.Element == ManagedUserDetail {
+        @Environment(\.account) var account: ManagedAccount?
 
         let userDetails: UserDetails
-        
+
         var body: some View {
             #if os(macOS)
             Table(userDetails) {
@@ -76,6 +76,8 @@ extension UserView {
                         if let creationDate = userDetail.creationDate {
                             Text(creationDate.formatted(date: .numeric, time: .shortened))
                                 .foregroundColor(.secondary)
+                                .lineLimit(1)
+                                .layoutPriority(1)
                         }
                     }
                 }

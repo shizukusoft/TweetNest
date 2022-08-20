@@ -12,11 +12,11 @@ import BackgroundTask
 import UnifiedLogging
 
 enum AppSidebarNavigationItem: Hashable {
-    case profile(Account)
-    case followings(Account)
-    case followers(Account)
-    case blockings(Account)
-    case mutings(Account)
+    case profile(ManagedAccount)
+    case followings(ManagedAccount)
+    case followers(ManagedAccount)
+    case blockings(ManagedAccount)
+    case mutings(ManagedAccount)
 }
 
 struct AppSidebarNavigation: View {
@@ -167,23 +167,14 @@ struct AppSidebarNavigation: View {
         }
 
         Task {
-            do {
-                defer {
-                    Task {
-                        await MainActor.run {
-                            withAnimation {
-                                webAuthenticationSession = nil
-                                isAddingAccount = false
-                            }
-                        }
-                    }
-// TODO: Removes above codes, uncomment below codes (Workarounds for https://forums.swift.org/t/a-bug-cant-defer-actor-isolated-variable-access/50796/15)
-//                    withAnimation {
-//                        webAuthenticationSession = nil
-//                        isAddingAccount = false
-//                    }
+            defer {
+                withAnimation {
+                    webAuthenticationSession = nil
+                    isAddingAccount = false
                 }
+            }
 
+            do {
                 try await TweetNestApp.session.authorizeNewAccount { webAuthenticationSession in
                     webAuthenticationSession.prefersEphemeralWebBrowserSession = true
 
@@ -216,7 +207,7 @@ struct AppSidebarNavigation: View {
             try await withExtendedBackgroundExecution {
                 _ = try await TweetNestApp.session.fetchNewData(force: true)
             }
-        }  catch {
+        } catch {
             Logger().error("Error occurred: \(String(reflecting: error), privacy: .public)")
             self.error = TweetNestError(error)
             showErrorAlert = true

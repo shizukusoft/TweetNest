@@ -13,7 +13,7 @@
 /* No comment provided by engineer. */
 "Account" = "계정";
 
-/* Navigation link for account, grouped by username. */
+/* No comment provided by engineer. */
 "Account for %@" = "%@의 계정";
 
 /* No comment provided by engineer. */
@@ -40,7 +40,7 @@
 /* No comment provided by engineer. */
 "Blocks History" = "차단 기록";
 
-/* Navigation link for blocks history, grouped by username. */
+/* No comment provided by engineer. */
 "Blocks History for %@" = "%@의 차단 기록";
 
 /* No comment provided by engineer. */
@@ -89,15 +89,12 @@
 "Fetch New Data" = "데이터 업데이트";
 
 /* No comment provided by engineer. */
-"Fetch Profile Headers" = "프로필 헤더 가져오기";
-
-/* No comment provided by engineer. */
 "Followers" = "팔로워";
 
 /* No comment provided by engineer. */
 "Followers History" = "팔로워 기록";
 
-/* Navigation link for followers history, grouped by username. */
+/* No comment provided by engineer. */
 "Followers History for %@" = "%@의 팔로워 기록";
 
 /* No comment provided by engineer. */
@@ -106,7 +103,7 @@
 /* No comment provided by engineer. */
 "Followings History" = "팔로잉 기록";
 
-/* Navigation link for followings history, grouped by username. */
+/* No comment provided by engineer. */
 "Followings History for %@" = "%@의 팔로잉 기록";
 
 /* No comment provided by engineer. */
@@ -143,9 +140,12 @@
 "More" = "더 보기";
 
 /* No comment provided by engineer. */
+"Muted Accounts" = "뮤트한 계정";
+
+/* No comment provided by engineer. */
 "Mutes History" = "뮤트 기록";
 
-/* Navigation link for mutes history, grouped by username. */
+/* No comment provided by engineer. */
 "Mutes History for %@" = "%@의 뮤트 기록";
 
 /* No comment provided by engineer. */

@@ -12,7 +12,7 @@ import OrderedCollections
 
 struct UsersList: View {
     let userIDs: OrderedSet<String>
-    
+
     @State private var searchQuery: String = ""
 
     var body: some View {

@@ -1,5 +1,5 @@
 //
-//  DataAssetsURLSessionManager.swift
+//  UserDataAssetsURLSessionManager.swift
 //  TweetNestKit
 //
 //  Created by 강재홍 on 2022/04/19.
@@ -11,8 +11,8 @@ import UnifiedLogging
 import OrderedCollections
 import CoreData
 
-class DataAssetsURLSessionManager: NSObject {
-    static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".data-assets"
+class UserDataAssetsURLSessionManager: NSObject {
+    static let backgroundURLSessionIdentifier = Bundle.tweetNestKit.bundleIdentifier! + ".user-data-assets"
 
     @MainActor
     private var _backgroundURLSessionEventsCompletionHandler: (() -> Void)?
@@ -36,7 +36,6 @@ class DataAssetsURLSessionManager: NSObject {
 
         urlSessionConfiguration.httpAdditionalHeaders = nil
         urlSessionConfiguration.sessionSendsLaunchEvents = true
-        urlSessionConfiguration.waitsForConnectivity = true
         urlSessionConfiguration.allowsConstrainedNetworkAccess = false
 
         return urlSessionConfiguration
@@ -45,10 +44,21 @@ class DataAssetsURLSessionManager: NSObject {
     private let isShared: Bool
 
     private let dispatchGroup = DispatchGroup()
-    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: DataAssetsURLSessionManager.self))
+    private lazy var dispatchQueue = DispatchQueue(label: String(reflecting: self), qos: .default, attributes: [.concurrent], autoreleaseFrequency: .workItem)
+    private lazy var operationQueue: OperationQueue = {
+        let operationQueue = OperationQueue()
+        operationQueue.maxConcurrentOperationCount = 1
+        operationQueue.underlyingQueue = dispatchQueue
+
+        return operationQueue
+    }()
+    private lazy var memoryPressureSource = DispatchSource.makeMemoryPressureSource(eventMask: .all, queue: dispatchQueue)
+
+    private let logger = Logger(label: Bundle.tweetNestKit.bundleIdentifier!, category: String(reflecting: UserDataAssetsURLSessionManager.self))
+
+    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: operationQueue)
+
     private let persistentContainer: PersistentContainer
-    
-    private lazy var urlSession = URLSession(configuration: urlSessionConfiguration, delegate: self, delegateQueue: nil)
     private lazy var managedObjectContext = persistentContainer.newBackgroundContext()
 
     init(isShared: Bool, persistentContainer: PersistentContainer) {
@@ -58,19 +68,60 @@ class DataAssetsURLSessionManager: NSObject {
         super.init()
 
         _ = urlSession
+
+        memoryPressureSource.setEventHandler(flags: [.barrier]) { [weak self] in
+            self?.didReceveMemoryPressure()
+        }
+
+        memoryPressureSource.activate()
     }
 
+    deinit {
+        invalidate()
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
+    func invalidate() {
+        urlSession.invalidateAndCancel()
+        memoryPressureSource.cancel()
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
+    private func saveManagedObjectContext() {
+        Task { [managedObjectContext] in
+            do {
+                try await withExtendedBackgroundExecution {
+                    try await managedObjectContext.perform {
+                        guard managedObjectContext.hasChanges else {
+                            return
+                        }
+
+                        try managedObjectContext.save()
+                    }
+                }
+            } catch {
+                logger.error("\(error as NSError, privacy: .public)")
+            }
+        }
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
+    private func didReceveMemoryPressure() {
+        saveManagedObjectContext()
+    }
+}
+
+extension UserDataAssetsURLSessionManager {
     @MainActor
     func handleBackgroundURLSessionEvents(completionHandler: @escaping () -> Void) {
         _backgroundURLSessionEventsCompletionHandler = completionHandler
     }
-
-    func invalidate() {
-        urlSession.invalidateAndCancel()
-    }
 }
 
-extension DataAssetsURLSessionManager {
+extension UserDataAssetsURLSessionManager {
     struct DownloadRequest: Equatable, Hashable {
         var urlRequest: URLRequest
         var priority: Float
@@ -90,8 +141,6 @@ extension DataAssetsURLSessionManager {
     }
 
     func download<S>(_ downloadRequests: S) async where S: Sequence, S.Element == DownloadRequest {
-        let downloadRequests = OrderedSet(downloadRequests)
-
         return await withCheckedContinuation { [urlSession] continuation in
             urlSession.getTasksWithCompletionHandler { _, _, downloadTasks in
                 let pendingDownloadTasks = Dictionary(
@@ -110,16 +159,26 @@ extension DataAssetsURLSessionManager {
                     by: \.originalRequest
                 )
 
-                for downloadRequest in downloadRequests {
-                    var urlRequest = downloadRequest.urlRequest
-                    urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
+                let newDownloadTasks: [URLSessionDownloadTask] = downloadRequests.lazy
+                    .uniqued()
+                    .compactMap {
+                        var urlRequest = $0.urlRequest
+                        urlRequest.allowsExpensiveNetworkAccess = TweetNestKitUserDefaults.standard.downloadsDataAssetsUsingExpensiveNetworkAccess
 
-                    let downloadTask = pendingDownloadTasks[urlRequest]?.last ?? urlSession.downloadTask(with: urlRequest)
-                    downloadTask.countOfBytesClientExpectsToSend = 1024
-                    downloadTask.countOfBytesClientExpectsToReceive = downloadRequest.expectsToReceiveFileSize
-                    downloadTask.priority = downloadRequest.priority
+                        guard (pendingDownloadTasks[urlRequest]?.count ?? 0) < 1 else {
+                            return nil
+                        }
 
-                    downloadTask.resume()
+                        let downloadTask = urlSession.downloadTask(with: urlRequest)
+                        downloadTask.countOfBytesClientExpectsToSend = 1024
+                        downloadTask.countOfBytesClientExpectsToReceive = $0.expectsToReceiveFileSize
+                        downloadTask.priority = $0.priority
+
+                        return downloadTask
+                    }
+
+                newDownloadTasks.forEach {
+                    $0.resume()
                 }
 
                 continuation.resume()
@@ -128,9 +187,9 @@ extension DataAssetsURLSessionManager {
     }
 }
 
-extension DataAssetsURLSessionManager: URLSessionDelegate {
+extension UserDataAssetsURLSessionManager: URLSessionDelegate {
     func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
-        dispatchGroup.notify(queue: .global(qos: .default)) {
+        dispatchGroup.notify(queue: dispatchQueue) {
             DispatchQueue.main.async {
                 self.backgroundURLSessionEventsCompletionHandler?()
             }
@@ -144,7 +203,7 @@ extension DataAssetsURLSessionManager: URLSessionDelegate {
     }
 }
 
-extension DataAssetsURLSessionManager: URLSessionTaskDelegate {
+extension UserDataAssetsURLSessionManager: URLSessionTaskDelegate {
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
         if let error = error {
             logger.error("\(error as NSError, privacy: .public)")
@@ -152,15 +211,16 @@ extension DataAssetsURLSessionManager: URLSessionTaskDelegate {
     }
 }
 
-extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
+extension UserDataAssetsURLSessionManager: URLSessionDownloadDelegate {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
         guard let originalRequestURL = downloadTask.originalRequest?.url else { return }
 
         do {
             let data = try Data(contentsOf: location, options: .mappedIfSafe)
+            let creationDate = Date()
 
             dispatchGroup.enter()
-            Task.detached { [dispatchGroup, managedObjectContext, logger] in
+            Task.detached { [dispatchGroup, dispatchQueue, managedObjectContext, logger] in
                 defer {
                     dispatchGroup.leave()
                 }
@@ -170,12 +230,22 @@ extension DataAssetsURLSessionManager: URLSessionDownloadDelegate {
                 }
 
                 do {
-                    try await managedObjectContext.perform(schedule: .enqueued) {
-                        try withExtendedBackgroundExecution {
-                            try DataAsset.dataAsset(data: data, dataMIMEType: downloadTask.response?.mimeType, url: originalRequestURL, context: managedObjectContext)
+                    try await withExtendedBackgroundExecution {
+                        try await managedObjectContext.perform(schedule: .enqueued) {
+                            try ManagedUserDataAsset.userDataAsset(
+                                data: data,
+                                dataMIMEType: downloadTask.response?.mimeType,
+                                url: originalRequestURL,
+                                creationDate: creationDate,
+                                context: managedObjectContext
+                            )
 
-                            if managedObjectContext.hasChanges {
-                                try managedObjectContext.save()
+                            guard managedObjectContext.hasChanges else {
+                                return
+                            }
+
+                            dispatchGroup.notify(queue: dispatchQueue) {
+                                self.saveManagedObjectContext()
                             }
                         }
                     }

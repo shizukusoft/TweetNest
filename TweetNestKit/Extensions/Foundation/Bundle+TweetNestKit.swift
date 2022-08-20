@@ -8,6 +8,7 @@
 import Foundation
 
 extension Bundle {
+    // swiftlint:disable:next type_name
     private class `_` {}
 
     class var tweetNestKit: Self {

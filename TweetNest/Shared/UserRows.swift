@@ -10,25 +10,17 @@ import CoreData
 import TweetNestKit
 
 struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs.Element == String {
-    @Environment(\.account) private var account: Account?
+    @Environment(\.account) private var account: ManagedAccount?
 
     let userIDs: UserIDs
     let searchQuery: String
     let icon: Icon?
 
-    @StateObject private var usersFetchedResultsController: FetchedResultsController<User>
     @State @Lazy private var backgroundManagedObjectContext = TweetNestApp.session.persistentContainer.newBackgroundContext()
     @State private var searchTask: Task<Void, Never>?
     @State private var filteredUserIDs: Set<String>?
 
     var body: some View {
-        let usersByID = Dictionary(
-            usersFetchedResultsController.fetchedObjects
-                .lazy
-                .map { ($0.id, $0) },
-            uniquingKeysWith: { first, _ in first }
-        )
-
         ForEach(userIDs, id: \.self) { userID in
             if filteredUserIDs?.contains(userID) != false {
                 NavigationLink {
@@ -36,7 +28,7 @@ struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs
                         .environment(\.account, account)
                 } label: {
                     Label {
-                        UserRowsLabel(userID: userID, user: usersByID[userID])
+                        UserRowsLabel(userID: userID)
                     } icon: {
                         icon
                     }
@@ -57,17 +49,17 @@ struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs
             searchTask?.cancel()
             searchTask = Task.detached(priority: .userInitiated) {
                 let fetchRequest = NSFetchRequest<NSDictionary>()
-                fetchRequest.entity = User.entity()
+                fetchRequest.entity = ManagedUserDetail.entity()
                 fetchRequest.resultType = .dictionaryResultType
                 fetchRequest.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [
-                    NSPredicate(format: "id IN %@", Array(userIDs)),
+                    NSPredicate(format: "userID IN %@", Array(userIDs)),
                     NSCompoundPredicate(orPredicateWithSubpredicates: [
-                        NSPredicate(format: "id CONTAINS[cd] %@", searchQuery),
-                        NSPredicate(format: "ANY userDetails.username CONTAINS[cd] %@", searchQuery),
-                        NSPredicate(format: "ANY userDetails.name CONTAINS[cd] %@", searchQuery),
+                        NSPredicate(format: "userID CONTAINS[cd] %@", searchQuery),
+                        NSPredicate(format: "username CONTAINS[cd] %@", searchQuery),
+                        NSPredicate(format: "name CONTAINS[cd] %@", searchQuery),
                     ])
                 ])
-                fetchRequest.propertiesToFetch = ["id"]
+                fetchRequest.propertiesToFetch = ["userID"]
                 fetchRequest.returnsDistinctResults = true
 
                 async let filteredUserIDsByNames: Set<String> = Set(
@@ -75,7 +67,7 @@ struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs
                         .perform {
                             try? backgroundManagedObjectContext.fetch(fetchRequest)
                         }?
-                        .compactMap { $0["id"] as? String } ?? []
+                        .compactMap { $0["userID"] as? String } ?? []
                 )
 
                 guard Task.isCancelled == false else { return }
@@ -103,26 +95,9 @@ struct UserRows<Icon: View, UserIDs: RandomAccessCollection>: View where UserIDs
         self.userIDs = userIDs
         self.searchQuery = searchQuery
         self.icon = icon
-
-        self._usersFetchedResultsController = StateObject(
-            wrappedValue: FetchedResultsController<User>(
-                fetchRequest: {
-                    let fetchRequest = User.fetchRequest()
-                    fetchRequest.predicate = NSPredicate(format: "id IN %@", Array(userIDs))
-                    fetchRequest.sortDescriptors = [
-                        NSSortDescriptor(keyPath: \User.modificationDate, ascending: false),
-                        NSSortDescriptor(keyPath: \User.creationDate, ascending: false),
-                    ]
-                    fetchRequest.returnsObjectsAsFaults = false
-
-                    return fetchRequest
-                }(),
-                managedObjectContext: TweetNestApp.session.persistentContainer.viewContext
-            )
-        )
     }
 
-    init(userIDs: UserIDs, searchQuery: String = "", @ViewBuilder icon: () -> Icon){
+    init(userIDs: UserIDs, searchQuery: String = "", @ViewBuilder icon: () -> Icon) {
         self.init(userIDs: userIDs, searchQuery: searchQuery, icon: icon())
     }
 

@@ -20,7 +20,15 @@ extension Date {
 }
 
 extension Date.FormatStyle {
-    public init(twnk_shouldCompact shouldCompact: Bool, date: Date.FormatStyle.DateStyle? = nil, time: Date.FormatStyle.TimeStyle? = nil, locale: Locale = .autoupdatingCurrent, calendar: Calendar = .autoupdatingCurrent, timeZone: TimeZone = .autoupdatingCurrent, capitalizationContext: FormatStyleCapitalizationContext = .unknown) {
+    public init(
+        twnk_shouldCompact shouldCompact: Bool,
+        date: Date.FormatStyle.DateStyle? = nil,
+        time: Date.FormatStyle.TimeStyle? = nil,
+        locale: Locale = .autoupdatingCurrent,
+        calendar: Calendar = .autoupdatingCurrent,
+        timeZone: TimeZone = .autoupdatingCurrent,
+        capitalizationContext: FormatStyleCapitalizationContext = .unknown
+    ) {
         self.init(
             date: date ?? (shouldCompact ? .numeric : .long),
             time: time ?? (shouldCompact ? .shortened : .standard),

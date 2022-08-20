@@ -48,7 +48,11 @@ struct BatchDeleteTweetsLoadingTwitterArchiveView: View {
                     allowedFileImporterContentTypes = [.zip]
                     isFileImporterPresented = true
                 }
-                .fileImporter(isPresented: $isFileImporterPresented, allowedContentTypes: allowedFileImporterContentTypes, onCompletion: onFileImporterCompletion(result:))
+                .fileImporter(
+                    isPresented: $isFileImporterPresented,
+                    allowedContentTypes: allowedFileImporterContentTypes,
+                    onCompletion: onFileImporterCompletion(result:)
+                )
                 .transition(.opacity)
             } else {
                 ProgressView("Loading Archive…")

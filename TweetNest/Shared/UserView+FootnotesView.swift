@@ -11,12 +11,15 @@ import TweetNestKit
 extension UserView {
     struct FootnotesView: View {
         let userID: String
-        let user: User?
-
+        let user: ManagedUser?
 
         var body: some View {
             VStack(alignment: .leading) {
                 Text(userID.displayUserID)
+                    #if os(macOS) || os(iOS)
+                    .textSelection(.enabled)
+                    #endif
+
                 if let user = user {
                     UpdatesText(user: user)
                 }
@@ -31,7 +34,7 @@ extension UserView {
 
 extension UserView.FootnotesView {
     private struct UpdatesText: View {
-        @ObservedObject var user: User
+        @ObservedObject var user: ManagedUser
 
         var body: some View {
             if let lastUpdateStartDate = user.lastUpdateStartDate, let lastUpdateEndDate = user.lastUpdateEndDate {
