@@ -30,6 +30,7 @@ struct UserView: View {
 
     #if os(iOS)
     @State var safariSheetURL: URL?
+    @available(iOS, deprecated: 16.0)
     @State var shareSheetURL: URL?
     #endif
 
@@ -37,6 +38,21 @@ struct UserView: View {
     #if os(iOS) || os(macOS)
     @State var showBulkDeleteAllTweets: Bool = false
     #endif
+
+    @ViewBuilder
+    var shareLink: some View {
+        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+            ShareLink(item: userProfileURL)
+        } else {
+            #if os(iOS)
+            Button {
+                shareSheetURL = userProfileURL
+            } label: {
+                Label("Share", systemImage: "square.and.arrow.up")
+            }
+            #endif
+        }
+    }
 
     var body: some View {
         let user = usersFetchedResultsController.fetchedObjects.first
@@ -106,13 +122,13 @@ struct UserView: View {
 
                         #if os(iOS)
                         Divider()
-
-                        Button {
-                            shareSheetURL = userProfileURL
-                        } label: {
-                            Label("Share", systemImage: "square.and.arrow.up")
+                        #else
+                        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+                            Divider()
                         }
                         #endif
+
+                        shareLink
 
                         if let account = account, user?.accounts?.contains(account) == true {
                             Divider()
@@ -130,13 +146,7 @@ struct UserView: View {
                         deleteMenu
                     }
 
-                    #if os(iOS)
-                    Button {
-                        shareSheetURL = userProfileURL
-                    } label: {
-                        Label("Share", systemImage: "square.and.arrow.up")
-                    }
-                    #endif
+                    shareLink
 
                     Link(destination: userProfileURL) {
                         Label("Open Profile", systemImage: "safari")
