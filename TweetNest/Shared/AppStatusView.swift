@@ -10,52 +10,55 @@ import Combine
 import OrderedCollections
 import TweetNestKit
 
+@MainActor
 struct AppStatusView: View {
     let isPersistentContainerLoaded: Bool
 
     @State private var inProgressPersistentContainerCloudKitEvent = TweetNestApp.session.persistentContainer.cloudKitEvents.values.last { $0.endDate == nil }
 
-    private var loadingText: Text? {
+    private var loadingText: LocalizedStringKey? {
         switch (isPersistentContainerLoaded, inProgressPersistentContainerCloudKitEvent?.type) {
         case (false, _):
-            return Text("Loading…")
+            return "Loading…"
         case (_, .setup?):
-            return Text("Preparing to Sync…")
+            return "Preparing to Sync…"
         case (_, .import?), (_, .export?), (_, .unknown?):
-            return Text("Syncing…")
+            return "Syncing…"
         case (true, nil):
             return nil
         }
     }
 
-    var body: some View {
-        Group {
-            if let loadingText = loadingText {
-                HStack(spacing: 4) {
-                    #if !os(watchOS)
-                    ProgressView()
-                        .accessibilityHidden(true)
-                    #endif
+    @ViewBuilder
+    private var statusView: some View {
+        if let loadingText = loadingText {
+            HStack(spacing: 4) {
+                #if !os(watchOS)
+                ProgressView()
+                    .accessibilityHidden(true)
+                #endif
 
-                    loadingText
-                        #if !os(watchOS)
-                        .font(.system(.callout))
-                        .foregroundColor(.secondary)
-                        #endif
-                        #if os(iOS)
-                        .fixedSize()
-                        #endif
-                }
-                .accessibilityElement(children: .combine)
-                .accessibilityAddTraits(.updatesFrequently)
+                Text(loadingText)
+                    #if !os(watchOS)
+                    .font(.system(.callout))
+                    .foregroundColor(.secondary)
+                    #endif
+                    #if os(iOS)
+                    .fixedSize()
+                    #endif
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityAddTraits(.updatesFrequently)
         }
-        .onReceive(
-            TweetNestApp.session.persistentContainer.$cloudKitEvents
-                .receive(on: RunLoop.main)
-        ) {
-            self.inProgressPersistentContainerCloudKitEvent = $0.values.last { $0.endDate == nil }
-        }
+    }
+
+    var body: some View {
+        statusView
+            .onReceive(
+                TweetNestApp.session.persistentContainer.$cloudKitEvents
+            ) {
+                self.inProgressPersistentContainerCloudKitEvent = $0.values.last { $0.endDate == nil }
+            }
     }
 }
 
