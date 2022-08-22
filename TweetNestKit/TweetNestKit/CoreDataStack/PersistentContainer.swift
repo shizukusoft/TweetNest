@@ -35,7 +35,7 @@ public final class PersistentContainer: NSPersistentCloudKitContainer {
     }
     #endif
 
-    @Published
+    @MainActor @Published
     public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
 
     init(inMemory: Bool = false, persistentStoreOptions: [String: Any?]? = nil) {
@@ -83,6 +83,7 @@ public final class PersistentContainer: NSPersistentCloudKitContainer {
 
                 return cloudKitEvents
             }
+            .receive(on: DispatchQueue.main)
             .assign(to: &$cloudKitEvents)
     }
 
