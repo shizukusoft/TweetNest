@@ -10,6 +10,7 @@
 import SwiftUI
 import UIKit
 
+@available(iOS, deprecated: 16.0)
 struct ShareView: UIViewControllerRepresentable {
 
     let items: [Any]
