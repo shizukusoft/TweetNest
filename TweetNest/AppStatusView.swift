@@ -33,8 +33,9 @@ struct AppStatusView: View {
     private var statusView: some View {
         if let loadingText = loadingText {
             HStack(spacing: 4) {
-                #if !os(watchOS)
+                #if os(iOS)
                 ProgressView()
+                    .progressViewStyle(.circular)
                     .accessibilityHidden(true)
                 #endif
 
@@ -43,10 +44,8 @@ struct AppStatusView: View {
                     .font(.system(.callout))
                     .foregroundColor(.secondary)
                     #endif
-                    #if os(iOS)
-                    .fixedSize()
-                    #endif
             }
+            .padding(8)
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.updatesFrequently)
         }

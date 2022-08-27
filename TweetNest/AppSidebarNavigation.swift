@@ -71,34 +71,30 @@ struct AppSidebarNavigation: View {
 
     var body: some View {
         NavigationView {
-            ZStack {
-                List {
-                    if isPersistentContainerLoaded {
-                        AppSidebarAccountsSections(navigationItemSelection: $navigationItemSelection)
-                    }
-
-                    #if os(watchOS)
-                    Section {
-                        addAccountButton
-                    }
-
-                    Section {
-                        NavigationLink {
-                            SettingsMainView()
-                        } label: {
-                            showSettingsLabel
-                        }
-                    } footer: {
-                        #if os(watchOS)
-                        AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
-                        #endif
-                    }
-                    #endif
+            List {
+                if isPersistentContainerLoaded {
+                    AppSidebarAccountsSections(navigationItemSelection: $navigationItemSelection)
                 }
-                #if os(macOS)
-                .frame(minWidth: 182)
+
+                #if os(watchOS)
+                Section {
+                    addAccountButton
+                }
+
+                Section {
+                    NavigationLink {
+                        SettingsMainView()
+                    } label: {
+                        showSettingsLabel
+                    }
+                } footer: {
+                    AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
+                }
                 #endif
             }
+            #if os(macOS)
+            .frame(minWidth: 182)
+            #endif
             #if os(iOS) || os(macOS)
             .listStyle(.sidebar)
             #endif
@@ -128,12 +124,23 @@ struct AppSidebarNavigation: View {
                 ToolbarItemGroup(placement: .automatic) {
                     addAccountButton
                 }
+                #endif
 
+                #if os(iOS)
                 ToolbarItemGroup(placement: .status) {
                     AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
                 }
                 #endif
             }
+            #if os(macOS)
+            .safeAreaInset(
+                edge: .bottom,
+                alignment: .center,
+                spacing: 0
+            ) {
+                AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
+            }
+            #endif
             .alert(isPresented: $showErrorAlert, error: error)
             #if os(iOS)
             .sheet(isPresented: $showSettings) {
