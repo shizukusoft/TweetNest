@@ -140,6 +140,10 @@
 		19C4E65628AE9E41008FFCB1 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19E5F41F28AEAA44002107D5 /* URLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F41E28AEAA44002107D5 /* URLTests.swift */; };
 		19E5F42528AEAD78002107D5 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F42428AEAD78002107D5 /* UIApplication.swift */; };
+		19EA118228B9D91800029075 /* SessionEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */; };
+		19EA118328B9D91800029075 /* SessionEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */; };
+		19EA118728B9D9D900029075 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118628B9D9D900029075 /* ProcessInfo.swift */; };
+		19EA118828B9D9D900029075 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118628B9D9D900029075 /* ProcessInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -322,6 +326,8 @@
 		19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TweetNestKit.xcodeproj; path = TweetNestKit/TweetNestKit.xcodeproj; sourceTree = "<group>"; };
 		19E5F41E28AEAA44002107D5 /* URLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLTests.swift; sourceTree = "<group>"; };
 		19E5F42428AEAD78002107D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
+		19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEnvironmentKey.swift; sourceTree = "<group>"; };
+		19EA118628B9D9D900029075 /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -469,6 +475,7 @@
 				19505F1328A1889200ADE8CF /* SafariView.swift */,
 				19505F1628A1889500ADE8CF /* ShareView.swift */,
 				19505F1928A1889900ADE8CF /* ShareButton.swift */,
+				19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */,
 				19505F1C28A188A100ADE8CF /* Components */,
 				19505F2F28A188A900ADE8CF /* BatchDeleteTweets */,
 				19505F3F28A188CB00ADE8CF /* Settings */,
@@ -568,6 +575,7 @@
 			isa = PBXGroup;
 			children = (
 				19505F5428A188E100ADE8CF /* URL.swift */,
+				19EA118628B9D9D900029075 /* ProcessInfo.swift */,
 			);
 			path = Foundation;
 			sourceTree = "<group>";
@@ -914,6 +922,7 @@
 				19505F4728A188CB00ADE8CF /* SettingsAccountView.swift in Sources */,
 				19505F1228A1888E00ADE8CF /* Pasteboard.swift in Sources */,
 				19505F1B28A1889900ADE8CF /* ShareButton.swift in Sources */,
+				19EA118828B9D9D900029075 /* ProcessInfo.swift in Sources */,
 				19505F4F28A188CB00ADE8CF /* SettingsNotificationsView.swift in Sources */,
 				19505F0328A1887B00ADE8CF /* DateText.swift in Sources */,
 				19505F4B28A188CB00ADE8CF /* SettingsAccountsView.swift in Sources */,
@@ -954,6 +963,7 @@
 				19505EDC28A1885900ADE8CF /* AccountLabel.swift in Sources */,
 				19505F5828A188E100ADE8CF /* URL.swift in Sources */,
 				19505EE828A1886000ADE8CF /* UserDetailView.swift in Sources */,
+				19EA118328B9D91800029075 /* SessionEnvironmentKey.swift in Sources */,
 				19505EE128A1885D00ADE8CF /* UserView+FootnotesView.swift in Sources */,
 				19505F4928A188CB00ADE8CF /* SettingsFetchNewDataView.swift in Sources */,
 				19505F2628A188A100ADE8CF /* UserDataAssetImage.swift in Sources */,
@@ -1028,11 +1038,13 @@
 				19505F3728A188A900ADE8CF /* BatchDeleteTweetsProgressView.swift in Sources */,
 				19505F0B28A1888600ADE8CF /* UserDetailLabel.swift in Sources */,
 				19505EED28A1886800ADE8CF /* UsersList.swift in Sources */,
+				19EA118228B9D91800029075 /* SessionEnvironmentKey.swift in Sources */,
 				19505EE728A1886000ADE8CF /* UserDetailView.swift in Sources */,
 				19505F1A28A1889900ADE8CF /* ShareButton.swift in Sources */,
 				19505F4A28A188CB00ADE8CF /* SettingsAccountsView.swift in Sources */,
 				19505EF928A1887000ADE8CF /* UserRows.swift in Sources */,
 				19505F0528A1887E00ADE8CF /* FetchedResultsController.swift in Sources */,
+				19EA118728B9D9D900029075 /* ProcessInfo.swift in Sources */,
 				19505F1128A1888E00ADE8CF /* Pasteboard.swift in Sources */,
 				19505EDB28A1885900ADE8CF /* AccountLabel.swift in Sources */,
 			);

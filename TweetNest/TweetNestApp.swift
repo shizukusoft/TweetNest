@@ -19,22 +19,12 @@ typealias ApplicationDelegateAdaptor = WKExtensionDelegateAdaptor
 
 @main
 struct TweetNestApp: App {
-    #if DEBUG
-    static nonisolated var isPreview: Bool {
-        CommandLine.arguments.contains("-com.tweetnest.TweetNest.Preview") || ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
-    }
-    #endif
-
+    @available(iOS, deprecated: 16.0)
+    @available(macOS, deprecated: 13.0)
+    @available(watchOS, deprecated: 9.0)
+    @available(tvOS, deprecated: 16.0)
     static nonisolated var session: Session {
-        #if DEBUG
-        if isPreview {
-            return Session.preview
-        } else {
-            return Session.shared
-        }
-        #else
-        return Session.shared
-        #endif
+        SessionEnvironmentKey.defaultValue
     }
 
     @ApplicationDelegateAdaptor(TweetNestAppDelegate.self) var delegate

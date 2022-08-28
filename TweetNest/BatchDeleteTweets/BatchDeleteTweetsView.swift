@@ -23,7 +23,7 @@ struct BatchDeleteTweetsView: View {
 
     #if DEBUG
     @State private var sourceTweets: OrderedDictionary<Tweet.ID, Tweet>? = {
-        if TweetNestApp.isPreview {
+        if ProcessInfo.processInfo.isPreview {
             return OrderedDictionary<Tweet.ID, [Tweet]>(
                 grouping: (0..<39042).compactMap { id in
                     return #"""
