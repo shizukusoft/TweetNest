@@ -50,6 +50,9 @@
 "Copy" = "복사";
 
 /* No comment provided by engineer. */
+"Date" = "날짜";
+
+/* No comment provided by engineer. */
 "Delete" = "삭제";
 
 /* No comment provided by engineer. */
@@ -87,6 +90,9 @@
 
 /* No comment provided by engineer. */
 "Fetch New Data" = "데이터 업데이트";
+
+/* No comment provided by engineer. */
+"Fetch new data" = "새 데이터 가져오기";
 
 /* No comment provided by engineer. */
 "Followers" = "팔로워";
@@ -149,6 +155,9 @@
 "Mutes History for %@" = "%@의 뮤트 기록";
 
 /* No comment provided by engineer. */
+"Name" = "이름";
+
+/* No comment provided by engineer. */
 "Notifications" = "알림";
 
 /* No comment provided by engineer. */
@@ -165,6 +174,9 @@
 
 /* No comment provided by engineer. */
 "Notify Profile Changes" = "프로필 변화 알림";
+
+/* No comment provided by engineer. */
+"OK" = "확인";
 
 /* No comment provided by engineer. */
 "Open Folder" = "폴더 열기";
@@ -188,7 +200,13 @@
 "Profile" = "프로필";
 
 /* No comment provided by engineer. */
+"Profile Image" = "프로필 사진";
+
+/* No comment provided by engineer. */
 "Protected" = "비공개 계정";
+
+/* No comment provided by engineer. */
+"Re-authenticate Account" = "계정 다시 인증";
 
 /* No comment provided by engineer. */
 "Refresh" = "새로 고침";
@@ -231,6 +249,9 @@
 
 /* No comment provided by engineer. */
 "URL" = "웹사이트";
+
+/* No comment provided by engineer. */
+"Username" = "사용자 아이디";
 
 /* No comment provided by engineer. */
 "Verified" = "인증된 계정";
