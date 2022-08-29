@@ -50,6 +50,9 @@
 "Copy" = "コピー";
 
 /* No comment provided by engineer. */
+"Date" = "日付";
+
+/* No comment provided by engineer. */
 "Delete" = "削除";
 
 /* No comment provided by engineer. */
@@ -87,6 +90,9 @@
 
 /* No comment provided by engineer. */
 "Fetch New Data" = "データの取得";
+
+/* No comment provided by engineer. */
+"Fetch new data" = "新しいデータを取り込む";
 
 /* No comment provided by engineer. */
 "Followers" = "フォロワー";
@@ -149,6 +155,9 @@
 "Mutes History for %@" = "%@のミュート履歴";
 
 /* No comment provided by engineer. */
+"Name" = "名前";
+
+/* No comment provided by engineer. */
 "Notifications" = "通知";
 
 /* No comment provided by engineer. */
@@ -165,6 +174,9 @@
 
 /* No comment provided by engineer. */
 "Notify Profile Changes" = "プロフィールの変更を通知する";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
 
 /* No comment provided by engineer. */
 "Open Folder" = "フォルダーを開く";
@@ -188,7 +200,13 @@
 "Profile" = "プロフィール";
 
 /* No comment provided by engineer. */
+"Profile Image" = "プロフィール画像";
+
+/* No comment provided by engineer. */
 "Protected" = "非公開";
+
+/* No comment provided by engineer. */
+"Re-authenticate Account" = "アカウントを再認証する";
 
 /* No comment provided by engineer. */
 "Refresh" = "更新";
@@ -231,6 +249,9 @@
 
 /* No comment provided by engineer. */
 "URL" = "Web";
+
+/* No comment provided by engineer. */
+"Username" = "ユーザー名";
 
 /* No comment provided by engineer. */
 "Verified" = "認証済み";
