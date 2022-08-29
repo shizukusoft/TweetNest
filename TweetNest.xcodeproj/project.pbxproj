@@ -196,6 +196,20 @@
 			remoteGlobalIDString = 1914CD0E28AE9A2800F7C398;
 			remoteInfo = TweetNestKitTests;
 		};
+		19EA11AE28BD3CE900029075 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1914CD0328AE9A2800F7C398;
+			remoteInfo = TweetNestKit;
+		};
+		19EA11B228BD3CED00029075 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 1914CD0328AE9A2800F7C398;
+			remoteInfo = TweetNestKit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -638,6 +652,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				19EA11B328BD3CED00029075 /* PBXTargetDependency */,
 			);
 			name = "TweetNest Watch App";
 			productName = "TweetNest Watch App";
@@ -693,6 +708,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				19EA11AF28BD3CE900029075 /* PBXTargetDependency */,
 				19505EB828A187BC00ADE8CF /* PBXTargetDependency */,
 			);
 			name = TweetNest;
@@ -1104,6 +1120,16 @@
 			platformFilter = ios;
 			target = 19505D9428A183B800ADE8CF /* TweetNest Watch App */;
 			targetProxy = 19505EB728A187BC00ADE8CF /* PBXContainerItemProxy */;
+		};
+		19EA11AF28BD3CE900029075 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TweetNestKit;
+			targetProxy = 19EA11AE28BD3CE900029075 /* PBXContainerItemProxy */;
+		};
+		19EA11B328BD3CED00029075 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = TweetNestKit;
+			targetProxy = 19EA11B228BD3CED00029075 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
