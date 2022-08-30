@@ -33,7 +33,7 @@ struct TweetNestApp: App {
     var body: some Scene {
         Group {
             WindowGroup {
-                MainView()
+                AppMainView()
                     .environmentObject(delegate)
                     .environment(\.managedObjectContext, Self.session.persistentContainer.viewContext)
                     #if os(macOS) && DEBUG

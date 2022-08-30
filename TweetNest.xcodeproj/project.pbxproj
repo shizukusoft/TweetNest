@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1908F44C28A2B63300F5DF2E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		1908F44D28A2B63800F5DF2E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
+		193A026A28C333A900B6E033 /* AppDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193A026928C333A900B6E033 /* AppDetailView.swift */; };
+		193A026B28C333A900B6E033 /* AppDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 193A026928C333A900B6E033 /* AppDetailView.swift */; };
 		19505DDE28A1844600ADE8CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DDD28A1844600ADE8CF /* Assets.xcassets */; };
 		19505DE228A1844600ADE8CF /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 19505DE128A1844600ADE8CF /* Preview Assets.xcassets */; };
 		19505DF628A1844700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
@@ -17,17 +19,9 @@
 		19505EC428A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
 		19505EC528A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC128A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift */; };
 		19505EC628A1883800ADE8CF /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC228A1883800ADE8CF /* TweetNestApp.swift */; };
-		19505EC828A1883D00ADE8CF /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC728A1883D00ADE8CF /* MainView.swift */; };
-		19505ECA28A1884100ADE8CF /* AppSidebarNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC928A1884100ADE8CF /* AppSidebarNavigation.swift */; };
-		19505ECD28A1884600ADE8CF /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505ECB28A1884600ADE8CF /* AppSidebarAccountsSections.swift */; };
-		19505ECE28A1884600ADE8CF /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505ECC28A1884600ADE8CF /* AppSidebarAccountsSections+Section.swift */; };
 		19505ECF28A1884A00ADE8CF /* TweetNestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC228A1883800ADE8CF /* TweetNestApp.swift */; };
-		19505ED028A1884A00ADE8CF /* AppSidebarAccountsSections+Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505ECC28A1884600ADE8CF /* AppSidebarAccountsSections+Section.swift */; };
 		19505ED128A1884A00ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */; };
-		19505ED228A1884A00ADE8CF /* AppSidebarAccountsSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505ECB28A1884600ADE8CF /* AppSidebarAccountsSections.swift */; };
 		19505ED328A1884A00ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC128A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift */; };
-		19505ED428A1884A00ADE8CF /* AppSidebarNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC928A1884100ADE8CF /* AppSidebarNavigation.swift */; };
-		19505ED528A1884A00ADE8CF /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EC728A1883D00ADE8CF /* MainView.swift */; };
 		19505ED628A1884A00ADE8CF /* TweetNestAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505EBF28A1883800ADE8CF /* TweetNestAppDelegate.swift */; };
 		19505ED828A1885100ADE8CF /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505ED728A1885100ADE8CF /* AppStatusView.swift */; };
 		19505ED928A1885100ADE8CF /* AppStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505ED728A1885100ADE8CF /* AppStatusView.swift */; };
@@ -144,6 +138,20 @@
 		19EA118328B9D91800029075 /* SessionEnvironmentKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */; };
 		19EA118728B9D9D900029075 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118628B9D9D900029075 /* ProcessInfo.swift */; };
 		19EA118828B9D9D900029075 /* ProcessInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118628B9D9D900029075 /* ProcessInfo.swift */; };
+		19EA118B28BB3E3800029075 /* AppMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118A28BB3E3800029075 /* AppMainView.swift */; };
+		19EA118C28BB3E3800029075 /* AppMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118A28BB3E3800029075 /* AppMainView.swift */; };
+		19EA119028BB3E8700029075 /* AppSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118F28BB3E8700029075 /* AppSidebar.swift */; };
+		19EA119128BB3E8700029075 /* AppSidebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA118F28BB3E8700029075 /* AppSidebar.swift */; };
+		19EA119428BB4D6100029075 /* UISplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA119328BB4D6100029075 /* UISplitViewController.swift */; };
+		19EA119528BB4D6100029075 /* UISplitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA119328BB4D6100029075 /* UISplitViewController.swift */; };
+		19EA119828BB4FDE00029075 /* AppSidebarAccountSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA119728BB4FDE00029075 /* AppSidebarAccountSection.swift */; };
+		19EA119928BB4FDE00029075 /* AppSidebarAccountSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA119728BB4FDE00029075 /* AppSidebarAccountSection.swift */; };
+		19EA119B28BB52C100029075 /* AppContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA119A28BB52C100029075 /* AppContentView.swift */; };
+		19EA119C28BB52C100029075 /* AppContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA119A28BB52C100029075 /* AppContentView.swift */; };
+		19EA11A128BB5C1800029075 /* AppSidebarNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA11A028BB5C1800029075 /* AppSidebarNavigationItem.swift */; };
+		19EA11A228BB5C1800029075 /* AppSidebarNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA11A028BB5C1800029075 /* AppSidebarNavigationItem.swift */; };
+		19EA11A428BB5DAB00029075 /* _NavigationSplitViewVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA11A328BB5DAB00029075 /* _NavigationSplitViewVisibility.swift */; };
+		19EA11A528BB5DAB00029075 /* _NavigationSplitViewVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19EA11A328BB5DAB00029075 /* _NavigationSplitViewVisibility.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -249,6 +257,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		193A026928C333A900B6E033 /* AppDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDetailView.swift; sourceTree = "<group>"; };
 		19505D9528A183B800ADE8CF /* TweetNest Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "TweetNest Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DA728A183B900ADE8CF /* TweetNest Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		19505DB128A183B900ADE8CF /* TweetNest Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TweetNest Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -263,10 +272,6 @@
 		19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+NSApplicationDelegate.swift"; sourceTree = "<group>"; };
 		19505EC128A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TweetNestAppDelegate+UIApplicationDelegate.swift"; sourceTree = "<group>"; };
 		19505EC228A1883800ADE8CF /* TweetNestApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TweetNestApp.swift; sourceTree = "<group>"; };
-		19505EC728A1883D00ADE8CF /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		19505EC928A1884100ADE8CF /* AppSidebarNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigation.swift; sourceTree = "<group>"; };
-		19505ECB28A1884600ADE8CF /* AppSidebarAccountsSections.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountsSections.swift; sourceTree = "<group>"; };
-		19505ECC28A1884600ADE8CF /* AppSidebarAccountsSections+Section.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "AppSidebarAccountsSections+Section.swift"; sourceTree = "<group>"; };
 		19505ED728A1885100ADE8CF /* AppStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppStatusView.swift; sourceTree = "<group>"; };
 		19505EDA28A1885900ADE8CF /* AccountLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountLabel.swift; sourceTree = "<group>"; };
 		19505EDD28A1885D00ADE8CF /* UserView+FootnotesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UserView+FootnotesView.swift"; sourceTree = "<group>"; };
@@ -344,6 +349,13 @@
 		19E5F42428AEAD78002107D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEnvironmentKey.swift; sourceTree = "<group>"; };
 		19EA118628B9D9D900029075 /* ProcessInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessInfo.swift; sourceTree = "<group>"; };
+		19EA118A28BB3E3800029075 /* AppMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppMainView.swift; sourceTree = "<group>"; };
+		19EA118F28BB3E8700029075 /* AppSidebar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebar.swift; sourceTree = "<group>"; };
+		19EA119328BB4D6100029075 /* UISplitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UISplitViewController.swift; sourceTree = "<group>"; };
+		19EA119728BB4FDE00029075 /* AppSidebarAccountSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarAccountSection.swift; sourceTree = "<group>"; };
+		19EA119A28BB52C100029075 /* AppContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppContentView.swift; sourceTree = "<group>"; };
+		19EA11A028BB5C1800029075 /* AppSidebarNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSidebarNavigationItem.swift; sourceTree = "<group>"; };
+		19EA11A328BB5DAB00029075 /* _NavigationSplitViewVisibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _NavigationSplitViewVisibility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -465,10 +477,12 @@
 				19505EBF28A1883800ADE8CF /* TweetNestAppDelegate.swift */,
 				19505EC028A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift */,
 				19505EC128A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift */,
-				19505EC728A1883D00ADE8CF /* MainView.swift */,
-				19505EC928A1884100ADE8CF /* AppSidebarNavigation.swift */,
-				19505ECB28A1884600ADE8CF /* AppSidebarAccountsSections.swift */,
-				19505ECC28A1884600ADE8CF /* AppSidebarAccountsSections+Section.swift */,
+				19EA118A28BB3E3800029075 /* AppMainView.swift */,
+				19EA118F28BB3E8700029075 /* AppSidebar.swift */,
+				19EA119728BB4FDE00029075 /* AppSidebarAccountSection.swift */,
+				19EA11A028BB5C1800029075 /* AppSidebarNavigationItem.swift */,
+				19EA119A28BB52C100029075 /* AppContentView.swift */,
+				193A026928C333A900B6E033 /* AppDetailView.swift */,
 				19505ED728A1885100ADE8CF /* AppStatusView.swift */,
 				19505EDA28A1885900ADE8CF /* AccountLabel.swift */,
 				19505EDE28A1885D00ADE8CF /* UserView.swift */,
@@ -493,6 +507,7 @@
 				19505F1628A1889500ADE8CF /* ShareView.swift */,
 				19505F1928A1889900ADE8CF /* ShareButton.swift */,
 				19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */,
+				19EA11A328BB5DAB00029075 /* _NavigationSplitViewVisibility.swift */,
 				19505F1C28A188A100ADE8CF /* Components */,
 				19505F2F28A188A900ADE8CF /* BatchDeleteTweets */,
 				19505F3F28A188CB00ADE8CF /* Settings */,
@@ -582,6 +597,7 @@
 		19505F5228A188E100ADE8CF /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				19EA119228BB4D5400029075 /* UIKit */,
 				19505F5328A188E100ADE8CF /* Foundation */,
 				19505F5528A188E100ADE8CF /* TweetNestKit */,
 			);
@@ -638,6 +654,14 @@
 				19C4E65228AE9E1A008FFCB1 /* TweetNestKitTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		19EA119228BB4D5400029075 /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				19EA119328BB4D6100029075 /* UISplitViewController.swift */,
+			);
+			path = UIKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -936,7 +960,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				19505EFD28A1887300ADE8CF /* AccountEnvironmentKey.swift in Sources */,
-				19505ED428A1884A00ADE8CF /* AppSidebarNavigation.swift in Sources */,
 				19505F4D28A188CB00ADE8CF /* SettingsMainView.swift in Sources */,
 				19505F4728A188CB00ADE8CF /* SettingsAccountView.swift in Sources */,
 				19505F1228A1888E00ADE8CF /* Pasteboard.swift in Sources */,
@@ -947,17 +970,19 @@
 				19505F4B28A188CB00ADE8CF /* SettingsAccountsView.swift in Sources */,
 				19505EE528A1885D00ADE8CF /* UserView+AllDataView.swift in Sources */,
 				19505F5128A188CB00ADE8CF /* SettingsGeneralView.swift in Sources */,
-				19505ED528A1884A00ADE8CF /* MainView.swift in Sources */,
 				19505EFA28A1887000ADE8CF /* UserRows.swift in Sources */,
+				19EA119128BB3E8700029075 /* AppSidebar.swift in Sources */,
+				19EA119528BB4D6100029075 /* UISplitViewController.swift in Sources */,
 				19505EEB28A1886400ADE8CF /* UserDetailProfileView.swift in Sources */,
 				19505ECF28A1884A00ADE8CF /* TweetNestApp.swift in Sources */,
-				19505ED028A1884A00ADE8CF /* AppSidebarAccountsSections+Section.swift in Sources */,
+				193A026B28C333A900B6E033 /* AppDetailView.swift in Sources */,
 				19505ED328A1884A00ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
 				19505EEE28A1886800ADE8CF /* UsersList.swift in Sources */,
 				19505F2A28A188A100ADE8CF /* PDFView.swift in Sources */,
 				19505F5A28A188E100ADE8CF /* Session.swift in Sources */,
 				19505F3C28A188A900ADE8CF /* BatchDeleteTweetsLoadingTwitterArchiveView.swift in Sources */,
 				19505F0928A1888200ADE8CF /* SectionedFetchedResultsController.swift in Sources */,
+				19EA11A228BB5C1800029075 /* AppSidebarNavigationItem.swift in Sources */,
 				19505F3628A188A900ADE8CF /* BatchDeleteTweetsLoadingRecentTweetsView.swift in Sources */,
 				19505F2E28A188A100ADE8CF /* ProfileImage.swift in Sources */,
 				19505EF428A1886C00ADE8CF /* UsersDiffList.swift in Sources */,
@@ -973,23 +998,26 @@
 				19505F1528A1889200ADE8CF /* SafariView.swift in Sources */,
 				19505F2428A188A100ADE8CF /* DetailImageView.swift in Sources */,
 				19505F0C28A1888600ADE8CF /* UserDetailLabel.swift in Sources */,
-				19505ED228A1884A00ADE8CF /* AppSidebarAccountsSections.swift in Sources */,
 				19505EF228A1886C00ADE8CF /* UsersDiffListSection.swift in Sources */,
 				19505ED928A1885100ADE8CF /* AppStatusView.swift in Sources */,
 				19505F1828A1889500ADE8CF /* ShareView.swift in Sources */,
 				19505F2828A188A100ADE8CF /* WebAuthenticationView.swift in Sources */,
 				19505F7228A189E800ADE8CF /* ComplicationController.swift in Sources */,
 				19505EDC28A1885900ADE8CF /* AccountLabel.swift in Sources */,
+				19EA119928BB4FDE00029075 /* AppSidebarAccountSection.swift in Sources */,
+				19EA118C28BB3E3800029075 /* AppMainView.swift in Sources */,
 				19505F5828A188E100ADE8CF /* URL.swift in Sources */,
 				19505EE828A1886000ADE8CF /* UserDetailView.swift in Sources */,
 				19EA118328B9D91800029075 /* SessionEnvironmentKey.swift in Sources */,
 				19505EE128A1885D00ADE8CF /* UserView+FootnotesView.swift in Sources */,
 				19505F4928A188CB00ADE8CF /* SettingsFetchNewDataView.swift in Sources */,
+				19EA119C28BB52C100029075 /* AppContentView.swift in Sources */,
 				19505F2628A188A100ADE8CF /* UserDataAssetImage.swift in Sources */,
 				19505F0628A1887E00ADE8CF /* FetchedResultsController.swift in Sources */,
 				19505EE328A1885D00ADE8CF /* UserView.swift in Sources */,
 				19505F3828A188A900ADE8CF /* BatchDeleteTweetsProgressView.swift in Sources */,
 				19505F0F28A1888A00ADE8CF /* UserDetailLabelStyle.swift in Sources */,
+				19EA11A528BB5DAB00029075 /* _NavigationSplitViewVisibility.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1014,16 +1042,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				19505F0E28A1888A00ADE8CF /* UserDetailLabelStyle.swift in Sources */,
+				19EA11A428BB5DAB00029075 /* _NavigationSplitViewVisibility.swift in Sources */,
 				19505EC428A1883800ADE8CF /* TweetNestAppDelegate+NSApplicationDelegate.swift in Sources */,
-				19505EC828A1883D00ADE8CF /* MainView.swift in Sources */,
 				19505F2528A188A100ADE8CF /* UserDataAssetImage.swift in Sources */,
 				19505EC328A1883800ADE8CF /* TweetNestAppDelegate.swift in Sources */,
+				19EA118B28BB3E3800029075 /* AppMainView.swift in Sources */,
 				19505F1428A1889200ADE8CF /* SafariView.swift in Sources */,
 				19505F5028A188CB00ADE8CF /* SettingsGeneralView.swift in Sources */,
 				19505F2328A188A100ADE8CF /* DetailImageView.swift in Sources */,
 				19505EF128A1886C00ADE8CF /* UsersDiffListSection.swift in Sources */,
 				19505F0228A1887B00ADE8CF /* DateText.swift in Sources */,
 				19505F2928A188A100ADE8CF /* PDFView.swift in Sources */,
+				19EA119B28BB52C100029075 /* AppContentView.swift in Sources */,
 				19505F0828A1888200ADE8CF /* SectionedFetchedResultsController.swift in Sources */,
 				19505F2D28A188A100ADE8CF /* ProfileImage.swift in Sources */,
 				19505F2728A188A100ADE8CF /* WebAuthenticationView.swift in Sources */,
@@ -1037,15 +1067,13 @@
 				19505EE428A1885D00ADE8CF /* UserView+AllDataView.swift in Sources */,
 				19505ED828A1885100ADE8CF /* AppStatusView.swift in Sources */,
 				19B7E61528AF69D4002E8213 /* TwitterAuthenticationButton.swift in Sources */,
-				19505ECD28A1884600ADE8CF /* AppSidebarAccountsSections.swift in Sources */,
-				19505ECA28A1884100ADE8CF /* AppSidebarNavigation.swift in Sources */,
 				19505EE028A1885D00ADE8CF /* UserView+FootnotesView.swift in Sources */,
 				19505F3528A188A900ADE8CF /* BatchDeleteTweetsLoadingRecentTweetsView.swift in Sources */,
-				19505ECE28A1884600ADE8CF /* AppSidebarAccountsSections+Section.swift in Sources */,
 				19505EE228A1885D00ADE8CF /* UserView.swift in Sources */,
 				19505F3928A188A900ADE8CF /* BatchDeleteTweetsView.swift in Sources */,
 				19505EC628A1883800ADE8CF /* TweetNestApp.swift in Sources */,
 				19505EF728A1887000ADE8CF /* UserRowsLabel.swift in Sources */,
+				19EA119828BB4FDE00029075 /* AppSidebarAccountSection.swift in Sources */,
 				19505F4828A188CB00ADE8CF /* SettingsFetchNewDataView.swift in Sources */,
 				19505F4E28A188CB00ADE8CF /* SettingsNotificationsView.swift in Sources */,
 				19505F5928A188E100ADE8CF /* Session.swift in Sources */,
@@ -1061,11 +1089,15 @@
 				19505EE728A1886000ADE8CF /* UserDetailView.swift in Sources */,
 				19505F1A28A1889900ADE8CF /* ShareButton.swift in Sources */,
 				19505F4A28A188CB00ADE8CF /* SettingsAccountsView.swift in Sources */,
+				19EA11A128BB5C1800029075 /* AppSidebarNavigationItem.swift in Sources */,
+				193A026A28C333A900B6E033 /* AppDetailView.swift in Sources */,
+				19EA119028BB3E8700029075 /* AppSidebar.swift in Sources */,
 				19505EF928A1887000ADE8CF /* UserRows.swift in Sources */,
 				19505F0528A1887E00ADE8CF /* FetchedResultsController.swift in Sources */,
 				19EA118728B9D9D900029075 /* ProcessInfo.swift in Sources */,
 				19505F1128A1888E00ADE8CF /* Pasteboard.swift in Sources */,
 				19505EDB28A1885900ADE8CF /* AccountLabel.swift in Sources */,
+				19EA119428BB4D6100029075 /* UISplitViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,24 +1,28 @@
 //
-//  MainView.swift
+//  AppMainView.swift
 //  TweetNest
 //
-//  Created by Jaehong Kang on 2021/02/24.
+//  Created by Jaehong Kang on 2022/08/28.
 //
 
 import SwiftUI
+import UserNotifications
 import TweetNestKit
 import UnifiedLogging
-import UserNotifications
 
 #if canImport(CoreSpotlight)
 import CoreSpotlight
 #endif
 
-struct MainView: View {
-    @EnvironmentObject private var appDelegate: TweetNestAppDelegate
-
-    @Environment(\.managedObjectContext) private var viewContext
-
+struct AppMainView: View {
+    @State private var navigationSplitViewVisibility: _NavigationSplitViewVisibility = {
+        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+            return _NavigationSplitViewVisibility(.all)
+        } else {
+            return _NavigationSplitViewVisibility()
+        }
+    }()
+    @State private var sidebarNavigationItemSelection: AppSidebarNavigationItem?
     @State private var isPersistentContainerLoaded: Bool = false
 
     @State var error: TweetNestError?
@@ -26,8 +30,52 @@ struct MainView: View {
 
     @State var user: ManagedUser?
 
+    @Environment(\.managedObjectContext) private var viewContext
+
+    @ViewBuilder
+    private var sidebar: some View {
+        AppSidebar(
+            isPersistentContainerLoaded: isPersistentContainerLoaded,
+            sidebarNavigationItemSelection: $sidebarNavigationItemSelection
+        )
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        AppContentView(
+            sidebarNavigationItemSelection: sidebarNavigationItemSelection,
+            navigationSplitViewVisibility: Binding($navigationSplitViewVisibility)
+        )
+    }
+
+    @ViewBuilder
+    private var detail: some View {
+        AppDetailView()
+    }
+
+    @ViewBuilder
+    private var navigationView: some View {
+        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+            NavigationSplitView(
+                columnVisibility: $navigationSplitViewVisibility.value
+            ) {
+                sidebar
+            } content: {
+                content
+            } detail: {
+                detail
+            }
+        } else {
+            NavigationView {
+                sidebar
+                content
+                detail
+            }
+        }
+    }
+
     var body: some View {
-        AppSidebarNavigation(isPersistentContainerLoaded: $isPersistentContainerLoaded)
+        navigationView
             .alert(isPresented: $showErrorAlert, error: error)
             .sheet(item: $user) { user in
                 NavigationView {
@@ -97,10 +145,8 @@ struct MainView: View {
     #endif
 }
 
-#if DEBUG
-struct MainView_Previews: PreviewProvider {
+struct AppMainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView().environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
+        AppMainView()
     }
 }
-#endif

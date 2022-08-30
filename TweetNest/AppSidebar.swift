@@ -1,8 +1,8 @@
 //
-//  AppSidebarNavigation.swift
-//  AppSidebarNavigation
+//  AppSidebar.swift
+//  TweetNest
 //
-//  Created by Jaehong Kang on 2021/07/31.
+//  Created by Jaehong Kang on 2022/08/28.
 //
 
 import SwiftUI
@@ -10,22 +10,13 @@ import TweetNestKit
 import BackgroundTask
 import UnifiedLogging
 
-enum AppSidebarNavigationItem: Hashable {
-    case profile(ManagedAccount)
-    case followings(ManagedAccount)
-    case followers(ManagedAccount)
-    case blockings(ManagedAccount)
-    case mutings(ManagedAccount)
-}
-
-struct AppSidebarNavigation: View {
-    @Binding var isPersistentContainerLoaded: Bool
+struct AppSidebar: View {
+    let isPersistentContainerLoaded: Bool
+    @Binding var sidebarNavigationItemSelection: AppSidebarNavigationItem?
 
     #if os(iOS)
     @State private var showSettings: Bool = false
     #endif
-
-    @State private var navigationItemSelection: AppSidebarNavigationItem?
 
     @State private var isRefreshing: Bool = false
 
@@ -69,29 +60,51 @@ struct AppSidebarNavigation: View {
     }
     #endif
 
-    var body: some View {
-        NavigationView {
-            List {
-                if isPersistentContainerLoaded {
-                    AppSidebarAccountsSections(navigationItemSelection: $navigationItemSelection)
-                }
+    @StateObject private var accountsFetchedResultsController = FetchedResultsController<ManagedAccount>(
+        sortDescriptors: [
+            SortDescriptor(\.preferringSortOrder, order: .forward),
+            SortDescriptor(\.creationDate, order: .reverse),
+        ],
+        managedObjectContext: TweetNestApp.session.persistentContainer.viewContext,
+        cacheName: "Accounts"
+    )
 
-                #if os(watchOS)
-                Section {
-                    addAccountButton
-                }
+    @ViewBuilder var list: some View {
+        let accounts = accountsFetchedResultsController.fetchedObjects
 
-                Section {
-                    NavigationLink {
-                        SettingsMainView()
-                    } label: {
-                        showSettingsLabel
-                    }
-                } footer: {
-                    AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
-                }
-                #endif
+        #if !os(watchOS)
+        List(accounts, selection: $sidebarNavigationItemSelection) { account in
+            AppSidebarAccountSection(
+                account: account, sidebarNavigationItemSelection: $sidebarNavigationItemSelection)
+        }
+        #else
+        List {
+            ForEach(accounts) { account in
+                AppSidebarAccountSection(
+                    account: account, sidebarNavigationItemSelection: $sidebarNavigationItemSelection)
             }
+
+            #if os(watchOS)
+            Section {
+                addAccountButton
+            }
+
+            Section {
+                NavigationLink {
+                    SettingsMainView()
+                } label: {
+                    showSettingsLabel
+                }
+            } footer: {
+                AppStatusView(isPersistentContainerLoaded: isPersistentContainerLoaded)
+            }
+            #endif
+        }
+        #endif
+    }
+
+    var body: some View {
+        list
             #if os(macOS)
             .frame(minWidth: 182)
             #endif
@@ -156,7 +169,6 @@ struct AppSidebarNavigation: View {
                 }
             }
             #endif
-        }
     }
 
     @Sendable
@@ -182,11 +194,11 @@ struct AppSidebarNavigation: View {
     }
 }
 
-#if DEBUG
-struct AppSidebarNavigation_Previews: PreviewProvider {
+struct AppSidebar_Previews: PreviewProvider {
     static var previews: some View {
-        AppSidebarNavigation(isPersistentContainerLoaded: .constant(true))
-            .environment(\.managedObjectContext, Session.preview.persistentContainer.viewContext)
+        AppSidebar(
+            isPersistentContainerLoaded: true,
+            sidebarNavigationItemSelection: .constant(nil)
+        )
     }
 }
-#endif

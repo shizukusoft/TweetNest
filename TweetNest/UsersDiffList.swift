@@ -42,18 +42,11 @@ struct UsersDiffList: View {
     }
 
     var body: some View {
-        #if os(macOS)
-        NavigationView {
-            usersDiffList
-                .frame(minWidth: 254)
-                .listStyle(.plain)
-                .navigationTitle(title)
-        }
-        .navigationViewStyle(.columns)
-        #else
         usersDiffList
+            #if os(macOS)
+            .frame(minWidth: 254)
+            #endif
             .navigationTitle(title)
-        #endif
     }
 
     init(_ title: LocalizedStringKey, userID: String?, diffKeyPath: KeyPath<ManagedUserDetail, [String]?>) {

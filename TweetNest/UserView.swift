@@ -96,6 +96,9 @@ struct UserView: View {
                     AllDataView(userDetails: userDetails)
                 }
             }
+            #if os(iOS)
+            .listStyle(.grouped)
+            #endif
             #endif
         }
         #if os(iOS)
