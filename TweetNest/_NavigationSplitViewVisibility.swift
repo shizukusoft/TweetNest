@@ -18,11 +18,19 @@ struct _NavigationSplitViewVisibility {
     var value: NavigationSplitViewVisibility {
         get {
             data.flatMap {
-                try! JSONDecoder().decode(NavigationSplitViewVisibility.self, from: $0)
+                do {
+                    return try JSONDecoder().decode(NavigationSplitViewVisibility.self, from: $0)
+                } catch {
+                    fatalError(error.localizedDescription)
+                }
             } ?? .automatic
         }
         set {
-            self.data = try! JSONEncoder().encode(newValue)
+            do {
+                self.data = try JSONEncoder().encode(newValue)
+            } catch {
+                fatalError(error.localizedDescription)
+            }
         }
     }
 
