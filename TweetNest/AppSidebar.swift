@@ -124,20 +124,18 @@ struct AppSidebar: View {
                 }
                 #endif
 
-                #if os(macOS) || os(watchOS)
                 ToolbarItemGroup(placement: .primaryAction) {
+                    #if os(macOS) || os(iOS)
+                    addAccountButton
+                    #endif
+
+                    #if os(macOS) || os(watchOS)
                     refreshButton
                         #if os(watchOS)
                         .padding(.bottom)
                         #endif
+                    #endif
                 }
-                #endif
-
-                #if os(macOS) || os(iOS)
-                ToolbarItemGroup(placement: .automatic) {
-                    addAccountButton
-                }
-                #endif
 
                 #if os(iOS)
                 ToolbarItemGroup(placement: .status) {
