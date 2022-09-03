@@ -100,7 +100,6 @@ struct AppSidebar: View {
             AppSidebarAccountSection(
                 account: account, sidebarNavigationItemSelection: $sidebarNavigationItemSelection)
         }
-        .listStyle(.sidebar)
         #endif
     }
 
