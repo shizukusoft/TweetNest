@@ -72,12 +72,7 @@ struct AppSidebar: View {
     @ViewBuilder var list: some View {
         let accounts = accountsFetchedResultsController.fetchedObjects
 
-        #if !os(watchOS)
-        List(accounts, selection: $sidebarNavigationItemSelection) { account in
-            AppSidebarAccountSection(
-                account: account, sidebarNavigationItemSelection: $sidebarNavigationItemSelection)
-        }
-        #else
+        #if os(watchOS)
         List {
             ForEach(accounts) { account in
                 AppSidebarAccountSection(
@@ -100,6 +95,12 @@ struct AppSidebar: View {
             }
             #endif
         }
+        #else
+        List(accounts, selection: $sidebarNavigationItemSelection) { account in
+            AppSidebarAccountSection(
+                account: account, sidebarNavigationItemSelection: $sidebarNavigationItemSelection)
+        }
+        .listStyle(.sidebar)
         #endif
     }
 

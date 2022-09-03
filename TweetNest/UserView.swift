@@ -97,7 +97,7 @@ struct UserView: View {
                 }
             }
             #if os(iOS)
-            .listStyle(.grouped)
+            .listStyle(.insetGrouped)
             #endif
             #endif
         }
