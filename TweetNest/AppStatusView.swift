@@ -45,7 +45,9 @@ struct AppStatusView: View {
                     .foregroundColor(.secondary)
                     #endif
             }
+            #if !os(watchOS)
             .padding(8)
+            #endif
             .accessibilityElement(children: .combine)
             .accessibilityAddTraits(.updatesFrequently)
         }
