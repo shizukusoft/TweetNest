@@ -463,7 +463,6 @@
 				19505EEF28A1886C00ADE8CF /* UsersDiffListSection.swift */,
 				19505EF628A1887000ADE8CF /* UserRows.swift */,
 				19505EF528A1887000ADE8CF /* UserRowsLabel.swift */,
-				19505EFB28A1887300ADE8CF /* AccountEnvironmentKey.swift */,
 				19505EFE28A1887700ADE8CF /* TweetNestError.swift */,
 				19505F0128A1887B00ADE8CF /* DateText.swift */,
 				19505F0428A1887E00ADE8CF /* FetchedResultsController.swift */,
@@ -474,11 +473,11 @@
 				19505F1328A1889200ADE8CF /* SafariView.swift */,
 				19505F1628A1889500ADE8CF /* ShareView.swift */,
 				19505F1928A1889900ADE8CF /* ShareButton.swift */,
-				19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */,
 				19EA11A328BB5DAB00029075 /* _NavigationSplitViewVisibility.swift */,
 				19505F1C28A188A100ADE8CF /* Components */,
 				19505F2F28A188A900ADE8CF /* BatchDeleteTweets */,
 				19505F3F28A188CB00ADE8CF /* Settings */,
+				66F3E82728CA514B005F364D /* Environments */,
 				19505F5228A188E100ADE8CF /* Extensions */,
 				19505DDD28A1844600ADE8CF /* Assets.xcassets */,
 				19505F7728A18AE300ADE8CF /* Info.plist */,
@@ -604,6 +603,15 @@
 				19EA119328BB4D6100029075 /* UISplitViewController.swift */,
 			);
 			path = UIKit;
+			sourceTree = "<group>";
+		};
+		66F3E82728CA514B005F364D /* Environments */ = {
+			isa = PBXGroup;
+			children = (
+				19505EFB28A1887300ADE8CF /* AccountEnvironmentKey.swift */,
+				19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */,
+			);
+			path = Environments;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
