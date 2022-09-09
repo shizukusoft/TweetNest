@@ -100,7 +100,7 @@ struct AppSidebar: View {
             #endif
         }
         #else
-        List(accounts) { account in
+        List(accounts, selection: $sidebarNavigationItemSelection) { account in
             AppSidebarAccountSection(
                 account: account, sidebarNavigationItemSelection: $sidebarNavigationItemSelection)
         }
