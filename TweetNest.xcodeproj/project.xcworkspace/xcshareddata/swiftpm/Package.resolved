@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/shizukusoft/swift-background-task",
       "state" : {
-        "revision" : "8e24a567fadeeeed497ce37cffe6410f93951783",
-        "version" : "0.2.7"
+        "revision" : "90880cff6a085f73fc1dcd374b6a4bd40ba1921a",
+        "version" : "0.2.8"
       }
     },
     {
@@ -39,10 +39,10 @@
     {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections",
+      "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
-        "version" : "1.0.2"
+        "revision" : "f504716c27d2e5d4144fa4794b12129301d17729",
+        "version" : "1.0.3"
       }
     },
     {
@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "8fc79cae9d03a5e623c52cc2dbd2df165a7832b0",
-        "version" : "1.4.3"
+        "revision" : "6fe203dc33195667ce1759bf0182975e4653ba1c",
+        "version" : "1.4.4"
       }
     },
     {
