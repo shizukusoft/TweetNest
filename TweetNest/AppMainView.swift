@@ -43,6 +43,7 @@ struct AppMainView: View {
     @ViewBuilder
     private var content: some View {
         AppContentView(
+            isPersistentContainerLoaded: isPersistentContainerLoaded,
             sidebarNavigationItemSelection: sidebarNavigationItemSelection,
             navigationSplitViewVisibility: Binding($navigationSplitViewVisibility)
         )

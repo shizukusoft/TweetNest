@@ -69,9 +69,13 @@ struct AppSidebar: View {
         cacheName: "Accounts"
     )
 
-    @ViewBuilder var list: some View {
-        let accounts = accountsFetchedResultsController.fetchedObjects
+    private var accounts: [ManagedAccount] {
+        isPersistentContainerLoaded ?
+            accountsFetchedResultsController.fetchedObjects :
+            []
+    }
 
+    @ViewBuilder var list: some View {
         #if os(watchOS)
         List {
             ForEach(accounts) { account in
@@ -96,7 +100,7 @@ struct AppSidebar: View {
             #endif
         }
         #else
-        List(accounts, selection: $sidebarNavigationItemSelection) { account in
+        List(accounts) { account in
             AppSidebarAccountSection(
                 account: account, sidebarNavigationItemSelection: $sidebarNavigationItemSelection)
         }

@@ -118,7 +118,7 @@ struct AppSidebarAccountSection: View {
                 tag: sidebarNavigationItem,
                 selection: $sidebarNavigationItemSelection,
                 destination: {
-                    AppContentView(sidebarNavigationItemSelection: sidebarNavigationItem)
+                    AppContentView(isPersistentContainerLoaded: true, sidebarNavigationItemSelection: sidebarNavigationItem)
                 },
                 label: label
             )
@@ -128,7 +128,7 @@ struct AppSidebarAccountSection: View {
             tag: sidebarNavigationItem,
             selection: $sidebarNavigationItemSelection,
             destination: {
-                AppContentView(sidebarNavigationItemSelection: sidebarNavigationItem)
+                AppContentView(isPersistentContainerLoaded: true, sidebarNavigationItemSelection: sidebarNavigationItem)
             },
             label: label
         )
