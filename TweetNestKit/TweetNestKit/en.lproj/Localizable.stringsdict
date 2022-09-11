@@ -5,97 +5,97 @@
 	<key>MUTUAL_FOLLOWINGS</key>
 	<dict>
 		<key>NSStringFormatValueTypeKey</key>
-		<string>%ld</string>
+		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
-		<key>Variable</key>
+		<key>COUNT</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>one</key>
-			<string>%#@COUNT@ mutual following</string>
+			<string>a mutual following</string>
 			<key>other</key>
-			<string>%#@COUNT@ mutual followings</string>
+			<string>%ld mutual followings</string>
 		</dict>
 	</dict>
 	<key>FOLLOWINGS</key>
 	<dict>
 		<key>NSStringFormatValueTypeKey</key>
-		<string>%ld</string>
+		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
-		<key>Variable</key>
+		<key>COUNT</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>one</key>
 			<string>a following</string>
 			<key>other</key>
-			<string>%#@COUNT@ followings</string>
+			<string>%ld followings</string>
 		</dict>
 	</dict>
 	<key>FOLLOWERS</key>
 	<dict>
 		<key>NSStringFormatValueTypeKey</key>
-		<string>%ld</string>
+		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
-		<key>Variable</key>
+		<key>COUNT</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>one</key>
 			<string>a follower</string>
 			<key>other</key>
-			<string>%#@COUNT@ followers</string>
+			<string>%ld followers</string>
 		</dict>
 	</dict>
 	<key>MUTED_USERS</key>
 	<dict>
 		<key>NSStringFormatValueTypeKey</key>
-		<string>%ld</string>
+		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
-		<key>Variable</key>
+		<key>COUNT</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>one</key>
 			<string>a muted user</string>
 			<key>other</key>
-			<string>%#@COUNT@ muted users</string>
+			<string>%ld muted users</string>
 		</dict>
 	</dict>
 	<key>BLOCKED_USERS</key>
 	<dict>
 		<key>NSStringFormatValueTypeKey</key>
-		<string>%ld</string>
+		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
-		<key>Variable</key>
+		<key>COUNT</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>one</key>
 			<string>a blocked user</string>
 			<key>other</key>
-			<string>%#@COUNT@ blocked user</string>
+			<string>%ld blocked user</string>
 		</dict>
 	</dict>
 	<key>USERS</key>
 	<dict>
 		<key>NSStringFormatValueTypeKey</key>
-		<string>%ld</string>
+		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
-		<key>Variable</key>
+		<key>COUNT</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>one</key>
 			<string>a user</string>
 			<key>other</key>
-			<string>%#@COUNT@ users</string>
+			<string>%ld users</string>
 		</dict>
 	</dict>
 </dict>
