@@ -1,6 +1,48 @@
+/* A part of notification body for background refreshing. "You %@."; 'are {followed by 2 users}' */
+"are %@" = "%@され";
+
+/* A notification body for background refreshing. "You %@."; becomes "You {are %@, and %@}"; 'are {followed by 2 users}, and {unfollowed by a user}' */
+"are %@, and %@" = "%@、%@され";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'blocked {2 mutual followings, and a user}' */
+"blocked %@" = "%@をブロック";
+
+/* A part of notification body for background refreshing. "You have %@."; 'changed your profile' */
+"changed your profile" = "プロフィールを変更";
+
 /* fetch-new-data-title notification title. */
 "Fetch New Data Error" = "データの取得エラー";
 
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'followed {2 followers, and a user}' */
+"followed %@" = "%@をフォロー";
+
+/* A part of notification body for background refreshing. "You are %@ and %@."; 'followed by {2 followings, and a user}' */
+"followed by %@" = "%@にフォロー";
+
+/* A notification body for background refreshing. "You %@."; becomes "have %@"; 'have {followed 2 users}' */
+"have %@" = "%@し";
+
+/* A notification body for background refreshing. "You %@."; becomes "have %@, and %@"; 'have {followed 2 users}, and {unfollowed a user}' */
+"have %@, and %@" = "%@、%@し";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'muted {2 mutual followings, and a user}' */
+"muted %@" = "%@をミュート";
+
 /* background-refresh notification body. */
 "New Profile" = "新しいプロフィール";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'unblocked {2 users, and a muted user}' */
+"unblocked %@" = "%@をブロック解除";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'unfollowed {2 followers, and a user}' */
+"unfollowed %@" = "%@をフォロー解除";
+
+/* A part of notification body for background refreshing. "You are %@ and %@."; 'unfollowed by {2 followings, and a user}' */
+"unfollowed by %@" = "%@にフォロー解除";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'unmuted {2 mutual followings, and a user}' */
+"unmuted %@" = "%@をミュート解除";
+
+/* A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.' */
+"You %@." = "ました。";
 
