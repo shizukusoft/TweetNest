@@ -457,30 +457,58 @@ extension UserNotificationManager {
         _ change: ManagedUserDetail.DetailedUserIDsChange,
         for kind: ChangeKind
     ) -> [String] {
+        guard !change.addedUserIDs.isEmpty || !change.removedUserIDs.isEmpty
+        else {
+            return .init()
+        }
         var texts = [String]()
         var addingTexts = [String]()
         var removingTexts = [String]()
         if change.component.contains(.friends) {
-            addingTexts.append(_changeText(for: change.friends.addedUserIDs, component: .friends))
-            removingTexts.append(_changeText(for: change.friends.removedUserIDs, component: .friends))
+            if !change.friends.addedUserIDs.isEmpty {
+                addingTexts.append(_changeText(for: change.friends.addedUserIDs, component: .friends))
+            }
+            if !change.friends.removedUserIDs.isEmpty {
+                removingTexts.append(_changeText(for: change.friends.removedUserIDs, component: .friends))
+            }
         }
         if change.component.contains(.followings) {
-            addingTexts.append(_changeText(for: change.followings.addedUserIDs, component: .followings))
-            removingTexts.append(_changeText(for: change.followings.removedUserIDs, component: .followings))
+            if !change.followings.addedUserIDs.isEmpty {
+                addingTexts.append(_changeText(for: change.followings.addedUserIDs, component: .followings))
+            }
+            if !change.followings.removedUserIDs.isEmpty {
+                removingTexts.append(_changeText(for: change.followings.removedUserIDs, component: .followings))
+            }
         }
         if change.component.contains(.followers) {
-            addingTexts.append(_changeText(for: change.followers.addedUserIDs, component: .followers))
-            removingTexts.append(_changeText(for: change.followers.removedUserIDs, component: .followers))
+            if !change.followers.addedUserIDs.isEmpty {
+                addingTexts.append(_changeText(for: change.followers.addedUserIDs, component: .followers))
+            }
+            if !change.followers.removedUserIDs.isEmpty {
+                removingTexts.append(_changeText(for: change.followers.removedUserIDs, component: .followers))
+            }
         }
-        addingTexts.append(_changeText(for: change.others.addedUserIDs, component: .init()))
-        removingTexts.append(_changeText(for: change.others.removedUserIDs, component: .init()))
+        if !change.others.addedUserIDs.isEmpty {
+            addingTexts.append(_changeText(for: change.others.addedUserIDs, component: .init()))
+        }
+        if !change.others.removedUserIDs.isEmpty {
+            removingTexts.append(_changeText(for: change.others.removedUserIDs, component: .init()))
+        }
         if change.component.contains(.mutings) {
-            addingTexts.append(_changeText(for: change.uniqueMutings.addedUserIDs, component: .mutings))
-            removingTexts.append(_changeText(for: change.uniqueMutings.removedUserIDs, component: .mutings))
+            if !change.uniqueMutings.addedUserIDs.isEmpty {
+                addingTexts.append(_changeText(for: change.uniqueMutings.addedUserIDs, component: .mutings))
+            }
+            if !change.uniqueMutings.removedUserIDs.isEmpty {
+                removingTexts.append(_changeText(for: change.uniqueMutings.removedUserIDs, component: .mutings))
+            }
         }
         if change.component.contains(.blockings) {
-            addingTexts.append(_changeText(for: change.uniqueBlockings.addedUserIDs, component: .blockings))
-            removingTexts.append(_changeText(for: change.uniqueBlockings.removedUserIDs, component: .blockings))
+            if !change.uniqueBlockings.addedUserIDs.isEmpty {
+                addingTexts.append(_changeText(for: change.uniqueBlockings.addedUserIDs, component: .blockings))
+            }
+            if !change.uniqueBlockings.removedUserIDs.isEmpty {
+                removingTexts.append(_changeText(for: change.uniqueBlockings.removedUserIDs, component: .blockings))
+            }
         }
         switch kind {
         case .profile:
