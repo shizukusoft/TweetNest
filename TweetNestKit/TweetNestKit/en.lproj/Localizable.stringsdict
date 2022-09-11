@@ -2,148 +2,100 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>%ld New Follower(s)</key>
+	<key>MUTUAL_FOLLOWINGS</key>
 	<dict>
+		<key>NSStringFormatValueTypeKey</key>
+		<string>%ld</string>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@followers@</string>
-		<key>followers</key>
+		<string>%#@COUNT@</string>
+		<key>Variable</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
 			<key>one</key>
-			<string>%ld New Follower</string>
+			<string>%#@COUNT@ mutual following</string>
 			<key>other</key>
-			<string>%ld New Followers</string>
-			<key>zero</key>
-			<string>%ld New Followers</string>
+			<string>%#@COUNT@ mutual followings</string>
 		</dict>
 	</dict>
-	<key>%ld New Following(s)</key>
+	<key>FOLLOWINGS</key>
 	<dict>
+		<key>NSStringFormatValueTypeKey</key>
+		<string>%ld</string>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@followings@</string>
-		<key>followings</key>
+		<string>%#@COUNT@</string>
+		<key>Variable</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
 			<key>one</key>
-			<string>%ld New Following</string>
+			<string>a following</string>
 			<key>other</key>
-			<string>%ld New Followings</string>
-			<key>zero</key>
-			<string>%ld New Followings</string>
+			<string>%#@COUNT@ followings</string>
 		</dict>
 	</dict>
-	<key>%ld New Unfollower(s)</key>
+	<key>FOLLOWERS</key>
 	<dict>
+		<key>NSStringFormatValueTypeKey</key>
+		<string>%ld</string>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@unfollowers@</string>
-		<key>unfollowers</key>
+		<string>%#@COUNT@</string>
+		<key>Variable</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
 			<key>one</key>
-			<string>%ld New Unfollower</string>
+			<string>a follower</string>
 			<key>other</key>
-			<string>%ld New Unfollowers</string>
-			<key>zero</key>
-			<string>%ld New Unfollowers</string>
+			<string>%#@COUNT@ followers</string>
 		</dict>
 	</dict>
-	<key>%ld New Unfollowing(s)</key>
+	<key>MUTED_USERS</key>
 	<dict>
+		<key>NSStringFormatValueTypeKey</key>
+		<string>%ld</string>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@unfollowings@</string>
-		<key>unfollowings</key>
+		<string>%#@COUNT@</string>
+		<key>Variable</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
 			<key>one</key>
-			<string>%ld New Unfollowing</string>
+			<string>a muted user</string>
 			<key>other</key>
-			<string>%ld New Unfollowings</string>
-			<key>zero</key>
-			<string>%ld New Unfollowings</string>
+			<string>%#@COUNT@ muted users</string>
 		</dict>
 	</dict>
-	<key>%ld New Block(s)</key>
+	<key>BLOCKED_USERS</key>
 	<dict>
+		<key>NSStringFormatValueTypeKey</key>
+		<string>%ld</string>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@blocks@</string>
-		<key>blocks</key>
+		<string>%#@COUNT@</string>
+		<key>Variable</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
 			<key>one</key>
-			<string>%ld New Block</string>
+			<string>a blocked user</string>
 			<key>other</key>
-			<string>%ld New Blocks</string>
-			<key>zero</key>
-			<string>%ld New Blocks</string>
+			<string>%#@COUNT@ blocked user</string>
 		</dict>
 	</dict>
-	<key>%ld New Unblock(s)</key>
+	<key>USERS</key>
 	<dict>
+		<key>NSStringFormatValueTypeKey</key>
+		<string>%ld</string>
 		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@unblocks@</string>
-		<key>unblocks</key>
+		<string>%#@COUNT@</string>
+		<key>Variable</key>
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
 			<key>one</key>
-			<string>%ld New Unblock</string>
+			<string>a user</string>
 			<key>other</key>
-			<string>%ld New Unblocks</string>
-			<key>zero</key>
-			<string>%ld New Unblocks</string>
-		</dict>
-	</dict>
-	<key>%ld New Mute(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@mutes@</string>
-		<key>mutes</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>one</key>
-			<string>%ld New Mute</string>
-			<key>other</key>
-			<string>%ld New Mutes</string>
-			<key>zero</key>
-			<string>%ld New Mutes</string>
-		</dict>
-	</dict>
-	<key>%ld New Unmute(s)</key>
-	<dict>
-		<key>NSStringLocalizedFormatKey</key>
-		<string>%#@unmutes@</string>
-		<key>unmutes</key>
-		<dict>
-			<key>NSStringFormatSpecTypeKey</key>
-			<string>NSStringPluralRuleType</string>
-			<key>NSStringFormatValueTypeKey</key>
-			<string>ld</string>
-			<key>one</key>
-			<string>%ld New Unmute</string>
-			<key>other</key>
-			<string>%ld New Unmutes</string>
-			<key>zero</key>
-			<string>%ld New Unmutes</string>
+			<string>%#@COUNT@ users</string>
 		</dict>
 	</dict>
 </dict>

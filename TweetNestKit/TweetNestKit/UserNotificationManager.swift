@@ -327,17 +327,28 @@ extension UserNotificationManager {
         notificationContent.sound = .default
         notificationContent.interruptionLevel = .timeSensitive
 
-        let changes = changes(
-            oldUserDetail: oldUserDetail,
-            newUserDetail: newUserDetail,
-            preferences: preferences
-        )
-
-        guard changes.isEmpty == false else {
+        let changeTexts =
+            changeTexts(
+                oldUserDetail: oldUserDetail,
+                newUserDetail: newUserDetail,
+                preferences: preferences)
+            as [String]
+        guard !changeTexts.isEmpty
+        else {
             return nil
         }
 
-        notificationContent.body = changes.formatted(.list(type: .and, width: .narrow))
+        let changeText =
+            changeTexts
+            .map {
+                String(
+                    localized: "You \($0).",
+                    bundle: .tweetNestKit,
+                    comment: #"A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.'"#)
+            }
+            .joined()
+        // TODO: routine for ko-KR postpositions
+        notificationContent.body = changeText
 
         return UNNotificationRequest(
             identifier: persistentID.uuidString,
@@ -346,105 +357,300 @@ extension UserNotificationManager {
         )
     }
 
-    private nonisolated func changes(
+    private nonisolated func changeTexts(
         oldUserDetail: ManagedUserDetail,
         newUserDetail: ManagedUserDetail,
         preferences: ManagedPreferences.Preferences
     ) -> [String] {
-        var changes: [String] = []
+        let categorizedChangeTexts =
+            changeTexts(
+                oldUserDetail: oldUserDetail,
+                newUserDetail: newUserDetail,
+                preferences: preferences)
+            as [ChangeKind: [String]]
+        var changeTexts = [String]()
+        categorizedChangeTexts[.profile].flatMap({changeTexts.append(contentsOf: $0)})
+        categorizedChangeTexts[.following].flatMap({changeTexts.append(contentsOf: $0)})
+        categorizedChangeTexts[.follower].flatMap({changeTexts.append(contentsOf: $0)})
+        categorizedChangeTexts[.muting].flatMap({changeTexts.append(contentsOf: $0)})
+        categorizedChangeTexts[.blocking].flatMap({changeTexts.append(contentsOf: $0)})
+        return changeTexts
+    }
 
+    private nonisolated func changeTexts(
+        oldUserDetail: ManagedUserDetail,
+        newUserDetail: ManagedUserDetail,
+        preferences: ManagedPreferences.Preferences
+    ) -> [ChangeKind: [String]] {
+        var changeTexts = [ChangeKind: [String]]()
         if preferences.notifyProfileChanges {
-            if oldUserDetail.isProfileEqual(to: newUserDetail) == false {
-                changes.append(
-                    String(localized: "New Profile", bundle: .tweetNestKit, comment: "background-refresh notification body.")
-                )
+            if !oldUserDetail.isProfileEqual(to: newUserDetail) {
+                let profileChangeText =
+                    String(
+                        localized: "changed your profile",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You have %@."; 'changed your profile'"#)
+                changeTexts[.profile] = [_changeText(for: [profileChangeText], kind: .profile)]
             }
         }
-
-        if preferences.notifyFollowingChanges, let followingUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.followingUserIDs) {
-            if followingUserIDsChanges.addedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(followingUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Following(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
-            }
-            if followingUserIDsChanges.removedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(followingUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unfollowing(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
+        if preferences.notifyFollowingChanges {
+            if let change =
+                newUserDetail.userIDsChange(
+                    from: oldUserDetail,
+                    for: \.followingUserIDs,
+                    component: [.followers])
+            {
+                changeTexts[.following] = self.changeTexts(change, for: .following)
             }
         }
-
-        if preferences.notifyFollowerChanges, let followerUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.followerUserIDs) {
-            if followerUserIDsChanges.addedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(followerUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Follower(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
-            }
-            if followerUserIDsChanges.removedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(followerUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unfollower(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
+        if preferences.notifyFollowerChanges {
+            if let change =
+                newUserDetail.userIDsChange(
+                    from: oldUserDetail,
+                    for: \.followerUserIDs,
+                    component: [.followings])
+            {
+                changeTexts[.follower] = self.changeTexts(change, for: .follower)
             }
         }
-
-        if preferences.notifyBlockingChanges, let blockingUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.blockingUserIDs) {
-            if blockingUserIDsChanges.addedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(blockingUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Block(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
-            }
-            if blockingUserIDsChanges.removedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(blockingUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unblock(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
+        if preferences.notifyMutingChanges {
+            if let change =
+                newUserDetail.userIDsChange(
+                    from: oldUserDetail,
+                    for: \.mutingUserIDs,
+                    component: [.friends, .followings, .followers, .blockings])
+            {
+                changeTexts[.muting] = self.changeTexts(change, for: .muting)
             }
         }
-
-        if preferences.notifyMutingChanges, let mutingUserIDsChanges = newUserDetail.userIDsChange(from: oldUserDetail, for: \.mutingUserIDs) {
-            if mutingUserIDsChanges.addedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(mutingUserIDsChanges.addedUserIDs.count, specifier: "%ld") New Mute(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
-            }
-            if mutingUserIDsChanges.removedUserIDs.count > 0 {
-                changes.append(
-                    String(
-                        localized: "\(mutingUserIDsChanges.removedUserIDs.count, specifier: "%ld") New Unmute(s)",
-                        bundle: .tweetNestKit,
-                        comment: "background-refresh notification body."
-                    )
-                )
+        if preferences.notifyBlockingChanges {
+            if let change =
+                newUserDetail.userIDsChange(
+                    from: oldUserDetail,
+                    for: \.blockingUserIDs,
+                    component: [.friends, .followings, .followers, .mutings])
+            {
+                changeTexts[.blocking] = self.changeTexts(change, for: .blocking)
             }
         }
+        return changeTexts
+    }
+}
 
-        return changes
+extension UserNotificationManager {
+
+    private enum ChangeKind: String, Equatable, Sendable {
+
+        case profile
+
+        case following
+
+        case follower
+
+        case muting
+
+        case blocking
+    }
+
+    @inline(never)
+    private nonisolated func changeTexts(
+        _ change: ManagedUserDetail.DetailedUserIDsChange,
+        for kind: ChangeKind
+    ) -> [String] {
+        var texts = [String]()
+        var addingTexts = [String]()
+        var removingTexts = [String]()
+        if change.component.contains(.friends) {
+            addingTexts.append(_changeText(for: change.friends.addedUserIDs, component: .friends))
+            removingTexts.append(_changeText(for: change.friends.removedUserIDs, component: .friends))
+        }
+        if change.component.contains(.followings) {
+            addingTexts.append(_changeText(for: change.followings.addedUserIDs, component: .followings))
+            removingTexts.append(_changeText(for: change.followings.removedUserIDs, component: .followings))
+        }
+        if change.component.contains(.followers) {
+            addingTexts.append(_changeText(for: change.followers.addedUserIDs, component: .followers))
+            removingTexts.append(_changeText(for: change.followers.removedUserIDs, component: .followers))
+        }
+        addingTexts.append(_changeText(for: change.others.addedUserIDs, component: .init()))
+        removingTexts.append(_changeText(for: change.others.removedUserIDs, component: .init()))
+        if change.component.contains(.mutings) {
+            addingTexts.append(_changeText(for: change.uniqueMutings.addedUserIDs, component: .mutings))
+            removingTexts.append(_changeText(for: change.uniqueMutings.removedUserIDs, component: .mutings))
+        }
+        if change.component.contains(.blockings) {
+            addingTexts.append(_changeText(for: change.uniqueBlockings.addedUserIDs, component: .blockings))
+            removingTexts.append(_changeText(for: change.uniqueBlockings.removedUserIDs, component: .blockings))
+        }
+        switch kind {
+        case .profile:
+            break
+        case .following:
+            var followingTexts = [String]()
+            if !addingTexts.isEmpty {
+                followingTexts.append(
+                    .init(
+                        localized: "followed \(addingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'followed {2 followers, and a user}'"#))
+            }
+            if !removingTexts.isEmpty {
+                followingTexts.append(
+                    .init(
+                        localized: "unfollowed \(removingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unfollowed {2 followers, and a user}'"#))
+            }
+            texts.append(_changeText(for: followingTexts, kind: kind))
+        case .follower:
+            var followerTexts = [String]()
+            if !addingTexts.isEmpty {
+                followerTexts.append(
+                    .init(
+                        localized: "followed by \(addingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You are %@ and %@."; 'followed by {2 followings, and a user}'"#))
+            }
+            if !removingTexts.isEmpty {
+                followerTexts.append(
+                    .init(
+                        localized: "unfollowed by \(removingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You are %@ and %@."; 'unfollowed by {2 followings, and a user}'"#))
+            }
+            texts.append(_changeText(for: followerTexts, kind: kind))
+        case .muting:
+            var mutingTexts = [String]()
+            if !addingTexts.isEmpty {
+                mutingTexts.append(
+                    .init(
+                        localized: "muted \(addingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'muted {2 mutual followings, and a user}'"#))
+            }
+            if !removingTexts.isEmpty {
+                mutingTexts.append(
+                    .init(
+                        localized: "unmuted \(removingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unmuted {2 mutual followings, and a user}'"#))
+            }
+            texts.append(_changeText(for: mutingTexts, kind: kind))
+        case .blocking:
+            var blockingTexts = [String]()
+            if !addingTexts.isEmpty {
+                blockingTexts.append(
+                    .init(
+                        localized: "blocked \(addingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'blocked {2 mutual followings, and a user}'"#))
+            }
+            if !removingTexts.isEmpty {
+                blockingTexts.append(
+                    .init(
+                        localized: "unblocked \(removingTexts.formatted(.list(type: .and, width: .standard)))",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unblocked {2 users, and a muted user}'"#))
+            }
+            texts.append(_changeText(for: blockingTexts, kind: kind))
+        }
+        return texts
+    }
+
+    @inline(never)
+    private nonisolated func _changeText(
+        for change: OrderedSet<String>,
+        component: ManagedUserDetail.DetailedUserIDsChange.Component
+    ) -> String {
+        guard !change.isEmpty
+        else {
+            return .init()
+        }
+        if component == .friends {
+            return
+                .init(
+                    localized: "MUTUAL_FOLLOWINGS",
+                    defaultValue: "\(change.count, specifier: "%ld") mutual following(s)",
+                    bundle: .tweetNestKit,
+                    comment: #"A part of notification body for background refreshing. "You have unmuted %@ and %@."; '{2} mutual followings'"#)
+        }
+        if component == .followings {
+            return
+                .init(
+                    localized: "FOLLOWINGS",
+                    defaultValue: "\(change.count, specifier: "%ld") following(s)",
+                    bundle: .tweetNestKit,
+                    comment: #"A part of notification body for background refreshing. "You are followed by %@ and %@."; '{2} followings'"#)
+        }
+        if component == .followers {
+            return
+                .init(
+                    localized: "FOLLOWERS",
+                    defaultValue: "\(change.count, specifier: "%ld") follower(s)",
+                    bundle: .tweetNestKit,
+                    comment: #"A part of notification body for background refreshing. "You have followed %@ and %@."; '{2} followers'"#)
+        }
+        if component == .mutings {
+            return
+                .init(
+                    localized: "MUTED_USERS",
+                    defaultValue: "\(change.count, specifier: "%ld") muted user(s)",
+                    bundle: .tweetNestKit,
+                    comment: #"A part of notification body for background refreshing. "You have unfollowed %@ and %@."; '{2} muted users'"#)
+        }
+        if component == .blockings {
+            return
+                .init(
+                    localized: "BLOCKED_USERS",
+                    defaultValue: "\(change.count, specifier: "%ld") blocked user(s)",
+                    bundle: .tweetNestKit,
+                    comment: #"A part of notification body for background refreshing. "You have muted %@ and %@."; '{2} blocked users'"#)
+        }
+        return
+            .init(
+                localized: "USERS",
+                defaultValue: "\(change.count, specifier: "%ld") user(s)",
+                bundle: .tweetNestKit,
+                comment: #"A part of notification body for background refreshing. "You have blocked %@ and %@."; '{2} users'"#)
+    }
+
+    @inline(never)
+    private nonisolated func _changeText(
+        for texts: [String],
+        kind: ChangeKind
+    ) -> String {
+        switch kind {
+        case .follower:
+            if texts.count == 1 {
+                return
+                    .init(
+                        localized: "are \(texts[0])",
+                        bundle: .tweetNestKit,
+                        comment: #"A part of notification body for background refreshing. "You %@."; 'are {followed by 2 users}'"#)
+            }
+            if texts.count == 2 {
+                return
+                    .init(
+                        localized: "are \(texts[0]), and \(texts[1])",
+                        bundle: .tweetNestKit,
+                        comment: #"A notification body for background refreshing. "You %@."; becomes "You {are %@, and %@}"; 'are {followed by 2 users}, and {unfollowed by a user}'"#)
+            }
+        default:
+            if texts.count == 1 {
+                return
+                    .init(
+                        localized: "have \(texts[0])",
+                        bundle: .tweetNestKit,
+                        comment: #"A notification body for background refreshing. "You %@."; becomes "have %@"; 'have {followed 2 users}'"#)
+            }
+            if texts.count == 2 {
+                return
+                    .init(
+                        localized: "have \(texts[0]), and \(texts[1])",
+                        bundle: .tweetNestKit,
+                        comment: #"A notification body for background refreshing. "You %@."; becomes "have %@, and %@"; 'have {followed 2 users}, and {unfollowed a user}'"#)
+            }
+        }
+        return .init()
     }
 }
