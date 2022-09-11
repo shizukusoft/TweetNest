@@ -41,7 +41,7 @@
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>other</key>
-			<string>%#@人のフォローしているユーザー</string>
+			<string>%#@COUNT@人のフォローしているユーザー</string>
 		</dict>
 	</dict>
 	<key>MUTED_USERS</key>
@@ -83,7 +83,7 @@
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
 			<key>other</key>
-			<string>%#@COUNT@ users</string>
+			<string>%#@COUNT@人のユーザー</string>
 		</dict>
 	</dict>
 </dict>

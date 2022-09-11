@@ -44,5 +44,5 @@
 "unmuted %@" = "%@をミュート解除";
 
 /* A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.' */
-"You %@." = "ました。";
+"You %@." = "%@ました。";
 
