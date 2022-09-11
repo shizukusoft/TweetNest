@@ -8,11 +8,11 @@
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>ld</string>
 			<key>other</key>
 			<string>%ld人のブロックしたユーザー</string>
 		</dict>
-		<key>NSStringFormatValueTypeKey</key>
-		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
@@ -22,11 +22,11 @@
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>ld</string>
 			<key>other</key>
 			<string>%ld人のフォロワー</string>
 		</dict>
-		<key>NSStringFormatValueTypeKey</key>
-		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
@@ -36,11 +36,11 @@
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>ld</string>
 			<key>other</key>
 			<string>%ld人のフォロー</string>
 		</dict>
-		<key>NSStringFormatValueTypeKey</key>
-		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
@@ -50,11 +50,11 @@
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>ld</string>
 			<key>other</key>
 			<string>%ld人のミュートしたユーザー</string>
 		</dict>
-		<key>NSStringFormatValueTypeKey</key>
-		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
@@ -64,11 +64,11 @@
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>ld</string>
 			<key>other</key>
 			<string>%ld人の相互フォロー</string>
 		</dict>
-		<key>NSStringFormatValueTypeKey</key>
-		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
@@ -78,11 +78,11 @@
 		<dict>
 			<key>NSStringFormatSpecTypeKey</key>
 			<string>NSStringPluralRuleType</string>
+            <key>NSStringFormatValueTypeKey</key>
+            <string>ld</string>
 			<key>other</key>
 			<string>%ld人のユーザー</string>
 		</dict>
-		<key>NSStringFormatValueTypeKey</key>
-		<string>ld</string>
 		<key>NSStringLocalizedFormatKey</key>
 		<string>%#@COUNT@</string>
 	</dict>
