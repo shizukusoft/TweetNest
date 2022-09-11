@@ -173,12 +173,12 @@ extension ManagedUserDetail {
             let followingFollowerUserIDs: Set<String>
             let mutingUserIDs: Set<String>
             let blockingUserIDs: Set<String>
-            if component.isSuperset(of: [.friends, .followings]) {
+            if component.contains(.followings) || component.contains(.friends) {
                 followingUserIDs = comparisonTarget.followingUserIDs.flatMap(Set.init(_:)) ?? .init()
             } else {
                 followingUserIDs = .init()
             }
-            if component.isSuperset(of: [.friends, .followers]) {
+            if component.contains(.followers) || component.contains(.friends) {
                 followerUserIDs = comparisonTarget.followerUserIDs.flatMap(Set.init(_:)) ?? .init()
             } else {
                 followerUserIDs = .init()
@@ -192,8 +192,15 @@ extension ManagedUserDetail {
             } else {
                 friendUserIDs = .init()
             }
-            if component.isSuperset(of: [.followings, .followers]) {
-                followingFollowerUserIDs = followingUserIDs.union(followerUserIDs)
+            if component.contains(.followings) {
+                if component.contains(.followers) {
+                    followingFollowerUserIDs = followingUserIDs.union(followerUserIDs)
+                }
+                else {
+                    followingFollowerUserIDs = followingUserIDs
+                }
+            } else if component.contains(.followers) {
+                followingFollowerUserIDs = followerUserIDs
             } else {
                 followingFollowerUserIDs = .init()
             }
