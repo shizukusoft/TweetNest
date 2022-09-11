@@ -194,8 +194,7 @@ extension ManagedUserDetail {
             }
             if component.isSuperset(of: [.followings, .followers]) {
                 followingFollowerUserIDs = followingUserIDs.union(followerUserIDs)
-            }
-            else {
+            } else {
                 followingFollowerUserIDs = .init()
             }
             if component.contains(.mutings) {
