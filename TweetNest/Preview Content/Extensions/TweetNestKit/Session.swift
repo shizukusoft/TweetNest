@@ -184,16 +184,3 @@ extension TweetNestKit.Session {
     }
 }
 #endif
-
-extension TweetNestKit.ManagedAccount {
-    public static var preview: ManagedAccount {
-        let fetchRequest = ManagedAccount.fetchRequest()
-
-        do {
-            return try Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
-        } catch {
-            let nsError = error as NSError
-            fatalError("Unresolved error \(nsError), \(nsError.userInfo)")
-        }
-    }
-}
