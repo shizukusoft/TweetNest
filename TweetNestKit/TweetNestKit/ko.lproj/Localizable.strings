@@ -1,6 +1,48 @@
+/* A part of notification body for background refreshing. "You %@."; 'are {followed by 2 users}' */
+"are %@" = "%@했";
+
+/* A notification body for background refreshing. "You %@."; becomes "You {are %@, and %@}"; 'are {followed by 2 users}, and {unfollowed by a user}' */
+"are %@, and %@" = "%@하고, %@했";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'blocked {2 mutual followings, and a user}' */
+"blocked %@" = "%@(을)를 차단";
+
+/* A part of notification body for background refreshing. "You have %@."; 'changed your profile' */
+"changed your profile" = "프로필을 변경";
+
 /* fetch-new-data-title notification title. */
 "Fetch New Data Error" = "데이터 업데이트 오류";
 
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'followed {2 followers, and a user}' */
+"followed %@" = "%@(을)를 팔로우";
+
+/* A part of notification body for background refreshing. "You are %@ and %@."; 'followed by {2 followings, and a user}' */
+"followed by %@" = "%@(이)가 당신을 팔로우";
+
+/* A notification body for background refreshing. "You %@."; becomes "have %@"; 'have {followed 2 users}' */
+"have %@" = "%@했";
+
+/* A notification body for background refreshing. "You %@."; becomes "have %@, and %@"; 'have {followed 2 users}, and {unfollowed a user}' */
+"have %@, and %@" = "%@하고, %@했";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'muted {2 mutual followings, and a user}' */
+"muted %@" = "%@(을)를 뮤트";
+
 /* background-refresh notification body. */
 "New Profile" = "새 프로필";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'unblocked {2 users, and a muted user}' */
+"unblocked %@" = "%@(을)를 차단 해제";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'unfollowed {2 followers, and a user}' */
+"unfollowed %@" = "%@(을)를 팔로우 해제";
+
+/* A part of notification body for background refreshing. "You are %@ and %@."; 'unfollowed by {2 followings, and a user}' */
+"unfollowed by %@" = "%@(이)가 당신을 팔로우 해제";
+
+/* A part of notification body for background refreshing. "You have %@ and %@."; 'unmuted {2 mutual followings, and a user}' */
+"unmuted %@" = "%@(을)를 뮤트 해제";
+
+/* A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.' */
+"You %@." = "%@습니다.";
 
