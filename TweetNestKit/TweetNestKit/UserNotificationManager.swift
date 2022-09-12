@@ -338,7 +338,7 @@ extension UserNotificationManager {
             return nil
         }
 
-        let changeText =
+        var changeText =
             changeTexts
             .map {
                 String(
@@ -347,7 +347,14 @@ extension UserNotificationManager {
                     comment: #"A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.'"#)
             }
             .joined()
-        // TODO: routine for ko-KR postpositions
+        if #available(iOS 16, macOS 13, watchOS 9, *) {
+            if Locale.current.language.languageCode == "ko" {
+                changeText = KoreanPostpositionResolver.resolvedString(changeText)
+            }
+        }
+        else if Locale.current.languageCode == "ko" {
+            changeText = KoreanPostpositionResolver.resolvedString(changeText)
+        }
         notificationContent.body = changeText
 
         return UNNotificationRequest(
