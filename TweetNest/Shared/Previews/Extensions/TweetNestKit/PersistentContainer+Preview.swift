@@ -42,7 +42,8 @@ extension PersistentContainer {
         guard let dataAsset = NSDataAsset(name: resourceName, bundle: bundle) else {
             fatalError("Cannot find preview manifest asset with given name: \(resourceName)")
         }
-        let decoder = PropertyListDecoder()
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
         let previewManifest: PreviewManifest
         do {
             previewManifest = try decoder.decode(PreviewManifest.self, from: dataAsset.data)

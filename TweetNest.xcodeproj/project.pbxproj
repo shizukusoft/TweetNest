@@ -575,7 +575,7 @@
 		663E96C02838F5D60037413E /* Pasteboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pasteboard.swift; sourceTree = "<group>"; };
 		6697AF09283EE26A00EE816D /* PersistentContainer+Preview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistentContainer+Preview.swift"; sourceTree = "<group>"; };
 		6697AF12283EE96C00EE816D /* PreviewManifest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewManifest.swift; sourceTree = "<group>"; };
-		6697AF2A28400DD100EE816D /* PreviewManifest.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = PreviewManifest.plist; path = Assets.xcassets/PreviewManifest.dataset/PreviewManifest.plist; sourceTree = "<group>"; };
+		6697AF2A28400DD100EE816D /* PreviewManifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = PreviewManifest.json; path = Assets.xcassets/PreviewManifest.dataset/PreviewManifest.json; sourceTree = "<group>"; };
 		66EE523726BF560200B721AC /* ShareView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareView.swift; sourceTree = "<group>"; };
 		66EE523A26BF5C0E00B721AC /* ShareButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -759,7 +759,7 @@
 				6697AF12283EE96C00EE816D /* PreviewManifest.swift */,
 				6697AF0D283EE55D00EE816D /* Extensions */,
 				19365983260978EB00865D40 /* Assets.xcassets */,
-				6697AF2A28400DD100EE816D /* PreviewManifest.plist */,
+				6697AF2A28400DD100EE816D /* PreviewManifest.json */,
 			);
 			path = Previews;
 			sourceTree = "<group>";

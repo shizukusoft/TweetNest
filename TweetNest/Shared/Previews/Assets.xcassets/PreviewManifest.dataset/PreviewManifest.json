@@ -1,0 +1,138 @@
+{
+    "accounts": [
+        "1352231658661920770"
+    ],
+    "data-assets": {
+        "783214": [
+            {
+                "data-mime-type": "image/jpeg",
+                "data-resource-name": "TwitterProfileImageData",
+                "url": "https://pbs.twimg.com/profile_images/1488548719062654976/u6qfBBkF.jpg"
+            }
+        ],
+        "17874544": [
+            {
+                "data-mime-type": "image/jpeg",
+                "data-resource-name": "TwitterSupportProfileImageData",
+                "url": "https://pbs.twimg.com/profile_images/1354479643882004483/Btnfm47p.jpg"
+            }
+        ],
+        "380749300": [
+            {
+                "data-mime-type": "image/jpeg",
+                "data-resource-name": "AppleProfileImageData",
+                "url": "https://pbs.twimg.com/profile_images/1283958620359516160/p7zz5dxZ.jpg"
+            }
+        ],
+        "1352231658661920770": [
+            {
+                "data-mime-type": "image/jpeg",
+                "data-resource-name": "TweetNestProfileHeaderImageData",
+                "url": "https://pbs.twimg.com/profile_banners/1373727821726580736/1632538699"
+            },
+            {
+                "data-mime-type": "image/png",
+                "data-resource-name": "TweetNestProfileImageData",
+                "url": "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png"
+            }
+        ]
+    },
+    "user-details": {
+        "783214": [
+            {
+                "is-verified": true,
+                "location": "everywhere",
+                "name": "Twitter",
+                "profile-image-url": "https://pbs.twimg.com/profile_images/1488548719062654976/u6qfBBkF.jpg",
+                "url": "https://about.twitter.com/",
+                "user-attributed-description": "what’s happening?!",
+                "user-creation-date": "2007-02-20T14:35:54Z",
+                "user-id": "783214",
+                "username": "Twitter"
+            }
+        ],
+        "17874544": [
+            {
+                "is-verified": true,
+                "location": "Twitter HQ",
+                "name": "Twitter Support",
+                "profile-image-url": "https://pbs.twimg.com/profile_images/1354479643882004483/Btnfm47p.jpg",
+                "url": "https://help.twitter.com",
+                "user-attributed-description": "Here to help. 💙",
+                "user-creation-date": "2008-12-04T18:51:57Z",
+                "user-id": "17874544",
+                "username": "TwitterSupport"
+            }
+        ],
+        "380749300": [
+            {
+                "is-verified": true,
+                "location": "Cupertino, CA",
+                "name": "Apple",
+                "profile-image-url": "https://pbs.twimg.com/profile_images/1283958620359516160/p7zz5dxZ.jpg",
+                "user-attributed-description": [
+                    "Apple.com",
+                    {
+                        "NSLink": {
+                            "relative": "http://Apple.com"
+                        }
+                    }
+                ],
+                "user-creation-date": "2011-09-27T05:02:03Z",
+                "user-id": "380749300",
+                "username": "Apple"
+            }
+        ],
+        "1352231658661920770": [
+            {
+                "blocking-user-ids": [],
+                "creation-date": "2021-08-12T15:00:00Z",
+                "follower-user-ids": [
+                    "783214",
+                    "17874544"
+                ],
+                "follower-users-count": 2,
+                "following-user-ids": [
+                    "783214",
+                    "17874544"
+                ],
+                "following-users-count": 2,
+                "location": "대한민국 서울",
+                "muting-user-ids": [],
+                "name": "TweetNest",
+                "profile-header-image-url": "https://pbs.twimg.com/profile_banners/1373727821726580736/1632538699",
+                "profile-image-url": "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png",
+                "url": "https://app.tweetnest.com/?pt=123424250&ct=Twitter&mt=8",
+                "user-attributed-description": "A Twitter account manager for iOS/iPadOS/watchOS/macOS. Don’t hesitate to ask about TweetNest app.",
+                "user-creation-date": "2021-03-21T20:06:57Z",
+                "user-id": "1352231658661920770",
+                "username": "TweetNest_App"
+            },
+            {
+                "creation-date": "2021-09-15T12:39:39Z",
+                "follower-user-ids": [
+                    "783214"
+                ],
+                "follower-users-count": 1,
+                "following-user-ids": [
+                    "783214"
+                ],
+                "following-users-count": 1,
+                "inherits": true
+            },
+            {
+                "follower-user-ids": [
+                    "380749300",
+                    "783214"
+                ],
+                "follower-users-count": 2,
+                "following-user-ids": [
+                    "380749300",
+                    "783214"
+                ],
+                "following-users-count": 2,
+                "inherits": true
+            }
+        ]
+    }
+}
