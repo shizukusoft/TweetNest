@@ -5,6 +5,8 @@
 //  Created by Jaehong Kang on 2021/02/23.
 //
 
+#if DEBUG
+
 import TweetNestKit
 
 extension TweetNestKit.Session {
@@ -14,3 +16,5 @@ extension TweetNestKit.Session {
         return session
     }()
 }
+
+#endif

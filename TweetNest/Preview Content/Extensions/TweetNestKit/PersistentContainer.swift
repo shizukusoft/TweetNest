@@ -6,12 +6,11 @@
 //
 
 #if DEBUG
+
 #if canImport(AppKit)
 import AppKit
 #elseif canImport(UIKit)
 import UIKit
-#else
-#error("AppKit or UIKit required.")
 #endif
 
 import CoreData
@@ -94,20 +93,20 @@ extension PersistentContainer {
 }
 
 extension PersistentContainer {
-
+    
     private final class _PreviewDataInjectionState {
-
+        
         let bundle: Bundle
-
+        
         var userDetail: ManagedUserDetail?
-
+        
         var userIDToUserDetail: [String: ManagedUserDetail] = .init()
-
+        
         init(bundle: Bundle) {
             self.bundle = bundle
         }
     }
-
+    
     @discardableResult
     private nonisolated func _injectPreviewAccount(
         userID: String,
@@ -136,7 +135,7 @@ extension PersistentContainer {
         }
         return account
     }
-
+    
     @discardableResult
     private nonisolated func _injectPreviewUser(
         id userID: String,
@@ -165,7 +164,7 @@ extension PersistentContainer {
         }
         return user
     }
-
+    
     @discardableResult
     private nonisolated func _injectPreviewUserDataAsset(
         _ previewUserDataAsset: PreviewManifest.UserDataAsset,
@@ -197,7 +196,7 @@ extension PersistentContainer {
         }
         return userDataAsset
     }
-
+    
     @discardableResult
     private nonisolated func _injectPreviewUserDetail(
         _ previewUserDetail: PreviewManifest.UserDetail,
@@ -260,4 +259,5 @@ extension PersistentContainer {
         return userDetail
     }
 }
+
 #endif

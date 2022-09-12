@@ -14,7 +14,7 @@ extension TweetNestKit.ManagedAccount {
     static var preview: ManagedAccount {
         let fetchRequest = ManagedAccount.fetchRequest()
         do {
-            return try Session.preview.persistentContainer.viewContext.fetch(fetchRequest)[0]
+            return try SessionEnvironmentKey.defaultValue.persistentContainer.viewContext.fetch(fetchRequest).randomElement()!
         } catch let error as NSError {
             fatalError("Unresolved error \(error), \(error.userInfo)")
         }
