@@ -84,11 +84,11 @@ extension PreviewManifest: Codable {
 
     private enum CodingKeys: String, CodingKey {
 
-        case accounts = "Accounts"
+        case accounts = "accounts"
 
-        case dataAssets = "Data Assets"
+        case dataAssets = "data-assets"
 
-        case userDetails = "User Details"
+        case userDetails = "user-details"
     }
 }
 
@@ -96,13 +96,13 @@ extension PreviewManifest.UserDataAsset: Codable {
 
     private enum CodingKeys: String, CodingKey {
 
-        case creationDate = "Creation Date"
+        case creationDate = "creation-date"
 
-        case dataMIMEType = "Data MIME Type"
+        case dataMIMEType = "data-mime-type"
 
-        case dataResourceName = "Data Resource Name"
+        case dataResourceName = "data-resource-name"
 
-        case url = "URL"
+        case url = "url"
     }
 }
 
@@ -110,47 +110,47 @@ extension PreviewManifest.UserDetail: Codable {
 
     private enum CodingKeys: String, CodingKey {
 
-        case blockingUserIDs = "Blocking User IDs"
+        case blockingUserIDs = "blocking-user-ids"
 
-        case creationDate = "Creation Date"
+        case creationDate = "creation-date"
 
-        case followerUserIDs = "Follower User IDs"
+        case followerUserIDs = "follower-user-ids"
 
-        case followerUsersCount = "Follower Users Count"
+        case followerUsersCount = "follower-users-count"
 
-        case followingUserIDs = "Following User IDs"
+        case followingUserIDs = "following-user-ids"
 
-        case followingUsersCount = "Following Users Count"
+        case followingUsersCount = "following-users-count"
 
-        case inherits = "Inherits"
+        case inherits = "inherits"
 
-        case isProtected = "Is Protected"
+        case isProtected = "is-protected"
 
-        case isVerified = "Is Verified"
+        case isVerified = "is-verified"
 
-        case listedCount = "Listed Count"
+        case listedCount = "listed-count"
 
-        case location = "Location"
+        case location = "location"
 
-        case mutingUserIDs = "Muting User IDs"
+        case mutingUserIDs = "muting-user-ids"
 
-        case name = "Name"
+        case name = "name"
 
-        case profileHeaderImageURL = "Profile Header Image URL"
+        case profileHeaderImageURL = "profile-header-image-url"
 
-        case profileImageURL = "Profile Image URL"
+        case profileImageURL = "profile-image-url"
 
-        case tweetsCount = "Tweets Count"
+        case tweetsCount = "tweets-count"
 
-        case url = "URL"
+        case url = "url"
 
-        case userAttributedDescription = "User Attributed Description"
+        case userAttributedDescription = "user-attributed-description"
 
-        case userCreationDate = "User Creation Date"
+        case userCreationDate = "user-creation-date"
 
-        case userID = "User ID"
+        case userID = "user-id"
 
-        case username = "Username"
+        case username = "username"
     }
 }
 #endif
