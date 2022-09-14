@@ -338,6 +338,14 @@ extension UserNotificationManager {
             return nil
         }
 
+        let currentLanguage: String?
+        if #available(iOS 16, macOS 13, watchOS 9, *) {
+            currentLanguage = Locale.current.language.languageCode?.identifier
+        }
+        else {
+            currentLanguage = Locale.current.languageCode
+        }
+        let sentenceSeparator = currentLanguage == "ja" ? "" : " "
         var changeText =
             changeTexts
             .map {
@@ -346,13 +354,8 @@ extension UserNotificationManager {
                     bundle: .tweetNestKit,
                     comment: #"A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.'"#)
             }
-            .joined()
-        if #available(iOS 16, macOS 13, watchOS 9, *) {
-            if Locale.current.language.languageCode == "ko" {
-                changeText = KoreanPostpositionResolver.resolvedString(changeText)
-            }
-        }
-        else if Locale.current.languageCode == "ko" {
+            .joined(separator: sentenceSeparator)
+        if currentLanguage == "ko" {
             changeText = KoreanPostpositionResolver.resolvedString(changeText)
         }
         notificationContent.body = changeText
