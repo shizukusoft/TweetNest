@@ -71,6 +71,7 @@
 		196746C628AE9D5400863E43 /* UnifiedLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 196746C528AE9D5400863E43 /* UnifiedLogging */; };
 		196746C928AE9D6C00863E43 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 196746C828AE9D6C00863E43 /* AsyncAlgorithms */; };
 		19B7E61928AF6D45002E8213 /* Session+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61828AF6D45002E8213 /* Session+Authentication.swift */; };
+		66380D1F28D4DA9700BA8F39 /* String+KoreanPostposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66380D1E28D4DA9700BA8F39 /* String+KoreanPostposition.swift */; };
 		66E036B328CF8C25001FE127 /* KoreanPostpositionResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E036B228CF8C25001FE127 /* KoreanPostpositionResolver.swift */; };
 /* End PBXBuildFile section */
 
@@ -152,6 +153,7 @@
 		196746B128AE9C4000863E43 /* DateFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatterTests.swift; sourceTree = "<group>"; };
 		196746B228AE9C4000863E43 /* UserDetailTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailTests.swift; sourceTree = "<group>"; };
 		19B7E61828AF6D45002E8213 /* Session+Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Authentication.swift"; sourceTree = "<group>"; };
+		66380D1E28D4DA9700BA8F39 /* String+KoreanPostposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+KoreanPostposition.swift"; sourceTree = "<group>"; };
 		66E036B228CF8C25001FE127 /* KoreanPostpositionResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreanPostpositionResolver.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -328,6 +330,7 @@
 			isa = PBXGroup;
 			children = (
 				1967469728AE9BE700863E43 /* Date+TweetNestKit.swift */,
+				66380D1E28D4DA9700BA8F39 /* String+KoreanPostposition.swift */,
 				1967469828AE9BE700863E43 /* String+TweetNestKit.swift */,
 				1967469928AE9BE700863E43 /* NSNumber+TwetNestKit.swift */,
 			);
@@ -494,6 +497,7 @@
 				1967466928AE9BD600863E43 /* ManagedUser.swift in Sources */,
 				1967469C28AE9BE700863E43 /* Bundle+TweetNestKit.swift in Sources */,
 				1967468628AE9BDE00863E43 /* Session+PersistentStoreRemoteChanges.swift in Sources */,
+				66380D1F28D4DA9700BA8F39 /* String+KoreanPostposition.swift in Sources */,
 				1967466F28AE9BD600863E43 /* ManagedUserDataAsset+CoreDataProperties.swift in Sources */,
 				196746A128AE9BE700863E43 /* String+TweetNestKit.swift in Sources */,
 				1967467128AE9BD600863E43 /* ManagedAccount+CoreDataProperties.swift in Sources */,

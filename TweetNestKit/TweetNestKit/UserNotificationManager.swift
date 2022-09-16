@@ -356,7 +356,7 @@ extension UserNotificationManager {
             }
             .joined(separator: sentenceSeparator)
         if currentLanguage == "ko" {
-            changeText = KoreanPostpositionResolver.resolvedString(changeText)
+            changeText.resolveKoreanPostpositions()
         }
         notificationContent.body = changeText
 
