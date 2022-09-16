@@ -17,11 +17,6 @@ internal struct KoreanPostpositionResolver: Sendable {
     ]
 
     internal static func resolvedString(_ string: String) -> String {
-        // "산(는)은 산(이)요, 물(는)은 물(이)로다." → "산은 산이요 물은 물이로다."
-        // "중생(야)아, 네 어디(를)을 방황하느냐." → "중생아, 네 어디를 방황하느냐."
-        // "고기(를)을 잡으러 바다(으)로 갈까나" → "고기를 잡으러 바다로 갈까나"
-        // "고기(를)을 잡으러 강(으)로 갈까나" → "고기를 잡으러 강으로 갈까나"
-        // "훈(이)가 짱구(를)을 팔아 넘겼어." → "훈이가 짱구를 팔아 넘겼어."
         var remainString = string[...]
         var resolvedString = String()
         for (rule, resolves) in generalPostpositions {
