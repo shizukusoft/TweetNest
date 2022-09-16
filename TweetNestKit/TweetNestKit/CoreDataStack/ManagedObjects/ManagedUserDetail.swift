@@ -224,7 +224,7 @@ extension ManagedUserDetail {
             var addedUniqueBlockingUserIDs = OrderedSet<String>()
             var addedOtherUserIDs = OrderedSet<String>()
             for userID in addedUserIDs {
-                if component.contains(.friends) && friendUserIDs.contains(userID) {
+                if friendUserIDs.contains(userID) {
                     addedFriendUserIDs.append(userID)
                 } else if component.contains(.followings) && followingUserIDs.contains(userID) {
                     addedFollowingUserIDs.append(userID)
@@ -259,7 +259,7 @@ extension ManagedUserDetail {
             var removedUniqueBlockingUserIDs = OrderedSet<String>()
             var removedOtherUserIDs = OrderedSet<String>()
             for userID in removedUserIDs {
-                if component.contains(.friends) && friendUserIDs.contains(userID) {
+                if friendUserIDs.contains(userID) {
                     removedFriendUserIDs.append(userID)
                 } else if component.contains(.followings) && followingUserIDs.contains(userID) {
                     removedFollowingUserIDs.append(userID)
