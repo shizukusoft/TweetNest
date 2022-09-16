@@ -195,8 +195,7 @@ extension ManagedUserDetail {
             if component.contains(.followings) {
                 if component.contains(.followers) {
                     followingFollowerUserIDs = followingUserIDs.union(followerUserIDs)
-                }
-                else {
+                } else {
                     followingFollowerUserIDs = followingUserIDs
                 }
             } else if component.contains(.followers) {

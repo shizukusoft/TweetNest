@@ -24,8 +24,9 @@ internal struct KoreanPostpositionResolver: Sendable {
             else {
                 continue
             }
-            if let firstIndex = remainString.firstIndex(of: rule.first!),
-               remainString[firstIndex...].hasPrefix(rule[...])
+            if
+                let firstIndex = remainString.firstIndex(of: rule.first!),
+                remainString[firstIndex...].hasPrefix(rule[...])
             {
                 resolvedString += remainString[..<firstIndex]
                 remainString = remainString[remainString.index(firstIndex, offsetBy: rule.count)...]
@@ -40,8 +41,7 @@ internal struct KoreanPostpositionResolver: Sendable {
                     default:
                         resolvedString += rule
                     }
-                }
-                else {
+                } else {
                     resolvedString += rule
                 }
             }

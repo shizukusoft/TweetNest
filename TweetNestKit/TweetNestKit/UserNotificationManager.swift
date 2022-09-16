@@ -341,8 +341,7 @@ extension UserNotificationManager {
         let currentLanguage: String?
         if #available(iOS 16, macOS 13, watchOS 9, *) {
             currentLanguage = Locale.current.language.languageCode?.identifier
-        }
-        else {
+        } else {
             currentLanguage = Locale.current.languageCode
         }
         let sentenceSeparator = currentLanguage == "ja" ? "" : " "
@@ -352,7 +351,7 @@ extension UserNotificationManager {
                 String(
                     localized: "You \($0).",
                     bundle: .tweetNestKit,
-                    comment: #"A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.'"#)
+                    comment: #"A notification body for background refreshing. "%@"; 'You {are followed by 2 followings, and unfollowed by a user}.'"#)  // swiftlint:disable:this line_length
             }
             .joined(separator: sentenceSeparator)
         if currentLanguage == "ko" {
@@ -399,46 +398,50 @@ extension UserNotificationManager {
                     String(
                         localized: "changed your profile",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You have %@."; 'changed your profile'"#)
+                        comment: #"A part of notification body for background refreshing. "You have %@."; 'changed your profile'"#)  // swiftlint:disable:this line_length
                 changeTexts[.profile] = [_changeText(for: [profileChangeText], kind: .profile)]
             }
         }
         if preferences.notifyFollowingChanges {
-            if let change =
-                newUserDetail.userIDsChange(
-                    from: oldUserDetail,
-                    for: \.followingUserIDs,
-                    component: [.friends, .followers, .mutings])
+            if
+                let change =
+                    newUserDetail.userIDsChange(
+                        from: oldUserDetail,
+                        for: \.followingUserIDs,
+                        component: [.friends, .followers, .mutings])
             {
                 changeTexts[.following] = self.changeTexts(change, for: .following)
             }
         }
         if preferences.notifyFollowerChanges {
-            if let change =
-                newUserDetail.userIDsChange(
-                    from: oldUserDetail,
-                    for: \.followerUserIDs,
-                    component: [.friends, .followings, .mutings])
+            if
+                let change =
+                    newUserDetail.userIDsChange(
+                        from: oldUserDetail,
+                        for: \.followerUserIDs,
+                        component: [.friends, .followings, .mutings])
             {
                 changeTexts[.follower] = self.changeTexts(change, for: .follower)
             }
         }
         if preferences.notifyMutingChanges {
-            if let change =
-                newUserDetail.userIDsChange(
-                    from: oldUserDetail,
-                    for: \.mutingUserIDs,
-                    component: [.friends, .followings, .followers, .blockings])
+            if
+                let change =
+                    newUserDetail.userIDsChange(
+                        from: oldUserDetail,
+                        for: \.mutingUserIDs,
+                        component: [.friends, .followings, .followers, .blockings])
             {
                 changeTexts[.muting] = self.changeTexts(change, for: .muting)
             }
         }
         if preferences.notifyBlockingChanges {
-            if let change =
-                newUserDetail.userIDsChange(
-                    from: oldUserDetail,
-                    for: \.blockingUserIDs,
-                    component: [.friends, .followings, .followers, .mutings])
+            if
+                let change =
+                    newUserDetail.userIDsChange(
+                        from: oldUserDetail,
+                        for: \.blockingUserIDs,
+                        component: [.friends, .followings, .followers, .mutings])
             {
                 changeTexts[.blocking] = self.changeTexts(change, for: .blocking)
             }
@@ -506,14 +509,14 @@ extension UserNotificationManager {
                     .init(
                         localized: "followed \(addingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'followed {2 followers, and a user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'followed {2 followers, and a user}'"#))  // swiftlint:disable:this line_length
             }
             if !removingTexts.isEmpty {
                 followingTexts.append(
                     .init(
                         localized: "unfollowed \(removingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unfollowed {2 followers, and a user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unfollowed {2 followers, and a user}'"#))  // swiftlint:disable:this line_length
             }
             texts.append(_changeText(for: followingTexts, kind: kind))
         case .follower:
@@ -523,14 +526,14 @@ extension UserNotificationManager {
                     .init(
                         localized: "followed by \(addingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You are %@ and %@."; 'followed by {2 followings, and a user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You are %@ and %@."; 'followed by {2 followings, and a user}'"#))  // swiftlint:disable:this line_length
             }
             if !removingTexts.isEmpty {
                 followerTexts.append(
                     .init(
                         localized: "unfollowed by \(removingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You are %@ and %@."; 'unfollowed by {2 followings, and a user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You are %@ and %@."; 'unfollowed by {2 followings, and a user}'"#))  // swiftlint:disable:this line_length
             }
             texts.append(_changeText(for: followerTexts, kind: kind))
         case .muting:
@@ -540,14 +543,14 @@ extension UserNotificationManager {
                     .init(
                         localized: "muted \(addingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'muted {2 mutual followings, and a user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'muted {2 mutual followings, and a user}'"#))  // swiftlint:disable:this line_length
             }
             if !removingTexts.isEmpty {
                 mutingTexts.append(
                     .init(
                         localized: "unmuted \(removingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unmuted {2 mutual followings, and a user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unmuted {2 mutual followings, and a user}'"#))  // swiftlint:disable:this line_length
             }
             texts.append(_changeText(for: mutingTexts, kind: kind))
         case .blocking:
@@ -557,14 +560,14 @@ extension UserNotificationManager {
                     .init(
                         localized: "blocked \(addingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'blocked {2 mutual followings, and a user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'blocked {2 mutual followings, and a user}'"#))  // swiftlint:disable:this line_length
             }
             if !removingTexts.isEmpty {
                 blockingTexts.append(
                     .init(
                         localized: "unblocked \(removingTexts.formatted(.list(type: .and, width: .standard)))",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unblocked {2 users, and a muted user}'"#))
+                        comment: #"A part of notification body for background refreshing. "You have %@ and %@."; 'unblocked {2 users, and a muted user}'"#))  // swiftlint:disable:this line_length
             }
             texts.append(_changeText(for: blockingTexts, kind: kind))
         }
@@ -586,7 +589,7 @@ extension UserNotificationManager {
                     localized: "MUTUAL_FOLLOWINGS",
                     defaultValue: "\(change.count, specifier: "%ld") mutual following(s)",
                     bundle: .tweetNestKit,
-                    comment: #"A part of notification body for background refreshing. "You have unmuted %@ and %@."; '{2} mutual followings'"#)
+                    comment: #"A part of notification body for background refreshing. "You have unmuted %@ and %@."; '{2} mutual followings'"#)  // swiftlint:disable:this line_length
         }
         if component == .followings {
             return
@@ -594,7 +597,7 @@ extension UserNotificationManager {
                     localized: "FOLLOWINGS",
                     defaultValue: "\(change.count, specifier: "%ld") following(s)",
                     bundle: .tweetNestKit,
-                    comment: #"A part of notification body for background refreshing. "You are followed by %@ and %@."; '{2} followings'"#)
+                    comment: #"A part of notification body for background refreshing. "You are followed by %@ and %@."; '{2} followings'"#)  // swiftlint:disable:this line_length
         }
         if component == .followers {
             return
@@ -602,7 +605,7 @@ extension UserNotificationManager {
                     localized: "FOLLOWERS",
                     defaultValue: "\(change.count, specifier: "%ld") follower(s)",
                     bundle: .tweetNestKit,
-                    comment: #"A part of notification body for background refreshing. "You have followed %@ and %@."; '{2} followers'"#)
+                    comment: #"A part of notification body for background refreshing. "You have followed %@ and %@."; '{2} followers'"#)  // swiftlint:disable:this line_length
         }
         if component == .mutings {
             return
@@ -610,7 +613,7 @@ extension UserNotificationManager {
                     localized: "MUTED_USERS",
                     defaultValue: "\(change.count, specifier: "%ld") muted user(s)",
                     bundle: .tweetNestKit,
-                    comment: #"A part of notification body for background refreshing. "You have unfollowed %@ and %@."; '{2} muted users'"#)
+                    comment: #"A part of notification body for background refreshing. "You have unfollowed %@ and %@."; '{2} muted users'"#)  // swiftlint:disable:this line_length
         }
         if component == .blockings {
             return
@@ -618,14 +621,14 @@ extension UserNotificationManager {
                     localized: "BLOCKED_USERS",
                     defaultValue: "\(change.count, specifier: "%ld") blocked user(s)",
                     bundle: .tweetNestKit,
-                    comment: #"A part of notification body for background refreshing. "You have muted %@ and %@."; '{2} blocked users'"#)
+                    comment: #"A part of notification body for background refreshing. "You have muted %@ and %@."; '{2} blocked users'"#)  // swiftlint:disable:this line_length
         }
         return
             .init(
                 localized: "USERS",
                 defaultValue: "\(change.count, specifier: "%ld") user(s)",
                 bundle: .tweetNestKit,
-                comment: #"A part of notification body for background refreshing. "You have blocked %@ and %@."; '{2} users'"#)
+                comment: #"A part of notification body for background refreshing. "You have blocked %@ and %@."; '{2} users'"#)  // swiftlint:disable:this line_length
     }
 
     @inline(never)
@@ -640,14 +643,14 @@ extension UserNotificationManager {
                     .init(
                         localized: "are \(texts[0])",
                         bundle: .tweetNestKit,
-                        comment: #"A part of notification body for background refreshing. "You %@."; 'are {followed by 2 users}'"#)
+                        comment: #"A part of notification body for background refreshing. "You %@."; 'are {followed by 2 users}'"#)  // swiftlint:disable:this line_length
             }
             if texts.count == 2 {
                 return
                     .init(
                         localized: "are \(texts[0]), and \(texts[1])",
                         bundle: .tweetNestKit,
-                        comment: #"A notification body for background refreshing. "You %@."; becomes "You {are %@, and %@}"; 'are {followed by 2 users}, and {unfollowed by a user}'"#)
+                        comment: #"A notification body for background refreshing. "You %@."; becomes "You {are %@, and %@}"; 'are {followed by 2 users}, and {unfollowed by a user}'"#)  // swiftlint:disable:this line_length
             }
         default:
             if texts.count == 1 {
@@ -655,14 +658,14 @@ extension UserNotificationManager {
                     .init(
                         localized: "have \(texts[0])",
                         bundle: .tweetNestKit,
-                        comment: #"A notification body for background refreshing. "You %@."; becomes "have %@"; 'have {followed 2 users}'"#)
+                        comment: #"A notification body for background refreshing. "You %@."; becomes "have %@"; 'have {followed 2 users}'"#)  // swiftlint:disable:this line_length
             }
             if texts.count == 2 {
                 return
                     .init(
                         localized: "have \(texts[0]), and \(texts[1])",
                         bundle: .tweetNestKit,
-                        comment: #"A notification body for background refreshing. "You %@."; becomes "have %@, and %@"; 'have {followed 2 users}, and {unfollowed a user}'"#)
+                        comment: #"A notification body for background refreshing. "You %@."; becomes "have %@, and %@"; 'have {followed 2 users}, and {unfollowed a user}'"#)  // swiftlint:disable:this line_length
             }
         }
         return .init()
