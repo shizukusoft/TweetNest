@@ -408,7 +408,7 @@ extension UserNotificationManager {
                 newUserDetail.userIDsChange(
                     from: oldUserDetail,
                     for: \.followingUserIDs,
-                    component: [.followers])
+                    component: [.friends, .followers, .mutings])
             {
                 changeTexts[.following] = self.changeTexts(change, for: .following)
             }
@@ -418,7 +418,7 @@ extension UserNotificationManager {
                 newUserDetail.userIDsChange(
                     from: oldUserDetail,
                     for: \.followerUserIDs,
-                    component: [.followings])
+                    component: [.friends, .followings, .mutings])
             {
                 changeTexts[.follower] = self.changeTexts(change, for: .follower)
             }
