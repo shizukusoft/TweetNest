@@ -214,87 +214,78 @@ extension ManagedUserDetail {
             } else {
                 blockingUserIDs = .init()
             }
-            var addedFriendUserIDs = OrderedSet<String>()
-            var addedFollowingUserIDs = OrderedSet<String>()
-            var addedFollowerUserIDs = OrderedSet<String>()
-            var addedStrangerUserIDs = OrderedSet<String>()
-            var addedMutingUserIDs = OrderedSet<String>()
-            var addedBlockingUserIDs = OrderedSet<String>()
-            var addedUniqueMutingUserIDs = OrderedSet<String>()
-            var addedUniqueBlockingUserIDs = OrderedSet<String>()
-            var addedOtherUserIDs = OrderedSet<String>()
-            for userID in addedUserIDs {
-                if friendUserIDs.contains(userID) {
-                    addedFriendUserIDs.append(userID)
-                } else if component.contains(.followings) && followingUserIDs.contains(userID) {
-                    addedFollowingUserIDs.append(userID)
-                } else if component.contains(.followers) && followerUserIDs.contains(userID) {
-                    addedFollowerUserIDs.append(userID)
-                } else {
-                    addedStrangerUserIDs.append(userID)
-                }
-                if mutingUserIDs.contains(userID) {
-                    addedMutingUserIDs.append(userID)
-                    if !followingFollowerUserIDs.contains(userID) {
-                        addedUniqueMutingUserIDs.append(userID)
+            func sortedUserIDs(
+                _ userIDs: OrderedSet<String>
+            ) -> (
+                friendUserIDs: OrderedSet<String>,
+                followingUserIDs: OrderedSet<String>,
+                followerUserIDs: OrderedSet<String>,
+                strangerUserIDs: OrderedSet<String>,
+                mutingUserIDs: OrderedSet<String>,
+                uniqueMutingUserIDs: OrderedSet<String>,
+                blockingUserIDs: OrderedSet<String>,
+                uniqueBlockingUserIDs: OrderedSet<String>,
+                otherUserIDs: OrderedSet<String>
+            ) {
+                var sortedFriendUserIDs = OrderedSet<String>()
+                var sortedFollowingUserIDs = OrderedSet<String>()
+                var sortedFollowerUserIDs = OrderedSet<String>()
+                var sortedStrangerUserIDs = OrderedSet<String>()
+                var sortedMutingUserIDs = OrderedSet<String>()
+                var sortedUniqueMutingUserIDs = OrderedSet<String>()
+                var sortedBlockingUserIDs = OrderedSet<String>()
+                var sortedUniqueBlockingUserIDs = OrderedSet<String>()
+                var sortedOtherUserIDs = OrderedSet<String>()
+                for userID in userIDs {
+                    if friendUserIDs.contains(userID) {
+                        sortedFriendUserIDs.append(userID)
+                    } else if component.contains(.followings) && followingUserIDs.contains(userID) {
+                        sortedFollowingUserIDs.append(userID)
+                    } else if component.contains(.followers) && followerUserIDs.contains(userID) {
+                        sortedFollowerUserIDs.append(userID)
+                    } else {
+                        sortedStrangerUserIDs.append(userID)
+                    }
+                    if mutingUserIDs.contains(userID) {
+                        sortedMutingUserIDs.append(userID)
+                        if !followingFollowerUserIDs.contains(userID) {
+                            sortedUniqueMutingUserIDs.append(userID)
+                        }
+                    }
+                    if blockingUserIDs.contains(userID) {
+                        sortedBlockingUserIDs.append(userID)
+                        if !followingFollowerUserIDs.contains(userID) {
+                            sortedUniqueBlockingUserIDs.append(userID)
+                        }
+                    }
+                    if !(followingFollowerUserIDs.contains(userID) || mutingUserIDs.contains(userID) || blockingUserIDs.contains(userID)) {
+                        sortedOtherUserIDs.append(userID)
                     }
                 }
-                if blockingUserIDs.contains(userID) {
-                    addedBlockingUserIDs.append(userID)
-                    if !followingFollowerUserIDs.contains(userID) {
-                        addedUniqueBlockingUserIDs.append(userID)
-                    }
-                }
-                if !(followingFollowerUserIDs.contains(userID) || mutingUserIDs.contains(userID) || blockingUserIDs.contains(userID)) {
-                    addedOtherUserIDs.append(userID)
-                }
+                return
+                    (sortedFriendUserIDs,
+                     sortedFollowingUserIDs,
+                     sortedFollowerUserIDs,
+                     sortedStrangerUserIDs,
+                     sortedMutingUserIDs,
+                     sortedUniqueMutingUserIDs,
+                     sortedBlockingUserIDs,
+                     sortedUniqueBlockingUserIDs,
+                     sortedOtherUserIDs)
             }
-            var removedFriendUserIDs = OrderedSet<String>()
-            var removedFollowingUserIDs = OrderedSet<String>()
-            var removedFollowerUserIDs = OrderedSet<String>()
-            var removedStrangerUserIDs = OrderedSet<String>()
-            var removedMutingUserIDs = OrderedSet<String>()
-            var removedBlockingUserIDs = OrderedSet<String>()
-            var removedUniqueMutingUserIDs = OrderedSet<String>()
-            var removedUniqueBlockingUserIDs = OrderedSet<String>()
-            var removedOtherUserIDs = OrderedSet<String>()
-            for userID in removedUserIDs {
-                if friendUserIDs.contains(userID) {
-                    removedFriendUserIDs.append(userID)
-                } else if component.contains(.followings) && followingUserIDs.contains(userID) {
-                    removedFollowingUserIDs.append(userID)
-                } else if component.contains(.followers) && followerUserIDs.contains(userID) {
-                    removedFollowerUserIDs.append(userID)
-                } else {
-                    removedStrangerUserIDs.append(userID)
-                }
-                if mutingUserIDs.contains(userID) {
-                    removedMutingUserIDs.append(userID)
-                    if !followingFollowerUserIDs.contains(userID) {
-                        removedUniqueMutingUserIDs.append(userID)
-                    }
-                }
-                if blockingUserIDs.contains(userID) {
-                    removedBlockingUserIDs.append(userID)
-                    if !followingFollowerUserIDs.contains(userID) {
-                        removedUniqueBlockingUserIDs.append(userID)
-                    }
-                }
-                if !(followingFollowerUserIDs.contains(userID) || mutingUserIDs.contains(userID) || blockingUserIDs.contains(userID)) {
-                    removedOtherUserIDs.append(userID)
-                }
-            }
+            let added = sortedUserIDs(addedUserIDs)
+            let removed = sortedUserIDs(removedUserIDs)
             self.addedUserIDs = addedUserIDs
             self.removedUserIDs = removedUserIDs
-            self.friends = .init(addedUserIDs: addedFriendUserIDs, removedUserIDs: removedFriendUserIDs)
-            self.followings = .init(addedUserIDs: addedFollowingUserIDs, removedUserIDs: removedFollowingUserIDs)
-            self.followers = .init(addedUserIDs: addedFollowerUserIDs, removedUserIDs: removedFollowerUserIDs)
-            self.strangers = .init(addedUserIDs: addedStrangerUserIDs, removedUserIDs: removedStrangerUserIDs)
-            self.mutings = .init(addedUserIDs: addedMutingUserIDs, removedUserIDs: removedMutingUserIDs)
-            self.uniqueMutings = .init(addedUserIDs: addedUniqueMutingUserIDs, removedUserIDs: removedUniqueMutingUserIDs)
-            self.blockings = .init(addedUserIDs: addedBlockingUserIDs, removedUserIDs: removedBlockingUserIDs)
-            self.uniqueBlockings = .init(addedUserIDs: addedUniqueBlockingUserIDs, removedUserIDs: removedUniqueBlockingUserIDs)
-            self.others = .init(addedUserIDs: addedOtherUserIDs, removedUserIDs: removedOtherUserIDs)
+            self.friends = .init(addedUserIDs: added.friendUserIDs, removedUserIDs: removed.friendUserIDs)
+            self.followings = .init(addedUserIDs: added.followingUserIDs, removedUserIDs: removed.followingUserIDs)
+            self.followers = .init(addedUserIDs: added.followerUserIDs, removedUserIDs: removed.followerUserIDs)
+            self.strangers = .init(addedUserIDs: added.strangerUserIDs, removedUserIDs: removed.strangerUserIDs)
+            self.mutings = .init(addedUserIDs: added.mutingUserIDs, removedUserIDs: removed.mutingUserIDs)
+            self.uniqueMutings = .init(addedUserIDs: added.uniqueMutingUserIDs, removedUserIDs: removed.uniqueMutingUserIDs)
+            self.blockings = .init(addedUserIDs: added.blockingUserIDs, removedUserIDs: removed.blockingUserIDs)
+            self.uniqueBlockings = .init(addedUserIDs: added.uniqueBlockingUserIDs, removedUserIDs: removed.uniqueBlockingUserIDs)
+            self.others = .init(addedUserIDs: added.otherUserIDs, removedUserIDs: removed.otherUserIDs)
             self.component = component
         }
     }
