@@ -471,55 +471,31 @@ extension UserNotificationManager {
         else {
             return .init()
         }
-        var texts = [String]()
         var addingTexts = [String]()
         var removingTexts = [String]()
-        if change.component.contains(.friends) {
-            if !change.friends.addedUserIDs.isEmpty {
-                addingTexts.append(_changeText(for: change.friends.addedUserIDs, component: .friends))
+        func makeTexts(
+            forKeyPath keyPath: KeyPath<ManagedUserDetail.DetailedUserIDsChange, ManagedUserDetail.UserIDsChange>,
+            component: ManagedUserDetail.DetailedUserIDsChange.Component = .init()
+        ) {
+            guard change.component.contains(component)
+            else {
+                return
             }
-            if !change.friends.removedUserIDs.isEmpty {
-                removingTexts.append(_changeText(for: change.friends.removedUserIDs, component: .friends))
+            let change = change[keyPath: keyPath]
+            if !change.addedUserIDs.isEmpty {
+                addingTexts.append(_changeText(for: change.addedUserIDs, component: component))
             }
-        }
-        if change.component.contains(.followings) {
-            if !change.followings.addedUserIDs.isEmpty {
-                addingTexts.append(_changeText(for: change.followings.addedUserIDs, component: .followings))
-            }
-            if !change.followings.removedUserIDs.isEmpty {
-                removingTexts.append(_changeText(for: change.followings.removedUserIDs, component: .followings))
-            }
-        }
-        if change.component.contains(.followers) {
-            if !change.followers.addedUserIDs.isEmpty {
-                addingTexts.append(_changeText(for: change.followers.addedUserIDs, component: .followers))
-            }
-            if !change.followers.removedUserIDs.isEmpty {
-                removingTexts.append(_changeText(for: change.followers.removedUserIDs, component: .followers))
+            if !change.removedUserIDs.isEmpty {
+                removingTexts.append(_changeText(for: change.removedUserIDs, component: component))
             }
         }
-        if !change.others.addedUserIDs.isEmpty {
-            addingTexts.append(_changeText(for: change.others.addedUserIDs, component: .init()))
-        }
-        if !change.others.removedUserIDs.isEmpty {
-            removingTexts.append(_changeText(for: change.others.removedUserIDs, component: .init()))
-        }
-        if change.component.contains(.mutings) {
-            if !change.uniqueMutings.addedUserIDs.isEmpty {
-                addingTexts.append(_changeText(for: change.uniqueMutings.addedUserIDs, component: .mutings))
-            }
-            if !change.uniqueMutings.removedUserIDs.isEmpty {
-                removingTexts.append(_changeText(for: change.uniqueMutings.removedUserIDs, component: .mutings))
-            }
-        }
-        if change.component.contains(.blockings) {
-            if !change.uniqueBlockings.addedUserIDs.isEmpty {
-                addingTexts.append(_changeText(for: change.uniqueBlockings.addedUserIDs, component: .blockings))
-            }
-            if !change.uniqueBlockings.removedUserIDs.isEmpty {
-                removingTexts.append(_changeText(for: change.uniqueBlockings.removedUserIDs, component: .blockings))
-            }
-        }
+        makeTexts(forKeyPath: \.friends, component: .friends)
+        makeTexts(forKeyPath: \.followings, component: .followings)
+        makeTexts(forKeyPath: \.followers, component: .followers)
+        makeTexts(forKeyPath: \.others)
+        makeTexts(forKeyPath: \.uniqueMutings, component: .mutings)
+        makeTexts(forKeyPath: \.uniqueBlockings, component: .blockings)
+        var texts = [String]()
         switch kind {
         case .profile:
             break
