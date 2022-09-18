@@ -24,12 +24,9 @@ internal struct KoreanPostpositionResolver: Sendable {
             else {
                 continue
             }
-            if
-                let firstIndex = remainString.firstIndex(of: rule.first!),
-                remainString[firstIndex...].hasPrefix(rule[...])
-            {
-                resolvedString += remainString[..<firstIndex]
-                remainString = remainString[remainString.index(firstIndex, offsetBy: rule.count)...]
+            while let firstRange = remainString.firstRange(of: rule) {
+                resolvedString += remainString[..<firstRange.lowerBound]
+                remainString = remainString[firstRange.upperBound...]
                 if let lastUnicodeScalar = resolvedString.last.flatMap(String.init(_:))?.decomposedStringWithCanonicalMapping.unicodeScalars.last {
                     switch lastUnicodeScalar.value {
                     case 0x1161 ... 0x1175:
