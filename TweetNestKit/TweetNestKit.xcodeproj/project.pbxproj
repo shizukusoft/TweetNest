@@ -73,6 +73,7 @@
 		19B7E61928AF6D45002E8213 /* Session+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61828AF6D45002E8213 /* Session+Authentication.swift */; };
 		66380D1F28D4DA9700BA8F39 /* String+KoreanPostposition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66380D1E28D4DA9700BA8F39 /* String+KoreanPostposition.swift */; };
 		66E036B328CF8C25001FE127 /* KoreanPostpositionResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E036B228CF8C25001FE127 /* KoreanPostpositionResolver.swift */; };
+		66EED37128D6B43A00AA48DF /* Collection+RangeMatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66EED37028D6B43A00AA48DF /* Collection+RangeMatching.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -155,6 +156,7 @@
 		19B7E61828AF6D45002E8213 /* Session+Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Authentication.swift"; sourceTree = "<group>"; };
 		66380D1E28D4DA9700BA8F39 /* String+KoreanPostposition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+KoreanPostposition.swift"; sourceTree = "<group>"; };
 		66E036B228CF8C25001FE127 /* KoreanPostpositionResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KoreanPostpositionResolver.swift; sourceTree = "<group>"; };
+		66EED37028D6B43A00AA48DF /* Collection+RangeMatching.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Collection+RangeMatching.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -329,6 +331,7 @@
 		1967469628AE9BE700863E43 /* Swift */ = {
 			isa = PBXGroup;
 			children = (
+				66EED37028D6B43A00AA48DF /* Collection+RangeMatching.swift */,
 				1967469728AE9BE700863E43 /* Date+TweetNestKit.swift */,
 				66380D1E28D4DA9700BA8F39 /* String+KoreanPostposition.swift */,
 				1967469828AE9BE700863E43 /* String+TweetNestKit.swift */,
@@ -527,6 +530,7 @@
 				1914CD0928AE9A2800F7C398 /* TweetNestKit.docc in Sources */,
 				1967469E28AE9BE700863E43 /* DateFormatter+TweetNestKit.swift in Sources */,
 				1967465D28AE9BD600863E43 /* PersistentContainer+Migration.swift in Sources */,
+				66EED37128D6B43A00AA48DF /* Collection+RangeMatching.swift in Sources */,
 				1967467028AE9BD600863E43 /* ManagedAccount+Preferences.swift in Sources */,
 				1967469F28AE9BE700863E43 /* NSPersistentContainer+TweetNestKit.swift in Sources */,
 				1967466B28AE9BD600863E43 /* ManagedUserDetail.swift in Sources */,
