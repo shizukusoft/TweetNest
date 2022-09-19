@@ -65,11 +65,6 @@ extension UserView {
                 } label: {
                     TweetNestStack {
                         UserDetailLabel(userDetail: userDetail, placeholder: userDetail.objectID.description, showsUsername: false)
-                            #if os(watchOS)
-                            .labelStyle(.userDetailLabelStyle(iconWidth: 16, iconHeight: 16))
-                            #else
-                            .labelStyle(.userDetailLabelStyle(iconWidth: 24, iconHeight: 24))
-                            #endif
 
                         Spacer()
 

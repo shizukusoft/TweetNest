@@ -156,6 +156,7 @@ struct UserDataAssetImage: View {
                 .interpolation(.medium)
                 #endif
                 .resizable()
+                .aspectRatio(contentMode: .fit)
         } else {
             Color.gray
         }

@@ -19,7 +19,7 @@ struct UserRowsLabel: View {
         UserDetailLabel(userDetail: latestUserDetail, placeholder: userID.displayUserID)
             #if os(watchOS)
             .labelStyle(.titleOnly)
-            #else
+            #elseif os(macOS)
             .labelStyle(.userDetailLabelStyle(iconWidth: 24, iconHeight: 24))
             #endif
     }
