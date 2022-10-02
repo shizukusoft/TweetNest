@@ -6,6 +6,7 @@
 	<array>
 		<string>com.tweetnest.TweetNestKit.background-refresh</string>
 		<string>com.tweetnest.TweetNestKit.data-cleansing</string>
+		<string>com.tweetnest.TweetNestKit.waiting-cloudkit-sync</string>
 	</array>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>

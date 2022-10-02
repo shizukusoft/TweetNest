@@ -21,11 +21,12 @@ import UIKit
 import WatchKit
 #endif
 
-public actor BackgroundTaskScheduler {
+public class BackgroundTaskScheduler {
     public static let shared = BackgroundTaskScheduler()
 
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).background-refresh"
     public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).data-cleansing"
+    public static let waitingCloudKitSyncHelperBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).waiting-cloudkit-sync"
 
     private static var preferredBackgroundRefreshDate: Date {
         TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval)
@@ -45,7 +46,7 @@ public actor BackgroundTaskScheduler {
 }
 
 extension BackgroundTaskScheduler {
-    public nonisolated func scheduleBackgroundTasks() async {
+    public func scheduleBackgroundTasks() async {
         do {
             try await withExtendedBackgroundExecution(priority: .high) {
                 guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else {
@@ -58,14 +59,19 @@ extension BackgroundTaskScheduler {
                 #if canImport(BackgroundTasks) && !os(macOS)
                 let backgroundRefreshRequest = BGAppRefreshTaskRequest(identifier: Self.backgroundRefreshBackgroundTaskIdentifier)
                 backgroundRefreshRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate
+                try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
 
                 let backgroundDataCleansingRequest = BGProcessingTaskRequest(identifier: Self.dataCleansingBackgroundTaskIdentifier)
                 backgroundDataCleansingRequest.requiresNetworkConnectivity = false
                 backgroundDataCleansingRequest.requiresExternalPower = true
                 backgroundDataCleansingRequest.earliestBeginDate = Self.preferredBackgroundDataCleansingDate
-
-                try BGTaskScheduler.shared.submit(backgroundRefreshRequest)
                 try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
+
+                let backgroundWaitingCloudKitSyncRequest = BGProcessingTaskRequest(identifier: Self.waitingCloudKitSyncHelperBackgroundTaskIdentifier)
+                backgroundWaitingCloudKitSyncRequest.requiresNetworkConnectivity = true
+                backgroundWaitingCloudKitSyncRequest.requiresExternalPower = false
+                backgroundWaitingCloudKitSyncRequest.earliestBeginDate = nil
+                try BGTaskScheduler.shared.submit(backgroundWaitingCloudKitSyncRequest)
                 #elseif canImport(WatchKit)
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                     DispatchQueue.main.async {
@@ -89,7 +95,7 @@ extension BackgroundTaskScheduler {
     }
 
     #if canImport(BackgroundTasks) && !os(macOS)
-    public nonisolated func cancelBackgroundTasks() {
+    public func cancelBackgroundTasks() {
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier)
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier)
     }
@@ -101,13 +107,6 @@ extension BackgroundTaskScheduler {
     private func backgroundRefresh() async throws -> Bool {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
 
-        logger.notice("Start background refresh")
-        defer {
-            logger.notice("Background refresh finished with cancelled: \(Task.isCancelled)")
-        }
-
-        await self.scheduleBackgroundTasks()
-
         do {
             return try await session.fetchNewData()
         } catch {
@@ -116,15 +115,9 @@ extension BackgroundTaskScheduler {
         }
     }
 
+    @available(watchOS, unavailable)
     private func backgroundDataCleansing() async throws {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return }
-
-        logger.notice("Start background data cleansing")
-        defer {
-            logger.notice("Background data cleansing finished with cancelled: \(Task.isCancelled)")
-        }
-
-        await self.scheduleBackgroundTasks()
 
         do {
             try await session.cleansingAllData()
@@ -133,6 +126,30 @@ extension BackgroundTaskScheduler {
             throw error
         }
     }
+
+    @discardableResult
+    private func waitCloudKitSync(shouldRetry: Bool = true) async -> Bool {
+        for await cloudKitEvents in session.persistentContainer.$cloudKitEvents.values {
+            guard !Task.isCancelled else {
+                break
+            }
+
+            guard cloudKitEvents.allSatisfy({ $0.value.endDate != nil }) else {
+                continue
+            }
+
+            guard shouldRetry else {
+                try? await Task.sleep(nanoseconds: 60 * 1_000_000_000) // 1 mins.
+                break
+            }
+
+            return await waitCloudKitSync(shouldRetry: false)
+        }
+
+        return await session.persistentContainer.cloudKitEvents.lazy
+            .filter { $0.value.succeeded }
+            .contains { $0.value.type == .import }
+    }
 }
 
 #if canImport(BackgroundTasks) && !os(macOS)
@@ -140,7 +157,7 @@ extension BackgroundTaskScheduler {
     @available(iOSApplicationExtension, unavailable)
     @available(tvOSApplicationExtension, unavailable)
     @discardableResult
-    public nonisolated func registerBackgroundTasks() -> Bool {
+    public func registerBackgroundTasks() -> Bool {
         [
             BGTaskScheduler.shared.register(
                 forTaskWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier,
@@ -151,21 +168,27 @@ extension BackgroundTaskScheduler {
                 forTaskWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier,
                 using: nil,
                 launchHandler: handleDataCleansingBackgroundTask(_:)
+            ),
+            BGTaskScheduler.shared.register(
+                forTaskWithIdentifier: Self.waitingCloudKitSyncHelperBackgroundTaskIdentifier,
+                using: nil,
+                launchHandler: handleWaitingCloudKitSyncBackgroundTask(_:)
             )
         ]
         .allSatisfy { $0 }
     }
 
-    @available(iOSApplicationExtension, unavailable)
-    @available(tvOSApplicationExtension, unavailable)
-    nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
+    private func handleBackgroundTask(_ backgroundTask: BGTask, _ action: @escaping () async throws -> Void) {
         let task = Task {
             do {
-                let hasChanges = try await self.backgroundRefresh()
-
-                if hasChanges {
-                    await self.requestScenesRefresh()
+                logger.notice("Start background task for \(backgroundTask.identifier, privacy: .public)")
+                defer {
+                    logger.notice("Background task finished for \(backgroundTask.identifier, privacy: .public) with cancelled: \(Task.isCancelled)")
                 }
+
+                await self.scheduleBackgroundTasks()
+
+                try await action()
 
                 backgroundTask.setTaskCompleted(success: true)
             } catch {
@@ -174,7 +197,7 @@ extension BackgroundTaskScheduler {
         }
 
         backgroundTask.expirationHandler = { [logger] in
-            logger.notice("Background refresh task expired for: \(backgroundTask.identifier, privacy: .public)")
+            logger.notice("Background task expired for: \(backgroundTask.identifier, privacy: .public)")
             task.cancel()
             task.waitUntilFinished()
         }
@@ -182,23 +205,35 @@ extension BackgroundTaskScheduler {
 
     @available(iOSApplicationExtension, unavailable)
     @available(tvOSApplicationExtension, unavailable)
-    nonisolated func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
-        let task = Task {
-            do {
-                try await self.backgroundDataCleansing()
+    func handleBackgroundRefreshBackgroundTask(_ backgroundTask: BGTask) {
+        handleBackgroundTask(backgroundTask) {
+            let hasChanges = try await self.backgroundRefresh()
 
+            if hasChanges {
                 await self.requestScenesRefresh()
-
-                backgroundTask.setTaskCompleted(success: true)
-            } catch {
-                backgroundTask.setTaskCompleted(success: false)
             }
         }
+    }
 
-        backgroundTask.expirationHandler = { [logger] in
-            logger.notice("Background refresh task expired for: \(backgroundTask.identifier, privacy: .public)")
-            task.cancel()
-            task.waitUntilFinished()
+    @available(iOSApplicationExtension, unavailable)
+    @available(tvOSApplicationExtension, unavailable)
+    func handleDataCleansingBackgroundTask(_ backgroundTask: BGTask) {
+        handleBackgroundTask(backgroundTask) {
+            try await self.backgroundDataCleansing()
+
+            await self.requestScenesRefresh()
+        }
+    }
+
+    @available(iOSApplicationExtension, unavailable)
+    @available(tvOSApplicationExtension, unavailable)
+    func handleWaitingCloudKitSyncBackgroundTask(_ backgroundTask: BGTask) {
+        handleBackgroundTask(backgroundTask) {
+            let hasChanges = await self.waitCloudKitSync()
+
+            if hasChanges {
+                await self.requestScenesRefresh()
+            }
         }
     }
 
@@ -220,7 +255,7 @@ extension BackgroundTaskScheduler {
 #elseif canImport(WatchKit)
 extension BackgroundTaskScheduler {
     @discardableResult
-    public nonisolated func handleBackgroundRefreshBackgroundTask(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
+    public func handleBackgroundRefreshBackgroundTask(_ backgroundTasks: Set<WKRefreshBackgroundTask>) -> Set<WKRefreshBackgroundTask> {
         guard
             let backgroundTask = backgroundTasks.first(where: { $0.userInfo as? NSString == Self.backgroundRefreshBackgroundTaskIdentifier as NSString })
         else {
@@ -229,7 +264,18 @@ extension BackgroundTaskScheduler {
 
         let task = Task {
             do {
-                let hasChanges = try await self.backgroundRefresh()
+                let hasChanges = try await withThrowingTaskGroup(of: Bool.self) { taskGroup in
+                    taskGroup.addTask {
+                        try await self.backgroundRefresh()
+                    }
+                    taskGroup.addTask {
+                        await self.waitCloudKitSync()
+                    }
+
+                    return try await taskGroup.reduce(into: false) { partialResult, taskResult in
+                        partialResult = partialResult || taskResult
+                    }
+                }
 
                 backgroundTask.setTaskCompletedWithSnapshot(hasChanges)
             } catch {
