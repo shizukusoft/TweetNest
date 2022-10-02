@@ -85,8 +85,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-zip.git",
       "state" : {
-        "revision" : "e91876de8762b9e447607a788c363115903b7810",
-        "version" : "0.0.4"
+        "revision" : "2854245af31bdcfec5161d2aa3021ea6c654aa05",
+        "version" : "0.0.5"
       }
     }
   ],
