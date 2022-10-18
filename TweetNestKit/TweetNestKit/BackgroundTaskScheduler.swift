@@ -70,7 +70,7 @@ extension BackgroundTaskScheduler {
                 let backgroundWaitingCloudKitSyncRequest = BGProcessingTaskRequest(identifier: Self.waitingCloudKitSyncHelperBackgroundTaskIdentifier)
                 backgroundWaitingCloudKitSyncRequest.requiresNetworkConnectivity = true
                 backgroundWaitingCloudKitSyncRequest.requiresExternalPower = false
-                backgroundWaitingCloudKitSyncRequest.earliestBeginDate = nil
+                backgroundWaitingCloudKitSyncRequest.earliestBeginDate = Self.preferredBackgroundRefreshDate // Data will not generated before app refresh.
                 try BGTaskScheduler.shared.submit(backgroundWaitingCloudKitSyncRequest)
                 #elseif canImport(WatchKit)
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
@@ -98,6 +98,7 @@ extension BackgroundTaskScheduler {
     public func cancelBackgroundTasks() {
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.backgroundRefreshBackgroundTaskIdentifier)
         BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier)
+        BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: Self.waitingCloudKitSyncHelperBackgroundTaskIdentifier)
     }
     #endif
 }
