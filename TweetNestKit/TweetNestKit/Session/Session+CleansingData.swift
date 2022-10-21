@@ -26,12 +26,33 @@ extension Session {
         return context
     }
 
+    private func waitCloudKitSync(shouldRetry: Bool = true) async {
+        for await cloudKitEvents in persistentContainer.$cloudKitEvents.values {
+            guard !Task.isCancelled else {
+                break
+            }
+
+            guard cloudKitEvents.allSatisfy({ $0.value.result != nil }) else {
+                continue
+            }
+
+            guard shouldRetry else {
+                break
+            }
+
+            try? await Task.sleep(nanoseconds: 60 * 1_000_000_000) // 1 mins.
+            return await waitCloudKitSync(shouldRetry: false)
+        }
+    }
+
     public func cleansingAllData(force: Bool = false) async throws {
         guard force || TweetNestKitUserDefaults.standard.lastCleansedDate.addingTimeInterval(Self.cleansingDataInterval) < Date() else {
             return
         }
 
         TweetNestKitUserDefaults.standard.lastCleansedDate = Date()
+
+        await waitCloudKitSync()
 
         try await withThrowingTaskGroup(of: Void.self) { taskGroup in
             taskGroup.addTask {
@@ -54,6 +75,8 @@ extension Session {
         }
 
         try await cleansingAllPersistentStores()
+
+        await waitCloudKitSync()
     }
 
     public func cleansingAllAccounts(context: NSManagedObjectContext? = nil) async throws {
