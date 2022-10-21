@@ -71,6 +71,7 @@
 		196746C628AE9D5400863E43 /* UnifiedLogging in Frameworks */ = {isa = PBXBuildFile; productRef = 196746C528AE9D5400863E43 /* UnifiedLogging */; };
 		196746C928AE9D6C00863E43 /* AsyncAlgorithms in Frameworks */ = {isa = PBXBuildFile; productRef = 196746C828AE9D6C00863E43 /* AsyncAlgorithms */; };
 		196FF9B82902CA60004A0535 /* Session+FetchingData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196FF9B72902CA60004A0535 /* Session+FetchingData.swift */; };
+		196FF9BC2902CC13004A0535 /* NSPersistentCloudKitContainer+TweetNestKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 196FF9BB2902CC13004A0535 /* NSPersistentCloudKitContainer+TweetNestKit.swift */; };
 		19B7E61928AF6D45002E8213 /* Session+Authentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61828AF6D45002E8213 /* Session+Authentication.swift */; };
 /* End PBXBuildFile section */
 
@@ -152,6 +153,7 @@
 		196746B128AE9C4000863E43 /* DateFormatterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateFormatterTests.swift; sourceTree = "<group>"; };
 		196746B228AE9C4000863E43 /* UserDetailTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDetailTests.swift; sourceTree = "<group>"; };
 		196FF9B72902CA60004A0535 /* Session+FetchingData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+FetchingData.swift"; sourceTree = "<group>"; };
+		196FF9BB2902CC13004A0535 /* NSPersistentCloudKitContainer+TweetNestKit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSPersistentCloudKitContainer+TweetNestKit.swift"; sourceTree = "<group>"; };
 		19B7E61828AF6D45002E8213 /* Session+Authentication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Session+Authentication.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -319,6 +321,7 @@
 		1967469428AE9BE700863E43 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				196FF9BB2902CC13004A0535 /* NSPersistentCloudKitContainer+TweetNestKit.swift */,
 				1967469528AE9BE700863E43 /* NSPersistentContainer+TweetNestKit.swift */,
 			);
 			path = CoreData;
@@ -502,6 +505,7 @@
 				1967469A28AE9BE700863E43 /* Session+TweetNestKit.swift in Sources */,
 				1967463A28AE9BB300863E43 /* TwitterArchive.swift in Sources */,
 				1967468B28AE9BDE00863E43 /* Session+Updates.swift in Sources */,
+				196FF9BC2902CC13004A0535 /* NSPersistentCloudKitContainer+TweetNestKit.swift in Sources */,
 				1967463528AE9BB300863E43 /* AsyncLazy.swift in Sources */,
 				1967468728AE9BDE00863E43 /* Session+Support.swift in Sources */,
 				1967466128AE9BD600863E43 /* PersistentContainer+V3_Migration.swift in Sources */,
