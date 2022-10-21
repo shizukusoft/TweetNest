@@ -130,29 +130,12 @@ extension PersistentContainer {
             case unknown(Int)
         }
 
-        public let identifier: UUID
-        public let storeIdentifier: String
-        public let type: EventType
-        public let startDate: Date
-        public let endDate: Date?
-        public let succeeded: Bool
-        private let nsError: NSError?
-    }
-}
-
-extension PersistentContainer.CloudKitEvent {
-    public var error: Error? {
-        nsError as Error?
-    }
-
-    public var result: Result<Void, Error>? {
-        if let error = error {
-            return .failure(error)
-        } else if succeeded {
-            return .success(())
-        } else {
-            return nil
-        }
+        public var identifier: UUID
+        public var storeIdentifier: String
+        public var type: EventType
+        public var startDate: Date
+        public var endDate: Date?
+        public var result: Result<Void, Error>?
     }
 }
 
@@ -171,7 +154,7 @@ extension PersistentContainer.CloudKitEvent.EventType {
     }
 }
 
-extension PersistentContainer.CloudKitEvent.EventType: Equatable, Hashable, Sendable { }
+extension PersistentContainer.CloudKitEvent.EventType: Equatable { }
 
 extension PersistentContainer.CloudKitEvent {
     init(_ event: NSPersistentCloudKitContainer.Event) {
@@ -180,15 +163,35 @@ extension PersistentContainer.CloudKitEvent {
         self.type = EventType(event.type)
         self.startDate = event.startDate
         self.endDate = event.endDate
-        self.succeeded = event.succeeded
-        self.nsError = event.error as NSError?
+
+        if let error = event.error {
+            result = .failure(error)
+        } else if event.succeeded {
+            result = .success(())
+        } else {
+            result = nil
+        }
     }
 }
 
-extension PersistentContainer.CloudKitEvent: Equatable, Hashable, Sendable { }
-
-extension PersistentContainer.CloudKitEvent: Identifiable {
-    public var id: UUID {
-        identifier
+extension PersistentContainer.CloudKitEvent: Equatable {
+    public static func == (lhs: PersistentContainer.CloudKitEvent, rhs: PersistentContainer.CloudKitEvent) -> Bool {
+        lhs.identifier == rhs.identifier &&
+        lhs.storeIdentifier == rhs.storeIdentifier &&
+        lhs.type == rhs.type &&
+        lhs.startDate == rhs.startDate &&
+        lhs.endDate == rhs.endDate &&
+        { () -> Bool in
+            switch (lhs.result, rhs.result) {
+            case (.success, .success):
+                return true
+            case (.failure, .failure):
+                return true
+            case (nil, nil):
+                return true
+            default:
+                return false
+            }
+        }()
     }
 }
