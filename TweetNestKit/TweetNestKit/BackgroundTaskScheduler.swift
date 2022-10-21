@@ -26,7 +26,6 @@ public class BackgroundTaskScheduler {
 
     public static let backgroundRefreshBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).background-refresh"
     public static let dataCleansingBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).data-cleansing"
-    public static let waitingCloudKitSyncHelperBackgroundTaskIdentifier: String = "\(Bundle.tweetNestKit.bundleIdentifier!).waiting-cloudkit-sync"
 
     private static var preferredBackgroundRefreshDate: Date {
         TweetNestKitUserDefaults.standard.lastFetchNewDataDate.addingTimeInterval(TweetNestKitUserDefaults.standard.fetchNewDataInterval)
@@ -66,12 +65,6 @@ extension BackgroundTaskScheduler {
                 backgroundDataCleansingRequest.requiresExternalPower = true
                 backgroundDataCleansingRequest.earliestBeginDate = Self.preferredBackgroundDataCleansingDate
                 try BGTaskScheduler.shared.submit(backgroundDataCleansingRequest)
-
-                let backgroundWaitingCloudKitSyncRequest = BGProcessingTaskRequest(identifier: Self.waitingCloudKitSyncHelperBackgroundTaskIdentifier)
-                backgroundWaitingCloudKitSyncRequest.requiresNetworkConnectivity = true
-                backgroundWaitingCloudKitSyncRequest.requiresExternalPower = false
-                backgroundWaitingCloudKitSyncRequest.earliestBeginDate = nil
-                try BGTaskScheduler.shared.submit(backgroundWaitingCloudKitSyncRequest)
                 #elseif canImport(WatchKit)
                 try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
                     DispatchQueue.main.async {
@@ -126,30 +119,6 @@ extension BackgroundTaskScheduler {
             throw error
         }
     }
-
-    @discardableResult
-    private func waitCloudKitSync(shouldRetry: Bool = true) async -> Bool {
-        for await cloudKitEvents in session.persistentContainer.$cloudKitEvents.values {
-            guard !Task.isCancelled else {
-                break
-            }
-
-            guard cloudKitEvents.allSatisfy({ $0.value.endDate != nil }) else {
-                continue
-            }
-
-            guard shouldRetry else {
-                try? await Task.sleep(nanoseconds: 60 * 1_000_000_000) // 1 mins.
-                break
-            }
-
-            return await waitCloudKitSync(shouldRetry: false)
-        }
-
-        return await session.persistentContainer.cloudKitEvents.lazy
-            .filter { $0.value.succeeded }
-            .contains { $0.value.type == .import }
-    }
 }
 
 #if canImport(BackgroundTasks) && !os(macOS)
@@ -168,11 +137,6 @@ extension BackgroundTaskScheduler {
                 forTaskWithIdentifier: Self.dataCleansingBackgroundTaskIdentifier,
                 using: nil,
                 launchHandler: handleDataCleansingBackgroundTask(_:)
-            ),
-            BGTaskScheduler.shared.register(
-                forTaskWithIdentifier: Self.waitingCloudKitSyncHelperBackgroundTaskIdentifier,
-                using: nil,
-                launchHandler: handleWaitingCloudKitSyncBackgroundTask(_:)
             )
         ]
         .allSatisfy { $0 }
@@ -227,18 +191,6 @@ extension BackgroundTaskScheduler {
 
     @available(iOSApplicationExtension, unavailable)
     @available(tvOSApplicationExtension, unavailable)
-    func handleWaitingCloudKitSyncBackgroundTask(_ backgroundTask: BGTask) {
-        handleBackgroundTask(backgroundTask) {
-            let hasChanges = await self.waitCloudKitSync()
-
-            if hasChanges {
-                await self.requestScenesRefresh()
-            }
-        }
-    }
-
-    @available(iOSApplicationExtension, unavailable)
-    @available(tvOSApplicationExtension, unavailable)
     @MainActor
     private func requestScenesRefresh() {
         for connectedScene in UIApplication.shared.connectedScenes {
@@ -264,18 +216,7 @@ extension BackgroundTaskScheduler {
 
         let task = Task {
             do {
-                let hasChanges = try await withThrowingTaskGroup(of: Bool.self) { taskGroup in
-                    taskGroup.addTask {
-                        try await self.backgroundRefresh()
-                    }
-                    taskGroup.addTask {
-                        await self.waitCloudKitSync()
-                    }
-
-                    return try await taskGroup.reduce(into: false) { partialResult, taskResult in
-                        partialResult = partialResult || taskResult
-                    }
-                }
+                let hasChanges = try await self.backgroundRefresh()
 
                 backgroundTask.setTaskCompletedWithSnapshot(hasChanges)
             } catch {

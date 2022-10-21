@@ -36,7 +36,7 @@ public final class PersistentContainer: NSPersistentCloudKitContainer {
     #endif
 
     @MainActor @Published
-    public private(set) var cloudKitEvents: OrderedDictionary<UUID, PersistentContainer.CloudKitEvent> = [:]
+    public private(set) var cloudKitEvents: OrderedDictionary<UUID, NSPersistentCloudKitContainer.Event> = [:]
 
     init(inMemory: Bool = false, persistentStoreOptions: [String: Any?]? = nil) {
         super.init(name: "\(Bundle.tweetNestKit.name!).V3", managedObjectModel: Self.V3.managedObjectModel)
@@ -76,10 +76,10 @@ public final class PersistentContainer: NSPersistentCloudKitContainer {
         NotificationCenter.default
             .publisher(for: NSPersistentCloudKitContainer.eventChangedNotification, object: self)
             .compactMap { $0.userInfo?[NSPersistentCloudKitContainer.eventNotificationUserInfoKey] as? NSPersistentCloudKitContainer.Event }
-            .scan(OrderedDictionary<UUID, PersistentContainer.CloudKitEvent>()) {
+            .scan(OrderedDictionary<UUID, NSPersistentCloudKitContainer.Event>()) {
                 var cloudKitEvents = $0
 
-                cloudKitEvents[$1.identifier] = CloudKitEvent($1)
+                cloudKitEvents[$1.identifier] = $1
 
                 return cloudKitEvents
             }
@@ -118,77 +118,5 @@ public final class PersistentContainer: NSPersistentCloudKitContainer {
         backgroundContext.automaticallyMergesChangesFromParent = true
         backgroundContext.mergePolicy = NSMergePolicy.mergeByPropertyObjectTrump
         return backgroundContext
-    }
-}
-
-extension PersistentContainer {
-    public struct CloudKitEvent {
-        public enum EventType {
-            case setup
-            case `import`
-            case export
-            case unknown(Int)
-        }
-
-        public let identifier: UUID
-        public let storeIdentifier: String
-        public let type: EventType
-        public let startDate: Date
-        public let endDate: Date?
-        public let succeeded: Bool
-        private let nsError: NSError?
-    }
-}
-
-extension PersistentContainer.CloudKitEvent {
-    public var error: Error? {
-        nsError as Error?
-    }
-
-    public var result: Result<Void, Error>? {
-        if let error = error {
-            return .failure(error)
-        } else if succeeded {
-            return .success(())
-        } else {
-            return nil
-        }
-    }
-}
-
-extension PersistentContainer.CloudKitEvent.EventType {
-    init(_ eventType: NSPersistentCloudKitContainer.EventType) {
-        switch eventType {
-        case .setup:
-            self = .setup
-        case .import:
-            self = .import
-        case .export:
-            self = .export
-        @unknown default:
-            self = .unknown(eventType.rawValue)
-        }
-    }
-}
-
-extension PersistentContainer.CloudKitEvent.EventType: Equatable, Hashable, Sendable { }
-
-extension PersistentContainer.CloudKitEvent {
-    init(_ event: NSPersistentCloudKitContainer.Event) {
-        self.identifier = event.identifier
-        self.storeIdentifier = event.storeIdentifier
-        self.type = EventType(event.type)
-        self.startDate = event.startDate
-        self.endDate = event.endDate
-        self.succeeded = event.succeeded
-        self.nsError = event.error as NSError?
-    }
-}
-
-extension PersistentContainer.CloudKitEvent: Equatable, Hashable, Sendable { }
-
-extension PersistentContainer.CloudKitEvent: Identifiable {
-    public var id: UUID {
-        identifier
     }
 }

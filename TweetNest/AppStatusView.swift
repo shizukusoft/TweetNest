@@ -14,7 +14,7 @@ import TweetNestKit
 struct AppStatusView: View {
     let isPersistentContainerLoaded: Bool
 
-    @State private var inProgressPersistentContainerCloudKitEvent = TweetNestApp.session.persistentContainer.cloudKitEvents.values.last { $0.endDate == nil }
+    @State private var inProgressPersistentContainerCloudKitEvent = TweetNestApp.session.persistentContainer.cloudKitEvents.values.last { $0.result == nil }
 
     private var loadingText: LocalizedStringKey? {
         switch (isPersistentContainerLoaded, inProgressPersistentContainerCloudKitEvent?.type) {
@@ -22,7 +22,7 @@ struct AppStatusView: View {
             return "Loading…"
         case (_, .setup?):
             return "Preparing to Sync…"
-        case (_, .import?), (_, .export?), (_, .unknown?):
+        case (_, .import?), (_, .export?), (_, .some(_)):
             return "Syncing…"
         case (true, nil):
             return nil
