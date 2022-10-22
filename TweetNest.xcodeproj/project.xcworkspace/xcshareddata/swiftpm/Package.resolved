@@ -23,8 +23,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/shizukusoft/swift-background-task",
       "state" : {
-        "revision" : "a73cf69c45d48786e4f820135ef302a054684604",
-        "version" : "0.2.9"
+        "revision" : "6286a4015120b7b09a6af402232d4014e4cf3676",
+        "version" : "0.2.10"
       }
     },
     {
@@ -76,8 +76,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-unified-log",
       "state" : {
-        "revision" : "3afccfaa8ffe143ebe0d7d784c1a01b339c4d162",
-        "version" : "2.0.2"
+        "revision" : "b1e3855af79774c80020f27e344e9acd58ca8e1a",
+        "version" : "2.1.0"
       }
     },
     {
