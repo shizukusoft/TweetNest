@@ -137,7 +137,10 @@ extension BackgroundTaskScheduler {
             do {
                 logger.notice("Start background task for \(backgroundTask.identifier, privacy: .public)")
                 defer {
-                    logger.notice("Background task finished for \(backgroundTask.identifier, privacy: .public) with cancelled: \(Task.isCancelled)")
+                    logger.log(
+                        level: Task.isCancelled ? .warning : .notice,
+                        "Background task finished for \(backgroundTask.identifier, privacy: .public) with cancelled: \(Task.isCancelled)"
+                    )
                 }
 
                 await self.scheduleBackgroundTasks()
@@ -209,7 +212,10 @@ extension BackgroundTaskScheduler {
         let task = Task {
             logger.notice("Start refresh background task with \(String(describing: backgroundTask.userInfo), privacy: .public)")
             defer {
-                logger.notice("Refresh Background task finished with \(String(describing: backgroundTask.userInfo), privacy: .public) with cancelled: \(Task.isCancelled)")
+                logger.log(
+                    level: Task.isCancelled ? .warning : .notice,
+                    "Refresh Background task finished with \(String(describing: backgroundTask.userInfo), privacy: .public) with cancelled: \(Task.isCancelled)"
+                )
             }
 
             do {
