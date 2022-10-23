@@ -32,8 +32,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-cminizip-ng.git",
       "state" : {
-        "revision" : "515df869172537c60e6704beb60bc6750b5bea7e",
-        "version" : "0.0.6"
+        "revision" : "0b37c2152e29c90bb9ed84bc472b2591f1a58095",
+        "version" : "0.0.9"
       }
     },
     {
