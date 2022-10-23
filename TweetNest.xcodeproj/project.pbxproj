@@ -114,6 +114,8 @@
 		19505F7228A189E800ADE8CF /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F7028A189E800ADE8CF /* ComplicationController.swift */; };
 		19505F7428A18A3700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
 		19505F7528A18A3A00ADE8CF /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F6C28A189D500ADE8CF /* TweetNestScreenTests.swift */; };
+		1993CD4C2905A38000889D3F /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		1993CD4D2905A38800889D3F /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		19A20A4028A18F0600FE5301 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19A20A4228A18F0600FE5301 /* InfoPlist.strings */; };
 		19AD1ADE2903D6C100EA4B45 /* TweetNest.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19AD1ADD2903D6C100EA4B45 /* TweetNest.docc */; };
 		19AD1AE02903DC4300EA4B45 /* TweetNest.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19AD1ADD2903D6C100EA4B45 /* TweetNest.docc */; };
@@ -357,6 +359,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1993CD4D2905A38800889D3F /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +382,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1993CD4C2905A38000889D3F /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
