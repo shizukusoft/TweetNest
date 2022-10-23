@@ -82,6 +82,9 @@
             reference = "container:TweetNest Watch App/TweetNest Watch App.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:TweetNest Watch App/ScreenTests.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference

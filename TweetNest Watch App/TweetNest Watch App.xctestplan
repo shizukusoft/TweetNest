@@ -68,6 +68,9 @@
     },
     {
       "parallelizable" : true,
+      "skippedTests" : [
+        "TweetNestScreenTests"
+      ],
       "target" : {
         "containerPath" : "container:TweetNest.xcodeproj",
         "identifier" : "19505DB028A183B900ADE8CF",

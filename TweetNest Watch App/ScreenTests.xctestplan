@@ -1,0 +1,27 @@
+{
+  "configurations" : [
+    {
+      "id" : "307C96A0-4BD3-4E85-B0DC-7B4F19392306",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "TweetNestUITests"
+      ],
+      "target" : {
+        "containerPath" : "container:TweetNest.xcodeproj",
+        "identifier" : "19505DB028A183B900ADE8CF",
+        "name" : "TweetNest Watch AppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

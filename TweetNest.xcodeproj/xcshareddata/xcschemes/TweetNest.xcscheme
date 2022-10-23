@@ -68,6 +68,9 @@
             reference = "container:TweetNest/TweetNest.xctestplan"
             default = "YES">
          </TestPlanReference>
+         <TestPlanReference
+            reference = "container:TweetNest/ScreenTests.xctestplan">
+         </TestPlanReference>
       </TestPlans>
       <Testables>
          <TestableReference

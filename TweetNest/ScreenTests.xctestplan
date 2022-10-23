@@ -1,0 +1,27 @@
+{
+  "configurations" : [
+    {
+      "id" : "B198D58E-E5AE-4716-ADF9-ADC248040A5E",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "skippedTests" : [
+        "TweetNestUITests"
+      ],
+      "target" : {
+        "containerPath" : "container:TweetNest.xcodeproj",
+        "identifier" : "19505DF028A1844700ADE8CF",
+        "name" : "TweetNestUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
