@@ -325,6 +325,8 @@
 		19BBDFE228BD3E2A00562866 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		19BBDFE428BD3E2B00562866 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TweetNestKit.xcodeproj; path = TweetNestKit/TweetNestKit.xcodeproj; sourceTree = "<group>"; };
+		19E5BCB42905684500C613BE /* TweetNest.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TweetNest.xctestplan; sourceTree = "<group>"; };
+		19E5BCB62905687F00C613BE /* TweetNest Watch App.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TweetNest Watch App.xctestplan"; sourceTree = "<group>"; };
 		19E5F41E28AEAA44002107D5 /* URLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLTests.swift; sourceTree = "<group>"; };
 		19E5F42428AEAD78002107D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEnvironmentKey.swift; sourceTree = "<group>"; };
@@ -423,6 +425,7 @@
 				19A20A4228A18F0600FE5301 /* InfoPlist.strings */,
 				19BBDFE328BD3E2A00562866 /* Localizable.strings */,
 				19505F7628A18AC800ADE8CF /* TweetNest Watch App.entitlements */,
+				19E5BCB62905687F00C613BE /* TweetNest Watch App.xctestplan */,
 			);
 			path = "TweetNest Watch App";
 			sourceTree = "<group>";
@@ -488,6 +491,7 @@
 				19505F6928A1896000ADE8CF /* Localizable.strings */,
 				19505DDF28A1844600ADE8CF /* TweetNest.entitlements */,
 				19AD1ADD2903D6C100EA4B45 /* TweetNest.docc */,
+				19E5BCB42905684500C613BE /* TweetNest.xctestplan */,
 				19505DE028A1844600ADE8CF /* Preview Content */,
 			);
 			path = TweetNest;
