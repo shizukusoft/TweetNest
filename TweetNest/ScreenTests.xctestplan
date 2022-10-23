@@ -9,12 +9,18 @@
     }
   ],
   "defaultOptions" : {
-
+    "areLocalizationScreenshotsEnabled" : true,
+    "uiTestingScreenshotsLifetime" : "keepAlways",
+    "userAttachmentLifetime" : "keepAlways"
   },
   "testTargets" : [
     {
-      "skippedTests" : [
-        "TweetNestUITests"
+      "parallelizable" : true,
+      "selectedTests" : [
+        "TweetNestScreenTests\/testAccount()",
+        "TweetNestScreenTests\/testBatchDeleteTweetsForm()",
+        "TweetNestScreenTests\/testFollowingsHistory()",
+        "TweetNestScreenTests\/testLaunch()"
       ],
       "target" : {
         "containerPath" : "container:TweetNest.xcodeproj",

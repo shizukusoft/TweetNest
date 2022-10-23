@@ -100,7 +100,7 @@ class TweetNestScreenTests: XCTestCase {
         #if os(macOS)
         app.buttons["\(Self.dispalyUserName):FollowingsHistory"].click()
 
-        app.tables.tableRows.buttons["Apple"].click()
+        app.tables.tableRows.buttons["Apple, Apple"].click()
         #else
         app.buttons["\(Self.dispalyUserName):FollowingsHistory"].tap()
 

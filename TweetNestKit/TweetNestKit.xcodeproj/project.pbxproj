@@ -362,6 +362,13 @@
 			buildRules = (
 			);
 			dependencies = (
+				19D4204B290587EE006F3BF4 /* PBXTargetDependency */,
+				19D4204D290587EE006F3BF4 /* PBXTargetDependency */,
+				19D4204F290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42051290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42053290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42055290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42057290587EE006F3BF4 /* PBXTargetDependency */,
 			);
 			name = TweetNestKit;
 			packageProductDependencies = (
@@ -541,6 +548,40 @@
 			isa = PBXTargetDependency;
 			target = 1914CD0328AE9A2800F7C398 /* TweetNestKit */;
 			targetProxy = 1914CD1028AE9A2800F7C398 /* PBXContainerItemProxy */;
+		};
+		19D4204B290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D4204A290587EE006F3BF4 /* Algorithms */;
+		};
+		19D4204D290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D4204C290587EE006F3BF4 /* OrderedCollections */;
+		};
+		19D4204F290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D4204E290587EE006F3BF4 /* BackgroundTask */;
+		};
+		19D42051290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D42050290587EE006F3BF4 /* Twitter */;
+		};
+		19D42053290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+				maccatalyst,
+				macos,
+				tvos,
+			);
+			productRef = 19D42052290587EE006F3BF4 /* ZIP */;
+		};
+		19D42055290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D42054290587EE006F3BF4 /* UnifiedLogging */;
+		};
+		19D42057290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D42056290587EE006F3BF4 /* AsyncAlgorithms */;
 		};
 /* End PBXTargetDependency section */
 
@@ -948,6 +989,41 @@
 			productName = UnifiedLogging;
 		};
 		196746C828AE9D6C00863E43 /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746C728AE9D6C00863E43 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
+		};
+		19D4204A290587EE006F3BF4 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746B528AE9CDD00863E43 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		19D4204C290587EE006F3BF4 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746B828AE9CF200863E43 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		19D4204E290587EE006F3BF4 /* BackgroundTask */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746BB28AE9D0F00863E43 /* XCRemoteSwiftPackageReference "swift-background-task" */;
+			productName = BackgroundTask;
+		};
+		19D42050290587EE006F3BF4 /* Twitter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746BE28AE9D2300863E43 /* XCRemoteSwiftPackageReference "swift-twitter" */;
+			productName = Twitter;
+		};
+		19D42052290587EE006F3BF4 /* ZIP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746C128AE9D3F00863E43 /* XCRemoteSwiftPackageReference "swift-zip" */;
+			productName = ZIP;
+		};
+		19D42054290587EE006F3BF4 /* UnifiedLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746C428AE9D5400863E43 /* XCRemoteSwiftPackageReference "swift-unified-log" */;
+			productName = UnifiedLogging;
+		};
+		19D42056290587EE006F3BF4 /* AsyncAlgorithms */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 196746C728AE9D6C00863E43 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;

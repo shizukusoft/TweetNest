@@ -120,6 +120,8 @@
 		19B7E61528AF69D4002E8213 /* TwitterAuthenticationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61428AF69D4002E8213 /* TwitterAuthenticationButton.swift */; };
 		19B7E61A28AF8246002E8213 /* TwitterAuthenticationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61428AF69D4002E8213 /* TwitterAuthenticationButton.swift */; };
 		19BBDFE128BD3E2A00562866 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19BBDFE328BD3E2A00562866 /* Localizable.strings */; };
+		19C309AD29058F2B005C06F1 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F42428AEAD78002107D5 /* UIApplication.swift */; };
+		19C309AF290590F7005C06F1 /* URLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F41E28AEAA44002107D5 /* URLTests.swift */; };
 		19C4E65328AE9E32008FFCB1 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; };
 		19C4E65428AE9E32008FFCB1 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19C4E65528AE9E40008FFCB1 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; };
@@ -951,6 +953,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19C309AF290590F7005C06F1 /* URLTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -958,6 +961,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19C309AD29058F2B005C06F1 /* UIApplication.swift in Sources */,
 				19505F7428A18A3700ADE8CF /* TweetNestUITests.swift in Sources */,
 				19505F7528A18A3A00ADE8CF /* TweetNestScreenTests.swift in Sources */,
 			);
@@ -1409,6 +1413,7 @@
 		19505DFA28A1844700ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1448,6 +1453,7 @@
 		19505DFB28A1844700ADE8CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1486,6 +1492,7 @@
 		19505DFD28A1844700ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1493,7 +1500,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1505,6 +1511,7 @@
 		19505DFE28A1844700ADE8CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1512,7 +1519,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1524,13 +1530,13 @@
 		19505E0028A1844700ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1542,13 +1548,13 @@
 		19505E0128A1844700ADE8CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
