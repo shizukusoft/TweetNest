@@ -14,7 +14,7 @@ final class UIApplication: XCUIApplication {
         }
         set {
             if newValue {
-                guard launchArguments.contains("-com.tweetnest.TweetNest.Preview") else {
+                guard !launchArguments.contains("-com.tweetnest.TweetNest.Preview") else {
                     return
                 }
 
