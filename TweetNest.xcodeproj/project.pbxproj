@@ -114,6 +114,7 @@
 		19505F7228A189E800ADE8CF /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F7028A189E800ADE8CF /* ComplicationController.swift */; };
 		19505F7428A18A3700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
 		19505F7528A18A3A00ADE8CF /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F6C28A189D500ADE8CF /* TweetNestScreenTests.swift */; };
+		1960A6782905B4650089F650 /* _WindowResizability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960A6772905B4650089F650 /* _WindowResizability.swift */; };
 		1993CD4C2905A38000889D3F /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		1993CD4D2905A38800889D3F /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		19A20A4028A18F0600FE5301 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19A20A4228A18F0600FE5301 /* InfoPlist.strings */; };
@@ -321,6 +322,7 @@
 		19505F7628A18AC800ADE8CF /* TweetNest Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "TweetNest Watch App.entitlements"; sourceTree = "<group>"; };
 		19505F7728A18AE300ADE8CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		19505F9A28A18C5F00ADE8CF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1960A6772905B4650089F650 /* _WindowResizability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _WindowResizability.swift; sourceTree = "<group>"; };
 		19A20A4328A18F0900FE5301 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4428A18F0A00FE5301 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4528A18F4700FE5301 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -489,6 +491,7 @@
 				19505F1628A1889500ADE8CF /* ShareView.swift */,
 				19505F1928A1889900ADE8CF /* ShareButton.swift */,
 				19EA11A328BB5DAB00029075 /* _NavigationSplitViewVisibility.swift */,
+				1960A6772905B4650089F650 /* _WindowResizability.swift */,
 				19505F1C28A188A100ADE8CF /* Components */,
 				19505F2F28A188A900ADE8CF /* BatchDeleteTweets */,
 				19505F3F28A188CB00ADE8CF /* Settings */,
@@ -1006,6 +1009,7 @@
 				19505F3528A188A900ADE8CF /* BatchDeleteTweetsLoadingRecentTweetsView.swift in Sources */,
 				19505EE228A1885D00ADE8CF /* UserView.swift in Sources */,
 				19505F3928A188A900ADE8CF /* BatchDeleteTweetsView.swift in Sources */,
+				1960A6782905B4650089F650 /* _WindowResizability.swift in Sources */,
 				19505EC628A1883800ADE8CF /* TweetNestApp.swift in Sources */,
 				19505EF728A1887000ADE8CF /* UserRowsLabel.swift in Sources */,
 				19EA119828BB4FDE00029075 /* AppSidebarAccountSection.swift in Sources */,
