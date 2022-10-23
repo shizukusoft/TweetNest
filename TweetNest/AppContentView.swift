@@ -50,18 +50,19 @@ struct AppContentView: View {
                         account(for: accountManagedObjectID)
                     )
             case .none:
-                Rectangle()
-                    .foregroundColor(.clear)
-                    .onAppear {
-                        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+                #if !os(macOS)
+                if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+                    Rectangle()
+                        .foregroundColor(.clear)
+                        .onAppear {
                             navigationSplitViewVisibility?.value = .all
                         }
-                    }
-                    .onDisappear {
-                        if #available(iOS 16.0, macOS 13.0, tvOS 16.0, watchOS 9.0, *) {
+                        .onDisappear {
                             navigationSplitViewVisibility?.value = .automatic
                         }
-                    }
+
+                }
+                #endif
             }
         }
     }
