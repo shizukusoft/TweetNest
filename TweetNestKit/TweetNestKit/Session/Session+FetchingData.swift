@@ -43,7 +43,7 @@ extension Session {
 
     func postUserNotification(error: Error, accountObjectID: NSManagedObjectID? = nil) async throws {
         switch error {
-        case is CancellationError, URLError.cancelled:
+        case let error as CancellableError where error.isCancelled:
             break
         default:
             let notificationContent = UNMutableNotificationContent()

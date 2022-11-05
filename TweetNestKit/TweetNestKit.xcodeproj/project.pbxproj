@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		1914CD0928AE9A2800F7C398 /* TweetNestKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1914CD0828AE9A2800F7C398 /* TweetNestKit.docc */; };
 		1914CD0F28AE9A2800F7C398 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1914CD0428AE9A2800F7C398 /* TweetNestKit.framework */; };
+		1957C05D29169A13002CE022 /* CancellableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1957C05C29169A13002CE022 /* CancellableError.swift */; };
 		1967463528AE9BB300863E43 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967462C28AE9BB300863E43 /* AsyncLazy.swift */; };
 		1967463628AE9BB300863E43 /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967462D28AE9BB300863E43 /* Lazy.swift */; };
 		1967463728AE9BB300863E43 /* SecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967462E28AE9BB300863E43 /* SecureUnarchiveFromDataTransformer.swift */; };
@@ -89,6 +90,7 @@
 		1914CD0428AE9A2800F7C398 /* TweetNestKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TweetNestKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1914CD0828AE9A2800F7C398 /* TweetNestKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = TweetNestKit.docc; sourceTree = "<group>"; };
 		1914CD0E28AE9A2800F7C398 /* TweetNestKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1957C05C29169A13002CE022 /* CancellableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellableError.swift; sourceTree = "<group>"; };
 		1967462C28AE9BB300863E43 /* AsyncLazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1967462D28AE9BB300863E43 /* Lazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
 		1967462E28AE9BB300863E43 /* SecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
@@ -213,6 +215,7 @@
 				1967462F28AE9BB300863E43 /* UserDataAssetsURLSessionManager.swift */,
 				1967463028AE9BB300863E43 /* UserID.swift */,
 				1967463328AE9BB300863E43 /* UserNotificationManager.swift */,
+				1957C05C29169A13002CE022 /* CancellableError.swift */,
 				1967463E28AE9BD600863E43 /* CoreDataStack */,
 				1967467328AE9BDE00863E43 /* Session */,
 				1967468C28AE9BE700863E43 /* Extensions */,
@@ -524,6 +527,7 @@
 				1967466228AE9BD600863E43 /* TweetNestKit.xcdatamodeld in Sources */,
 				1967466028AE9BD600863E43 /* PersistentContainer+V1.swift in Sources */,
 				1914CD0928AE9A2800F7C398 /* TweetNestKit.docc in Sources */,
+				1957C05D29169A13002CE022 /* CancellableError.swift in Sources */,
 				1967469E28AE9BE700863E43 /* DateFormatter+TweetNestKit.swift in Sources */,
 				1967465D28AE9BD600863E43 /* PersistentContainer+Migration.swift in Sources */,
 				1967467028AE9BD600863E43 /* ManagedAccount+Preferences.swift in Sources */,
