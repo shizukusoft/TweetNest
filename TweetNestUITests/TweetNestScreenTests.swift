@@ -156,7 +156,11 @@ class TweetNestScreenTests: XCTestCase {
 
     private func waitForScrollBarsDisappeard() {
         wait(for: [
-            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
+            expectation(
+                for: .init(format: "count == 0"),
+                evaluatedWith: app.scrollBars.matching(.init(format: "isHittable == 1")),
+                handler: nil
+             )
         ], timeout: 5.0)
     }
 
