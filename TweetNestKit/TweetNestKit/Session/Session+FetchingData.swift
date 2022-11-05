@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import UserNotifications
 import UnifiedLogging
+import BackgroundTask
 
 extension Session {
     private func errorNotificationRequest(_ error: Error, for accountObjectID: NSManagedObjectID? = nil) -> UNNotificationRequest {
@@ -44,6 +45,8 @@ extension Session {
     func postUserNotification(error: Error, accountObjectID: NSManagedObjectID? = nil) async throws {
         switch error {
         case let error as CancellableError where error.isCancelled:
+            break
+        case is ProcessInfo.TaskAssertionError:
             break
         default:
             let notificationContent = UNMutableNotificationContent()
