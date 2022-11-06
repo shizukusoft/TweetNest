@@ -46,8 +46,10 @@ extension Session {
         switch error {
         case let error as CancellableError where error.isCancelled:
             break
+        #if os(iOS) || os(watchOS) || os(tvOS)
         case is ProcessInfo.TaskAssertionError:
             break
+        #endif
         default:
             let notificationContent = UNMutableNotificationContent()
             notificationContent.title = String(localized: "Fetch New Data Error", bundle: .tweetNestKit, comment: "fetch-new-data-error notification title.")
