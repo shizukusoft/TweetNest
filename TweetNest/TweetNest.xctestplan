@@ -1,0 +1,82 @@
+{
+  "configurations" : [
+    {
+      "id" : "6803EFA7-6F3C-4271-A919-7783EEBB65B4",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "-com.tweetnest.TweetNest.Preview",
+        "enabled" : false
+      },
+      {
+        "argument" : "-com.apple.CoreData.Logging.stderr 0"
+      },
+      {
+        "argument" : "-com.apple.CoreData.CloudKitDebug 1",
+        "enabled" : false
+      },
+      {
+        "argument" : "-com.apple.CoreData.SQLDebug 1",
+        "enabled" : false
+      },
+      {
+        "argument" : "-com.apple.CoreData.ConcurrencyDebug 1"
+      }
+    ],
+    "environmentVariableEntries" : [
+      {
+        "key" : "SQLITE_ENABLE_THREAD_ASSERTIONS",
+        "value" : "1"
+      },
+      {
+        "enabled" : false,
+        "key" : "SQLITE_AUTO_TRACE",
+        "value" : "1"
+      },
+      {
+        "key" : "SQLITE_ENABLE_FILE_ASSERTIONS",
+        "value" : "1"
+      }
+    ],
+    "guardMallocEnabled" : true,
+    "mallocGuardEdgesEnabled" : true,
+    "mallocScribbleEnabled" : true,
+    "mallocStackLoggingOptions" : {
+      "loggingType" : "allAllocations"
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:TweetNest.xcodeproj",
+      "identifier" : "19505DD128A1844500ADE8CF",
+      "name" : "TweetNest"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TweetNest.xcodeproj",
+        "identifier" : "19505DE628A1844600ADE8CF",
+        "name" : "TweetNestTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "skippedTests" : [
+        "TweetNestScreenTests"
+      ],
+      "target" : {
+        "containerPath" : "container:TweetNest.xcodeproj",
+        "identifier" : "19505DF028A1844700ADE8CF",
+        "name" : "TweetNestUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

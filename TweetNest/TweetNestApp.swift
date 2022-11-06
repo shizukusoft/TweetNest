@@ -40,6 +40,9 @@ struct TweetNestApp: App {
                     .frame(width: ProcessInfo.processInfo.isPreview ? 1440 : nil, height: ProcessInfo.processInfo.isPreview ? (900 - 52) : nil)
                     #endif
             }
+            #if os(macOS) && DEBUG
+            ._windowResizability(ProcessInfo.processInfo.isPreview ? .contentSize : .automatic)
+            #endif
             #if os(iOS) || os(macOS)
             .commands {
                 SidebarCommands()

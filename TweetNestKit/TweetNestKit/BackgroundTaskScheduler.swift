@@ -100,24 +100,14 @@ extension BackgroundTaskScheduler {
     private func backgroundRefresh() async throws -> Bool {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return false }
 
-        do {
-            return try await session.fetchNewData()
-        } catch {
-            logger.error("Error occurred while background refresh: \(error as NSError, privacy: .public)")
-            throw error
-        }
+        return try await session.fetchNewData()
     }
 
     @available(watchOS, unavailable)
     private func backgroundDataCleansing() async throws {
         guard TweetNestKitUserDefaults.standard.isBackgroundUpdateEnabled else { return }
 
-        do {
-            try await session.cleansingAllData()
-        } catch {
-            logger.error("Error occurred while background data cleansing: \(error as NSError, privacy: .public)")
-            throw error
-        }
+        try await session.cleansingAllData()
     }
 }
 
@@ -142,12 +132,15 @@ extension BackgroundTaskScheduler {
         .allSatisfy { $0 }
     }
 
-    private func handleBackgroundTask(_ backgroundTask: BGTask, _ action: @escaping () async throws -> Void) {
+    private func handleBackgroundTask(_ backgroundTask: BGTask, _ action: @escaping @Sendable () async throws -> Void) {
         let task = Task {
             do {
                 logger.notice("Start background task for \(backgroundTask.identifier, privacy: .public)")
                 defer {
-                    logger.notice("Background task finished for \(backgroundTask.identifier, privacy: .public) with cancelled: \(Task.isCancelled)")
+                    logger.log(
+                        level: Task.isCancelled ? .warning : .notice,
+                        "Background task finished for \(backgroundTask.identifier, privacy: .public) with cancelled: \(Task.isCancelled)"
+                    )
                 }
 
                 await self.scheduleBackgroundTasks()
@@ -156,6 +149,8 @@ extension BackgroundTaskScheduler {
 
                 backgroundTask.setTaskCompleted(success: true)
             } catch {
+                logger.error("Error occurred while background task for \(backgroundTask.identifier, privacy: .public): \(error as NSError, privacy: .public)")
+
                 backgroundTask.setTaskCompleted(success: false)
             }
         }
@@ -215,17 +210,32 @@ extension BackgroundTaskScheduler {
         }
 
         let task = Task {
+            logger.notice("Start refresh background task with \(String(describing: backgroundTask.userInfo), privacy: .public)")
+            defer {
+                logger.log(
+                    level: Task.isCancelled ? .warning : .notice,
+                    "Refresh Background task finished with \(String(describing: backgroundTask.userInfo), privacy: .public) with cancelled: \(Task.isCancelled)"
+                )
+            }
+
             do {
                 let hasChanges = try await self.backgroundRefresh()
 
                 backgroundTask.setTaskCompletedWithSnapshot(hasChanges)
             } catch {
+                logger.error(
+                    """
+                    Error occurred while refresh background task with \
+                    \(String(describing: backgroundTask.userInfo), privacy: .public): \(error as NSError, privacy: .public)
+                    """
+                )
+
                 backgroundTask.setTaskCompletedWithSnapshot(false)
             }
         }
 
         backgroundTask.expirationHandler = { [logger] in
-            logger.notice("Background refresh task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
+            logger.notice("Refresh background task expired for: \(String(describing: backgroundTask.userInfo), privacy: .public)")
             task.cancel()
             task.waitUntilFinished()
         }

@@ -65,9 +65,7 @@ class TweetNestScreenTests: XCTestCase {
         // Insert steps here to perform after app launch but before taking a screenshot,
         // such as logging into a test account or navigating somewhere in the app
 
-        wait(for: [
-            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
-        ], timeout: 5.0)
+        waitForScrollBarsDisappeard()
 
         takeScreenshot(name: "Launch Screen")
     }
@@ -85,9 +83,7 @@ class TweetNestScreenTests: XCTestCase {
 
         XCTAssertTrue(app.navigationBars[Self.dispalyUserName].staticTexts[Self.dispalyUserName].waitForExistence(timeout: 5))
 
-        wait(for: [
-            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
-        ], timeout: 5.0)
+        waitForScrollBarsDisappeard()
         #endif
 
         takeScreenshot(name: "Account Screen")
@@ -100,15 +96,13 @@ class TweetNestScreenTests: XCTestCase {
         #if os(macOS)
         app.buttons["\(Self.dispalyUserName):FollowingsHistory"].click()
 
-        app.tables.tableRows.buttons["Apple"].click()
+        app.tables.tableRows.buttons["Apple, Apple"].click()
         #else
         app.buttons["\(Self.dispalyUserName):FollowingsHistory"].tap()
 
-        XCTAssertTrue(app.staticTexts["@Apple"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.staticTexts["Apple"].waitForExistence(timeout: 5))
 
-        wait(for: [
-            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
-        ], timeout: 5.0)
+        waitForScrollBarsDisappeard()
         #endif
 
         takeScreenshot(name: "Followings History Screen")
@@ -154,12 +148,20 @@ class TweetNestScreenTests: XCTestCase {
 
         XCTAssertTrue(app.switches.firstMatch.waitForExistence(timeout: 5))
 
-        wait(for: [
-            expectation(for: .init(format: "exists == 0"), evaluatedWith: app.scrollBars.element, handler: nil)
-        ], timeout: 5.0)
+        waitForScrollBarsDisappeard()
         #endif
 
         takeScreenshot(name: "Batch Delete Tweets Form Screen")
+    }
+
+    private func waitForScrollBarsDisappeard() {
+        wait(for: [
+            expectation(
+                for: .init(format: "count == 0"),
+                evaluatedWith: app.scrollBars.matching(.init(format: "isHittable == 1")),
+                handler: nil
+             )
+        ], timeout: 5.0)
     }
 
     private func scrollUp(element: XCUIElement? = nil) {

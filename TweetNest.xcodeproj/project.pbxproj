@@ -114,10 +114,17 @@
 		19505F7228A189E800ADE8CF /* ComplicationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F7028A189E800ADE8CF /* ComplicationController.swift */; };
 		19505F7428A18A3700ADE8CF /* TweetNestUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505DF528A1844700ADE8CF /* TweetNestUITests.swift */; };
 		19505F7528A18A3A00ADE8CF /* TweetNestScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19505F6C28A189D500ADE8CF /* TweetNestScreenTests.swift */; };
+		1960A6782905B4650089F650 /* _WindowResizability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1960A6772905B4650089F650 /* _WindowResizability.swift */; };
+		1993CD4C2905A38000889D3F /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		1993CD4D2905A38800889D3F /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		19A20A4028A18F0600FE5301 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19A20A4228A18F0600FE5301 /* InfoPlist.strings */; };
+		19AD1ADE2903D6C100EA4B45 /* TweetNest.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19AD1ADD2903D6C100EA4B45 /* TweetNest.docc */; };
+		19AD1AE02903DC4300EA4B45 /* TweetNest.docc in Sources */ = {isa = PBXBuildFile; fileRef = 19AD1ADD2903D6C100EA4B45 /* TweetNest.docc */; };
 		19B7E61528AF69D4002E8213 /* TwitterAuthenticationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61428AF69D4002E8213 /* TwitterAuthenticationButton.swift */; };
 		19B7E61A28AF8246002E8213 /* TwitterAuthenticationButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19B7E61428AF69D4002E8213 /* TwitterAuthenticationButton.swift */; };
 		19BBDFE128BD3E2A00562866 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 19BBDFE328BD3E2A00562866 /* Localizable.strings */; };
+		19C309AD29058F2B005C06F1 /* UIApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F42428AEAD78002107D5 /* UIApplication.swift */; };
+		19C309AF290590F7005C06F1 /* URLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19E5F41E28AEAA44002107D5 /* URLTests.swift */; };
 		19C4E65328AE9E32008FFCB1 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; };
 		19C4E65428AE9E32008FFCB1 /* TweetNestKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		19C4E65528AE9E40008FFCB1 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19C4E65028AE9E1A008FFCB1 /* TweetNestKit.framework */; };
@@ -315,13 +322,19 @@
 		19505F7628A18AC800ADE8CF /* TweetNest Watch App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "TweetNest Watch App.entitlements"; sourceTree = "<group>"; };
 		19505F7728A18AE300ADE8CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		19505F9A28A18C5F00ADE8CF /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1960A6772905B4650089F650 /* _WindowResizability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = _WindowResizability.swift; sourceTree = "<group>"; };
 		19A20A4328A18F0900FE5301 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4428A18F0A00FE5301 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		19A20A4528A18F4700FE5301 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		19AD1ADD2903D6C100EA4B45 /* TweetNest.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = TweetNest.docc; sourceTree = "<group>"; };
 		19B7E61428AF69D4002E8213 /* TwitterAuthenticationButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitterAuthenticationButton.swift; sourceTree = "<group>"; };
 		19BBDFE228BD3E2A00562866 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		19BBDFE428BD3E2B00562866 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		19C4E64A28AE9E1A008FFCB1 /* TweetNestKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = TweetNestKit.xcodeproj; path = TweetNestKit/TweetNestKit.xcodeproj; sourceTree = "<group>"; };
+		19E5BCB42905684500C613BE /* TweetNest.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TweetNest.xctestplan; sourceTree = "<group>"; };
+		19E5BCB62905687F00C613BE /* TweetNest Watch App.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = "TweetNest Watch App.xctestplan"; sourceTree = "<group>"; };
+		19E5BCB72905698800C613BE /* ScreenTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ScreenTests.xctestplan; sourceTree = "<group>"; };
+		19E5BCB8290569B300C613BE /* ScreenTests.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = ScreenTests.xctestplan; sourceTree = "<group>"; };
 		19E5F41E28AEAA44002107D5 /* URLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLTests.swift; sourceTree = "<group>"; };
 		19E5F42428AEAD78002107D5 /* UIApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIApplication.swift; sourceTree = "<group>"; };
 		19EA118128B9D91800029075 /* SessionEnvironmentKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionEnvironmentKey.swift; sourceTree = "<group>"; };
@@ -348,6 +361,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1993CD4D2905A38800889D3F /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +384,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1993CD4C2905A38000889D3F /* TweetNestKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +435,8 @@
 				19A20A4228A18F0600FE5301 /* InfoPlist.strings */,
 				19BBDFE328BD3E2A00562866 /* Localizable.strings */,
 				19505F7628A18AC800ADE8CF /* TweetNest Watch App.entitlements */,
+				19E5BCB62905687F00C613BE /* TweetNest Watch App.xctestplan */,
+				19E5BCB8290569B300C613BE /* ScreenTests.xctestplan */,
 			);
 			path = "TweetNest Watch App";
 			sourceTree = "<group>";
@@ -474,6 +491,7 @@
 				19505F1628A1889500ADE8CF /* ShareView.swift */,
 				19505F1928A1889900ADE8CF /* ShareButton.swift */,
 				19EA11A328BB5DAB00029075 /* _NavigationSplitViewVisibility.swift */,
+				1960A6772905B4650089F650 /* _WindowResizability.swift */,
 				19505F1C28A188A100ADE8CF /* Components */,
 				19505F2F28A188A900ADE8CF /* BatchDeleteTweets */,
 				19505F3F28A188CB00ADE8CF /* Settings */,
@@ -484,6 +502,9 @@
 				19505F6328A1895700ADE8CF /* InfoPlist.strings */,
 				19505F6928A1896000ADE8CF /* Localizable.strings */,
 				19505DDF28A1844600ADE8CF /* TweetNest.entitlements */,
+				19AD1ADD2903D6C100EA4B45 /* TweetNest.docc */,
+				19E5BCB42905684500C613BE /* TweetNest.xctestplan */,
+				19E5BCB72905698800C613BE /* ScreenTests.xctestplan */,
 				19505DE028A1844600ADE8CF /* Preview Content */,
 			);
 			path = TweetNest;
@@ -900,6 +921,7 @@
 				19505F2E28A188A100ADE8CF /* ProfileImage.swift in Sources */,
 				19505EF428A1886C00ADE8CF /* UsersDiffList.swift in Sources */,
 				19505F0028A1887700ADE8CF /* TweetNestError.swift in Sources */,
+				19AD1AE02903DC4300EA4B45 /* TweetNest.docc in Sources */,
 				19505F7128A189E800ADE8CF /* TweetNestAppDelegate+WKExtensionDelegate.swift in Sources */,
 				19505F2C28A188A100ADE8CF /* TweetNestStack.swift in Sources */,
 				19505F3E28A188A900ADE8CF /* BatchDeleteTweetsFormView.swift in Sources */,
@@ -938,6 +960,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19C309AF290590F7005C06F1 /* URLTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -945,6 +968,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19C309AD29058F2B005C06F1 /* UIApplication.swift in Sources */,
 				19505F7428A18A3700ADE8CF /* TweetNestUITests.swift in Sources */,
 				19505F7528A18A3A00ADE8CF /* TweetNestScreenTests.swift in Sources */,
 			);
@@ -972,6 +996,7 @@
 				19505F2728A188A100ADE8CF /* WebAuthenticationView.swift in Sources */,
 				19505EF328A1886C00ADE8CF /* UsersDiffList.swift in Sources */,
 				19505F5728A188E100ADE8CF /* URL.swift in Sources */,
+				19AD1ADE2903D6C100EA4B45 /* TweetNest.docc in Sources */,
 				19505EC528A1883800ADE8CF /* TweetNestAppDelegate+UIApplicationDelegate.swift in Sources */,
 				19505F4C28A188CB00ADE8CF /* SettingsMainView.swift in Sources */,
 				19505F1728A1889500ADE8CF /* ShareView.swift in Sources */,
@@ -984,6 +1009,7 @@
 				19505F3528A188A900ADE8CF /* BatchDeleteTweetsLoadingRecentTweetsView.swift in Sources */,
 				19505EE228A1885D00ADE8CF /* UserView.swift in Sources */,
 				19505F3928A188A900ADE8CF /* BatchDeleteTweetsView.swift in Sources */,
+				1960A6782905B4650089F650 /* _WindowResizability.swift in Sources */,
 				19505EC628A1883800ADE8CF /* TweetNestApp.swift in Sources */,
 				19505EF728A1887000ADE8CF /* UserRowsLabel.swift in Sources */,
 				19EA119828BB4FDE00029075 /* AppSidebarAccountSection.swift in Sources */,
@@ -1395,6 +1421,7 @@
 		19505DFA28A1844700ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1434,6 +1461,7 @@
 		19505DFB28A1844700ADE8CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1472,6 +1500,7 @@
 		19505DFD28A1844700ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1479,7 +1508,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1491,6 +1519,7 @@
 		19505DFE28A1844700ADE8CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1498,7 +1527,6 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1510,13 +1538,13 @@
 		19505E0028A1844700ADE8CF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -1528,13 +1556,13 @@
 		19505E0128A1844700ADE8CF /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALLOW_TARGET_PLATFORM_SPECIALIZATION = YES;
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = SYA56G458A;
 				GENERATE_INFOPLIST_FILE = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.tweetnest.TweetNestUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = auto;
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;

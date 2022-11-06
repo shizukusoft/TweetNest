@@ -9,6 +9,7 @@ import Foundation
 import CoreData
 import UserNotifications
 import UnifiedLogging
+import BackgroundTask
 
 extension Session {
     private func errorNotificationRequest(_ error: Error, for accountObjectID: NSManagedObjectID? = nil) -> UNNotificationRequest {
@@ -43,8 +44,12 @@ extension Session {
 
     func postUserNotification(error: Error, accountObjectID: NSManagedObjectID? = nil) async throws {
         switch error {
-        case is CancellationError, URLError.cancelled:
+        case let error as CancellableError where error.isCancelled:
             break
+        #if os(iOS) || os(watchOS) || os(tvOS)
+        case is ProcessInfo.TaskAssertionError:
+            break
+        #endif
         default:
             let notificationContent = UNMutableNotificationContent()
             notificationContent.title = String(localized: "Fetch New Data Error", bundle: .tweetNestKit, comment: "fetch-new-data-error notification title.")

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1914CD0928AE9A2800F7C398 /* TweetNestKit.docc in Sources */ = {isa = PBXBuildFile; fileRef = 1914CD0828AE9A2800F7C398 /* TweetNestKit.docc */; };
 		1914CD0F28AE9A2800F7C398 /* TweetNestKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1914CD0428AE9A2800F7C398 /* TweetNestKit.framework */; };
+		1957C05D29169A13002CE022 /* CancellableError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1957C05C29169A13002CE022 /* CancellableError.swift */; };
+		1961595B2917618E003ED0CC /* NSManagedObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1961595A2917618E003ED0CC /* NSManagedObject.swift */; };
 		1967463528AE9BB300863E43 /* AsyncLazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967462C28AE9BB300863E43 /* AsyncLazy.swift */; };
 		1967463628AE9BB300863E43 /* Lazy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967462D28AE9BB300863E43 /* Lazy.swift */; };
 		1967463728AE9BB300863E43 /* SecureUnarchiveFromDataTransformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1967462E28AE9BB300863E43 /* SecureUnarchiveFromDataTransformer.swift */; };
@@ -92,6 +94,8 @@
 		1914CD0428AE9A2800F7C398 /* TweetNestKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = TweetNestKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1914CD0828AE9A2800F7C398 /* TweetNestKit.docc */ = {isa = PBXFileReference; lastKnownFileType = folder.documentationcatalog; path = TweetNestKit.docc; sourceTree = "<group>"; };
 		1914CD0E28AE9A2800F7C398 /* TweetNestKitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TweetNestKitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1957C05C29169A13002CE022 /* CancellableError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancellableError.swift; sourceTree = "<group>"; };
+		1961595A2917618E003ED0CC /* NSManagedObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSManagedObject.swift; sourceTree = "<group>"; };
 		1967462C28AE9BB300863E43 /* AsyncLazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncLazy.swift; sourceTree = "<group>"; };
 		1967462D28AE9BB300863E43 /* Lazy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Lazy.swift; sourceTree = "<group>"; };
 		1967462E28AE9BB300863E43 /* SecureUnarchiveFromDataTransformer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureUnarchiveFromDataTransformer.swift; sourceTree = "<group>"; };
@@ -219,6 +223,7 @@
 				1967462F28AE9BB300863E43 /* UserDataAssetsURLSessionManager.swift */,
 				1967463028AE9BB300863E43 /* UserID.swift */,
 				1967463328AE9BB300863E43 /* UserNotificationManager.swift */,
+				1957C05C29169A13002CE022 /* CancellableError.swift */,
 				1967463E28AE9BD600863E43 /* CoreDataStack */,
 				1967467328AE9BDE00863E43 /* Session */,
 				66E036B128CF8BFB001FE127 /* Utilities */,
@@ -328,6 +333,7 @@
 		1967469428AE9BE700863E43 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
+				1961595A2917618E003ED0CC /* NSManagedObject.swift */,
 				196FF9BB2902CC13004A0535 /* NSPersistentCloudKitContainer+TweetNestKit.swift */,
 				1967469528AE9BE700863E43 /* NSPersistentContainer+TweetNestKit.swift */,
 			);
@@ -379,6 +385,13 @@
 			buildRules = (
 			);
 			dependencies = (
+				19D4204B290587EE006F3BF4 /* PBXTargetDependency */,
+				19D4204D290587EE006F3BF4 /* PBXTargetDependency */,
+				19D4204F290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42051290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42053290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42055290587EE006F3BF4 /* PBXTargetDependency */,
+				19D42057290587EE006F3BF4 /* PBXTargetDependency */,
 			);
 			name = TweetNestKit;
 			packageProductDependencies = (
@@ -532,10 +545,12 @@
 				1967469B28AE9BE700863E43 /* URLCache+TweetNestKit.swift in Sources */,
 				1967466D28AE9BD600863E43 /* ManagedPreferences.swift in Sources */,
 				1967463628AE9BB300863E43 /* Lazy.swift in Sources */,
+				1961595B2917618E003ED0CC /* NSManagedObject.swift in Sources */,
 				1967466328AE9BD600863E43 /* PersistentContainer+V3.swift in Sources */,
 				1967466228AE9BD600863E43 /* TweetNestKit.xcdatamodeld in Sources */,
 				1967466028AE9BD600863E43 /* PersistentContainer+V1.swift in Sources */,
 				1914CD0928AE9A2800F7C398 /* TweetNestKit.docc in Sources */,
+				1957C05D29169A13002CE022 /* CancellableError.swift in Sources */,
 				1967469E28AE9BE700863E43 /* DateFormatter+TweetNestKit.swift in Sources */,
 				1967465D28AE9BD600863E43 /* PersistentContainer+Migration.swift in Sources */,
 				66EED37128D6B43A00AA48DF /* Collection+RangeMatching.swift in Sources */,
@@ -561,6 +576,40 @@
 			isa = PBXTargetDependency;
 			target = 1914CD0328AE9A2800F7C398 /* TweetNestKit */;
 			targetProxy = 1914CD1028AE9A2800F7C398 /* PBXContainerItemProxy */;
+		};
+		19D4204B290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D4204A290587EE006F3BF4 /* Algorithms */;
+		};
+		19D4204D290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D4204C290587EE006F3BF4 /* OrderedCollections */;
+		};
+		19D4204F290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D4204E290587EE006F3BF4 /* BackgroundTask */;
+		};
+		19D42051290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D42050290587EE006F3BF4 /* Twitter */;
+		};
+		19D42053290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			platformFilters = (
+				ios,
+				maccatalyst,
+				macos,
+				tvos,
+			);
+			productRef = 19D42052290587EE006F3BF4 /* ZIP */;
+		};
+		19D42055290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D42054290587EE006F3BF4 /* UnifiedLogging */;
+		};
+		19D42057290587EE006F3BF4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			productRef = 19D42056290587EE006F3BF4 /* AsyncAlgorithms */;
 		};
 /* End PBXTargetDependency section */
 
@@ -968,6 +1017,41 @@
 			productName = UnifiedLogging;
 		};
 		196746C828AE9D6C00863E43 /* AsyncAlgorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746C728AE9D6C00863E43 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
+			productName = AsyncAlgorithms;
+		};
+		19D4204A290587EE006F3BF4 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746B528AE9CDD00863E43 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+		19D4204C290587EE006F3BF4 /* OrderedCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746B828AE9CF200863E43 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = OrderedCollections;
+		};
+		19D4204E290587EE006F3BF4 /* BackgroundTask */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746BB28AE9D0F00863E43 /* XCRemoteSwiftPackageReference "swift-background-task" */;
+			productName = BackgroundTask;
+		};
+		19D42050290587EE006F3BF4 /* Twitter */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746BE28AE9D2300863E43 /* XCRemoteSwiftPackageReference "swift-twitter" */;
+			productName = Twitter;
+		};
+		19D42052290587EE006F3BF4 /* ZIP */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746C128AE9D3F00863E43 /* XCRemoteSwiftPackageReference "swift-zip" */;
+			productName = ZIP;
+		};
+		19D42054290587EE006F3BF4 /* UnifiedLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 196746C428AE9D5400863E43 /* XCRemoteSwiftPackageReference "swift-unified-log" */;
+			productName = UnifiedLogging;
+		};
+		19D42056290587EE006F3BF4 /* AsyncAlgorithms */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 196746C728AE9D6C00863E43 /* XCRemoteSwiftPackageReference "swift-async-algorithms" */;
 			productName = AsyncAlgorithms;

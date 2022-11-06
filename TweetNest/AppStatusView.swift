@@ -22,7 +22,7 @@ struct AppStatusView: View {
             return "Loading…"
         case (_, .setup?):
             return "Preparing to Sync…"
-        case (_, .import?), (_, .export?), (_, .some(_)):
+        case (_, .import?), (_, .export?), (_, .some):
             return "Syncing…"
         case (true, nil):
             return nil

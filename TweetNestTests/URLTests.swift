@@ -6,7 +6,11 @@
 //
 
 import XCTest
+#if os(watchOS)
+@testable import TweetNest_Watch_App
+#else
 @testable import TweetNest
+#endif
 
 final class URLTests: XCTestCase {
     func testSimplifiedString() throws {
