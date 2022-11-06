@@ -75,32 +75,20 @@ extension TweetNestKit.Session {
         tweetnestUserDetail1.userID = tweetnestUser.id
 
         let tweetnestUserDetail2 = ManagedUserDetail(context: context)
+        tweetnestUserDetail2.values = tweetnestUserDetail1.values
         tweetnestUserDetail2.creationDate = Date(timeIntervalSince1970: 1631709579)
         tweetnestUserDetail2.followerUserIDs = ["783214"]
         tweetnestUserDetail2.followerUsersCount = 1
         tweetnestUserDetail2.followingUserIDs = ["783214"]
         tweetnestUserDetail2.followingUsersCount = 1
-        tweetnestUserDetail2.userCreationDate = Date(timeIntervalSince1970: 1616357217)
-        tweetnestUserDetail2.location = "대한민국 서울"
-        tweetnestUserDetail2.name = "TweetNest"
-        tweetnestUserDetail2.username = "TweetNest_App"
-        tweetnestUserDetail2.profileImageURL = URL(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")
-        tweetnestUserDetail2.url = URL(string: "https://www.tweetnest.com")
-        tweetnestUserDetail2.userID = tweetnestUser.id
 
         let tweetnestUserDetail3 = ManagedUserDetail(context: context)
+        tweetnestUserDetail3.values = tweetnestUserDetail2.values
         tweetnestUserDetail3.creationDate = now
         tweetnestUserDetail3.followerUserIDs = ["783214", "380749300"]
         tweetnestUserDetail3.followerUsersCount = 2
         tweetnestUserDetail3.followingUserIDs = ["783214", "380749300"]
         tweetnestUserDetail3.followingUsersCount = 2
-        tweetnestUserDetail3.userCreationDate = Date(timeIntervalSince1970: 1616357217)
-        tweetnestUserDetail3.location = "대한민국 서울"
-        tweetnestUserDetail3.name = "TweetNest"
-        tweetnestUserDetail3.username = "TweetNest_App"
-        tweetnestUserDetail3.profileImageURL = URL(string: "https://pbs.twimg.com/profile_images/1373878674903113729/JL3SGoch.png")
-        tweetnestUserDetail3.url = URL(string: "https://www.tweetnest.com")
-        tweetnestUserDetail3.userID = tweetnestUser.id
 
         let tweetnestProfileImageDataAsset = ManagedUserDataAsset(context: context)
         tweetnestProfileImageDataAsset.url = tweetnestUserDetail1.profileImageURL
