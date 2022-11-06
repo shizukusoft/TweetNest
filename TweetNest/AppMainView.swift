@@ -66,6 +66,7 @@ struct AppMainView: View {
             } detail: {
                 detail
             }
+            .navigationSplitViewStyle(.balanced)
         } else {
             NavigationView {
                 sidebar
