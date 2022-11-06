@@ -223,7 +223,12 @@ extension BackgroundTaskScheduler {
 
                 backgroundTask.setTaskCompletedWithSnapshot(hasChanges)
             } catch {
-                logger.error("Error occurred while refresh background task with \(String(describing: backgroundTask.userInfo), privacy: .public): \(error as NSError, privacy: .public)")
+                logger.error(
+                    """
+                    Error occurred while refresh background task with \
+                    \(String(describing: backgroundTask.userInfo), privacy: .public): \(error as NSError, privacy: .public)
+                    """
+                )
 
                 backgroundTask.setTaskCompletedWithSnapshot(false)
             }
