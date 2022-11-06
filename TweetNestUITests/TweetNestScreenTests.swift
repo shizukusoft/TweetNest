@@ -42,7 +42,7 @@ class TweetNestScreenTests: XCTestCase {
 
         app.launch()
 
-        if app.navigationBars.buttons["BackButton"].exists {
+        if app.navigationBars.buttons["BackButton"].isHittable {
             app.navigationBars.buttons["BackButton"].tap()
         }
 
