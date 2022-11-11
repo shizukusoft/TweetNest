@@ -1,0 +1,258 @@
+/* No comment provided by engineer. */
+"%@ of %@ tweets deletion requested." = "트윗 총 %2$@개 중 %1$@개 삭제 요청했습니다.";
+
+/* No comment provided by engineer. */
+"%@ tweets failed to delete." = "트윗을 %@개 삭제 실패했습니다.";
+
+/* No comment provided by engineer. */
+"%@ tweets will be deleted." = "트윗 %@개를 삭제합니다.";
+
+/* No comment provided by engineer. */
+"About" = "정보";
+
+/* No comment provided by engineer. */
+"Account" = "계정";
+
+/* No comment provided by engineer. */
+"Account for %@" = "%@의 계정";
+
+/* No comment provided by engineer. */
+"Accounts" = "계정";
+
+/* No comment provided by engineer. */
+"Add Account" = "계정 추가";
+
+/* No comment provided by engineer. */
+"Additional Settings" = "기타 설정";
+
+/* No comment provided by engineer. */
+"All Data" = "모든 데이터";
+
+/* No comment provided by engineer. */
+"App Version" = "앱 버전";
+
+/* No comment provided by engineer. */
+"Background Update" = "백그라운드 업데이트";
+
+/* No comment provided by engineer. */
+"Blocked Accounts" = "차단한 계정";
+
+/* No comment provided by engineer. */
+"Blocks History" = "차단 기록";
+
+/* No comment provided by engineer. */
+"Blocks History for %@" = "%@의 차단 기록";
+
+/* No comment provided by engineer. */
+"Cancel" = "취소";
+
+/* No comment provided by engineer. */
+"Copy" = "복사";
+
+/* No comment provided by engineer. */
+"Date" = "날짜";
+
+/* No comment provided by engineer. */
+"Delete" = "삭제";
+
+/* No comment provided by engineer. */
+"Delete All Tweets" = "모든 트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Recent Tweets" = "최근 트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets" = "트윗 삭제";
+
+/* No comment provided by engineer. */
+"Delete Tweets?" = "트윗을 삭제하시겠습니까?";
+
+/* No comment provided by engineer. */
+"Deleting %@ tweets…" = "트윗 %@개 삭제 중…";
+
+/* No comment provided by engineer. */
+"Done" = "완료";
+
+/* No comment provided by engineer. */
+"Download Images Using Cellular" = "셀룰러를 사용하여 이미지 다운로드";
+
+/* No comment provided by engineer. */
+"Downloads images using cellular or personal hotspot on this deivce when other networks are not available. If “Allow More Data on 5G” is turned on this device, this option will be ignored." = "이 기기에서 다른 네트워크가 사용 불가능할 때, 셀룰러나 개인용 핫스팟을 이용하여 이미지를 다운로드합니다. 이 기기에서 “5G에서 데이터 더 사용”이 활성화되어 있으면, 이 옵션은 무시됩니다.";
+
+/* No comment provided by engineer. */
+"Every %@" = "%@마다";
+
+/* No comment provided by engineer. */
+"Fetch Blocking Users" = "차단한 계정 목록 가져오기";
+
+/* No comment provided by engineer. */
+"Fetch Muting Users" = "뮤트한 계정 목록 가져오기";
+
+/* No comment provided by engineer. */
+"Fetch New Data" = "데이터 업데이트";
+
+/* No comment provided by engineer. */
+"Fetch new data" = "새 데이터 가져오기";
+
+/* No comment provided by engineer. */
+"Followers" = "팔로워";
+
+/* No comment provided by engineer. */
+"Followers History" = "팔로워 기록";
+
+/* No comment provided by engineer. */
+"Followers History for %@" = "%@의 팔로워 기록";
+
+/* No comment provided by engineer. */
+"Followings" = "팔로잉";
+
+/* No comment provided by engineer. */
+"Followings History" = "팔로잉 기록";
+
+/* No comment provided by engineer. */
+"Followings History for %@" = "%@의 팔로잉 기록";
+
+/* No comment provided by engineer. */
+"General" = "일반";
+
+/* No comment provided by engineer. */
+"Joined" = "가입 날짜";
+
+/* No comment provided by engineer. */
+"Latest Profile" = "최신 프로필";
+
+/* No comment provided by engineer. */
+"Listed" = "리스트";
+
+/* No comment provided by engineer. */
+"Loaded Tweets" = "로드한 트윗";
+
+/* No comment provided by engineer. */
+"Loading Archive…" = "아카이브 로드 중…";
+
+/* No comment provided by engineer. */
+"Loading Recent Tweets…" = "최근 트윗 로드 중…";
+
+/* No comment provided by engineer. */
+"Loading…" = "로드 중…";
+
+/* No comment provided by engineer. */
+"Location" = "위치";
+
+/* No comment provided by engineer. */
+"Manually" = "수동";
+
+/* No comment provided by engineer. */
+"More" = "더 보기";
+
+/* No comment provided by engineer. */
+"Muted Accounts" = "뮤트한 계정";
+
+/* No comment provided by engineer. */
+"Mutes History" = "뮤트 기록";
+
+/* No comment provided by engineer. */
+"Mutes History for %@" = "%@의 뮤트 기록";
+
+/* No comment provided by engineer. */
+"Name" = "이름";
+
+/* No comment provided by engineer. */
+"Notifications" = "알림";
+
+/* No comment provided by engineer. */
+"Notify Blocking Changes" = "차단 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Follower Changes" = "팔로워 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Following Changes" = "팔로잉 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Muting Changes" = "뮤트 변화 알림";
+
+/* No comment provided by engineer. */
+"Notify Profile Changes" = "프로필 변화 알림";
+
+/* No comment provided by engineer. */
+"OK" = "확인";
+
+/* No comment provided by engineer. */
+"Open Folder" = "폴더 열기";
+
+/* No comment provided by engineer. */
+"Open Profile" = "프로필 열기";
+
+/* No comment provided by engineer. */
+"Open Profile in Safari" = "Safari에서 프로필 열기";
+
+/* No comment provided by engineer. */
+"Open Twitter Archive" = "Twitter 아카이브 열기";
+
+/* No comment provided by engineer. */
+"Open ZIP File" = "ZIP 파일 열기";
+
+/* No comment provided by engineer. */
+"Preparing to Sync…" = "동기화 준비 중…";
+
+/* No comment provided by engineer. */
+"Profile" = "프로필";
+
+/* No comment provided by engineer. */
+"Profile Image" = "프로필 사진";
+
+/* No comment provided by engineer. */
+"Protected" = "비공개 계정";
+
+/* No comment provided by engineer. */
+"Re-authenticate Account" = "계정 다시 인증";
+
+/* No comment provided by engineer. */
+"Refresh" = "새로 고침";
+
+/* No comment provided by engineer. */
+"Retweets" = "리트윗";
+
+/* No comment provided by engineer. */
+"Save" = "저장";
+
+/* No comment provided by engineer. */
+"Settings" = "설정";
+
+/* No comment provided by engineer. */
+"Share" = "공유";
+
+/* No comment provided by engineer. */
+"Since" = "시작";
+
+/* No comment provided by engineer. */
+"Syncing…" = "동기화 중…";
+
+/* No comment provided by engineer. */
+"Target Tweets" = "대상 트윗";
+
+/* No comment provided by engineer. */
+"Tweets" = "트윗";
+
+/* No comment provided by engineer. */
+"Until" = "종료";
+
+/* No comment provided by engineer. */
+"Update accounts in background on this device." = "이 기기에서 백그라운드로 계정 정보를 업데이트합니다.";
+
+/* No comment provided by engineer. */
+"Updated %@ ago" = "%@ 전에 업데이트됨";
+
+/* No comment provided by engineer. */
+"Updating…" = "업데이트 중…";
+
+/* No comment provided by engineer. */
+"URL" = "웹사이트";
+
+/* No comment provided by engineer. */
+"Username" = "사용자 아이디";
+
+/* No comment provided by engineer. */
+"Verified" = "인증된 계정";
+

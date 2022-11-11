@@ -1,0 +1,82 @@
+{
+  "configurations" : [
+    {
+      "id" : "42DDBC35-CBFE-41D7-89FD-D8B0DF9DBBF1",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "commandLineArgumentEntries" : [
+      {
+        "argument" : "-com.tweetnest.TweetNest.Preview",
+        "enabled" : false
+      },
+      {
+        "argument" : "-com.apple.CoreData.Logging.stderr 0"
+      },
+      {
+        "argument" : "-com.apple.CoreData.CloudKitDebug 1",
+        "enabled" : false
+      },
+      {
+        "argument" : "-com.apple.CoreData.SQLDebug 1",
+        "enabled" : false
+      },
+      {
+        "argument" : "-com.apple.CoreData.ConcurrencyDebug 1"
+      }
+    ],
+    "environmentVariableEntries" : [
+      {
+        "key" : "SQLITE_ENABLE_THREAD_ASSERTIONS",
+        "value" : "1"
+      },
+      {
+        "enabled" : false,
+        "key" : "SQLITE_AUTO_TRACE",
+        "value" : "1"
+      },
+      {
+        "key" : "SQLITE_ENABLE_FILE_ASSERTIONS",
+        "value" : "1"
+      }
+    ],
+    "guardMallocEnabled" : true,
+    "mallocGuardEdgesEnabled" : true,
+    "mallocScribbleEnabled" : true,
+    "mallocStackLoggingOptions" : {
+      "loggingType" : "allAllocations"
+    },
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:TweetNest.xcodeproj",
+      "identifier" : "19505D9428A183B800ADE8CF",
+      "name" : "TweetNest Watch App"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:TweetNest.xcodeproj",
+        "identifier" : "19505DA628A183B900ADE8CF",
+        "name" : "TweetNest Watch AppTests"
+      }
+    },
+    {
+      "parallelizable" : true,
+      "skippedTests" : [
+        "TweetNestScreenTests"
+      ],
+      "target" : {
+        "containerPath" : "container:TweetNest.xcodeproj",
+        "identifier" : "19505DB028A183B900ADE8CF",
+        "name" : "TweetNest Watch AppUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

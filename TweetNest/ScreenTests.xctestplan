@@ -1,0 +1,33 @@
+{
+  "configurations" : [
+    {
+      "id" : "B198D58E-E5AE-4716-ADF9-ADC248040A5E",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "areLocalizationScreenshotsEnabled" : true,
+    "uiTestingScreenshotsLifetime" : "keepAlways",
+    "userAttachmentLifetime" : "keepAlways"
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "selectedTests" : [
+        "TweetNestScreenTests\/testAccount()",
+        "TweetNestScreenTests\/testBatchDeleteTweetsForm()",
+        "TweetNestScreenTests\/testFollowingsHistory()",
+        "TweetNestScreenTests\/testLaunch()"
+      ],
+      "target" : {
+        "containerPath" : "container:TweetNest.xcodeproj",
+        "identifier" : "19505DF028A1844700ADE8CF",
+        "name" : "TweetNestUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

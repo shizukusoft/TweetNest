@@ -10,12 +10,21 @@
       }
     },
     {
+      "identity" : "swift-async-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-async-algorithms.git",
+      "state" : {
+        "revision" : "cca423ff03ab657062f3781847e65a867b51bb01",
+        "version" : "0.0.3"
+      }
+    },
+    {
       "identity" : "swift-background-task",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tweetnest/swift-background-task",
+      "location" : "https://github.com/shizukusoft/swift-background-task",
       "state" : {
-        "revision" : "8e24a567fadeeeed497ce37cffe6410f93951783",
-        "version" : "0.2.7"
+        "revision" : "269faf8a948f397d1f9ea83a57eea78063f0d32a",
+        "version" : "0.2.11"
       }
     },
     {
@@ -23,17 +32,17 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-cminizip-ng.git",
       "state" : {
-        "revision" : "515df869172537c60e6704beb60bc6750b5bea7e",
-        "version" : "0.0.6"
+        "revision" : "0b37c2152e29c90bb9ed84bc472b2591f1a58095",
+        "version" : "0.0.9"
       }
     },
     {
       "identity" : "swift-collections",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-collections",
+      "location" : "https://github.com/apple/swift-collections.git",
       "state" : {
-        "revision" : "48254824bb4248676bf7ce56014ff57b142b77eb",
-        "version" : "1.0.2"
+        "revision" : "f504716c27d2e5d4144fa4794b12129301d17729",
+        "version" : "1.0.3"
       }
     },
     {
@@ -41,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-log.git",
       "state" : {
-        "revision" : "8fc79cae9d03a5e623c52cc2dbd2df165a7832b0",
-        "version" : "1.4.3"
+        "revision" : "6fe203dc33195667ce1759bf0182975e4653ba1c",
+        "version" : "1.4.4"
       }
     },
     {
@@ -57,9 +66,8 @@
     {
       "identity" : "swift-twitter",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/tweetnest/swift-twitter",
+      "location" : "https://github.com/shizukusoft/swift-twitter",
       "state" : {
-        "branch" : "develop",
         "revision" : "b004ce31d583b00fce6771fb538fbb55fdd79e4d"
       }
     },
@@ -68,8 +76,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-unified-log",
       "state" : {
-        "revision" : "3afccfaa8ffe143ebe0d7d784c1a01b339c4d162",
-        "version" : "2.0.2"
+        "revision" : "b1e3855af79774c80020f27e344e9acd58ca8e1a",
+        "version" : "2.1.0"
       }
     },
     {
@@ -77,8 +85,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sinoru/swift-zip.git",
       "state" : {
-        "revision" : "e91876de8762b9e447607a788c363115903b7810",
-        "version" : "0.0.4"
+        "revision" : "2854245af31bdcfec5161d2aa3021ea6c654aa05",
+        "version" : "0.0.5"
       }
     }
   ],
