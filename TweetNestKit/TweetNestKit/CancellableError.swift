@@ -19,8 +19,8 @@ extension CancellationError: CancellableError {
 
 extension URLError: CancellableError {
     public var isCancelled: Bool {
-        switch self.code {
-        case .cancelled:
+        switch self {
+        case URLError.cancelled:
             return true
         default:
             return false
