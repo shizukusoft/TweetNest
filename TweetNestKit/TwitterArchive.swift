@@ -65,25 +65,52 @@ extension TwitterArchive {
 extension TwitterArchive {
     public var tweets: [Tweet] {
         get async throws {
-            let tweetJSData = try await data(atPath: "data/tweet.js")
+            const tweetSearchFiles = ["data/tweet.js","data/tweets.js","data/tweets-part1.js","data/tweets-part2.js","data/tweets-part3.js","data/tweets-part4.js","data/tweets-part5.js","data/tweets-part6.js","data/tweets-part7.js","data/tweets-part8.js","data/tweets-part9.js","data/twitter-circle-tweet.js"]
+            let tweetJS = [];
+            let fetchedCount = 0;
+            
+            tweetSearchFiles.forEach(filePath => {
+                try { 
+                    let fetchedJSData = await data(atPath: filePath)
+                    let fetchedJS = String(data: fetchedJSData, encoding: .utf8)
+                    tweetJS.append(fetchedJS);
+                    fetchedCount++;
+                } error (e) {}
+            }
 
-            return try autoreleasepool {
-                guard let tweetJS = String(data: tweetJSData, encoding: .utf8) else {
-                    throw TwitterArchiveError.dataCorrupted
-                }
+            if (fetchedCount === 0) {
+                throw TwitterArchiveError.dataCorrupted
+            }
 
+            try autoreleasepool {
                 let result = JSContext(virtualMachine: jsVirtualMachine)!.evaluateScript("""
                 window = {};
                 window.YTD = {};
                 window.YTD.tweet = {};
+                window.YTD.tweets = {};
+                window.YTD.twitter_circle_tweet = {};
 
                 \(tweetJS)
 
                 var tweets = [];
 
-                for (const property in window.YTD.tweet) {
-                    tweets = tweets.concat(window.YTD.tweet[property]);
-                }
+                try {
+                    for (const property in window.YTD.tweet) {
+                        tweets = tweets.concat(window.YTD.tweet[property]);
+                    }
+                } error (e) { }
+
+                try {
+                    for (const property in window.YTD.tweets) {
+                        tweets = tweets.concat(window.YTD.tweets[property]);
+                    }
+                } error (e) { }
+
+                try {
+                    for (const property in window.YTD.twitter_circle_tweet) {
+                        tweets = tweets.concat(window.YTD.twitter_circle_tweet[property]);
+                    }
+                } error (e) { }
 
                 tweets.map(x => x.tweet);
                 """)
